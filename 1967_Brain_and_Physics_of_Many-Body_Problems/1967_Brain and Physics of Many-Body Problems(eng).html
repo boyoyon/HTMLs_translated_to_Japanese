@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Brain and Physics of Many-Body Problems</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+        </style>
+    <style>
+
+        ul {
+            list-style-type: none; /* 箇条書き記号を非表示 */
+            padding-left: 60px; /* 全体の左余白 */
+        }
+        li {
+            text-indent: -50px; /* 最初の行の字下げを逆方向に */
+            margin-left: 20px; /* 2行目以降の字下げを調整 */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Brain and Physics of Many-Body Problems</center></h1>
+<center>L. M. RICCIARDI</center>
+<center>Gruppo Nazionale di Cibernetica del CNR, Istituto di Fisiea Teorica, lqapoli</center>
+<br>
+<center>H. UMEZAWA</center>
+<center>Istituto di Fisica Teoriea, Napoli</center>
+        <p>
+Summary. On the basis of a recent physical theory of
+many-body problems developped in our Institute <sup>1</sup>, a model
+of the brain is formulated, and it is shown how some of its
+typical features, such as learning and memory processes, find
+therein a natural and simple explanation. In the Appendix a
+short surview of the necessary mathematical formalism is
+finally given.
+        </p>
+        <p class="margin-large">
+            <sup>1</sup> UMEZAWA (1966); LEPLAE, SEN, and UMEZAWA (1966); UMEZAWA (1965).
+        </p>
+<h2><center>Introduction</center></h2>
+        <p>
+Although nowadays the study of natural and artificial
+brain plays the main role among those researches
+which were indicated by N. WIENER as Cybernetics,
+it seems that a very few concrete results have been
+obtained, in the sense that the question how the brain
+works out the in]ormation received ]rom the outside, and
+which is the logic on which the operations per]ormed by
+the brain are based is still far from a satisfactory solution.
+Several mathematical models of brains have been
+formulated (McCULLOCH and PITTS, 1943 ; CAIAINIELLO,
+1961; HARTH, 1966), and all of them, although apparently
+more or less different, are based upon the
+same assumption, partially demonstrated by electrophysiological
+evidence, that significant parameters in
+the description of the brain are the activity or inactivity states of its neurons, the values of their
+thresholds, and the magnitude of their coupling coefficients.
+Neurons are looked on as binary elements,
+whose output can be described by a two-valued function
+which, after obvious normalization, is usually represented
+by the Heaviside unit step-function. In this
+way, it is possible (CAIANlELLO, 1961) to write a
+system of N nonlinear algebraic equations (where N
+is the number of neurons) which once solved after
+specification of couplings and thresholds, furnish the
+instantaneous behaviour of the nerve net.
+        </p>
+        <p>
+Models of this type are particularly useful in order
+to design machines, whose fundamental elements are
+artificial neurons, able to perform preassigned operations,
+as for instance pattern recognition; they also
+contain the possibility of introducing learning processes,
+and of explaining memory as due to the time variation
+of the coupling coefficients and to the formation of
+periodical activity patterns in the firing of neurons
+(CAIANIELLO, 1961). It seems very appropriate to indicate
+these models as simulators of neuronal networks.
+Being a very drastic idealization of the reality, they represent a powerful tool of investigation of the neuron
+dynamics, and moreover they offer undeniable advantages
+in machine-designing problems, i.e. in designing
+active networks characterized by certain specific
+features. However, in the case of natural brains, it
+might be pure optimism to hope to determine the
+numerical values for the coupling coefficients and the
+thresholds of all neurons by means of anatomical or
+physiological methods. Moreover, as soon as one asks
+the question whether or not these models can be looked
+on as models of the true brain, many questions immediately
+arise. First of all, a t which level should the
+brain be studied and described ? I n other words, is i t
+essential to know the bchaviour in time of any single
+neuron in order to understand the behaviour of natural
+brains ? Probably the answer is negative. The behaviour
+of any single neuron should not be significant for
+the functioning of the whole brain, otherwise a higher
+and higher degree of malfunctioning should be observed,
+unless to assume the existance of "special"
+neurons, characterized by an exceptionally long half
+life : or to postulate a huge redundancy in the circuitry
+of the brain. However, up to our knowledge, there have
+been no evidences which show the existence of such
+"special" neurons, and to invoke the redundancy is
+not the best way to answer the question.
+        </p>
+        <p>
+Another possibility is the following one : the activity
+of any single neuron is not significant, but rather the
+patterns of activity of clusters of them; what is important is only a "quantity" somehow related to the
+activity of the whole cluster, which does not change
+appreciably as function of the number of alive neurons
+belonging to that cluster. However, apart from the
+difficulties offered by the latter hypothesis, it is easily
+seen that it also contains the same difficulty as the
+one present in the former. Moreover, any effort to
+support any hypothesis of this type by means of
+anatomo-physiological evidence, for the time being,
+does not seem to be successful.
+        </p>
+        <p>
+Another remark which seems rather important is
+that neurons do not seem to be the only fundamental
+units of the brain; or, at least, together with them
+some other elements, as for instance glia cells, may
+play important r61c (ARBIB, 1964; SCHMITT, 1966).
+        </p>
+        <p>
+From all the previous considerations, it again
+emerges t h a t the proposed simulators of brain may
+be useful only in order to design "thinking machines"
+able to perform preassigned tasks, and although all of
+them stemed from some anatomical and physiological
+evidence, they cannot be looked on as describing the
+true dynamics of the brain.
+        </p>
+        <p>
+Then, another possible approach to the braindynamics
+naturally arises. The point of departure is
+that even though the elementary entities like neurons
+and others could be the most fundamental, their
+dynamical behaviour may be so complicated that many of their original features may become hidden under
+the macroscopic dynamics of the brain as a whole.
+This hypothesis has been recently supported by some
+beautiful experimental results obtained by JOHN
+(1966); he clearly demonstrated that the existence of
+similar and almost simultaneous responses in several
+regions of the brain (a kind of long range correlation)
+to a particular stimulation technique does not find any
+explanation in terms of activity of the single nerve
+cells: new non-classical mechanisms have to be looked
+for. I t then arises naturally a possibility: since one
+usually ignores the mechanism according to which the
+brain performs intelligent operations, but only hypothesis
+(even though interesting and sometimes useful
+(REICHARDT, 1957) can be formulated, one could try
+to give a more general description of the brain dynamics;
+as we shall see later, from a phenomenological
+point of view it is strongly suggestive of a quantum
+model. In other terms, one can try to look for specific
+dynamical mechanisms (already known in physics of
+many degrees of freedom) which can satisfy the essential
+requirements of the observed functioning of
+the brain.
+        </p>
+        <p>
+In the following, we shall first examine which are
+the essential requirements to be satisfied by a model
+of the brain, and we shall later see how an already
+existing physical theory can be used in order to give
+a quantum description of the brain, such to take into
+account well recognized features of the living beings,
+as the capacity of learning and of remembering; moreover,
+the existence of long range correlations automatically
+finds an explanation in the theory itself.
+        </p>
+<h2><center>II. Some Necessary Requirements to be Satisfied by a Model of Brain</center></h2>
+        <p>
+One of the most typical features of the brain
+is the capacity of remembering, that is of storing information
+patterns for a more or less long time interval.
+More precisely, there seems a great deal of evidences
+for the existence of essentially two types of
+memories, i.e., a long-term and a short-term memory
+(ARBIB, 1964; SCHMITT, 1966), and it appears that we
+have to retain an idea for quite a while in a short
+term memory before it is transferred into long-term
+memory.
+        </p>
+        <p>
+How can we account for memory ? The brain is
+estimated to contain \(10^{10}\) neurons and ten times that
+many glia cells, which closely invest the neurons and
+the blood vessels. Many neurons receive hundreds or
+thousands of fiber connections from other neurons
+(BRAITENBERG et al. 1965). The resulting neuronal nets
+are too comphcated to be explored with the microscope,
+and experts estimate that only a few per cent of the
+connections have actually been traced (SCHMITT,
+1966), and these myriad "nets-within-nets" are particularly
+complex and numerous in the brain cortex,
+the region most intimately associated with higher
+mental functioning.
+        </p>
+        <p>
+Especially long term memory, learning and other
+higher nervous functions have been thought to result
+from impulses traversing such complex neuronal nets,
+and individual long term memories could have their
+physical explanation in ceaseless reverberatory passage
+of impulses, each in its particular net (SCHMITT, 1966).
+        </p>
+        <p>
+However, there seems to be some serious objections.
+Bioelectrical waves in the brain can be stopped by treatment with cold, electric shock, or drugs, without
+loss of memory after recovery, and moreover, memory
+is not lost after many ablation experiments or when
+a brain is sliced in many directions so that certainly
+some pre-existent networks are distroyed.
+        </p>
+        <p>
+These facts suggest that memories are not "wired"
+into individual neuronal nets, but are instead diffused
+in the brain (SCHMITT, 1966). The first net that corresponds
+to an incoming message has its information
+transferred to other nets often far from the original
+location of the stimuli carrying the message.
+        </p>
+        <p>
+In this framework, it automatically emerges the
+possibility of observing some kind of correlations between
+the activities of neurons (at present neurons
+are much more easily observed than other systems or
+"entities") even though they are situated in places
+far from each other, and this has been supported by
+experimental evidence (BRAITENBERG, 1965; RICCIARDI,
+1966).
+        </p>
+        <p>
+Another remark has finally to be made: it seems
+that no conscious simultaneous recall of several memorized
+inlormations is possible; more precisely, there
+are good reasons to believe that the stored information
+can be recalled according to serial processes rather
+than in parallel, and, as it is well known, often it
+happens that as soon as something has been remembered,
+further and sometimes unrelated informations
+are recalled, too. Also this last remark, as it will soon
+be seen, finds its natural explanation in the model
+that we are going to propose.
+        </p>
+<h2><center>III. Outline of the Model</center></h2>
+        <p>
+In this section we will be concerned with the essential
+requirements to be satisfied by a model which
+describes the brain as a collection of very many mutually
+interacting units. As it will clearly appear in the
+following, the model is firmly based on the experimental
+evidence which was mentioned in the previous
+sections. In the forgoing, while exposing the logical
+steps to be done in order to construct our model, we
+will see how naturally our argument follows the line
+of an already well founded physical theory; from the
+latter, in order to give a deeper development of our
+model, the necessary mathematical tools can be
+derived.
+        </p>
+        <p>
+Let us look at the brain as a system in interaction
+with the external world; from the latter it receives
+stimuli, and as a consequence of it the system is put
+into particular states. A first requirement is that theso
+stimuli should be in some way coded and their effects
+should be represented into the brain also after they
+have ceased; this implies that the brain, as effect of
+the received stimulations, changes its state; the states
+may be described by a suitable set of variables, which
+in the following according to the physical terminology
+we will call "dynamical variables ". In the usual models
+of brain these variables may be for instance identified
+with the binary variables describing the activity or
+inactivity states of the neurons. However, for the
+previously mentioned reasons, here we do not intend
+to consider necessarily the neurons as the fundamental
+units in the brain; therefore, our variables should be
+thought as related to a certain (very large) number of
+entities, essential for producing the different states of
+the brain; their nature does not here need to be
+analysed. To be precise, our variables must be such to describe the stationary or quasi-stationary states of
+the isolated brain. According to the usual terminology
+of Quantum Mechanics, such states can be classified
+in terms of quantum numbers associated with the invariance
+of the system under certain transformations <sup>2</sup>.
+We can than assume the specification of the quantum
+number as the code itself; moreover only those variables
+which do not change under invariant transformations
+will be responsible for the storing of the information
+represented by the corresponding code.
+        </p>
+        <p class="margin-large">
+            <sup>2</sup> The reader is reminded, for instance, of the angular momentum associated with spherical symmetry.
+        </p>
+        <p>
+These variables must be classified into sets (henceforth
+called independent sets) which transform independently
+under a given invariant transformation;
+these sets, in turn, can be labelled by the quantum
+numbers <sup>3</sup>. Moreover the classification of the independent
+sets depends on the choice of the invariant
+transformations, since in general there may exist
+several non-commutative invariant transformations <sup>4</sup>.
+        </p>
+        <p class="margin-large">
+            <sup>3</sup> For example the spin doublet has 1/2 spin quantum number, associated with the spin rotation.<br>
+            <sup>4</sup> For instance, this happens in the case of rotations in manyfold spaces.
+        </p>
+        <p>
+According to different stimuli, these variables are
+changed to create excited states of the quantum
+numbers associated to them; already at this stage the
+information coming to the system from the outside
+is coded into the brain. Since the first requirement for
+memory processes is the stability, the code should be
+later on transferred to the ground state of the system.
+This can be achieved by means of condensation into
+the ground state of the coded information already held
+by the excited states. Such a condensation can then
+give account of learning processes.
+        </p>
+        <p>
+The previously invoked condensation finds its explanation
+in the Bose-Einstein condensation phenomenon,
+well known in the physics of many-body problems.
+More in detail, the condensation of Bose particles
+with a specific quantum number transfers to the ground
+state the quantum number itself (for instance, the
+Bose condensation of spin wave in the case of ferromagnetism
+creates the polarized ground state). This
+arguments requires the existence in the brain of variables
+obeying the Bose-statistics. Such variables should
+also posses long range property in order to supply the
+code to the brain system itself and to maintain it. In
+other words, the interaction of such a complex system
+consisting of a huge number of entities, has as its effect
+the creation of the long range Boson correlation which
+regulates the brain dynamics.
+        </p>
+        <p>
+In the terminology of physics, what the present
+model proposes is that the brain function is a manifestation
+of spontaneous break-down of various symmetries
+in brain dynamics and the long range Bosons
+mentioned above correspond to the so called Goldstone
+quanta.
+        </p>
+        <p>
+By means of the previous description, long term
+memory is related to the ground state; short-term
+memories can instead be related to the existence of
+meta.stable excited states.
+        </p>
+        <p>
+The description of the brain as a system of an
+enormous number of interacting entities, offers also
+another advantage: the gross properties of the system
+should not change appreciably under destruction of a
+considerable number of units, which, instead, as we mentioned before, has a catastrophic effect for the
+usual brain simulators.
+        </p>
+        <p>
+A final remark is that from our argument one should
+expect correlations also among the neurons' activity,
+which, as we said before, recently has been already
+observed.
+        </p>
+<h2><center>IV. Concluding Remarks</center></h2>
+        <p>
+Although the outlined model only represents the
+start point of further theoretical researches, already at
+this stage some additional remarks, which spontaneously
+emerge from the previously sketched theory, are to
+be done.
+        </p>
+        <p>
+The existence of long range correlation, by means
+of which fundamental properties of the brain, as memory
+processes, find an explanation, seems to be supported
+by experimental evidence <sup>5</sup> (John, 1966). Moreover,
+it also suggests the existence of different types
+of short-term memory processes. In the previous section,
+indeed, we interpreted short term memory as
+related to transitions between excited states. Such an
+interpretation has the advantage of giving reason for
+the so often observed "association of ideas"; moreover,
+the fact that memory is associated with the
+states of the brain system, leads us to predict that
+several codes cannot be transferred to the brain at
+the same time, and it would be useful to recall here
+that psychological experiments seem to show that
+several memory processes may not take place simultaneously.
+        </p>
+        <p class="margin-large">
+        <sup>5</sup> An extremely stable type of memory, as it is well known, seems to be linked with the genetic code contained in the structure of DNA-molecules. The proposed model can be utilized also in order to describe the genetic mechanisms, and again one may account for stability by means of the condensation of the long range correlation.
+        </p>
+        <p>
+Also another possibility is offered, indeed, for the
+explanation of the short term memory. As a matter
+of fact, we may consider the brain as consisting of
+several regions; our previous argument may then be
+applied to each of these regions, considered as physically
+disjoined. However, because of the existence of
+long range correlation in our model, these regions
+should not be ]unctionally separated, and therefore
+the code held by one of them may be destroyed or
+modified because of the influence of the other regions.
+        </p>
+        <p>
+Another remark is the following: as we said in
+See. 3, the classification of the independent sets depends
+on the choice of the invariant' transformations,
+because of the possible existence of several non commutative
+invariant transformations. This situation,
+which is an obvious property of some descriptions of
+many-body problems, provides in this context an explanation
+for the often observed "many-to-one" type
+response of living beings under given stimulations, and
+at the same time it accounts for the destructive or
+associative correlations in memory processes.
+        </p>
+        <p>
+To conclude, we wish to remark that our present
+knowledge of the brain and of the microscopic processes
+therein involved does not yet permit us to guess which
+types of invariance may be present, even though a high
+number of them should certainly exist; therefore, for
+the moment we prefer not to anticipate anything. However
+we want to point out that often in many-body
+problems the possible types of invariance are suggested
+just by inspection of the properties of the long range
+correlation; and also in the case of the brain we feel 
+        </p>
+        <p>
+that following this way we will eventually obtain encouraging
+results.
+        </p>
+<h2><center>Appendix <sup>6</sup></center></h2>
+        <p class="margin-large">
+            <sup>6</sup> In this Appendix we present a very brief sketch of the mathematics on which our model is based. The interested reader, however, will find a complete treatment of the theories of the type utilized in the text in UMEZAWA (1966) (which is easy readable also by the non-specialists), LEPLAE et al., (1966) and UMEZAWA (1965). Detailed mathematical considerations on the Bose condensation will be found in ARAKI and WOODS (1963) and EZAWA (1965). Finally, a simple presentation of the many-body problems in terms of our framework can be found, for instance, in HENLEY and THIRRING (1962).
+        </p>
+        <p>
+Let us consider a set \(\{X_i(\vec{x},t)\}\) of dynamical variables
+describing stationary or quasi-stationary oscillations;
+by \(\vec{x}\) and t we denote the position and the
+time respectively. According to the terminology of
+Quantum Mechanics, stationary oscillations can be
+described by harmonic oscillators, while the quasi-stationary oscillations are represented by damped oscillators.
+These oscillators are described by the set of
+real variables \(\{X_i(\vec{x}, t)\}\) already introduced, together
+with their canonical conjugates \(\{X_i(\vec{x}, t)\}\) ; index \(i\) may
+in general assume both discret and continuous values.
+        </p>
+        <p>
+Let us now indicate by \(n_i (n_i = 0 , 1, 2, . . . )\) the
+principal quantum number; the corresponding energy
+\(E_i\) is then of the form:
+\[
+E_i=n_i\omega_i　(n_i=0,1,2,...)
+\]
+where \(omega_i\) denotes the energy of the oscillation. Since
+we are concerned only with long half-life quasi stationary
+oscillations, we will consider them, in a first
+approximation, as stationary oscillations.
+        </p>
+        <p>
+Let us now consider the variables Xi as obeying
+the Bose statistics <sup>7</sup>; this implies that the following
+commutation relations hold:
+        </p>
+        <p class="margin-large">
+            <sup>7</sup> By this we do not mean that the Bosons represent original constituents of the brain, but rather we assume the existence of a mapping between the original variables and the Xi here introduced. Moreover, let us stress that Bosons do not represent a pure speculative fiction; in fact from their observed properties we must be able to identify them as realistic entities. In this respect a very urgent and significant problem is to measure the energy spectrum of the long range correlation.    
+        </p>
+        <p>
+\[
+[X_i(\vec{x},t),X_j(\vec{y},t)]=i\hbar\delta_{ij}\delta(\vec{x}-\vec{y})
+\]
+Let us now construct the new variables \(\xi_j\). defined as <sup>8</sup> :
+        </p>
+        <p class="margin-large">
+            <sup>8</sup> When no risk of ambiguity arises, for simplicity we will
+drop the argument \((\vec{x}, t)\).
+        </p>
+        <p>
+\[
+\xi_j=\frac{X_j+iX_j}{2}
+\]
+Their hermitic conjugate \(\xi_j^\dagger\) are then given by
+\[
+\xi_j^\dagger=\frac{X_j-iX_j}{2}
+\]
+and between the \(\xi_i\)'s and \(\xi_j^\dagger\)'s the following commutation
+relations hold:
+\[
+[\xi_i(\vec{x},t),\xi_j^\dagger(\vec{y},t)]=i\hbar\delta_{ij}\delta(\vec{x}-\vec{y})
+\tag{1}
+\]
+As i t is well known, the principal quantum number \(n_j\) is eigenvalue of the operator
+\[
+\int d^3x\xi_j^\dagger\xi_j
+\]
+and \(\xi_j\) depends on t only through an exponential factor
+of the form
+\[
+\exp[-i\omega_j t]
+\]
+Denoting now by \(\Phi_0\) the ground state, whose energy
+is regarded as zero, the states \(\xi_j^\dagger\Phi_0\) represent excited
+states whose correspondent energies are \(z\omega_j\). Proceeding
+in this way we may construct all the excited states.
+        </p>
+        <p>
+The Bose-Einstein condensation appears provided
+there exist certain variables \(\tilde{\xi_j}\) such t h a t their ground
+state expectation values are non-zero, that is
+\[
+\langle\tilde{\xi}_j\rangle=\eta_j\neq 0
+\tag{2}
+\]
+These variables \(\tilde{\xi}_j\) can then always be written in the
+form
+\[
+\tilde{\xi}_j=\xi_j+\eta_j
+\tag{3}
+\]
+where \(\xi_j\) are the already introduced operators.
+        </p>
+        <p>
+Let us note that since \(\xi_j\)'s obey the Bose statistics,
+the variables \(\tilde{\xi}_j\) satisfy the commutation relations (1),
+and therefore they also are canonical.
+        </p>
+        <p>
+The dynamical variables may now be classified into
+independent sets which independently transform under
+given invariant transformations, and each of which is
+specified by its quantum number. Let us recall that
+the invariant transformations are those under which
+the dynamical system does not change a t all.
+        </p>
+        <p>
+Let us now focus our attention on the independent
+set containing the variables \(\tilde{\xi}_j\) which satisfy (2). Now,
+since \(\tilde{\xi}_j\) carries a quantum number, because of (3) also
+\(\eta_j\) does, and finally in virtue of (2) this quantum number
+is given to the ground state. Intuitively speaking,
+the condensation of bosons carrying a quantum number
+gives origin to a ground state which maintains the
+same quantum number.
+        </p>
+        <p>
+The quantum number transmitted to the ground
+state has to be identified with the code introduced in
+See. 3.
+        </p>
+        <p>
+It is obvious that any ground state of non-trivial
+quantum number is not a state which is invariant
+under the invariant transformations. Still, such a
+ground state can appear without conflicting with the
+invariant nature of the system, when the energy spectra (\(\omega_i\)) of the bosons (\(\xi_i\)) are gapless <sup>9</sup>. Here an energy
+spectrum is said to be gapless when its minimum value
+coincides with the energy of the ground state. The
+condensation of bosons can take place without any
+external energy supply when the boson energy spectra
+are gapless. Since any invariant transformation can
+be performed without any energy supply, the condensation
+in the ground state can be regulated b y the
+invariant transformations. It must be noted that the
+gapless nature of the boson energy spectra is the origin
+of the long range property of the boson effects <sup>10</sup> (i.e. long
+range correlation).
+        </p>
+        <p class=margin_large>
+<sup>9</sup> Remember, for example, the crystals and ferromagnets. In the crystals the interactions are invariant under spatial translations even though they crea~e the lattice structure. In the polarized magnets the interactions are invariant under the spin-rotation. In both cases there exist certain gapless bosons.<br>
+<sup>10</sup> When there exists a long range potential of the Coulomb type, the boson energy spectra need not to be gapless. In such a case the long range property of the boson effects comes from that of the potential.
+        </p>
+        <p>
+The excited s tates \(\xi_i^\dagger\Phi_0\), \(\xi_i^\dagger\xi_j^\dagger\Phi_0\), etc. appear under the effect of external stimuli, and since \(\xi_j\) carries
+a quantum number, the excited states carry additional
+quantum numbers: these represent the code of the short-term memory.
+        </p>
+        <p>
+Let us note t h a t the excited states may decay into
+lower states either because of their intrinsic instability or because of the interaction of a particular subsystem
+with the neighbouring regions.
+        </p>
+        <p>
+Let us finally recall that the invariance of the considered
+dynamics under any continuous transformation
+gives origin to locally conserving currents carrying
+specific quantum numbers, and this is the origin of
+the long range correlation. Noteworthy is the fact that
+the communication of the code (i.e. of the quantum
+number) is performed only by conserving currents, and
+this circumstance automatically ensures the conservation
+of the code, in the sense that it cannot spontaneously
+disappear.
+        </p>
+        <p>
+Acknowledgments. The first-named author (L.M.R.) would
+like to thank Prof. F. O. SCm~ITT for hospitality of the
+Neurosciences Research Program, Intensive Study Program
+held at Boulder, Colorado from July 18 through August 12,
+where some of the work was performed.
+        </p>
+        <p>
+Warm thanks are due by the second-named author (H.U.)
+to Prof. E.R. CAIANIELLO for hospitality at the Istituto di
+Fisica Teorica in Naples.
+        </p>
+<h2><center>Referenes</center></h2> 
+
+<ul>
+<li>ARAKI, H., and E.J. WOODS: J. Math. and Phys. 4, 637 (1963).</li>
+
+<li>ARBIB, M. : Brains Machines and Mathematics. New York-Toronto-London: McGraw-Hill Book
+Co. 1964.
+
+<li>BRAITENBERG, V., G. GAMBARDELLA, G. GHIGO, and U. VOTA: Kybernetik 2, 197 (1965).</li>
+
+<li>CAIANIELLO, E. R. :J. theor. Biol. 1,204 (1961).</li>
+
+<li>EZAWA, H. : J. Math. and Phys. 6, 380 (1965).</li>
+
+<li>HARTH, E.M.: Editor CAIANIELLO, p. 201. London: Academic Press 1966.</li>
+
+<li>HENLEY, E.M., and W. THIRRING: Elementary quantum field theory. New York-
+Toronto-London: McGraw-Hill Book Co. 1962.</li> 
+
+<li>JOHN, E. R. :Proc. Neurosc. Res. Progr. I.S.P. 1966.</li> 
+
+<li>LEPLAE, L., R. N. SEN and H. UMEZAWA: Nuovo cimento 1, 1 (1967).</li>
+
+<li>McCULLOCH,W.S., and W. PITTS: Bull. math. Biophys. 5, 115 (1943). </li> 
+
+<li>RICCIARDI, L. M.: Exp. Brain Res. 8, 1 (1967). </li>
+<li>SCHMITT, F. O. : New Scientist 23, 643 (1966).</li>
+<li>UMEZAWA, H. : Acta phys. hung. 19, 9 (1965); </li>
+<li>Fcstschrift of Progr. theor.Phys. (Kyoto) Supplement, 37, 38, 585 (1966).</li>
+        </ul>
+    </body>
+</html>
