@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Nonlinear Quantum Mechanics</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -30px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 50px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    </head>
+    <body>
+        <h1><center>Classical Mechanics as Nonlinear Quantum Mechanics</center></h1>
+<center>Hrvoje Nikolic</center>
+<center>Theoretical Physics Division, Rudjer Boˇskovi´c Institute,</center>
+<center>P.O.B. 180, HR-10002 Zagreb, Croatia</center>
+<center>e-mail: hrvoje@thphys.irb.hr</center>
+<br>
+<h2><center>Abstract</center></h2>
+<p class="margin-abstract">
+All measurable predictions of classical mechanics can be reproduced from a quantum-like interpretation of a nonlinear Schr&ouml;dinger equation. The key observation leading to classical physics is the fact that a wave function that satisfies a linear equation is real and positive, rather than complex. This has profound implications on the role of the Bohmian classical-like interpretation of linear quantum mechanics, as well as on the possibilities to find a consistent interpretation of arbitrary nonlinear generalizations of quantum mechanics.
+</p>
+<h2>1 Introduction</h2>
+<p>
+In physics, linear e quations are often approximations to nonlinear equations. On the other hand, we know that the Schr&ouml;dinger equation is a linear equation. This raises an interesting question: Does it mean that the Schr&ouml;dinger equation could be an approximation to a nonlinear equation?
+</p><p>　
+We also know that the interpretation of the Schr&ouml;dinger equation strongly rests on linearity. Therefore, the possibility of a nonlinear generalization of the Schr&ouml;dinger equation raises further questions, such as: Does it mean that we have to modify the interpretation of quantum mechanics (QM)? Can nonlinearities teach us something new about the interpretation of QM?
+</p><p>　
+Some results in that direction have already been found. In [1, 2, 3] the following result
+has been obtained: If (nonlinear) wave function collapses, then EPR correlations can be used to transmit information instantaneously. (For a comparison, it is well known that in ordinary linear QM the EPR correlations cannot be used to transmit information instantaneously.) This suggests that the concept of a true wave-function collapse is problematic. An alternative is to adopt an interpretation that does not rest on a true wave-function collapse. An example of such an interpretation is the many-world interpretation. However, when the many-world interpretation is applied to the nonlinear case, it is found that then different branches (worlds) may communicate [2]. But if they communicate, then it does not seem meaningful to interpret them as different worlds.
+</p><p>　
+We see that the properties of nonlinear QM seem rather pathological. This suggests that a radically different interpretation should be adopted. In particular, interpretations in which the wave function is an objective-realistic entity are not expected to lead to such pathologies, as such interpretions are more similar to classical nonlinear waves (which, of course, do not lead to interpretational pathologies).
+</p><p>　
+To resolve the interpretational problems, it would be desirable to have at least one example of nonlinear QM which we know how to interpret. On the other hand, it is widely believed that no such example of nonlinear QM exists. Nevertheless, we show that such an example exists, i.e., that classical mechanics (CM) represents an example of nonlinear QM. More precisely, we review our results of [4] which show that classical mechanics can be represented by a nonlinear Schr&ouml;dinger equation
+\[
+\left[\frac{\hat{p}^2}{2m}+V-Q\right]\psi=i\hbar\partial_t\psi \tag{1}
+\]
+where
+\[
+Q\equiv -\frac{\hbar^2}{2m}\frac{\nabla^2|\psi |}{|\psi |} \tag{2}
+\]
+We see that Q in (2) explicitly depends on \(psi\) , which makes (1) nonlinear in \(\si\) . We also note that the classical Schr&ouml;dinger equation (1) has also been discussed earlier (see, e.g., [5]), but that before [4] it has not been shown that this equation alone is sufficient to reproduce all measurable predictions of the usual formulation of CM.
+</p><p>　
+Another motivation for viewing CM as nonlinear QM is a hope that it could help in a
+better understanding of the big conceptual difference between CM and QM. For example, where does this difference comes from? A frequent answer is that this difference comes from the fact that CM is deterministic, whereas QM is probabilistic. Nevertheless, there is a deterministic interpretation of QM very similar to CM, but with the same probabilistic predictions as standard QM – the Bohmian interpretation [6]. Then why the Bohmian interpretation is not widely accepted? A frequent answer is: Because the purely probabilistic interpretation is simpler. (Or more precisely, because the Bohmian trajectories are unobservable, and thus unnecessary, hidden variables.) If we accept this argument against the Bohmian interpretation, then the following natural question arises: Can CM be made simpler by adopting a probabilistic interpretation? As we shall see in this paper, the answer will turn out to be – yes. We shall see that the probabilistic QM-like interpretation of the classical nonlinear Schr&ouml;dinger equation reproduces all measurable predictions of standard CM. We shall also see that classical trajectories existing even without measurements play a role of unobservable hidden variables analogous to the Bohmian trajectories in QM. Thus, if it is (un)natural to accept the Bohmian interpretation of QM, then it is equally (un)natural to accept classical trajectories of CM.
+</p>
+<h2>2 QM and the Bohmian interpretation</h2>
+<p>
+Consider the standard Schr&ouml;dinger equation
+\[
+\left[\frac{\hat{p}^2}{2m}+V(x,t)\right]\psi(x,t)=i\hbar\partial_t\psi(x,t) \tag{3}
+\]
+where
+\[
+\hat{p}=-i\hbar\nabla \tag{4}
+\]
+We write \(\psi\) in the polar form
+\[
+\psi(x,t)=R(x,t)e^{iS(x,t)/\hbar} \tag{5}
+\]
+where \(R\) and \(S\) are real functions and
+\[
+R(x, t) \geq 0  \tag{6}
+\]
+The complex Schr&ouml;dinger equation is equivalent to a set of 2 real equations. These are the quantum Hamilton-Jacobi equation
+\[
+\frac{(\nabla S)^2}{2m}+V+Q=-\partial_tS \tag{7}
+\]
+and the conservation equation
+\[
+\partial_t\rho+\nabla\left(\rho\frac{\nabla S}{m}\right)=0 \tag{8}
+\]
+where
+\[
+Q\equiv -\frac{\hbar^2}{2m}\frac{\nabla^2R}{R} \tag{9}
+\]
+Similarity with the classical Hamilton-Jacobi equation suggests the Bohmian interpretation [6]. In this interpretation, the particle has a trajectory satisfying
+\[
+\frac{dx}{dt}=\frac{\nabla S}{m} \tag{10}
+\]
+which is the same as an analogous equation in the classical Hamilton-Jacobi theory. The conservation equation provides that particles in a statistical ensemble are always distributed as in QM, with the probability density \(\rho(x, t)\). Thus, in the Bohmian interpretation, all QM uncertainties emerge from the lack of knowledge of the actual initial particle position \(x(t_0)\).
+</p>
+<h2>3 Classical Schr&ouml;dinger equation</h2>
+<p>　
+Now consider a classical statistical ensemble in the configuration space. The conservation equation is the same as in QM, which can be written as a linear equation for \(R\)
+\[
+\left[\partial_t+\left(\frac{\nabla S}{m}\right)\nabla+\left(\frac{\nabla^2 S}{2m}\right)\right]R=0 \tag{11}
+\]
+where \(R\equiv \sqrt{\rho}\). The classical Hamilton-Jacobi equation reads
+\[
+\frac{(\nabla S)^2}{2m}+V=-\partial_t S \tag{12}
+\]
+Defining the classical wave function as
+\[
+\psi(x,t)=R(x,t)e^{iS(x,t)/\hbar} \tag{13}
+\]
+the conservation equation and the Hamilton-Jacobi equation together turn out to be equivalent to the nonlinear classical Schr&ouml;dinger equation
+\[
+\left[\frac{\hat{p}^2}{2m}+V-Q\right]\psi=i\hbar\partial_t\psi \tag{14}
+\]
+If, in addition, the wave function is required to be single-valued, then CM improves by including the Bohr quantization condition [4]
+\[
+mvr=n\hbar \tag{15}
+\]
+</p>
+<h2>4 Measurement in nonlinear QM</h2>
+<p>
+We start from the observation that any function \(\psi(x, t)\) representing a solution of some (not necessarily linear) equation can be expanded in terms of some other functions as
+\[
+\psi(x,t)=\sum\limits_a c_a\psi_a(x,t) \tag{16}
+\]
+The linear case is special by having the property that the functions  \(\psi_a\) can be chosen such that \(c_a\psi_a\) and  \(\psi_a\) are also solutions. Now, what is a measurement? Typically, a measurement is a process in which we obtain knowledge that the actual state is \(c_a\psi_a\). Thus, to determine the subsequent post-measurement properties of the system, it is sufficient to know only that component. However, in the nonlinear case, it is not a solution, so to know that component one actually needs to know the whole solution. Only in the linear case the measured component evolves independently of other components. This explains the effective collapse in the linear case.
+</p><p>　
+Now consider a measuring apparatus. Let the eigenstates of a measured hermitian operator be \(\psi_a(x, t)\). A measurement that does not disturb the wave function requires entanglement with the measuring apparatus, such that the total wave function takes a form
+\[
+\Psi(x,y,t)=\sum\limits_a c_a\psi_a(x,t)\phi_a(y,t) \tag{17}
+\]
+where the coefficients \(c_a\) are the same as those in (16) and \(\phi_a(y, t)\) are some orthonormal states of the measuring apparatus. However, in the general nonlinear case, such a solution does not exist. From this, we conclude that it is much more difficult to measure a quantity in nonlinear QM than in linear QM.
+</p>
+<h2>5 Measurement for the classical Schr&ouml;dinger equation</h2>
+<p>
+The final conclusion of the preceding paragraph raises the following question: Does it mean that it is very difficult to measure anything in the quantum theory described by the classical Schr&ouml;dinger equation? Fortunately, the answer is – no! Instead, as we show below, the classical Schr&ouml;dinger equation has some specific properties that allow measurements that reproduce standard CM.
+</p><p>　
+Although \(\psi\) does not satisfy a linear equation, there is a quantity that does satisfy a linear equation. This quantity is \(R(x, t)\). (Note that for the linear Schr&ouml;dinger equation R is not determined by a linear equation because \(R\) appears also in the quantum Hamilton-Jacobi equation.) Thus, for measurement and effective collapse, the relevant “wave function” is \(R(x, t)\). The positivity of this wave function will turn out to be the source of classical properties that emerge from the classical Schr&ouml;dinger equation.
+</p><p>　
+First, in analogy with standard QM, we introduce the notation
+\[
+R(x) = \langle x|R\rangle = \langle R|x\rangle \tag{18}
+\]
+where the last equality is a consequence of reality. The scalar product is
+\[
+\langle R_1|R_2 \rangle\equiv \int d^3x\langle R_1|x\rangle\langle x|R_2\rangle\equiv\int d^3x R_1(x)R_2(x) \tag{19}
+\]
+which is positive (i.e., real and nonnegative). The only complete orthogonal basis \(\{|R_i\rangle\}\) consistent with the positivity requirement \(\langle x|R_i\rangle\geq 0\) is the position basis \(\{|x\rangle\}\). Thus, the position basis is the preferred basis. The most general state consistent with the positivity requirement is
+\[
+|R\rangle=\int d^3 c(x)|x\rangle \tag{20}
+\]
+where \(c(x)\geq 0\).
+</p><p>　
+We see that no real state \(R(x)\) is an eigenstate of the momentum operator. Consequently, the state cannot collapse to the momentum eigenstate. This implies that the Heisenberg uncertainty relation \(\Delta x\Delta p\geq\hbar/2\) cannot be revealed by an experiment, in agreement with the fact that there is no Heisenberg uncertainty relation in classical mechanics. Still, it does not mean that momentum cannot be measured. Instead, momentum can be measured indirectly by measuring two subsequent positions \(x_1, x_2\) at times \(t_1, t_2,\) respectively. The momentum is then defined as
+\[
+p=(x_2-x_1)/m(t_2-t_1) \tag{21}
+\]
+This, indeed, is how momentum is measured in classical mechanics.
+</p>
+<h2>6 Emergence of classical statistics</h2>
+<p>
+The origin of all nonclassical (i.e., typically quantum) probabilistic phenomena (e.g. destructive interference, EPR correlations, violation of Bell inequalities, ...) can be traced back to the fact that the scalar product \(\langle\psi_1|\psi_2\rangle\) between the probability amplitudes does not need to be positive. Therefore, the positivity implies that there is no such nonclassical probabilistic phenomena in
+CM.
+</p><p>　
+Furthermore, particles can always be distinguished. To see this, consider a 2-particle state
+\[
+R(x, y) = R_1(x)R_2(y) + R_2(x)R_1(y) \tag{22}
+\]
+where \(R_1\) and \(R_2\) are orthogonal. Consequently, in the probability density \(R^2\), the exchange term vanishes
+\[
+2R_1(x)R_2(x)R_1(y)R_2(y) = 0 \tag{23}
+\]
+Just as in standard QM, this means that two particles can be regarded as distinguishable.
+</p><p>　
+Now consider the density matrices. A pure state
+\[
+|R\rangle=\sum\limits_i \sqrt{w_i}|R_i\rangle \tag{24}
+\]
+where \(w_i\geq 0\), can be represented by a density matrix
+\[
+\hat{\rho}_{pure}=|R\rangle\langle R| \tag{25}
+\]
+The associated mixed state is a diagonal state
+\[
+\hat{\rho}_{mix}=\sum\limits_i w_i|R_i\rangle\langle R_i| \tag{26}
+\]
+The pure and the mixed state are related as
+\[
+\hat{\rho}_{pure}=\hat{\rho}_{mix}+\sum\limits_{i\neq j}\sqrt{w_iw_j}|R_i\rangle\langle R_j| \tag{27}
+\]
+Is there a measurable difference between pure and mixed states? Since \(\hat{p}\) is not measurable, the most general measurable operator is \(\hat{A}= A(x)\), which is diagonal in the preferred basis. Consequently
+\[
+\langle\hat{A}\rangle=Tr(\hat{\rho}_{mix}\hat{A})=Tr(\hat{\rho}_{pure}\hat{A})=\int d^3\rho(x)A(x) \tag{28}
+\]
+where \(\rho(x)=R^2(x)\) and \(R(x) =\sum_i\sqrt{w_i}R_i(x)\). This means that there is no measurable difference between pure states and the associated mixed states. The off-diagonal part plays no measurable role. Effectively it does not appear, which is a property of classical statistical mechanics. (Note a similarity with decoherence in ordinary QM).
+</p>
+<h2>7 Emergence of classical trajectories</h2>
+<p>
+The next question is: Why particles appear to move along classical trajectories? A partial
+answer is provided by the Ehrenfest theorem valid for the classical Schr&ouml;dinger equation. One
+can show that
+\[
+\begin{align}
+\langle x\rangle=\int d^3x\psi^*(x,t)x\psi(x,t)=\int d^3x\rho(x,t)x \tag{29} \\
+\\
+\frac{d\langle x\rangle}{dt}=\int d^3x\rho\frac{\nabla S}{m}=\int d^3x\psi^*\frac{\hat{p}}{m}\psi \tag{30}\\
+\\
+m\frac{d^2\langle x\rangle}{dt^2}=\int d^3x\rho(-\nabla V)=\int d^3x\psi^*(-\nabla V)\psi \tag{31}
+\end{align}
+\]
+Thus, as in ordinary QM, the Ehrenfest theorem says that the average position satisfies classical equations of motion, but that the actual position may be uncertain. But why particles appear as pointlike? As in ordinary QM, a measurement of the position induces a collapse of \(R(x)\) to an arbitrarily narrow wave packet. However, in linear QM, we know that the wave packet suffers dispersion, i.e., that narrow wave packets are not stable. By contrast, the classical nonlinear Schr&ouml;dinger equation contains arbitrarily narrow stable soliton solutions. The point-particle soliton solution is [4]
+\[
+\psi_{sol}(x,t)=\sqrt{\delta^3\left(x-y(t)\right)}e^{iS(x,t)/\hbar} \tag{32}
+\]
+where
+\[
+\frac{dy(t)}{dt}=\frac{\nabla S\left(y(t),t\right)}{m} \tag{33}
+\]
+Note that (33) does not describe the motion of a pointlike particle associated with any solution of the classical Schr&ouml;dinger equation, but the motion of the crest of the wave packet. </p><p>　
+The results above can be interpreted as follows: If a particle is measured to have a definite position at some time, then it will remain to have a definite position at later times and this position will change with time according to classical equations of motion. However, if the particle is not measured to have a definite position, then one is not allowed to claim that the particle has a definite position. While this interpretation contradicts the usual interpretation of CM, it is analogous to the reasoning in the usual interpretation of QM and does not contradict any measurable result of CM.
+</p><p>　
+We also note that, at each time, both a position and a momentum can be associated with such soliton solutions. This allows to introduce a classical phase space for this nonlinear QM
+[4].
+</p>
+<h2>8 Discussion</h2>
+<p>
+Now we see that there are 4 consistent ways to interpret CM and QM:
+<div class="styleBullet">
+<ul>
+<li>1. Traditional: CM is deterministic, QM is probabilistic.</li><br>
+<li>2. Bohmian: Both CM and QM are deterministic.</li><br>
+<li>3. Anti-Bohmian: Both CM and QM are probabilistic.</li><br>
+<li>4. Anti-traditional: CM is probabilistic, QM is deterministic.</li>
+</ul>
+</div>
+</p><p>
+The natural question is: How to know what is the correct way to interpret CM and QM? The Occam’s razor says – the simplest one! But what does it mean “the simplest”? We have to chose some criterion of simplicity. With two different criteria we obtain two different answers:
+<div class="styleBullet">
+<ul>
+<li>1. Technical simplicity: no guiding equation for a particle trajectory – implies that both QM
+and CM are probabilistic.</li><br>
+<li>2. Conceptual simplicity: particle positions exist even if we do not measure them – implies that both QM and CM are deterministic.</li>
+</ul>
+</div>
+</p><p>
+This suggests that we should either:
+<div class="styleBullet">
+<ul>
+<li>1. reject determinism of CM, or</li><br>
+<li>2. accept the Bohmian deterministic interpretation of QM.
+The interesting thing is that both possibilities seem rather heretic.</li>
+</ul>
+</div>
+</p><p>　
+The next question we study is the following: Is there a consistent interpretation of nonlinear QM (in general)? From our results, we can conclude that if the consistent theory of measurement is the crucial consistency requirement, then the answer is – no! This is because we have seen that if there is no “wave function” (either complex or real) that satisfies a linear equation, then the theory of measurement based on wave-function collapse is inconsistent. The possible interpretations of this result are:
+<div class="styleBullet">
+<ul>
+<li>1. Only CM and linear QM are meaningful physical theories, or</li><br>
+<li>2. More general nonlinear QM is physically meaningful, but a measurement cannot be performed, which is why we cannot measure effects of such theories, or</li><br>
+<li>3. The wave-function collapse is not an essential part of measurement at all, so that all nonlinear generalizations of QM can be interpreted in the same way.</li>
+</ul>
+</div>
+</p><p>
+We note that the only known interpretation that allows consistent interpretation for any nonlinear generalization of QM by satisfying 3. is – the Bohmian interpretation.
+</p><p>　
+It is also possible that the conclusions above suffer from our lack of imagination. We do not exclude a possibility that someone may think to have a different (and better) general interpretation of nonlinear QM. What we propose is a simple test of the consistency of any such different interpretation: one should test it on the classical nonlinear Schr&ouml;dinger equation. If one does not reproduce the predictions of classical mechanics, then this interpretation of nonlinear QM is wrong!
+</p>
+<h2>Acknowledgments</h2>
+<p>
+This work was supported by the Ministry of Science and Technology of the Republic of Croatia.
+</p>
+<h2>References</h2>
+<div class="styleRef">
+<ul>
+<li>[1] N. Gisin, Phys. Lett. A 143, 1 (1990).</li>
+<li>[2] J. Polchinski, Phys. Rev. Lett. 66, 397 (1991).</li>
+<li>[3] M. Czachor, Phys. Rev. A 53, 1310 (1996).</li>
+<li>[4] H. Nikoli´c, Found. Phys. Lett. 19, 553 (2006).</li>
+<li>[5] N. Rosen, Am. J. Phys. 32, 597 (1964); 33, 146 (1965).</li>
+<li>[6] D. Bohm, Phys. Rev. 85, 166, 180 (1952).</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>
