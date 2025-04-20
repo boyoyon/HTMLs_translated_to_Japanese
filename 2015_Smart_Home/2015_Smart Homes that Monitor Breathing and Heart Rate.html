@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Smart Home</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    </head>
+    <body>
+        <h1><center>Smart Homes that Monitor Breathing and Heart Rate</center></h1>
+<center>呼吸と心拍をモニターするスマートホーム</center>
+<br>
+<center>Fadel Adib Hongzi Mao Zachary Kabelac Dina Katabi Robert C. Miller</center>
+<center>Massachusetts Institute of Technology</center>
+<center>32 Vassar Street, Cambridge, MA 02139</center>
+<center>{fadel,hongzi,zek,dk,rcm}@mit.edu</center>
+<h2>要旨</h2>
+<p>
+ユビキタス・センシング技術の進化は適応冷暖房システムやジェスチャー応答、高齢者のモニタリングと言った我々の日常の活動をモニターしたり応答したりすることができるインテリジェント環境へと導いてきた。本稿ではスマート環境が、体に機器を装着することなく、生体兆候を遠隔モニターすることができるか否かを問う。体に触れることなく呼吸や心拍数をモニターする無線センシング技術であるVital-Radioを紹介する。Vital-Radioは無線信号が吸気や呼気による胸の動きや心拍による皮膚の振動を含む環境内の運動に影響されるという事実を活用する。Vital-Radioの動作を説明し、ユーザーがデバイスから8ｍ離れていたり別の部屋にいたりしたとしても、中央値精度99%で呼吸数や心拍数を追跡できるユーザー検証をデモする。更に、これは複数の人の生体兆候を同時にモニターすることができる。Vital-Radioは、体に機器を装着することなく人々の生体兆候をモニターし、居住者の幸福に積極的に貢献するスマート・ホームの実現を可能にすると思い描いている。
+</p>
+<h2>はじめに</h2>
+<p>
+過去数年間に渡りユビキタス健康モニタリングへの関心の高まりが見られてきた[22,25]。今日、我々は温度や空気の質を連続的にモニターし、その情報を居住者の快適性向上に使うスマート・ホームを見ることができる[46,32]。健康モニタリング技術が更に進むに従って、我々は将来のスマート・ホームが環境をモニターするだけでなく、呼吸や心拍といった生体兆候もモニターするようになることを思い描くようになった。それらは「呼吸数と心拍数は健康的なライフスタイルを反映しているか？」のような質問に答えることで我々の健康意識を高めるためにその情報を使うかもしれない。その他にも「子供は睡眠中も正常に呼吸をしているか？」や「高齢な親に不整脈はないか？」と言った質問に答えることで我々の課題のいくつかに取り組むのを手助けするかもしれない。さらに、家庭内に非侵襲で呼吸や心拍をモニターするものが存在するならば、それらの信号とストレス・レベルがどのように相関し、時間や年齢とともにどう進展していくかを研究するヘルスケアの専門家を可能にする。これはヘルスケア・システムに大きな影響を持つ。
+</p>
+<p>
+　生体信号を追跡する通常の技術は、残念ながら身体に接触させる必要があり、それらの多くは煩わしいものである。具体的には、今日の呼吸モニタリング・センサーは不便である: 鼻用プローブを装着する必要があったり[19]、胸にベルトを装着する必要があったり[43]、特別なマットレスに横たわる必要があったり[3]する。心拍数モニタリング技術のいくつかも、ユーザーが胸郭バンドを身に付ける必要があったり[18]、指にパルス・オキシメータを装着する必要があったり[21]するので、同様に厄介である。リストバンドのような、より快適な技術は呼吸数を採取できず、心拍数モニタリングには精度が低かった[12]。さらに、人口の一部にはウェアラブル・デバイスが望ましくない人々が存在する。例えば、高齢者は一般にウェアラブル・デバイスを邪魔と感じたり、恥ずかしいと感じたり[20,37]し、認知症の人は装着するのを忘れるかもしれない。子供は外したり、なくしたりし、乳幼児はウェアラブル・センサーから皮膚炎を発症するかもしれない[40]。
+</p>
+<p>
+　本稿で我々は、スマート・ホームがリモートで、つまり身体に物理的に接触させる必要なしで、生体兆候をモニターすることができるか否かを問う。過去の研究も身体への直接の接触なしで呼吸や心拍をセンシングする可能性を調査してきた[17, 16, 15, 34, 27, 48, 14]が、提案された方法は制御されたセッティングにより適しており、スマート・ホームには適していない。それらは複数のユーザーがいたり、関係のない動きがあったりすると失敗する。それらは通常、ユーザーがデバイスの方を向いて静かにベッドに横たわることを必要とした。さらに、それらはユーザーの胸部に近い場合のみ正確である。
+</p>
+<p>
+　我々はVital-Radioを紹介する。これは身体に物理的に接触させる必要なしで呼吸数と心拍数を追跡する新しい入力デバイスである。Vital-Radioは環境内に複数のユーザーがいても正しく動作し、存在するユーザーの生体兆候を同時に追跡することができる。またVital-Radioはユーザーがデバイスの方を向いている必要がなく、その存在を意識する必要がない。実際、ユーザーは眠ったり、TVを見たり、ラップトップでタイピングしたり、携帯電話をチェックしたりすることができる。さらにVital-Radioはユーザーがデバイスから8m離れていても、あるいは別の部屋にいても呼吸数や心拍数を正確に追跡することができる。
+</p>
+<p>
+　Vital-Radioは吸気や呼気、心拍による微妙な動きをモニターするために無線信号により動作する。具体的には、これは低電力の無線信号を送出し、信号が反射されてデバイスに戻ってくるのに要する時間を測定する。反射時間は反射体とデバイスの距離に依存し、反射体が動くのに従って変化する。図1は信号の反射時間への呼吸の影響を図説している。人が息を吸うと胸が拡がり前へ動き反射時間を減らす。対照的に、人が息をはく際には胸が収縮しデバイスから離れ、反射時間が増す。一般に、人がデバイスの方を向いていない場合でも、無線信号は体まで行き来し、生体兆候は信号の反射時間に周期的な変化を生じる。Vital-Radioはこれらの変化を測定し、呼吸や心拍を抽出するためにそれらを解析する。
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+図1－胸の動きは信号の反射時間を変化させる (a) は人が息を吸う場合を示しており、胸が膨らみアンテナに近づくので信号が反射してデバイスに戻るのに掛かる時間が減る。(b)は人が息をはく場合を示しており、胸が収縮してアンテナから離れるので胸とアンテナの距離が増し、反射時間の増加となる。
+</p>
+<p>
+　Vital-Radioのキーとなる特徴は複数の人の生体兆候をモニターできる能力とユーザーが静かに横になることを要求せずに堅牢に動作することである。この特徴を提供する上での主な課題は環境内のどんな動きも無線信号に影響し得ること、従って呼吸や心拍の追跡に干渉することである。過去の研究は一人だけの人がデバイスの正面にいて静止いていることを要求することでこの課題に取り組んでいた。それに対してVital-Radioは無線信号を使ってユーザーの位置を特定する最近の技術[6]の上に構築することでこの問題に取り組むことができると認識している。具体的には、Vital-Radioはまず環境内の各ユーザーの位置をつきとめ、その後、各ユーザーから反射された信号を拡大し、反射波の変化を解析して呼吸と心拍を抽出する。ユーザーの反射を分離することにより、Vital-radioはノイズや環境内の関係のない動きといったその他の干渉源を取り除く。そうしないと、それらの干渉源がユーザーの生体兆候による微妙な変化をマスクしてしまう。これによりVital-Radioは複数ユーザーの呼吸と心拍数をモニターすることが可能になり、ユーザーまでの距離が8mまで離れていたとしても、または壁の向こう側にいたとしても動作可能になる。
+</p>
+<p>
+　我々はVital-Radioのリアルタイムで動作するプロタイプを構築し14人の被験者を使った実験を行うことで機能を検証した。ベースラインとしてFDAが承認した呼吸、心拍モニターを使った; それらには吸気・呼気の運動をモニタリングするための胸郭バンドや、心拍をモニターするために被験者の指につけるパルス・オキシメータが含まれる。我々のベンチマーク評価では、我々はユーザーにベースライン・モニターを装着するよう依頼し、Vital-Radioは身体的な接触なしてリモートで彼らをモニターした。我々はVital-Radioの出力とFDA承認されたベースラインからの正解値の比較を行い、それはVital-Radioが呼吸パターンと心拍を正確に追跡していることを示していた。
+<div class="styleBullet">
+<ul> 
+<li>● Vital-Radioは、たとえユーザーが8mまでデバイスから離れていても、あるいは壁の向こう側にいても、身体的な接触なしで人の呼吸と心拍を正確に追跡できる。</li><br>
+<li>● 人がデバイスから1mの距離にいる場合、Vital-Radioの中央値精度は、呼吸に関しては中央値精度99.3%(1分あたり0.09回の呼吸回数の誤差)、心拍に関しては98.5%(1分あたり0.95回の誤差)である。人がデバイスから8m離れている場合、精度は98.7%（1分あたり0.15回の誤差)、98.3%(1分あたり1.1回の誤差)に低下する。</li><br>
+<li>● 8m×5mの広がりに領域内で、Vital-Radioは同じ精度で3人までの生体兆候をモニターすることができる。</li>
+</ul>
+</div>
+</p>
+<p>
+　我々はVital-Radioのモニタリング能力を活用し活動にフォーカスした実験も実施した。具体的にはユーザーがコンピュータにタイピングしたり携帯電話を使ったりする際の呼吸や心拍数もVital-Radioは正確に測定できることをデモする。我々はVital-Radioが生体兆候の急激な変化も追跡できることをデモする。具体的にはユーザーに運動するように依頼し、運動後に呼吸と心拍数の変化をどれくらい正確にVital-Radioが追跡できるかを示す実験を行った。
+</p>
+<p>
+　人々が生体兆候をモニターすることを可能にし、その能力が我々の健康意識とヘルスケア・システムに大きな影響を持つスマート・ホームの実現に向けてVital-Radioは大きな一歩を踏み出したと信じている。
+</p>
+<h2>関連研究</h2>
+<p>
+非接触で生体兆候をモニタリングしたいという要望は70年代後半から研究者を占めてきた[29]。初期の研究は無線信号が胸の動きに影響されるという概念実証を示した。これらの実験では人はベッドに静止して横たわりセンサーは心臓の先端からわずか3cmしか離れていないところに置かれた。結果は定性的で精度の評価はなかった。
+</p>
+<p>
+　その後、呼吸は無線信号に影響するという事実を当てにして軍事研究は壁や瓦礫の下の人の存在を検出できる建物用レーダーのポテンシャルを活用した[42, 47, 26, 45]。具体的には、無線信号は障害物を超えるので、瓦礫に閉じ込められている犠牲者の胸の動きを感知するために使われたり、SWATチームが障害物の背後から動きを感知して待ち伏せされないようにするために使われたりする。しかし、これらのシステムは軍事用をターゲットとしており、通常は過度な電力を送出し軍事用に予約されたスペクトル帯域を使い[47,45]、民生用デバイスでは実現できない。さらに重要なことは、この系列の研究は一般に生体兆候自体の推定やモニタリングよりも、生体兆候による動きを感知することでユーザーを検出することに注力されているということである。
+</p>
+<p>
+　近年、健康、安心のための技術への関心の高まりにより、研究者は生体兆候を解析するための非接触法の調査へと導かれている。この話題に関する現在の研究は2つの領域に分けることができる: ビジョン・ベースの技法と無線システムである。具体的には、画像処理の進歩により研究者は呼吸や心拍を検出するためにビデオ画像内の視覚パターン(血流による色の変化など)を増幅することが可能になった[8, 44]; しかし、その様なビデオ・ベースの技法はユーザーがカメラの方を向く必要があり、ユーザーが向きを変えたりカメラの視野の外にいたりする場合は機能しない。
+</p>
+<p>
+　同様に、無線伝送システムと信号処理の進歩により研究者は人の生体兆候を検出し解析できるようになった。過去の提案は以下の技法の一つを使っている: ドップラー・レーダー[17, 16, 15]、WiFi[34, 27]、ウルトラ・ワイドバンド・レーダー[48, 14, 7]。生体兆候を検出するのに無線信号を使うことの主な課題は環境内のどんな動きも信号に影響するということである。呼吸や心拍は微小な動きなので、環境内の他の運動源からの干渉で簡単にマスクされる。さらに複数のユーザーが存在すると－どちらも動いていないとしても－、無線信号は彼らの生体兆候の組み合わせで影響され、個々人の生体兆候を解きほぐすことが困難になるため、システムが正常に動作するのを妨害する。過去の提案はこの問題を、環境内にただ一つの運動源、つまり生体兆候をモニターされる人しか存在しないようにすることで処理した。従ってそれらの実験は、通常デバイスの近くに静止して横たわる一人用にセットアップされた[17, 16, 15, 34, 27, 48, 14, 7, 4]。
+</p>
+<p>
+　これらの過去のシステムとは対照的に、Vital-Radioは環境内の異なる運動源を分離することを可能にする固有のメカニズムを持っている。それを実現するため、Vital-Radioは最先端の無線定位技法[6]の上に構築されており、それはデバイスと異なる運動体の距離を識別できる。しかしVital-Radioはこの方法を、実際の位置を推定するためではなく、距離に基づいて入力信号を解きほぐすために使っている。これによる別の体や体の別の部分からの反射された信号を分離することが可能になる。その後、潜在的には複数の人の呼吸や心拍を推定するために動きを別々に解析する。
+</p>
+<h2>文脈と範囲</h2>
+<p>
+我々はVital-Radioが身体に機器を装着することなく居住者の呼吸や心拍をモニターするスマート・ホームに配備できること思い描いている。そのデバイスは、たとえ壁や家具の一部でユーザーがデバイスから遮蔽されたとしても複数のユーザーの生体兆候を同時にモニターすることができる。一つのデバイスは8mまでの距離のユーザーの生体兆候をモニターすることができ、スタジオや小さなアパートをカバーするために使われるかもしれない。環境内に複数のVital-Radioを配置することで大きな家をカバーすることもできる。
+</p>
+<p>
+　Vital-Radioのアルゴリズムは連続的に、異なるユーザーからの信号を分離し、その後、ユーザー毎の生体兆候を独立に測定するために各ユーザーからの信号を解析する。しかし、ユーザーが歩いた場合(または大きな身体運動を行った場合)、胸の動きは主に歩行によって影響され、もはや呼吸や心拍<sup>1</sup>を表していない。家庭では、通常ユーザーが準静止状態になる十分な期間がある; これらにはユーザーがTVを見ている、ラップトップでタイピングしている、新聞を読んでいる、眠っているなどのシナリオが含まれる。Vital-Radioはユーザーの生体兆候をモニターするために、これらの期間のすべてを使うことができ、一日を通じてそれらがどう変化するかを追跡することができる。
+</p>
+<p class="margin-large">
+<sup>1</sup> 呼吸をモニターする胸郭バンドや、心拍をモニターするパルス・オキシメータを含む、生体兆候モニターの大部分はユーザーが歩いている場合や、手足を動かしている場合に正確な推定を提供できない[35, 28, 11]。生体兆候推定で誤りを生じるその様な動きを避けるため、Vital-Radioはユーザーが準静止状態にいる期間を検出し、その様な期間でのみ推定を計算する。
+</p>
+<h2>動作理論</h2>
+<p>
+Vital-Radioは低電力の無線信号を送出し、身体に伝わり反射してアンテナに戻ってくるのに掛かる時間を測定する。無線信号は光速で伝わることがわかっているので、反射時間をデバイスと身体までの距離を計算するために使うことができる。この距離はユーザーの吸気や呼気、心拍により周期的にわずかに変換する。Vital-Radioはこれらの微妙な距離の変化を捕え、ユーザーの生体兆候抽出に使う。
+</p>
+<p>
+　しかし、自然の環境は無線信号を反射する複数のユーザーだけでなく壁、家具といった多くの反射体を持っている。この問題に取り組むため、Vital-Radioの動作は3ステップからなる。
+<div class="styleBullet">
+<ul>
+<li>1. 異なるユーザーからの反射を分離し、家具や静止している物体からの反射を除去する</li><br>
+<li>2. 各ユーザーに対して、呼吸、心拍による信号変化を識別し、身体や手足の動きによる変動から分離する</li><br>
+<li>3. 呼吸、心拍を抽出するために信号変化を解析する</li>
+</ul>
+</div>
+</p>
+<p>
+以下で我々はVital-Radioを使ってこれらのステップがどのようにしてユーザーの生体兆候をモニターすることを可能にするかを説明する。<br>
+<br>
+<strong>Step1: </strong><br>
+Vital-Radioの動作を理解するため、図2のシナリオを考えよう。そこではデバイスは部屋の壁の背後に置かれ、部屋には二人の人とテーブルがある。Vital-Radioが無線信号を送出すると、信号の一部は壁で反射する; 残りの部分は壁を通過し、部屋の中の人やテーブルで反射し、壁を通過してデバイスに戻ってくる。
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2　反射体を異なるバケットに分離する。物体とデバイス間の距離により、物体から届いた反射を異なるバケットに分離するために、Vital-RadioはFMCWと呼ばれるレーダー技法を使う。
+</p>
+<p>
+　異なる物体で反射した信号を分離するために、Vital-RadioはFMCW(周波数変調搬送波)と呼ばれるレーダー技法を使う。FMCWがどのように動作するかの詳細な説明については[6]参照。我々が本稿で活用するFMCWの鍵となる特性は、異なる物体からの反射を反射時間に基づいて異なるバケットに分離できるというものである。無線信号は光速で伝わるので、異なる距離にある物体で反射した信号は異なるバケットに落ちる。
+</p>
+<p>
+　しかし、過去の定位の研究では、ユーザーの位置を突き止めるために異なる距離から届く電力量を感知する目的でFMCWを使っていたのに対して、Vital-Radioはフィルターとして－つまり(step2以降の)バケット内の信号を解析して生体兆候を抽出する前に、環境内の異なる距離から届く反射波を異なるバケットに分離するために－FMCW技法を使う。
+</p>
+<p>
+　FMCWの我々の実装は[6]のシステムに従い、FMCWバケットの分解能は約8cmである。これには2つの意味がある。
+<div class="styleBullet">
+<ul>
+<li>●少なくとも8cm離れた2つの物体からの反射は異なるバケットに入るであろう。従って数フィート離れた二人のユーザーは自然に異なるバケットに入る。例えば、図2で壁とボブとテーブルとアリスはデバイスからの距離が異なり、従ってFMCWはこれらの実体から反射された信号を別々のバケットに分離し、それらを別々に注目することを可能にする。</li><br>
+<li>● FMCWをフィルターとして使うことで、手足の動きのいくつかを呼吸や心拍による胸の動きと分離することが可能になる。例えばユーザーの足に反射した信号はユーザーの胸で反射した信号とは別のバケットに入る。従って(同じ場所で)足を動かすことはVital-Radioの呼吸や心拍を抽出するというVital-Radioの能力に干渉しない。</li>
+</ul>
+</div>
+</p>
+<p>
+　反射体の距離に基づいてバケット分けした後で、Vital-Radioは壁や家具などの静止した物体からの反射を除去する。具体的には、静止物体は動かないので、その反射波時間的に変化せず、従って連続する時間の測定結果を引くことで除去することができる。
+</p>
+<p>
+このステップの最後に、Vital-Radioは(壁や家具など)静止物体からの反射信号を除去し、バケット<sup>2</sup>に分けられた動く物体で反射された信号が残る。
+</p>
+<p class="margin-large">
+<sup>2</sup> 可能性は低いが、デバイスから同じ距離に複数のユーザーがいることもあり得え、従って同じバケットに入る。このようなケースを扱うため、複数のデバイスを配置し、1つのデバイスでは二人のユーザーは同じ距離だが、別のデバイスからは異なる距離にいるようにすることもできる。
+</p>
+<p>
+<strong>Step 2:</strong><br>
+Vital-Radioが異なる動く物体からの反射を異なるバケットに分離した後で、呼吸や心拍を識別するために個々のバケットを解析することで処理を行う。例えば図2で、バケット2のユーザーは準静止状態で、動きは生体兆候が優勢か、
+あるいは歩き回っていたり手足を動かしていたりするかを識別する。
+</p>
+<p>
+　それを行うため、Vital-Radioは対応するバケットに分離された反射信号を拡大する。この無線反射は波である; 波の位相は以下のように信号が伝わった距離に関係する[39]
+\[
+\phi(t)~2\pi\frac{d(t)}{\lambda} \tag{1}
+\]
+ここで \(\lambda\) は送信信号の波長であり、\(d(t)\) はデバイスから反射体とデバイスに戻る距離である。上の式は反射波の位相の変化を測定することにより、吸気、呼気、心拍による \(d(t)\) の変化を識別できることを示している。
+</p>
+<p>
+　生体兆候とともに位相がいかに変化するかを説明するために、図1の例を考えよう。ここでユーザーはデバイスの方を向いて座っているものとする。人が息を吸うと胸が膨らみデバイスに近くなる; 息を吐くと胸はしぼみデバイスから離れる。位相と反射体までの距離は線形に関係するので、Vital-Radioは人の呼吸を追跡することができる。図3は時間の関数として取得した反射波の位相を示している。具体的には、位相のピークは呼気に対応し(デバイスからの距離が最大になる)、位相の谷は吸気に対応する(デバイスからの距離が最小になる)。我々の実装では波長λは約4.5cmである。上の式に従い、呼吸による胸の距離のcm以下の変化は、位相のラジアン以下の変化を生じ、これが図で観測されるものである。
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+図3－生体兆候による位相変化。図は呼吸、心拍による位相の変化を示しており、位相のピークと谷はそれぞれ呼気運動と吸気運動に対応している; 信号を拡大することで、呼吸運動のトップに心拍による変調を観察することができる。
+</p>
+<p>
+　同様に、人の心拍は身体の別の部分の微妙な運動を生じる。具体的には、反射信号からVital-Radioが心拍を抽出可能にする生理現象はバリストカルジオグラフィー(BCG：心弾動図記録法)である。BCGとは心室ポンプ活動による心拍と同期した身体の動きを指す[36]。過去の研究は頭部、胴体、臀部、その他からのBCG変動を文書化している[5, 8]。周期的な変化は無線信号に周期的な変動を起こし、心拍を捕らえることを可能にしている。これらの動きは図3の局所的なピークで見ることができるように、無線反射の呼吸運動の上の小さな変動へと転移する。呼吸や心拍の周期性はユーザーの向きには独立であることに注意してほしい。例えば、ユーザーがデバイスに背を向けていても、谷が山になり、山が谷になるが同じ周期性が維持される。
+</p>
+<p>
+　答えるべき質問がまだある: 人が動きまわったり手足を動かしたりしたら、Vital-Radioはどうやってそのような動きと呼吸や心拍を区別できるのか？この質問に答えるために、図4に1分の印の前にユーザーに手を振ってもらい、信号に非周期的な位相変化を生じさせるシナリオを示す。
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+図4－手足の動きは生体兆候モニタリングに影響する。図は被験者が1分の印の直前まで呼吸をし、そこで手を降った場合を示している。このデバイスはそのような動きが発生した期間は取り除いている。
+</p>
+<p>
+このようなシナリオを扱うため、Vital-Radioは生体兆候による動きは周期的で、身体や手足の動きは非周期的であることを活用する。生体兆候の推定で誤りを生じさせないようにするために、ユーザーが全身を動かしたり、手足を大きく動かしたりしている期間を識別するためにこの特性を使う。これを実現するため、Vital-Radioは時間窓で動作する(我々の実装では時間窓は30秒である)。各ウィンドウに対して、信号の周期性を測る。周期性が閾値以上の場合、優勢な動きは呼吸や心拍であると判断する; そうでなければ、そのウィンドウは破棄する。信号の周期性を測定する一般的な手法はフーリエ変換(またはFFT)の鋭さを評価することである[10]。従って我々は各ウィンドウでFFTを実行し、FFTのピーク周波数を選び、ピークの値が他の周波数の平均パワーよりも十分高いか否かを判定する <sup>3</sup>。
+</p>
+<p class="margin-large">
+<sup>3</sup> 我々の実装では、このピークを他の周波数のパワーの平均よりも少なくとも5倍とした。
+</p>
+<p>
+　この指標により、ユーザーがノートパソコンでタイピングしたり、スマートフォンを確認したりするようなシナリオなど、手足を大きく動かさない間隔を維持できる。これらの動きは確かに非周期的であるが、その力が生体兆候による反復運動を圧倒しないため、呼吸や心拍数を覆い隠すことはない<sup>4</sup>。 さらに、これらのシナリオの一部では、ユーザーはタイピング中にノートパソコンに手を伸ばし、胸部から離している。その結果、タイピング動作の大部分は、ユーザーの胸部とは別のFMCWバケットに分類される。当然のことながら、人体はつながっているため、手の動きによってユーザーの胸部に近い筋肉の伸張や軽度の肩の震えが発生するが、このような動きは弱く非周期的であるため、FFTの出力では薄められる。対照的に、生体兆候による周期的な動きはFFT演算で強調されるため、このような準静的シナリオの間隔が維持される。
+</p>
+<p class="margin-large">
+<sup>4</sup> 数学的には、これらの信号は低周波で「白色ノイズ」として現れ、Vital-Radioの操作のステップ3でフィルタリングされる。
+</p>
+<p>
+　上記のステップは、外的な動きをフィルタリングし、各ユーザの支配的な動きが呼吸および心拍数である時間窓に焦点を当てることを可能にする。次のセクションでは、これらの時間間隔からVital-Radioがどのように呼吸と心拍数を抽出するかを示す。
+</p>
+<p>
+<strong>Step3: 呼吸と心拍数の抽出</strong> <br>
+<strong>呼吸数の抽出</strong><br>
+呼吸は周期的な動きであるため、フーリエ変換（FFT）を実行して呼吸の頻度（速度）を抽出することができる。 FFTの出力におけるピークは、我々の場合の呼吸速度である優勢な周波数に対応する。具体的には、図3の位相信号のFFTを30秒間のウインドウにわたって実行し、図5の出力をプロットする。この信号のピークは、人の呼吸速度の初期推定値を与える。
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+図5　呼吸のためのフーリエ変換の出力。この図は、図1の信号の位相に対して実行されたFFTの出力を示す。 FFTは約10回の呼吸/分のピークを示し、呼吸速度の粗推定値を提供する。
+</p>
+<p>
+　しかし、単にFFTのピークをとっても、呼吸数の正確な推定値は得られない。具体的には、FFTの周波数分解能はウィンドウサイズ分の1である。ウィンドウサイズが30秒の場合、我々の呼吸数推定値の分解能は約0.033Hz、すなわち2回の呼吸/分である。ウィンドウサイズが大きくなると解像度は向上するが、呼吸数の変化を追跡する能力は低下する。より正確な測定を行うために，信号処理におけるよく知られた特性を利用する。それは，信号に単一の支配的な周波数が含まれている場合，その周波数は，複素数の時間領域信号の位相に線形回帰を行うことで正確に測定できるというものである[33]。したがって、追加の最適化ステップを実行し、FFTの出力をフィルタリングし、ピークとその2つの隣接するビンのみを保持する。このフィルタリングによって、外的および非周期的な動きによるノイズを排除できる。次に、逆FFTを実行して、複素時間領域信号s0（t）を得る。 s0（t）の位相は線形であり、その傾きは呼吸周波数、すなわち呼吸速度に対応する。数学的には、以下の式から呼吸数の正確な推定値（毎分呼吸数）を計算することができる。
+\[
+推定=60\times \frac{slope\{\angle s^\prime(t)\}}{2\pi} \tag{2}
+\]
+倍数60は、この周波数をHz（すなわち、1 /秒）から呼吸/分に変換する。
+</p>
+<p>
+<strong>心拍数抽出</strong><br>
+呼吸と同様に、心拍信号は周期的であり、図5に示すように、呼吸信号の上で変調される。しかし、呼吸信号は心拍よりも桁違いに強い。これは、ある周波数で強い信号が他の周波数に漏れる（すなわち、FFTの出力で近くのビンに漏れる）、近くの周波数でより弱い信号をマスクするというFFTの古典的な問題を引き起こす。このリークを軽減するために、我々は1分あたりの[40-200]ビートあたりの周波数領域信号をフィルタリングする。これは、典型的には1分間に8〜16回の呼吸と、高周波ノイズ（毎分200回よりも高い）の間の呼吸をフィルタリングすることを可能にする。
+</p>
+<p>
+　この得られた周波数領域信号の出力を図3にプロットします。この出力の最大ピークを心拍数に対応する周波数として選択する。この絶対最大値は、典型的にはフィルタ処理後の第1のビン（すなわち、約40ビート/分）であり、呼吸からの漏れによるものであるため、FFTの絶対最大値を選択するだけではないことに留意されたい。対照的に、この例では、ピークは66ビート/分で発生する。
+</p>
+<p>
+　呼吸と同様に、単にFFTのピークをとると、分解能が低くなる。心拍数のより正確な推定値を得るために、心拍ピークと2つの隣接するFFTビンに対応するFFTビン内の信号の逆FFTを取る。この回帰ステップの後、得られた心拍数は66.7拍/分であるのに対して、パルスオキシメーターから得られる正解心拍数は約66.5拍/分である。
+</p>
+<p>
+　最後に、心拍数を計算するために、10秒間のFFTウィンドウしか使用しないことに注意。このウィンドウは、心拍の周期性を捕捉するのに十分な長さであるが、心拍数の増加/減少に迅速に反応するのに十分短い。また、FFTは、30msだけシフトされたオーバーラップウィンドウにわたって計算されるため、30msごとに新しい推定値を提供する。
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+図6－心拍数に対するフーリエ変換の出力。この図は、ハニングウィンドウを適用し、[40-200]ビート/分の間でフィルタリングした後のFFTの出力を示している。最高ピーク（すなわち、「局所最大」）は、心拍数の粗推定値を提供する。
+</p>
+<h2>実装</h2>
+<p>
+我々の実装は、以下のコンポーネントで構成されている。
+</p>
+<p>
+ハードウェア：我々は、無線定位に関する過去の研究によって設計された最先端のFMCWラジオを再現した[6]。デバイスは、5.46GHzから7.25GHzまでスイープする2.5ミリ秒の信号を生成し、サブmW電力を送信する。これらのパラメータは[6]で選択され、伝送システムは民生用電子機器のFCC規制に準拠している。
+</p>
+<p>
+　FMCW無線はイーサネット経由でコンピュータに接続する。受信信号はサンプリングされ（デジタル化され）、リアルタイム処理のためにイーサネットを介してコンピュータに送信される。
+</p>
+<p>
+ソフトウェア：C ++の前のセクションで説明した信号処理アルゴリズムを実装する。このコードはリアルタイムで実行され、時間の関数として呼吸と心拍数を画面にプロットし、同時にそれらをファイルに記録する。このコードは、シフトされた重なり合うFFTウィンドウで動作し、30msごとに新しい推定値を生成する。出力はまた、ユーザの動き、すなわち、ユーザが準静的であるかまたは大きな動作を行っているかを示す30msのウィンドウ毎のコード・タグを示す。
+<p class="margin-large">
+<sup>5</sup> 実際、このフィルタリングにより、呼吸信号とその最初の高調波をフィルタリングすることができる。
+</p>
+<h2>実験評価</h2>
+<p>
+参加者：Vital-Radioのパフォーマンスを評価するために、14人の参加者（女性3人）を募集した。これらの参加者は、21〜55歳（μ= 31.4）、体重52〜95kg（μ= 78.3）、身長164〜187cm（μ= 175）であった。実験の間、被験者は、シャツ、Tシャツ、パーカー、および異なる布地材料を有するジャケットを含め、毎日の着衣を着用した。
+</p>
+<p>
+正解：Vital-Radioの正確さを判断するために、我々は呼吸と心拍数を監視するためにFDAが認可したデバイスであるAlice PDx [1]に対する出力を比較する。 Alice PDxには、胸部バンドとパルスオキシメーターが装備されている。胸部バンドは呼吸を監視するために各被験者の胸の周りに縛られており、パルスオキシメータは彼/彼女の耳に置かれ、実験中の心拍数を監視する。
+</p>
+<p>
+実験環境：我々は、標準的な建物で実験を行った。内部の壁は、上部にシートロックを備えた金属フレームによって支持された標準的な2つの乾燥した壁である。評価環境には、机、椅子、ソファ、コンピュータなどの家具が含まれている。
+</p>
+<p>
+実験を通して、Vital-Radioのアンテナは、図7に示すように、地面から約3フィート上のテーブルに置かれる。ユーザーはこれらのアンテナからある程度離れた場所に座り、図に示すようにアリスPDxの胸部バンドとパルスオキシメーターを装着して正解値を取得する。私たちの評価では、次のセクションで示すように、さまざまなシナリオでVital-Radioに関する正確性を判断するために、ユーザーの距離と向きを変更する。
+</p>
+<center><img src="images/fig7.png"></center>
+<p>
+図7 - 実験的セットアップ。 （a）は、Vital-Radioのアンテナから約2.5m離れた場所に座っているユーザーを示している。ユーザはまた、胸部ストラップおよびパルス・オキシメータを装着し、それらは、アースPDxに接続され、正解測定値を取得する。（b）は、四分の一波長隣に配置されたVital-Radioアンテナの1つを示す。
+</p>
+<h2>コア実験：精度と距離</h2>
+<p>
+装置から異なる距離で、被験者の呼吸や心拍数をモニターするVital-Radioの能力を検証したいと考えた。この実験では、装置を図8に示すような広い部屋のコーナに設置した。.装置のアンテナは、部屋の中央に向かって指し示され、部屋の中の動きを確実に捕捉します。被験者は、装置から1mから8mの距離にあるマークのある場所で椅子に座るように求めます。各実験では、被験者はVital-Radioのアンテナに面した椅子に座り、図7に示すようにAlice PDxを装着する。
+</p>
+<center><img src="images/fig8.png"></center>
+<p>
+図8 - テスト。この図には、Vital-Radioの位置を紺色でマークした実験設定と、監視対象が赤で座っていたさまざまな場所のレイアウトが示されている。
+</p>
+<p>
+合計112回の実験を行い、14名の被験者のそれぞれに1mから8m <sup>6</sup>までのマークされた場所に座るように依頼した。 6各実験は2分間続き、その間、ユーザーはこれらの各場所で装置の方を向いています。 Vital-Radioを使用して呼吸と心拍数をリアルタイムで抽出し、AlicePDxを使用してこれらの生体兆候を記録します。 2分ごとの実験では、Vital-Radioは30ミリ秒ごとに生体兆候の推定値を出力し、すべての実験およびすべての場所で合計448,000の測定値が得られます。
+</p>
+<p class="margin-large">
+<sup>6</sup> コンシューマー向けのFMCWベースのシステムでは、この距離を超えると測位精度が低下するため、実験は8mの距離に限定している[6]。
+</p>
+<p>
+Alice PDxを使用した正解値測定に基づいて、被験者の呼吸速度は5〜23回/分であり、心拍数は53〜115回/分で変動する。これらの率は、成人呼吸および心拍数の範囲にわたる[41,31] .<sup>7</sup>
+</p>
+<p class="margin-large">
+<sup>7</sup> 被験者の一人が115拍/分と著しく高い心拍数を示していることに注目した。Alice PDxで測定したこの値が医療記録と一致していることを被験者と確認した。また、被験者の一人は、Alice PDxで測定した呼吸数が5回/分と少ない。この被験者は、日常的にヨガを行っていた。
+</p>
+<h2>呼吸数の精度 </h2>
+<p>
+Vital-Radioの出力をAlice PDxの出力と比較し、呼吸の精度の中央値と90%値を1〜8mの距離の関数としてプロットしたもの図9である。この図から、中央値は1mで99.3％、8mで98.7％と高い精度を維持していることがわかる。また，90パーセントの精度は，これらすべての距離において90％以上であることがわかる。
+</p>
+<center><img src="images/fig9.png"></center>
+<p>
+図9 - 呼吸の正確さと距離。この図は、Vital-Radioの呼吸精度と被験者までの距離を示している。
+</p>
+<h2>心拍数の精度</h2>
+<p>
+心拍数の精度の中央値と90%値を1mから8mの距離の関数としてプロットしたのが図10である。この図から、中央値の精度は1mで98.5％、8mで98.3％に低下していることがわかる。また，被験者がデバイスから8メートル離れていても，90パーセントの精度は90％以上を維持していることがわかる。
+</p>
+<center><img src="images/fig10.png"></center>
+<p>
+図10－心拍数の精度と距離の関係。この図は、Vital-Radioの心拍数の精度と被験者との距離の関係を示している。
+</p>
+<h2>様々なシナリオにおける精度 </h2>
+<h3>姿勢に対する精度</h3>
+<p>
+Vital-Radioが、被験者が直接デバイスに向かっていなくても正しく動作することを検証するために、被験者にデバイスに対して様々な方向を向いてもらう実験を行った。具体的には，被験者にVital-Radioから4mの距離に座ってもらい，4つの異なる向き（デバイスに向かっている，デバイスに背を向けている，デバイスに対して左または右（垂直）を向いている）で実験を行った。
+</p>
+<p>
+図11は，これら4つの異なる向きでの呼吸と心拍数の精度の中央値をプロットしたものである．この図を見ると，確かに，ユーザがデバイスの方を向いているときに，呼吸と心拍の精度の中央値が最も高くなります（それぞれ99.1%と98.7%）．しかし，この精度は，すべての方向で最大3%程度のわずかな低下にとどまっている．なお、胸の動きが垂直であっても、デバイスは胸の動きを検出することができます。これは、人が息を吸うときに胸が全方向に膨らむため、Vital-Radioは胸の横方向の膨らみを微小ながらも検出することができるためである。<sup>8</sup> 
+</p>
+<p class="margin-large">
+<sup>8</sup> その広がりは、心拍の変化に比べても小さくない。
+</p>
+<center><img src="images/fig11.png"></center>
+<p>
+図11－心拍数の精度と方向性の関係。図は、Vital-Radioの呼吸と心拍の精度の中央値を、デバイスから4m離れた場所に座り、異なる方向を向いているユーザーに対して示している。
+</p>
+<p>
+次に、Vital-Radioはユーザーがアンテナに向かって一直線上にいる必要がないことを検証する。具体的には、部屋の中央にアンテナを設置し、ユーザーにはアンテナから4m離れた場所で、アンテナのポインティング方向に対して-90°から+90°の角度で座ってもらった。異なる角度で、異なる被験者を対象に、1分間の実験を20回行った。その結果、Vital-Radioは、アンテナのポインティング方向に対して-75°から+75°の角度であれば、ユーザーの生体兆候を捉えることができることがわかった。具体的には、ユーザーがアンテナに対して直線上にいる場合、中央値の精度は98%以上であり、遠端（±75°）では96%に低下する。<sup>9</sup> 
+</p>
+<p class="margin-large">
+<sup>9</sup> この結果は、Vital-Radioが、指向性が150°前後のログペリオディックアンテナを使用していることから予想される。
+</p>
+<h3>壁越しの精度 </h3>
+<p>
+Vital-Radioが別の部屋にいてもユーザーの生体兆候を測定できるかどうかを検証するために、被験者とは別の部屋にデバイスを設置し、壁越しの実験を行った。具体的には、図8のような実験を行った。デバイスは広い方の部屋に置かれ，被験者は壁の向こうの隣の部屋に座っている。被験者はデバイスの方を向いており，デバイスから約4m離れている。
+</p>
+<p>
+すべての実験において，呼吸数と心拍数の中央値はそれぞれ99.2%と90.1%であった。この結果から，壁があってもなくても（4mという同じ距離で），呼吸数はほとんど変わらないことがわかる。しかし，心拍数の精度（中央値）は低下した。これは，壁によって心拍数の信号が大幅に減衰し，S/N比が低下したことによる。しかし、このような壁越しのシナリオでも、心拍数の精度は90％程度を維持している。
+</p>
+<h3>マルチユーザーの精度 </h3>
+<p>
+我々はVital-Radioのマルチユーザー生体兆候モニタリングの精度を評価することに興味がある。そこで，図8の2m，4m，6mの地点で，3人のユーザーに椅子に座ってもらい，コントロール実験を行った。それぞれの実験において、Vital-Radioは、3人のユーザーがそれぞれの距離にいると判断し、それぞれの生体兆候を出力するが、ベースライン（AlicePDx）は、常に1人のユーザーしか監視できない。ベースライン（AlicePDx）は1人のユーザしか監視できないため、精度を評価するためには、まずベースラインを1人目のユーザに接続し、その距離にいるユーザのVitalRadioの出力と比較します。その後、ベースラインを残りのユーザーに順次移動させていく。
+</p>
+<p>
+被験者の異なるグループで20回の実験を行い、その精度を図12にプロットした。この図は、Vital-Radioの呼吸と心拍数のモニタリング精度が、3人のユーザー全員で約98%であることを示している。また、最も近いユーザーの精度の中央値は、他の2人のユーザーよりも高くなっている。これは、これらのユーザーとデバイス間の距離が長くなったためである。これらの結果は、Vital-Radioが複数のユーザーのバイタルサインをモニタリングできること、そして複数のユーザーに対するモニタリング精度が1人のユーザーに対するモニタリング精度と同じであることを証明している。
+<!--
+We run 20 experiments with different sets of subjects and plot
+the accuracies in Fig. 12. The figure shows that Vital-Radio’s
+breathing and heart rate monitoring accuracy is around 98%
+for all three users. Note also that the median accuracy of
+the nearest user is higher than that of the further two users
+because of the increase in distance between these users and
+the device. These results verify that Vital-Radio can monitor
+multiple users’ vital signs, and that its monitoring accuracy
+for multiple users is the same as that for a single user.
+-->
+</p>
+<center><img src="images/fig12.png"></center>
+<p>
+図12—複数ユーザーでの精度。この図は、Vital-Radioが3人のユーザーのバイタルサインを同時にモニタリングした際の平均精度を示している。ユーザーはデバイスから2m、4m、6mの距離に座っている。
+<!--
+Figure 12—Multi-User Accuracy. The figure shows Vital-Radio’s
+median accuracy in monitoring the vital signs of 3 users simultaneously.
+The users are sitting at 2 m, 4 m, and 6 m from the device.
+-->
+</p>
+<p>
+次に、Vital-Radioが、他のユーザーが環境内を移動している場合でも、準静止状態のユーザーのバイタルサインを正確に捕捉できることを確認したい。FMCWはデバイスとの距離に基づいてユーザーからの反射を分離するため、原理的にはVital-Radioは正常に動作するはずである。そこで、図8の3mの地点で被験者の1人に椅子に座ってもらい、もう1人の被験者には室内を歩き回ってもらう実験を行った。異なる被験者による20回以上の実験において、呼吸と心拍数の精度の中央値は、移動中のユーザーが監視対象ユーザーから少なくとも1.5m離れている限り、98%以上を維持した。この精度は、移動中のユーザーが監視対象ユーザーから1m以内に近づくと75%を下回る。これは、2人のユーザーが1メートル以内にいる場合、体からの反射が互いに干渉し合い、Vital-Radioがユーザーのバイタルサインによる信号の変化を分離できなくなるためである。
+<!--
+Next, we would like to confirm that Vital-Radio can accurately
+capture the vital signs of a quasi-static user while other
+users are moving in the environment. In principle, Vital-
+Radio should still operate correctly since FMCW separates
+reflections from different users based on their distance to the device. Hence, we run experiments where we ask one of our
+subjects to sit on a chair at the 3 m mark in Fig. 8 while asking
+another subject to walk around in the room. Over 20 experiments
+with different subjects, the median accuracy of breathing
+and heart rate remains above 98% for the monitored user
+as long as the moving user is at a distance of at least 1.5 m
+away from him. This accuracy drops below 75% when the
+moving user gets closer than 1 m to the monitored person.
+This is because when the two users are closer than 1 m, the
+reflections off their bodies interfere with each other, preventing
+Vital-Radio from isolating the signal variations due to the
+monitored user’s vital signs.
+-->
+</p>
+<h3>活動に焦点を当てた実験</h3>
+<p>
+日常のその場での活動<br>
+我々は、ノートパソコンでのタイピング、テレビの視聴、睡眠など、ユーザーがその場で日常の活動を行う際のVital-Radioの精度を評価したいと考えている。そのため、被験者をノートパソコンを操作するグループとスマートフォンを操作するグループの2つに分けた。各実験では、被験者にデバイスから4mの距離に座り、スマートフォンまたはノートパソコンを自然に使用してもらう。各実験は5分間続き、実験終了時にユーザーはノートパソコンまたはスマートフォンで行った活動を報告する。報告によると、ユーザーはメールの確認と返信から、ウェブ上でのニュースの閲覧、FacebookやInstagramへのログインまで、さまざまなタスクを実行していた。スマートフォンでテキストメッセージを送信しているユーザーもいれば、ノートパソコンで問題集を解いているユーザーもいた。
+<!--
+Daily In-Place Activities<br>
+We would like to evaluate Vital-Radio’s accuracy in monitoring
+users as they perform in-place day-to-day activities, such
+as typing on their laptops, watching TV, or sleeping. Thus,
+we divided the subjects into two groups: one interacting with
+their laptops and another interacting with their smartphones.
+In each experiment, we ask the subject to sit at 4 m from the
+device and naturally use his/her phone or laptop. Each experiment
+lasts for 5 minutes; the user reports at the end the
+activities he/she performed with their laptop or phone. The
+reports show that the users performed various tasks ranging
+from checking and responding to their emails to reading news
+on the web or logging on to Facebook or Instagram. Some
+users were texting using their phones and one user worked on
+a problem set on his laptop.
+-->
+</p>
+<p>
+被験者がスマートフォンを使用した実験全体を通して、呼吸と心拍数の精度の中央値はそれぞれ99.4%と98.9%だった。被験者がノートパソコンを使用した場合、これらの精度はわずかに低下し、それぞれ99.3%と98.7%となった。ノートパソコンの使用は通常、スマートフォンの使用よりもわずかに大きな動きを伴うため、Vital-Radioの精度がわずかに低下することが予想されるため、このわずかな精度の低下は予想通りである。ただし、これらの精度は、被験者がアンテナに対して同じ距離で静止している場合の精度とほぼ同じであることに留意してもらいたい。したがって、Vital-Radioは、ユーザーがアパート内を移動する必要のない日常的な活動を行っている間の呼吸と心拍数をモニタリングすることができた。
+<!--
+Throughout the experiments where our subjects used their
+phones, the median accuracies for breathing and heart rate
+were 99.4% and 98.9% respectively. These accuracies
+slightly dropped to 99.3% and 98.7% when our subjects
+were using their laptops. This minor drop in accuracy is
+expected because using a laptop typically involves slightly
+larger movements than using a phone, leading to a slight reduction
+in Vital-Radio’s accuracy. Note, however, that these
+accuracies are almost the same as those when subjects were
+sitting still at the same distance with respect to our antenna.
+Hence, Vital-Radio was able to monitor users’ breathing and
+heart rate as they perform day-to-day activities that do not
+require them to move around their apartments.
+-->
+</p>
+<p>
+運動と健康意識<br>
+心拍数回復（運動後に心拍数がどれだけ速く低下するかを表す指標）は、心臓の健康状態を判断するための重要な指標である。具体的には、心臓が強いほど心拍数の回復が速く、その回復率は死亡率の予測因子となる[13, 24]。したがって、Vital-Radioがスマートホーム居住者の健康に貢献する重要な方法の一つは、ユーザーが運動した後の心拍数を正確に測定することである。
+<!--
+Exercising and Health-Awareness<br>
+Heart rate recovery – which corresponds to how fast a person’s
+heart rate decreases after exercising – is an important
+metric for determining how healthy a person’s heart is.
+Specifically, a stronger heart has a fast heart rate recovery, and that recovery rate is a predictor of mortality [13, 24]. Hence,
+an important way in which Vital-Radio may contribute to a
+smart home inhabitants’ well-being is by accurately measuring
+the heart rate after users exercise.
+-->
+</p>
+<p>
+この機能を評価するため、被験者に運動を依頼した後、Vital-Radio によるリアルタイムバイタルサインモニタリングの精度を評価した。具体的には、被験者は2分間縄跳びをした後、デバイスから4m離れた椅子に座り、通常通り呼吸をする。また、これらの実験中は、被験者に Alice PDx チェストバンドと酸素濃度計を装着してもらい、バイタルサインの正解測定値を取得した。Vital-Radio と Alice PDx はどちらも、ジャンプなどの激しい動作中の心拍数を正確に測定することはできないが、運動後に座った際のバイタルサインは測定可能である。
+<!--
+To evaluate this capability, we evaluate the accuracy of Vital-
+Radio’s real-time vital sign monitoring after asking our subjects
+to exercise. Specifically, each of the subjects jumps rope
+for 2 minutes then sits down on a chair, 4 m away from the
+device, and breathes normally. During these experiments, we
+also ask our subjects to wear the Alice PDx chest band and
+oximeter to obtain ground truth measurements for their vital
+signs. While both Vital-Radio and Alice PDx cannot accurately
+measure heart rate during the excessive motion of
+jumping, they can both measure the vital signs when a user
+sits down after exercising.
+-->
+</p>
+<p>
+図13は、被験者が運動を中止してから2分間、パルスオキシメータでモニタリングされた被験者の真の心拍数（黒色）の上に、Vital-Radioによって推定された心拍数（赤色）を重ね合わせたものである。この図は、Vital-Radioが心拍数の変動を効果的に追跡できることを示している。この2分間を通して、心拍数は下降傾向（約93回/分から約70回/分へ）にあることに注目してもらいたい。これは、被験者が運動後に安静状態にあるため、予想される値である。また、この期間を通して、心拍数はその傾向に沿って継続的に変動しており、真の心拍数とVital-Radioの両方がこれらの変動を捉えていることにも注目してもらいたい。
+<!--
+Fig. 13 overlays the heart rate estimated by Vital-Radio (in
+red) on top of the the ground-truth heart rate of a subject as
+monitored by the pulse oximeter (in black), throughout a twominute
+period after the subject stops exercising. The figure
+shows that Vital-Radio can effectively track the variations in
+the heart rate. Note that, throughout this two-minute period,
+there’s a downward trend in the heart rate (from about 93
+beats/minute to around 70 beats/minute), which is expected
+since the subject is in a resting state after exercising. Also,
+note that throughout this period, the heart rate varies continuously
+about that trend, and that both the ground truth and
+Vital-Radio are able to capture these variations.
+-->
+</p>
+<center><img src="images/fig13.png"></center>
+<p>
+図13—運動後の心拍数の追跡。この図は、運動後に低下するユーザーの心拍数を、Vital-Radioがいかに正確かつリアルタイムで追跡できるかを示している。
+<!--
+Figure 13—Tracking Heart Rate after Exercising. The figure
+shows how Vital-Radio’ can accurately and in real-time track a
+user’s heart rate as it decreases after exercising.
+-->
+</p>
+<p>
+複数の被験者を対象とした実験において、Vital-Radioの呼吸と心拍数の測定における平均精度はそれぞれ99.4%と99%、90パーセンタイルはそれぞれ91.7%と96.8%であった。これらの数値は、被験者が十分に休息した状態で行った以前の実験で達成された精度とほぼ同等であり、Vital-Radioが私たちのバイタルサインを確かに捕捉し、変動する場合でも正確に追跡できることを示している。
+<!--
+Across the experiments with multiple subjects, Vital-Radio’s
+median accuracy in measuring breathing and heart rate is
+99.4% and 99% respectively, and the 90th percentile is 91.7%
+and 96.8%. These figures are similar to the accuracy achieved
+in our previous experiments, where subjects were fully rested,
+indicating that Vital-Radio can indeed capture our vital signs
+and track them accurately even as they vary.
+-->
+</p>
+<h3>制限事項</h3>
+<p>
+このセクションでは、Vital-Radio の限界について詳しく説明する。
+<div class="styleBullet">
+<ul>
+<li>1. ユーザー間の最小距離：Vital-Radio は、FMCW を使用して、ユーザーごとのバイタルデータを抽出する前に、異なるユーザーからの反射を分離する。理想的な点反射体の場合、FMCW は 2 つの物体間の反射が C/2B 以上離れている場合にそれらを分離できる [6]。ここで、B は帯域幅、C は光速である。Vital-Radio の場合、これは理論上の最小距離 8 cm に相当する。しかし、人間は点反射体ではないため、実験では、高い精度を得るには 1～2 m の距離が必要であることが示されている。
+</li><br><li>2. 監視範囲：Vital-Radio は無線システムであるため、ノイズから信号を抽出するには最低限の信号対雑音比（SNR）が必要であり、この SNR が監視範囲と精度を制限する。具体的には、Vital-Radio がユーザーを検出できる最大距離は 8 m である。これは、SNRがデバイスからユーザーまでの距離とともに低下するためである。
+
+</li><br><li>3. 準静的要件：本実装では、準静的なユーザー（タイピング、テレビ視聴など）のバイタルサインのみを測定する。これは、全身の動きによる信号変動がバイタルサインによる小さな変動を圧倒し、Vital-Radioが微細な動きを捉えられないためである。
+</li><br><li>4. 人間以外の動き：Vital-RadioはFMCWを使用して空間内の異なる物体からの反射を分離する。そのため、さまざまな移動物体（人間、扇風機、ペットなど）の反射を分離できる。次に、各移動物体の反射を分析して呼吸を検出する。呼吸の周期性は扇風機よりもはるかに低いため、デバイスは扇風機を人間と誤認することはない。たとえデバイスが扇風機を人間と誤認したとしても、FMCWによって人間の信号が扇風機から分離されるため、実際の人間のバイタルサインには影響しない。ただし、ペットの存在を認識し、その環境内に他のユーザーがいると想定して、呼吸数や心拍数を出力する可能性がある。</li>
+</ul>
+</div>
+<!--
+In this section, we elaborate on the limitations of Vital-Radio:
+
+1. Minimum Separation between Users: Vital-Radio uses
+FMCW to separate reflections from different users before
+extracting the per-user vitals. For ideal point reflectors,
+FMCW can separate reflections from two objects if they
+are at least C/2B apart [6], where B is the bandwidth and
+C is the speed of light. For Vital-Radio, this translates to a
+theoretical minimum separation of 8 cm. However, because
+a human is not a point reflector, our experiments show that
+a separation of 1–2 m is needed for high accuracy.
+2. Monitoring Range: Since Vital-Radio is a wireless system,
+it requires a minimum signal-to-noise ratio (SNR) to extract
+the signal from the noise, and this SNR bounds its
+range and accuracy. Specifically, the maximum distance at
+which Vital-Radio detects users is 8m. This is because the
+SNR drops with user distance from the device.
+3. Quasi-static Requirement: Our implementation measures
+the vital signs only for quasi-static users (e.g., typing,
+watching TV). This is because signal variations due to full
+body motion would otherwise overwhelm the small variations
+due to vital signs, and prevent Vital-Radio from capturing
+the minute movements.
+4. Non-human Motion: Vital-Radio uses FMCW to separate
+reflections from different objects in space; hence, it can
+separate the reflection of various moving objects (e.g., humans,
+fans, pets). It then analyzes the reflections of each
+moving object to detect breathing. Since the periodicity of
+breathing is much lower than fans, the device never confuses
+a fan as a human. Even if the device confuses a fan
+for a human, it will not affect the vital signs of the real
+humans since their signals are separated from the fans by
+FMCW. However, it may still identify the presence of a pet
+and output its breathing and heart rate assuming it is another
+user in the environment.
+
+
+</p>
+<h2>結論と今後の可能性</h2>
+<p>
+HCIコミュニティには、様々なアプリケーションにおける生理学的センシングの活用に関する重要な文献がある[38, 30, 9, 23]。
+特に、HCI研究者は、感情反応、ストレスレベル、認知能力、ユーザーエンゲージメントなどのユーザーエクスペリエンスを評価するために生理学的センシングを用いてきた。
+しかし、従来のセンサー（オキシメーター、EEG、FNIR、GSRなど）の主な懸念事項は、ユーザーの身体に直接接触する必要があるため、ユーザーの反応に影響を与える可能性がある。対照的に、Vital-Radioはユーザーにその存在を意識させる必要がないため、ユーザーエクスペリエンスを妨げない。
+<!--
+The HCI community has significant literature on the use of
+physiological sensing for various applications [38, 30, 9, 23].
+In particular, HCI researchers have used physiological sensing
+to evaluate user experience including emotional reactions,
+stress levels, cognitive performance, and user engagement.
+But, a key concern with past sensors (e.g., oximeters,
+EEG, FNIRs, GSR) is that they require direct contact with the
+user’s body, and hence may affect a user’s response. In contrast,
+Vital-Radio doesn’t require users to to be aware of its
+presence, and hence doesn’t interfere with user experience.
+-->
+</p>
+<p>
+さらに、Vital-Radioは新しいインターフェースとインタラクション機能を実現する。例えば、センサーを装着することなく、ユーザーインターフェースに組み込むことで、ユーザーに合わせて調整することができる。また、ユーザーのバイタルサインを感知し、気分を推測することで、音楽や照明を環境に合わせて調整することも可能である。さらに、空港などの見知らぬ場所でVital-Radio対応のキオスクに近づいたユーザーは、ストレスレベルに基づいてカスタマイズされた支援を受けることができるかもしれない。
+<!--
+Additionally, Vital-Radio enables new interface and interaction
+capabilities. For example, it may be incorporated into
+user interfaces to adapt to a user without requiring him to
+wear sensors. Also, it can enable environments to adapt the
+music or lighting by sensing the user’s vital signs and inferring
+his mood. Further, a user walking up to a Vital-Radioenabled
+kiosk in an unfamiliar location (such as an airport)
+might receive customized assistance based on his stress level.
+-->
+</p>
+<p>
+これらのアプリケーション以外にも、Vital-Radioは、QS（定量的自己認識）、スマートホーム、高齢者介護、個人の健康と幸福、モバイル感情センシングなど、HCIの幅広い分野に影響を与えることができると考えている。<sup>10</sup>
+<!--
+Beyond these applications, we believe that Vital-Radio can
+impact a wide array of areas in HCI including quantified self,
+smart homes, elderly care, personal health and well-being,
+and mobile emotional sensing.<sup>10</sup>
+-->
+</p>
+<p class="margin-large">
+<sup>10</sup> 
+我々は柔軟な開発・制御のために無線機を構築したが、FMCW無線機は市場で入手可能であり[2]、ソフトウェアで我々のアルゴリズムを拡張すれば上記のアプリケーションに使用できる。
+<!--
+While we built our radio for flexible development/control, FMCW
+radios are available on the market [2] and can be used for the above
+applications once augmented with our algorithm in software.
+-->
+</p>
+<p>
+謝辞 – 著者一同は、NETMITグループのメンバーからのフィードバックと、査読者からの洞察に満ちたコメントに感謝の意を表します。本研究はNSFの支援を受けています。Microsoft Research PhD FellowshipはFadel Adib氏を支援しました。また、MITワイヤレスネットワーク＆モバイルコンピューティングセンターのメンバーであるAmazon.com、Cisco、Google、Intel、MediaTek、Microsoft、Telefonicaの皆様には、関心とご支援に感謝いたします。
+<!--
+Acknowledgements – The authors thank the members of the NETMIT
+group for their feedback, and the reviewers for their insightful
+comments. This research is supported by NSF. The Microsoft Research
+PhD Fellowship has supported Fadel Adib. We thank members
+of the MIT Center for Wireless Networks and Mobile Computing:
+Amazon.com, Cisco, Google, Intel, MediaTek, Microsoft, and
+Telefonica for their interest and support.
+-->
+</p>
+<p>
+</p>
+<h2>参考文献</h2>
+<p>
+<div class="styleRef">
+<ul>
+<li>1. Alice PDx. http://www.healthcare.philips.com/main/
+homehealth/sleep/alicepdx/default.wpd. Phillips.
+</li><li>2. FMCW Transceivers. http://www.siversima.com/.
+SiversIMA.
+</li><li>3. iBabyGuard. http://www.ibabyguard.com/.
+</li><li>4. Kai Medical. http://www.kaimedical.com/.
+</li><li>5. Aardal, O., Paichard, Y., Brovoll, S., Berger, T., Lande, T. S., and
+Hamran, S.-E. Physical working principles of medical radar.
+Biomedical Engineering, IEEE Trans. on (2013).
+</li><li>6. Adib, F., Kabelac, Z., Katabi, D., and Miller, R. C. 3D Tracking via
+Body Radio Reflections. In Usenix NSDI (2014).
+</li><li>7. Anitori, L., de Jong, A., and Nennie, F. Fmcw radar for life-sign
+detection. In IEEE Radar Conference (2009).
+</li><li>8. Balakrishnan, G., Durand, F., and Guttag, J. Detecting pulse from head
+motions in video. In IEEE CVPR (2013).
+</li><li>9. Bargas-Avila, J. A., and Hornbæk, K. Old wine in new bottles or novel
+challenges: a critical analysis of empirical studies of user experience.
+In ACM CHI (2011).
+</li><li>10. Callahan, J., Cox, D., Hoffman, K., O’shea, D., Pollatsek, H., and
+Senechal, L. Calculus in context: the five college calculus project,
+Chapter 7 (Periodicity). WH Freeman, 1995.
+</li><li>11. Chi, Y., Jung, T.-P., and Cauwenberghs, G. Dry-contact and noncontact
+biopotential electrodes: Methodological review. Biomedical
+Engineering, IEEE Reviews in (2010).
+</li><li>12. CNET. Do wristband heart trackers actually work? A checkup.
+http://www.cnet.com/news/how-accurate-are-wristband-heart-ratemonitors/.
+</li><li>13. Cole, C. R., Blackstone, E. H., Pashkow, F. J., Snader, C. E., and Lauer,
+M. S. Heart-rate recovery immediately after exercise as a predictor of
+mortality. New England Journal of Medicine (1999).
+</li><li>14. de Chazal, P., O’Hare, E., Fox, N., and Heneghan, C. Assessment of
+sleep/wake patterns using a non-contact biomotion sensor. In IEEE
+EMBS (2008).
+</li><li>15. Droitcour, A. D., Boric-Lubecke, O., and Kovacs, G. T. Signal-to-noise
+ratio in doppler radar system for heart and respiratory rate
+measurements. Microwave Theory and Techniques, IEEE Trans. (2009).
+</li><li>16. Droitcour, Amy D et. al. Range correlation and i/q performance benefits
+in single-chip silicon doppler radars for noncontact cardiopulmonary
+monitoring. Microwave Theory and Techniques, IEEE Trans. (2004).
+</li><li>17. Fletcher, R., and Han, J. Low-cost differential front-end for doppler
+radar vital sign monitoring. In IEEE MTT (2009).
+</li><li>18. Garmin. Heart Rate Monitor. https://buy.garmin.com/en-US/US/shopby-
+accessories/fitness-sensors/heart-rate-monitor/prod10996.html.
+</li><li>19. GigaOm. Could a breath-monitoring headset improve your health?
+http://gigaom.com/2013/09/20/could-a-breath-monitoring-headsetimprove-
+your-health/.
+</li><li>20. Gokalp, H., and Clarke, M. Monitoring activities of daily living of the
+elderly and the potential for its use in telecare and telehealth: a review.
+TELEMEDICINE and e-HEALTH (2013).
+</li><li>21. Guard, C. Wireless Wristband Pulse Oximeter CMS-50FW With
+Software For Sleep Study.
+http://www.clinicalguard.com/wirelesswristband-
+pulse-oximeter-cms50fw-with-softwarefor-
+sleep-study-p-455.html.
+</li><li>22. Healthcare, F. M. Market for embedded health monitoring-gadgets to
+hit 170M devices by 2017.
+http://www.fiercemobilehealthcare.com/story/
+market-embedded-health-monitoring-gadgets-hit-
+</li><li>170m-devices-2017/2012-08-03.
+</li><li>23. Hirshfield, L. et. Al. Brain measurement for usability testing and
+adaptive interfaces: an example of uncovering syntactic workload with
+functional near infrared spectroscopy. In ACM CHI (2009).
+</li><li>24. Imai, K. et. Al. Vagally mediated heart rate recovery after exercise is
+accelerated in athletes but blunted in patients with chronic heart failure.
+Journal of the American College of Cardiology (1994).
+</li><li>25. InformationWeek. Health-Monitoring Devices Market Outpaces
+Telehealth.
+http://www.informationweek.com/mobile/healthmonitoring-
+devices-market-outpacestelehealth/
+d/d-id/1104636.
+</li><li>26. Jia, Y. et. Al. Through-wall-radar localization for stationary human
+based on life-sign detection. In IEEE RADAR (2013).
+</li><li>27. Kaltiokallio, O. et. Al. Non-invasive respiration rate monitoring using a
+single cots tx-rx pair. In ACM/IEEE IPSN (2014).
+</li><li>28. Lanata, A et. Al. Comparative evaluation of susceptibility to motion
+artifact in different wearable systems for monitoring respiratory rate.
+</li><li>29. Lin, J. et. Al. Microwave apexcardiography. Microwave Theory and
+Techniques, IEEE Trans. (1979).
+</li><li>30. Mahlke, S., and Th¨uring, M. Studying antecedents of emotional
+experiences in interactive contexts. In ACM CHI (2007).
+</li><li>31. Mayo Clinic. What’s a normal resting heart rate?
+http://www.mayoclinic.org/healthy-living/fitness/expert-answers/heartrate/
+faq-20057979.
+</li><li>32. Min, J. et. Al. Toss nturn: Smartphone as sleep and sleep quality
+detector. In ACM CHI (2014).
+</li><li>33. Oppenheim, A., Schafer, R., Buck, J., et al. Discrete-time signal
+processing. Prentice Hall, 1989.
+</li><li>34. Patwari, N. et. Al. Breathfinding: A wireless network that monitors and
+locates breathing in a home. Selected Topics in Signal Processing,
+IEEE Journal of (2014).
+</li><li>35. Petterson, M. et. Al. The effect of motion on pulse oximetry and its
+clinical significance. Anesthesia & Analgesia (2007).
+</li><li>36. Pinheiro, E., Postolache, O., and Gir˜ao, P. Theory and developments in
+an unobtrusive cardiovascular system representation:
+ballistocardiography. The open biomedical engineering journal (2010).
+</li><li>37. Steele, R., Lo, A., Secombe, C., and Wong, Y. K. Elderly persons
+perception and acceptance of using wireless sensor networks to assist
+healthcare. International journal of medical informatics (2009).
+</li><li>38. Tan, C. et. Al. Combining think-aloud and physiological data to
+understand video game experiences. In ACM CHI (2014).
+</li><li>39. Tse, D., and Vishwanath, P. Fundamentals of Wireless
+Communications. Cambridge University Press, 2005.
+</li><li>40. U.S. National Library of Medicine MedLine Plus. Heart-respiratory
+monitor - infantsShare. http://www.nlm.nih.gov/
+medlineplus/ency/article/007236.htm.
+</li><li>41. U.S. National Library of Medicine MedLine Plus. Rapid Shallow
+Breathing. http://www.nlm.nih.gov/medlineplus/ency/
+article/007198.htm.
+</li><li>42. Venkatesh, S., Anderson, C., Rivera, N., and Buehrer, R.
+Implementation and analysis of respiration-rate estimation using
+impulse-based uwb. In IEEE MILCOMM (2005).
+</li><li>43. Vivonoetics. Respiration: Single or Dual-Band.
+http://vivonoetics.com/products/vivosense/
+analyzing/respiration-single-or-dual-band/.
+</li><li>44. Wu, H.-Y., Rubinstein, M., Shih, E., Guttag, J., Durand, F., and
+Freeman, W. Eulerian video magnification for revealing subtle changes
+in the world. ACM SIGGRAPH (2012).
+</li><li>45. Xu, Y., Wu, S., Chen, C., Chen, J., and Fang, G. A novel method for
+automatic detection of trapped victims by ultrawideband radar.
+Geoscience and Remote Sensing, IEEE Trans. on (2012).
+</li><li>46. Yang, R. et. Al. Making sustainability sustainable: Challenges in the
+design of eco-interaction technologies. In ACM CHI (2014).
+</li><li>47. Yarovoy, A. et. Al. Uwb radar for human being detection. Aerospace
+and Electronic Systems Magazine, IEEE (2006).
+</li><li>48. Zaffaroni, A., de Chazal, P., Heneghan, C., Boyle, P., Mppm, P. R., and
+McNicholas, W. T. Sleepminder: an innovative contact-free device for
+the estimation of the apnoea-hypopnoea index. In IEEE EMBS (2009).
+</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>
