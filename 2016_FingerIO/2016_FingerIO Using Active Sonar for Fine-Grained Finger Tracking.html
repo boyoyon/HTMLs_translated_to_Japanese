@@ -1,0 +1,1392 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Finger IO</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    </head>
+    <body>
+        <h1><center>FingerIO: Using Active Sonar for Fine-Grained Finger Tracking</center></h1>
+<center>FingerIO: アクティブソナーを使った精密フィンガートラッキング</center>
+<p>
+<center>Rajalakshmi Nandakumar1, Vikram Iyer1, Desney Tan2, Shyamnath Gollakota1</center>
+    <div class="two-columns">
+        <div class="column">
+            <p>
+<center>DUB Group, University of Washington1</center>
+<center>frajaln, vsiyer, gshyamg@cs.washington.edu</center>
+            </p>
+        </div>
+        <div class="column">
+            <p>
+<center>Microsoft Research2</center>
+<center>desney@microsoft.com</center>
+            </p>
+        </div>
+    </div>
+<h2>要旨</h2>
+<p>
+デバイス周辺でのインタラクションのための、これまでにないきめ細かい指追跡ソリューションである FingerIO を紹介する。FingerIO は、指にセンサーを装着する必要がなく、指とデバイスの間に遮蔽物があっても機能する。我々は、デバイスをアクティブソナーシステムに変換し、聞こえない音信号を送信してマイクで指のエコーを追跡することでこれを実現する。1センチメートル未満の追跡精度を実現するために、無線通信で一般的に使用される直交周波数分割多重方式（OFDM）と呼ばれる変調技術を使用する革新的なアプローチを紹介する。我々の評価では、fingerIO は Samsung Galaxy S4 の内蔵マイクとスピーカーを使用して、平均精度 \(8mm\) で2D指追跡を実現できることが示されている。また、電話がポケットの中にある場合でも、デバイスの周りの微妙な指の動きを追跡する。最後に、スマートウォッチ形状の Finger IO デバイスのプロトタイプを作成し、デバイスの両側の \(0.5×0.25m^2\) の領域にインタラクションスペースを拡張でき、指から完全に遮蔽されている場合でも機能することを示す。
+</p>
+<center><img src="images/fig1.png"></center>
+<p class="margin-large">
+図 1: FingerIO のアプリケーション。a) あらゆる表面を書き込みインターフェイスに変換する。b) スマートウォッチ形状デバイスに新しいインターフェイスを提供する。c) ポケットの中の電話でのジェスチャー操作を可能にする。d) 時計が隠れている場合でも動作する。
+<!--
+Figure 1: Applications of fingerIO. a) Transform any surface into a writing interface; b) provide a new interface for smartwatch form factor devices; c) enable gesture interaction with a phone in a pocket; d) work even when the watch is occluded.
+-->
+</p>
+<h2>はじめに</h2>
+<p>
+本稿では、以下の問いについて考察する。デバイス上でのユーザーの指の動きを追跡できるか、また、指同士が遮蔽されている場合でも追跡できるか。肯定的な答えが得られれば、ユーザーはより表現力豊かなインタラクションが可能になり、手が遮られることなく画面を最大限に活用できるだけでなく、新しいインタラクションシナリオも実現できる。例えば、ユーザーは指をペンのように使って、スマートフォンよりもはるかに広い面積に入力できる。また、スマートフォンがポケットの中にあっても、デバイス上で微妙な指の動きを追跡できる。このような機能は、スマートウォッチなどの小型デバイスにも役立つだろう。これらのデバイスは、指が完全に遮蔽されている場合や、スマートウォッチがインタラクション面とは異なる平面にある場合でも、ユーザーの指を追跡できる。しかし、既存の指追跡ソリューションでは、指にセンサーを取り付けるか [21, 40, 10, 12]、デバイスにカメラや赤外線センサーを取り付けるかのいずれかである [9, 22, 23]。前者のアプローチは面倒であり、後者は遮蔽には対応していない。
+<!--
+In this paper, we explore the following question: Can we track
+the user’s finger around the device and can we do this even
+when they are occluded from each other? A positive answer
+would allow the user to interact in more expressive ways, utilize
+the screen fully without hand blockage and also enable
+new interaction scenarios. For instance, the user can use her
+finger as a pen to provide input over a much larger surface
+area than the smartphone. She can also perform subtle finger
+motion around the device that can be tracked even when
+the phone is in a pocket. Such a capability would also benefit
+smaller devices such as smart watches that could track the user’s finger, even when fully occluded from it or when the
+watch is on a different plane from the interaction surface. Existing
+solutions for finger tracking, however, either instrument
+the finger with sensors [21, 40, 10, 12] or use cameras/infrared
+sensors at the device [9, 22, 23]. The former approach
+is burdensome while the latter does not work with occlusions.
+-->
+</p>
+<p>
+指にセンサーを装着する必要がなく、指とデバイスの間に遮蔽があっても動作する、きめ細かな指追跡システムである FingerIO を紹介する。FingerIO は既存のスマートフォンの周囲で指の動きを追跡し、平均 8mm の 2D 追跡精度を実現する。また、スマートフォンがポケットの中にある場合でも、デバイス周囲の微妙な指の動きを追跡する。FingerIO を用いて、指を追跡しながら、デバイスの両側に 0.5×0.25m² の領域までインタラクション空間を拡張できるスマートウォッチ型のデバイスも試作した。さらに、指が完全に遮蔽されていても、このスマートウォッチは指の追跡を継続できる。
+<!--
+We present fingerIO, a fine-grained finger tracking system
+that does not require instrumenting the finger with sensors
+and works even with occlusions between the finger and the
+device. FingerIO tracks finger motion in the region around
+existing smartphones, and achieves an average 2-D tracking
+accuracy of \(8mm\). It also tracks subtle finger motion around
+the device, even when the phone is in the pocket. Using fingerIO,
+we also prototype a smart watch-form factor device that
+can track the finger, while extending the interaction space to
+a \(0.5×0.25 m^2\) region on either side of the device. Further,
+the watch can continue tracking the finger even when they are
+fully occluded from each other.
+-->
+</p>
+<p>
+我々の鍵となる洞察は、モバイルデバイス（例：スマートフォン）をアクティブソナーシステムに変えることである。高レベルでは、デバイスのスピーカーから人の耳には聞こえない（18～20 kHz）音波を送信する。これらの信号は指で反射され、デバイスのマイクでエコーとして記録される。指の動きは、複数のマイクへのエコーの到着時刻に変化をもたらす。これらのエコーの開始時刻を追跡することで、FingerIO は指の位置を継続的に追跡する。しかし、指からのエコーにはノイズが多く含まれるため、他のすべての反射音がある中で、エコーが受信された正確な時刻を推定することは困難である。この課題を以下のように理解できる、今日のモバイルデバイスのマイクのサンプリングレート（48 kHz）である[27]。空気中の音速を考えると、エコーの開始点を推定する際にわずか3～4サンプルの誤差が生じるだけで、各マイクからの推定距離に 2.1～2.8cmの誤差が生じる。指の位置は複数のマイクからの距離を計算して決定されるため、指の追跡誤差はさらに大きくなる。さらに、モバイルデバイスのスピーカーとマイクは通常独立して動作し、正確に同時にサンプリングを行うことはない。その結果、サンプリングのオフセットが追加され、追跡誤差がさらに増大する。
+<!--
+Our key insight is to transform mobile devices (e.g., smartphones)
+into active sonar systems. At a high level, we
+transmit inaudible \(18-20 kHz\) sound waves from the device’s
+speaker. These signals get reflected from the finger and can be
+recorded as an echo at the device’s microphones. Finger motion
+results in changes to the arrival time of the echo at multiple
+microphones. By tracking the time at which these echoes
+begin, fingerIO continuously tracks the finger location. The
+echo from the finger however is noisy and hence estimating
+the exact time when the echo is received, in the presence of all
+other reflections, is challenging. To appreciate the challenge,
+microphones on today’s mobile devices have a sampling rates
+of \(48 kHz\) [27]. Given the speed of sound in air, an error of
+just 3-4 samples in estimating the start of the echo results in
+a 2.1-2.8 cm error in the estimated distance from each microphone.
+Since the finger location is determined by computing
+the distance from multiple microphones, the finger tracking
+error would be much higher. In addition, speakers and microphones
+on mobile devices typically run independently and do
+not sample at the exact same time. This results in an additional
+sampling offset, further increasing the tracking error.
+-->
+</p>
+<p>
+FingerIOは、無線通信の知見を借用することで、上記の技術的課題に対処する。無線システムでは、送信機と受信機は同期しておらず、同時にサンプリングは行わない。しかし、無線受信機は、送信された情報をデコードするために、送信ごとにサンプリングオフセットを推定するように設計されている。現代の無線システムでは、この目的を達成するために、直交周波数分割多重化（OFDM）と呼ばれる変調技術が使用されている。これに着想を得て、FingerIO はOFDM を用いて正確な指追跡を実現する。高レベルでは、N個のランダムビットの FFT を計算し、N個のサンプルを生成することで、18～20kHzのOFDMシンボルを作成する。次に、図2に示すように、S個のサンプルからなる巡回サフィックスを計算し、スピーカーから送信する。巡回サフィックスを備えた OFDM の重要な特性は、シンボルの先頭を識別する際のサンプル誤差が、周波数領域における位相変化に線形に変換されることである。これらの変化は、FFTを用いてマイクロフォンで抽出できる。例えば、Eサンプルの誤差は、FFT出力において位相が0から\(2E\pi\)まで直線的に増加することを意味する。さらに、マイクロフォンとスピーカー間のサンプリングドリフトによって発生する分数サンプリング誤差も、FFT出力において同様の位相変化をもたらす。これを利用して、FingerIO はサンプリング誤差を補正し、きめ細かい指の追跡を実現する。
+<!--
+FingerIO addresses the above technical challenges by borrowing
+insights from wireless communication. In wireless
+systems, the transmitter and the receiver are not synchronized
+and do not sample at the same time. Wireless receivers
+however are designed to estimate the sampling offset for every
+transmission so as to decode the transmitted information.
+Modern wireless system uses a modulation technique
+called Orthogonal Frequency Divison Multiplexing (OFDM) to achieve this goal. Inspired by this, fingerIO achieves accurate
+finger tracking using OFDM. At a high level, we create
+\(18-20 kHz\) OFDM symbols by computing the FFT of N
+random bits and generating N samples. We then compute a
+cyclic suffix of S samples, as shown in the Fig. 2, which we
+transmit from the speaker. The key property of OFDM with
+cyclic suffixes is that, a sample error in identifying the beginning
+of the symbol, translates linearly into phase changes
+in the frequency domain; these changes can be extracted at
+the microphones using an FFT. For instance, an error of E
+samples translates into the phase linearly increasing from 0
+to \(2E\pi\) at the output of the FFT. Further, fractional sampling
+errors that occur because of sampling drifts between the microphone
+and the speaker also result in a similar phase change
+at the output of the FFT. Using this, fingerIO corrects for the
+sampling errors and achieves fine-grained finger tracking.
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p class="margin-large">
+図2：OFDM信号の構造。OFDMサンプルの最初のSサンプルが末尾に追加され、巡回サフィックスが作成される。オフセットEから始まる信号のNポイントFFTを実行すると、巡回サフィックスの一部が含まれ、位相差が生じる。
+<!--
+Figure 2: OFDM signal structure. The first S samples of the OFDM samples are appended to the end to create the cyclic suffix. Taking an N point FFT of the signal beginning at offset E will include part of the cyclic suffix resulting in a phase difference.
+-->
+</p>
+<p>
+アクティブソナーは、粗いレベルのジェスチャ認識を行うために提案されてきたが[15, 11]、既存のデバイス上できめ細かな指追跡を実現するためにこれを用いた試みはこれまでに知られていない。したがって、我々の貢献は以下の通りである。
+<div class="styleBullet">
+<ul>
+<li>1. デバイス周辺でのインタラクションのためのきめ細かな指追跡のための新しいアプローチを導入する。このアプローチは、指にセンサーを装着する必要がなく、指とデバイスの間に遮蔽物があっても動作する。
+</li><br><li>2. 指追跡のためのアクティブソナーソリューションを提案し、開発する。この目標を高精度で達成するために、OFDMの特性を利用して指の動きによって生じるエコーの変化を追跡するアルゴリズムを導入する。
+</li><br><li>3. 内蔵スピーカーとマイクを使用してSamsung Galaxy S4に設計を実装し、追加のハードウェアなしで携帯電話周辺の指追跡を実証する。
+また、市販のハードウェアを用いて、スマートウォッチのフォームファクタデバイスに設計のプロトタイプを構築した。
+</li><br><li>4. 実験評価の結果、FingerIO はスマートフォンとスマートウォッチのプロトタイプにおいて、169フレーム/秒で平均8mmと1.2cmの2D指追跡精度を達成できることが示された。さらに、スマートフォンがポケットの中にある場合でも、スマートウォッチが指から完全に隠れている場合でも、微妙な指の動きを正確に追跡する。</li>
+</ul>
+</div>
+<!--
+While active sonar has been proposed before to perform
+coarse-level gesture recognition [15, 11], we are not aware of
+prior attempts to use it to achieve fine-grained finger tracking
+on existing devices. Hence, our contributions are:
+1. We introduce a novel approach to fine-grained finger tracking
+for around device interaction that does not require instrumenting
+the finger with sensors and works even in the
+presence of occlusions between the finger and the device.
+2. We propose and develop an active sonar solution to finger
+tracking. To achieve this goal with high accuracies, we
+introduce algorithms that use the properties of OFDM to
+track the changes in echoes caused due to finger motion.
+3. We implement our design on a Samsung Galaxy S4 using
+its in-built speaker and microphones and demonstrate
+finger tracking around the phone, with no additional hardware.
+We also built a prototype of our design in a smart
+watch form factor device using off-the-shelf hardware.
+4. We conduct experimental evaluations that show that fingerIO
+can achieve average 2-D finger tracking accuracies of
+8 mm and 1.2 cm at 169 frames/s for the smartphone and
+smart watch prototypes. Further, it accurately tracks subtle
+finger motion even when the phone in a pocket as well as
+with the smart watch fully occluded from the finger.
+-->
+</p>
+<h2>関連研究</h2>
+<p>
+従来の研究は 3 つの主要な領域に分かれている。
+<!-- Prior work falls in three key domains. -->
+</p>
+<p>
+<strong>●近接デバイスインタラクション</strong><br>
+この分野における先行研究は、人体の計測を必要とするものと視覚ベースのシステムとに大別できる。iRing [28] は、赤外線センサーを用いて指の回転、曲げ、外力を認識した。LightRing [21] は、赤外線近接センサーと1軸ジャイロスコープで構成されたリング型のデバイスを設計し、それぞれ指の屈曲と回転を測定した。Magic Finger [40] は、光学式マウスセンサーとマイクロRGBカメラを用いて触覚と接触面の質感を感知する指装着型デバイスを設計した。Fingerpad [10] は、磁気トラッキングを用いて人差し指の先端をタッチパッドとして使用する爪装着型デバイスである。uTrack [12] は、磁気センシングを用いた3D入力システムを実現するために、指の甲に磁力計、親指の甲に磁石を装着することを提案している。
+<!--
+Near Device Interaction. Prior work in this domain can
+be broadly categorized as either requiring instrumenting the human body or vision based systems. iRing [28] uses an
+infrared sensor to recognize rotation, bending and external
+force on the finger. LightRing [21] designs a ring-form factor
+device that consists of a infrared proximity sensor and a
+1-axis gyroscope to measure the finger flexion and rotation
+respectively. Magic finger [40] designs a finger-worn device
+that uses an optical mouse sensor and a micro RGB camera
+to sense touch as well as the texture of the surface being
+touched. Fingerpad [10] is a nail-mounted device that
+uses the tip of the index finger as a touchpad using magnetic
+tracking. uTrack [12] proposes to instrument the back of the
+fingers with magnetometers and the back of the thumb with a
+magnet to enable a 3D input system using magnetic sensing.
+-->
+</p>
+<p>
+Digits [22] や SideSight [9] などのシステムは、指にセンサーを装着する必要がなく、視覚/赤外線センサーを使用するため、遮蔽物の影響をうけない。具体的には、Digits [22] は手首に装着した 3D 赤外線カメラを使用して、ユーザーの手の完全なポーズを復元する。SideSight [9] は、モバイルデバイス (スマートフォンなど) の側面に赤外線近接センサーのアレイを装着し、センサーの視線内にある指の存在と位置を検出する。Hover flow [23] は、携帯電話の端に沿って配置された赤外線センサーのアレイを使用して、手のジェスチャーを検出する。[35] は、携帯電話の内蔵カメラを使用して、空中でのジェスチャーとカメラの視野内にある手の部分の追跡を検出する。[41] は、携帯電話のカメラに全方向ミラーを取り付けて視野を広げる。これらのシステムとは対照的に、FingerIO は、ほとんどのモバイルデバイスに搭載されているマイクとスピーカーを活用して、デバイス近傍の指の動きを追跡できるアクティブソナーシステムを設計する。さらに、FingerIO は音響信号を使用するため、指が隠れている場合でも動作する。
+<!--
+Systems such as Digits [22] and SideSight [9] do not require
+instrumenting the finger with sensors but use vision/infrared
+sensors and hence do not work with occlusions. Specifically,
+Digits [22] uses a wrist-worn 3D infrared camera to recover
+the full pose of the user hand. SideSight [9] instruments the
+sides of a mobile device (e.g., smartphone) with an array of
+infrared proximity sensors which detect the presence and position
+of the fingers in line-of-sight of the sensors. Hover flow [23] uses an array of IR sensors placed along the edges of
+the phone to detect hand gestures. [35] uses the built-in camera
+of a phone to detect in-air gestures and tracking of hand
+parts in the camera’s view. [41] attaches an omni-directional
+mirror to the phone’s camera to increase its field of view. In
+contrast to these systems, fingerIO leverage the microphones
+and speakers that are common on most mobile devices to design
+an active sonar system that can track finger motion in the
+vicinity of the device. Further, fingerIO uses acoustic signals
+and hence can operate even when the finger is occluded.
+-->
+</p>
+<p>
+最後に、PocketTouch [34] は、独自の静電容量式センシングハードウェアを用いて、布地越しの指の動きを検出する。一方、FingerIO は、既存のスマートフォンを用いて、デバイスに触れることなく、ポケット越しの微妙な指の動きを検知できる。
+<!--
+Finally, PocketTouch [34] detects finger-strokes through fabric
+using a custom capacitive sensing hardware. In contrast,
+fingerIO can track subtle finger motion through pockets with
+existing smartphones, without the need to touch the device.
+-->
+</p>
+<p>
+<strong>●アクティブ音響位置特定</strong><br>
+Cricket [29]、Doplink [6]、Spartacus [37]、Shake and Walk [17] などのデバイス位置特定システムは、音響伝送を用いてデバイスの位置を特定し、その動きの方向を決定する。AAmouse [42] は、ドップラーシフトを利用して、室内のアンカーデバイスを用いて携帯電話の位置を追跡する。Mimio [4] などのホワイトボード技術は、超音波と赤外線を備えたアクティブスタイラスを使用し、ボードの角に設置されたアンカーデバイスを用いて位置を特定する。一方、FingerIOは、既存のデバイスを用いて計測機器を装着していない指を追跡する、デバイスフリーの位置特定ソリューションである。これは、OFDMの特性を利用して実現される。OFDMは、マルチパスに対する耐性があるため、無線通信やデバイス位置特定システム [19, 20] で使用されているが、指の追跡に使用した先行研究は知られていない。
+<!--
+Active Acoustic Localization. Device localization systems
+such as Cricket [29], Doplink [6], Spartacus [37], and Shake
+and Walk [17] localize and determine the direction of a device
+movement using acoustic transmissions. AAmouse [42]
+uses Doppler shifts to track the phone position using anchor
+devices in the room. Whiteboard technologies such as
+Mimio [4] use an active stylus with ultrasound and infrared
+and localize using an anchor device placed at the corner of the
+board. In contrast, fingerIO is a device-free localization solution
+that tracks an uninstrumented finger using existing devices;
+this is achieved using the properties of OFDM. While
+OFDM has been used in wireless communication and device
+localization systems [19, 20] due to its resilience to multipath,
+we are unaware of prior work that uses it for finger tracking.
+-->
+</p>
+<p>
+SoundWave [15] は、音響伝送のドップラーシフトを利用して、デバイスに手を近づけたり遠ざけたりするジェスチャーを認識する。Airlink [11] とSurfacelink [13] は、それぞれドップラーシフトと表面実装型圧電センサーを用いて、一方のデバイスからもう一方のデバイスに向かって手を振るジェスチャーを検出する。これらの設計は、事前に定義された手と腕のジェスチャーのセットに焦点を当てており、指の追跡には対応していない。最後に、ApneaApp [27] は、携帯電話からの聞こえない伝送のFMCW反射を用いて、睡眠環境における周期的な呼吸運動を追跡する。
+<!--
+SoundWave [15] leverage Doppler shifts from acoustic transmissions
+to recognize gestures such as moving the hand
+towards or away from the device. Airlink [11] and Surfacelink
+[13] use Doppler shifts and surface-mounted piezoelectric
+sensors respectively to detect hand waving gestures
+from one device towards the other. These design focus on predefined
+set of hand and arm gestures and are not designed for
+finger tracking. Finally, ApneaApp [27] tracks the periodic
+breathing movements in a sleep environment using FMCW
+reflections of the inaudible transmissions from the phone.
+-->
+</p>
+<p>
+Chirp Microsystems [3] は、7つのトランスデューサーアレイを用いて到来角測定を行い、15度の角度分解能を実現する、217kHzで動作するオンチップ超音波距離計を設計している [31]。主な目的は、カメラの消費電力を削減し、代わりに超音波設計を使用することであった。我々のアプローチは、3つの重要な点でこれと異なる。まず、1～2個のマイクを搭載した既存のデバイスを使用し、カスタムチップは不要である。次に、OFDMを活用し、わずか2kHzの帯域幅でセンチメートルレベルの位置特定を実現できることを示している。最後に、これらのオンチップ設計の性能は指追跡では評価されていないが、さまざまな指追跡アプリケーションに我々の設計を適用し、多くの興味深いインタラクションシナリオを実現できることを示している。
+<!--
+Chirp microsystems [3] designs on-chip ultrasonic rangefinders
+operating at 217 kHz with a bandwidth of 12 kHz using
+an array of seven transducers to perform angle-of-arrival techniques
+and get an angular resolution of 15 degrees [31]. The
+key motivation was to reduce the power consumption of cameras
+and instead use an ultrasonic design. Our approach differs
+from this in three key ways. First, we use existing devices
+with one to two microphones and do not need any custom
+chips. Second, we leverage OFDM and show that using just
+2 kHz of bandwidth we can achieve centimeter level localization.
+Third, while the performance of these on-chip designs
+has not been evaluated for finger tracking, we apply our design
+in various finger tracking applications and show that it
+can enable a number of interesting interaction scenarios.
+-->
+</p>
+<p>
+<strong>●受動音響定位</strong><br>
+[38, 24]は、キーボードをクリックしたときに発生する可聴音を利用して、ユーザーが入力したキーを盗聴する。[33]は、圧電衝撃センサーを用いて材料中の音の伝播を感知することで、固体アルミニウムおよびガラス表面のタップの位置を特定する。Toffee [39]は、振動音響圧電センサーを用いて、ユーザーがテーブルをタップしたときに伝播する可聴音と振動波の方向を特定する。ノートパソコンとスマートフォンの角にそれぞれ4つのセンサーを設置し、平均4.3度と18.3度の角度分解能を実現する。さらに最近では、[8]は、表面に取り付けられた接触型マイクを用いて、タッチ、ノック、スワイプなどのさまざまな衝撃イベントを区別している。この研究とは対照的に、FingerIO はアクティブソナーアプローチを用いて、非可聴信号を送信し、表面上および空中の両方でセンチメートルレベルの指追跡を実現する。
+<!--
+Passive Acoustic Localization. [38, 24] use the audible
+sounds made when clicking on a keyboard to snoop on the
+keys typed by the users. [33] localizes taps on solid aluminum
+and glass surfaces by using a piezoelectric shock sensor to sense the sound propagation through the material. Toffee [39]
+uses vibro-acoustic piezo sensors to find the direction of the
+audible sound and vibration waves that propagate as the user
+taps on a table. It achieves a mean angular resolution of 4.3
+and 18.3 degrees using four sensors at the corners of a laptop
+and smartphone respectively. More recently, [8] uses contact
+microphones attached to the surface to distinguish between
+various impact events such as touch, knock and swipe. In
+contrast to this work, fingerIO uses an active sonar approach
+that transmits inaudible signals and achieves centimeter level
+finger tracking both on surfaces as well as in the air.
+-->
+</p>
+<p>
+RFベースのジェスチャーシステム。<br>
+WiSee [32]、AllSee [18]、SideSwipe [43] はそれぞれWi-Fi、テレビ、携帯電話の通信を用いて、大まかな手、腕、脚のジェスチャーを認識する。WiTrack [5] は、カスタムレーダー通信を用いて指差しジェスチャーを検出する。WiDraw [36] は、ネットワーク内の20～30台の他のWi-Fiデバイスからの通信を用いて、Wi-Fiデバイスの近傍における腕の動きを追跡する。Googleは、Soliプロジェクトが60GHzレーダーを用いて微妙な指のジェスチャーを認識することを検討していると報告している [14]。これらのアプローチはいずれもスマートフォンでは実証されておらず、カスタムセンサーハードウェアが必要である。また、RF信号は光速で伝播するため、1センチメートルの解像度を得るにはギガヘルツの帯域幅の処理が必要になるという理由から、本稿で紹介するアクティブソナーアプローチは、より魅力的であると考えている。対照的に、音速ははるかに低いため、48kHzではfingerIOはセンチメートルレベルの精度を達成できる。さらに、我々のアプローチでは、既存のモバイルデバイスに既に搭載されているマイクとスピーカーを使用するため、導入のハードルははるかに低くなる。
+<!--
+RF-based Gesture Systems. WiSee [32], AllSee [18] and
+SideSwipe [43] usesWi-Fi, TV and cellular transmissions respectively
+to recognize coarse hand, arm and leg gestures.
+WiTrack [5] uses custom radar transmissions to detect pointing
+gestures. WiDraw [36] tracks the arm motion in the
+vicinity of a Wi-Fi device using transmissions from 20-30
+other Wi-Fi devices in the network. Google has reported that
+project Soli is exploring the use of 60 GHz radar to recognize
+subtle finger gestures [14]. None of these approaches have
+been demonstrated on smartphones and require custom sensor
+hardware. We also believe that the active sonar approach
+introduced in this paper is more attractive for two reasons: RF
+signals propagate at the speed of light and so to get a centimeter
+resolution requires processing GigaHertz of bandwidth. In
+contrast, the speed of sound is significant lower and hence
+with 48 kHz, fingerIO could achieve centimeter level accuracies.
+Further, our approach uses microphones and speakers
+that are already available on existing mobile devices and
+hence the bar for adoption is much lower.
+-->
+</p>
+<h2>FingerIO</h2>
+<p>
+FingerIO は、モバイルデバイスをアクティブソナーシステムに変換することで、センチメートルレベルの指追跡を実現する。高レベルでは、デバイスのスピーカーから18～20KHzの周波数範囲の不可聴音信号を送信する。これらの信号は環境内のすべての物体で反射され、マイクによってエコーとして記録される。ユーザーが指を動かすと、対応するエコーの到着時間が変化する。ある瞬間から別の瞬間までのエコープロファイルを比較することで、動いている指に対応するエコーを抽出できる。前述のように、これらのエコーにはノイズが多いため、高精度な指追跡を実現するためには、エコーの開始点を正確に特定することが課題となる。FingerIOは、この目標を実現するためにOFDMと呼ばれる変調技術を活用する。
+<!--
+FingerIO achieves centimeter level finger tracking by transforming
+the mobile device into an active sonar system. At a
+high level, we transmit an inaudible sound signal in the frequency
+range of 18-20 KHz from the device’s speaker. These
+signal are reflected by all the objects in the environment and
+can be recorded by the microphone as echoes. When the user
+moves her finger, the time of arrival for the corresponding
+echo changes. By comparing the echo profile from one instance
+to the other, we can extract the echoes that correspond
+to the moving finger. As described earlier, since these echoes
+are noisy, the challenge is in accurately identifying the beginning
+of the echo so that we can achieve finger tracking with
+high accuracies. FingerIO leverages a modulation technique
+called OFDM to achieve this goal.
+-->
+</p>
+<p>
+このセクションの残りの部分では、まずOFDMの特性について説明する。次に、18～20kHzの範囲でスピーカーを使用してOFDM伝送を生成する方法について説明する。次に、FingerIOがOFDMを使用して、移動する指と単一のマイクとの距離を測定する方法を示す。最後に、2つのマイクを使用して2Dトラッキングを実現する方法について説明する。
+<!--
+In the rest of this section, we first explain the properties of
+OFDM. Next, we describe how we generate OFDM transmissions
+using speakers in the 18-20 kHz range. We then show
+how fingerIO uses OFDM to measure the distance of a moving
+finger from a single microphone. Finally, we discuss how
+to use two microphones to achieve 2D tracking.
+-->
+</p>
+<h3>OFDMを理解する</h3>
+<p>
+直交周波数分割多重方式（OFDM）は、Wi-FiやLTEを含む現代の無線通信システムで一般的に使用されている変調方式である。このセクションでは、設計に関連するOFDMの特性に焦点を当てる。OFDMの詳細については、[7, 16, 30]を参照。OFDMは帯域幅を直交サブキャリアに分割し、各サブキャリアでデータを独立して送信する。例えば、Wi-Fiでは、20MHzの帯域幅が、それぞれ312.5kHzの幅を持つ64のサブキャリアに分割される。データは、これらの64個のサブキャリアのそれぞれで送信される。これを実現するために、OFDMはフーリエ変換を使用する。帯域幅をN個のサブキャリアに分割し、n番目のサブキャリアでビットXnのデータを送信するものとする。 OFDMは、これらのデータビットに対して逆高速フーリエ変換（IFFT）を実行することで、送信機で送信される時間領域サンプルを生成する。つまり、
+<!--
+Orthogonal frequency division multiplexing (OFDM) is a
+common modulation technique used in modern wireless communication
+systems includingWi-Fi and LTE. In this section,
+we focus on the properties of OFDM that are relevant to our design. See [7, 16, 30] for more extensive discussion about
+OFDM. OFDM splits up the bandwidth into orthogonal subcarriers
+and transmits data independently on each of the subcarriers.
+For example, in Wi-Fi, the 20 MHz bandwidth is divided
+into 64 subcarriers each with a width of 312.5 kHz. The
+data is then transmitted on each of these 64-subcarriers. To
+achieve this, OFDM uses Fourier transforms. Say we divide
+the bandwidth into N subcarriers and transmit the data bitXn
+on the nth subcarrier. OFDM generates the time-domain samples
+that are sent at the transmitter by performing an inverse
+Fast Fourier transform (IFFT) over these data bits, i.e.,
+-->
+\[
+\mathbf x_k=\sum_{n=0}^{N-1} \mathbf X_n e^{i2\pi kn/N}　k=0\;to\;N-1
+\]
+これによりN個の時間領域サンプル\(x_k\)が生成され、送信機から送信される。理想的な受信機は、これらの時間領域サンプルを受信し、高速フーリエ変換(FFT)を実行してデータビットを復元する。つまり、
+<!--
+This createsN time-domain samples, \(x_k\), that are then sent by
+the transmitter. An ideal receiver would receive these timedomain
+samples and performs a Fast Fourier transform (FFT)
+to recover the data bits, i.e.,
+-->
+\[
+\mathbf X_n=\sum_{k=0}^{N-1} \mathbf x_k e^{-i2\pi kn/N}　n=\;to\;N-1
+\]
+実際には、受信機は完全に同期していないため、このシンボルの正確な開始位置を把握できない。この問題に対処するため、送信機は図2に示すように、最初のS個の時間領域サンプルの繰り返しである巡回サフィックスを送信する。これがなぜ役立つのかを理解するには、受信機がOFDMシンボルの開始位置を推定する際にEサンプルの誤差があるとする。この誤差を考慮すると、図に示すように、受信機はEだけオフセットされたN個の時間領域サンプルに対してFFTを実行する。巡回サフィックスを使用しているため、これらの新しい時間領域サンプルは\(x_{(k+E)\,mod\,N}\)と表すことができる。受信機がこれらのサンプルに対してFFTを実行すると、次のようになる。
+<!--
+In practice since the receiver is not perfectly synchronized, it
+does not know the exact beginning of this symbol. To help address
+this problem, the transmitter sends a cyclic suffix which
+is a repetition of the first S time-domain samples as shown in
+Fig. 2. To see why this helps, say the receiver has an error of
+E samples in estimating the beginning of the OFDM symbol.
+Given this error, it would perform an FFT over the N timedomain
+samples that are offset by E, as shown in the figure.
+Since we use a cyclic suffix, these new time-domain samples
+can be written as \(x_{(k+E)\,mod\,N}\). Now when the receiver performs
+an FFT over these samples, we get,
+-->
+\[
+\begin{align}
+\mathbf X_n^{\mathbf E} &=\sum_{k=0}^{N-1} \mathbf x_{(k+E)\,mod\,N} e^{-i2\pi kn/N}
+\\
+&=\mathbf X_n e^{i2\pi En/N}
+\end{align}
+\]
+
+</p>
+<p>
+新しい周波数領域データは元のデータと同じだが、シンボルの開始位置 (E) の推定誤差に依存する位相が追加されていることがわかる。また、図3に示すように、サブキャリア番号nとともに線形に増加する。例えば、1サンプルの誤差があると、サブキャリア全体で位相は0から\(2\pi\)まで線形に増加する。より一般的には、Eサンプルの誤差があると、N個のOFDMサブキャリア全体で位相は0から\(2E\pi\)まで増加する。
+<!--
+We see that the new frequency-domain data is the same as the
+original data but with an additional phase that depends on the
+error in estimating the beginning of the symbol (E). It also
+linearly increases with the subcarrier number n as shown in
+the Fig. 3. For example, an error of one sample results in the
+phase linearly increasing from 0 to \(2\pi\) across the subcarriers.
+More generally, an error of E samples, results in the phase
+increasing from 0 to \(2E\pi\) across the N OFDM subcarriers.
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p class="margin-large">
+図3：サンプルエラーによるOFDM位相変化。巡回サフィックスは、OFDMシンボルの開始位置がEサンプル分誤って推定された場合、OFDMサブキャリア全体で\(2E\pi\)の位相変化をもたらす。この位相変化は、サンプルエラーを補正し、システムの精度を向上させるために使用できる。
+<!--
+Figure 3: OFDM phase change due to sample error. The cyclic suffix introduces a phase change of \(2E\pi\) across the OFDM subcarriers when the beginning of the OFDM symbol is estimated incorrectly by E samples. This phase can be used to correct the sample error and improve the accuracy of the system.
+-->
+</p>
+<p>
+要約すると、受信機が送信されたデータビット\(\mathbf X_n\)を知っていれば、OFDMシンボルの開始位置を推定する際の誤差Eを計算できる。さらに、上記の解析は送信機と受信機の間にわずかな時間オフセットがある場合でも成立するため、オフセットを推定できる。我々はこのOFDMの特性を設計に活用し、センチメートルレベルの指追跡精度を実現している。
+<!--
+To summarize, if the receiver knows the data bits, \(\mathbf X_n\), that
+are been transmitted, it can compute the error E in estimating
+the beginning of the OFDM symbol. Further, the above
+analysis holds even when there is a fractional time offset between
+the transmitter and the receiver, allowing us to estimate
+it. We leverage this OFDM property in our design to achieve
+centimeter-level finger tracking accuracies.
+-->
+</p>
+<h3>スピーカーでのFingerIO送信</h3>
+<p>
+FingerIOは、18～20kHzの非可聴周波数範囲でOFDM信号を生成し、デバイスのスピーカーで再生する。しかし、音響OFDMシステムの構築には、2つの重要な注意点がある。i) 音響デバイスは、搬送周波数の生成と送信に発振器を使用しない。これは、48kHzのオーディオサンプリングレートで、一般的なスピーカーとマイクの周波数範囲全体をカバーできるためである。ii) スピーカーへの入力は16ビットの実数であり、IFFTによって生成された複素数を送信できない。そのため、FingerIO はキャリアレスの実数値OFDMシンボルを生成する。これを実現するために、48kHzのサンプリングレートを前提として、まず動作周波数0～24kHzを、それぞれ375Hzの幅を持つ64個のサブキャリアに分割する。18～20kHzの非可聴周波数範囲でのみ動作させたいため、この範囲外のサブキャリアはゼロに設定する。残りの部分については、各サブキャリアを+1または-1に設定する。次に、IFFTを計算し、64サンプルの複素時間領域信号xkを生成する。これらの複素数を実数値に変換するために、これらの複素数の実部を計算する。具体的には、次の変換を使用する。
+<!--
+FingerIO generates OFDM signals in the inaudible frequency
+range of 18-20 KHz which is then played by the device’s
+speaker. There are however two key subtleties with creating
+an acoustic OFDM system: i) acoustic devices do not use
+oscillators to generate and transmit a carrier frequency. This
+is because the audio sampling rate of 48 kHz is sufficient to
+cover the entire frequency range of typical speaker and microphones.
+ii) The input to the speaker is a 16-bit real number
+and cannot transmit the complex numbers generated by the
+IFFT. So fingerIO generates a carrier-less real value OFDM
+symbol. To do this, given a sampling rate of 48 kHz, we first
+split the operational frequency of 0–24 kHz into 64 subcarriers
+each spanning a width of 375 Hz. Since we want to operate
+only in the inaudible frequencies of 18–20 kHz, we set the
+subcarriers outside this range to zero. For the rest, we set each
+subcarrier to either +1 or -1. Then, we compute an IFFT that
+gives us a complex time-domain signal with 64 samples, xk.
+We convert these complex numbers into real values by computing
+the real value of these complex numbers. Specifically,
+we use the following transformation,
+-->
+\[
+real_k=|x_k|\cos(\angle \mathbf x_k)
+\]
+ここで、\(|\cdot|\) と \(\angle\) は複素数の振幅と位相を表す。これらの64個の実数値は、スピーカーから送信される実数値OFDMシンボルを形成する。これらの値の最初の20個を付加して巡回サフィックスを作成し、図4に示すように、スピーカーから繰り返し再生される。
+<!--
+Here \(|\cdot|\) and \(\angle\) denote the amplitude and phase of the complex
+number. These 64 real values form the real-valued OFDM
+symbol that is transmitted by the speaker. We append the first
+20 of these values to create a cyclic suffix that together is
+played repeatedly from the speaker, as shown in Fig. 4.
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p class="margin-large">
+図4：スピーカーにおける FingerIO の送信。OFDMシンボルと巡回サフィックスの84サンプルに続いて、200サンプルの無音区間が続く。この無音区間は、デバイスから1m以内にあるすべての物体からのエコーを受信するのに十分な長さである。上記の送信において48kHzのサンプルレートを用いると、フレームレートは169Hzとなる。
+<!--
+Figure 4: FingerIO transmissions at the speaker. The 84 samples for the OFDM symbol and the cyclic suffix are followed by 200 samples of silence. This silence duration is sufficient to receive echoes from all objects within 1 m from the device. Given a 48 kHz sample rate the above transmissions, the above transmissions achieves a frame rate of 169 Hz.
+-->
+</p>
+<p>
+48kHzのサンプリングレートでは、これらの84サンプル（巡回サフィックスを含む）は1.75msのパルスを形成する。これらのパルスを200サンプル間隔で配置すると、4.17msの間隔になる。この間隔を選んだのは、1mの距離からのすべてのエコーが次のパルスの開始前に到達できるようにするためである。これらのパラメータを考慮すると、OFDMパルスを5.92msごとに送信し、169Hzのフレームレートを実現する。
+<!--
+At a sampling rate of 48 kHz, these 84 samples (including
+the cyclic suffix) form a pulse that occupies 1.75 ms. We
+separate these pulses by 200 samples which in turn translates
+to a separation of 4.17 ms. We pick this duration to ensure
+that all the echoes from a distance of 1 m can arrive before
+the beginning of the next pulse. Given these parameters, we
+transmit an OFDM pulse once every 5.92 ms and achieve a
+frame rate of 169 Hz.
+-->
+</p>
+<h3>マイクからの距離を測定する</h3>
+<p>
+スピーカーから再生されたOFDM信号は、手を含む様々な物体で反射され、マイクで録音される。これらの反射音が存在する状況下で指からの距離を測定するために、3つの主要なステップを実行する。
+<div class="styleBullet">
+<ul>
+<li>(1) マイクにおけるすべての反射音のエコープロファイルを生成する</li><li>(2) 動いている指に対応するエコーを特定する</li><li>(3) 指から反射されたOFDMシンボルを処理して、マイクからの距離を微調整する。</li>
+</ul>
+</div>
+<!--
+The OFDM signal played by the speaker gets reflected off
+different objects including the hand and is then recorded by
+the microphone. To find the distance from the finger in the
+presence of all these reflections, we perform three key steps:
+(1) generate the echo profile of all the reflections at the microphone,
+(2) identify the echo corresponding to the moving
+finger, (3) process the OFDM symbol that is echoed by the
+finger to fine-tune its distance from the microphone.
+-->
+</p>
+<p>
+<strong>ステップ1：エコープロファイルの生成</strong><br>
+マイクでの録音を処理する際に、まず、一定距離内にあるすべての物体によって発生する個々のエコーを特定する。そのためには、受信信号と元のOFDMシンボルとの相関処理を行う。この相関処理の出力は、図5に示すエコープロファイルである。このプロファイルの各ピークは、モバイルデバイスの周囲の物体からのエコーの開始点に対応している。これは、反射物体がマイクとスピーカーからどのくらい離れた距離にあるかを示す指標となる。OFDMは優れた自己相関特性を備えているが、ノイズを考慮すると、このステップでは2～3サンプルの誤差で各エコーの開始点を特定できる。これは、距離推定における1.4～2.1cmの誤差に相当する。
+<!--
+Step 1. Generating the echo profile. While processing the
+recording at the microphone, we first identify the individual
+echoes that occur due to all objects within a distance. To do
+that, we perform correlation of the received signal with the original OFDM symbol. The output of this correlation process
+is an echo profile as shown in Fig. 5. Each of the peaks
+in this profile corresponds to the beginning of an echo from
+an object around the mobile device. This can be translated to
+a distance at which the reflecting object is present from the
+microphone and speaker. While OFDM has good autocorrelation
+properties, given noise, this step gives us the beginning
+of each echo with an error of 2–3 samples. This translates to
+an error in distance estimate of 1.4–2.1 cm.
+-->
+</p>
+<center><img src="images/fig5.png"></center>
+<p class="margin-large">
+図5：2つの時点におけるエコープロファイル。各ピークはエコーの到達を示し、X軸は音速に基づいて計算された対応する距離を示している。指がデバイスのマイクに対して34cmから35cmに移動するにつれて、エコーの到達時間の変化によりピークがシフトしていることがわかる。
+<!--
+Figure 5: Echo profile at two time instances. Each peak indicates the arrival of an echo and the X-axis shows the corresponding distance computed based on the speed of sound. When the finger moves from 34 cm to 35 cm with respect to the device’s microphone we can see a shift in the peak due to the change in the arrival time of the echo.
+-->
+</p>
+<p>
+<strong>ステップ2. 指に対応するエコーの識別</strong><br>
+指が動くと、指に対応するエコーの到着時刻が変化する。図5は、マイクから34cmの距離から35cmの距離まで指が移動したときのエコーを示している。図から、指がデバイスの周りを動くにつれてエコーの位置が変化することがわかる。この変化は、連続するOFDMパルスのエコープロファイル間の減算を行うことで識別する。特定の距離値で変化が発生したかどうかを認識するために、閾値ベースのアプローチを使用する。具体的には、エコープロファイル内のすべての距離値にわたる変化が閾値より小さい場合、デバイスの近くで指の動きはなかったと判断される。閾値より大きい変化は、動きに対応するものと判断される。この閾値は、スピーカーから直接聞こえるスピーカー信号の振幅の15%に設定した。この相対閾値を選択するのは、マイクやスピーカーの非線形性によって生じる振幅の変動が誤検知につながらないようにするためである。
+<!--
+Step 2. Identifying the echo corresponding to the finger.
+When the finger moves, the time of arrival for the echo corresponding
+to the finger changes. Fig. 5 shows the echo from
+the finger as it moves from a distance of 34 cm to 35 cm from
+the microphone. We can see from the figure that the position
+of the echo changes as the finger moves around the device.
+We identify this change by performing a subtraction between
+the echo profiles of consecutive OFDM pulses. To recognize
+if a change has occurred at a specific distance value, we use a
+threshold based approach. Specifically, if the changes across
+all the distance values in the echo profile are smaller than a
+threshold, we conclude that there has been no finger motion
+in the vicinity of the device. Changes that are greater than the
+threshold value are designated as those corresponding to motion.
+We set this threshold value to 15% of the amplitude of
+the speaker signal as heard directly by the speaker. We pick
+this relative threshold value to ensure that amplitude fluctuations
+that occur because of non-linearities in microphones
+and speakers do not lead to false positives.
+-->
+</p>
+<p>
+成人の指の幅は約1センチメートルである。これは、サンプリングレートが48kHzのアクティブソナーシステムが提供する距離分解能（0.7cm）に近い値である。したがって、指が動くと、指の以前の位置と新しい位置に対応する1～2つのサンプルでのみ変化が起こると予想される。しかし、図5をよく見ると、変化は指の位置だけでなく、その近傍でも起こっていることがわかる。これは、指の動きが、指と同じ軌跡を描く手の動きも引き起こすためである。しかし、我々の設計では、これは、他の小さな手の動きに対応する変化が存在する中で、指の動きによって引き起こされる変化を正しく識別する必要があることを意味する。これは、変化が閾値を超える最も近いサンプルを選択することで実現する。これが機能する理由は、指が手の他の部分と比較して常にマイクに近いためである。さらに、ユーザーが指を使って描くと、最大の変位（つまり変化）は指先で発生する。
+<!--
+The width of a human adult finger is around a centimeter.
+This is close to the distance resolution (0.7 cm) provided by
+an active sonar system where the sampling rate if 48 kHz.
+Hence, when the finger moves, one would expect a change to
+occur at only one-two samples corresponding to the old and
+new locations of the finger. However, close examination of
+Fig. 5 reveals that the changes occur not only at the finger’s
+location but also near its vicinity. This is because a finger motion
+also causes a hand movement that traces a similar path
+as the finger. For our design, however, this means that we
+need to correctly identifying the changes caused by the finger
+motion in the presence of changes corresponding to other
+small hand movements. We achieve this by picking the closest sample, where the change crosses the threshold value. The
+reason why this works is that the finger is always closer to
+the microphone compared to the rest of the hand. Further, as
+the user draws using their finger, the maximum displacement
+(and hence changes) occurs at the tip of the finger.
+-->
+</p>
+<p>
+<strong>ステップ3. マイクからの距離の微調整</strong><br>
+最後に、指に対応するエコーを特定したら、OFDMの特性を利用して、このエコーの開始位置を正確に推定する。具体的には、前述のように、OFDMパルスのエコーに対してFFTを実行すると、エコーの開始位置の推定誤差はFFT出力における線形位相シフトに変換される。したがって、大まかに言うと、まずステップ1の相関によって推定されたエコーのおおよその位置から64ポイントのFFTを計算する。次に、FFT出力における線形位相シフトを利用してエコーの開始位置を正確に推定し、マイクからの距離を算出する。マイクは実OFDM信号を受信するため、FFTを実行する前にまず複素信号に変換する必要があることに注意。これを実現するために、負の側波帯抑圧[26]と呼ばれる手法を用いる。この手法では、信号の負の周波数成分をゼロに設定することで複素表現を得る。このプロセス全体を通して、指とマイクの距離推定を微調整することができる。
+<!--
+Step 3. Fine-tuning the distance from the microphone. Finally,
+once we identified the echo corresponding to the finger,
+we use the properties of OFDM to accurately estimate the beginning
+of this echo. Specifically as described earlier, when
+we perform an FFT over the echo of an OFDM pulse, any error
+in estimating the beginning of the echo translates to a linear
+phase shift at the output of the FFT. Thus, at a high level,
+we first compute a 64-point FFT starting at the approximate
+location of the echo as estimated by the correlation in step 1.
+We then use the linear phase shift at the output of the FFT to
+accurately estimate the beginning of the echo, which in turn
+gives us the distance from the microphone. We note that since
+the microphones receive a real OFDM signal, we need to first
+transform it into a complex signal before performing the FFT.
+To do this, we use a technique called negative sideband suppression
+[26] where we obtain a complex representation by
+setting the negative frequency components of the signal to
+zero. This overall process allows us to fine-tune the distance
+estimate of the finger from the microphone.
+--.
+</p>
+<h3>2つのマイクを使った2D指追跡</h3>
+<p>
+2Dトラッキングを実行するには、2つのマイクに対する指の距離を計算し、それらを組み合わせて2D位置を測定する。測定する距離は、実際にはスピーカーから指までの信号の移動距離と、指からマイクまでのエコーの移動距離の合計であることに注意。つまり、1つのマイクで計算された距離測定では、マイクとスピーカーからの距離の合計が測定距離に等しい2D空間内の任意の点に指を置くことができる。言い換えれば、スピーカーとマイクの位置が楕円の2つの焦点であり、測定距離が楕円の長軸の長さの2倍である楕円上に指を置くことができる。2つのマイクからの測定値があれば、FingerIO は対応する2つの楕円の交点を見つけ、指の位置の可能性を絞り込むことができる。
+<!--
+To perform 2D tracking, we compute the distances of the finger
+with respect to two microphones and combine them to
+measure the 2D location. Note that the distance we are measuring
+is actually the sum of the distance traveled by the signal
+from the speaker to the finger and the distance traveled
+by the echo from the finger to the microphone. This means
+that given the distance measurements computing on a single
+microphone, the finger can lie on any point in a 2D space
+where the sum of its distance from the microphone and the
+speaker is equal to the measured distance. Said differently,
+the finger can lie on an ellipse where the speaker and the microphone
+locations are the two focii of the ellipse and the
+distance measured is twice the length of the major axis of
+the ellipse. Given the measurements from two microphones, fingerIO can find the intersection of the corresponding two ellipses
+to narrow down the possibilities for the finger location.
+-->
+</p>
+<p>
+一般的に、2つの楕円は最大4点で交差するが、この場合は交点は2つしかない。これは、焦点（スピーカー）を共有する2つの楕円は、最大2点でしか交差できないためである[25]。
+これらの2点は、2つのマイクを結ぶ線の両側にある。つまり、システムは2つのマイクを結ぶ線に沿って対称であり、2次元位置は携帯電話のどちらの側にも存在する可能性がある。我々の設計上の意味は、ユーザーが2つのマイクを結ぶ線のどちら側で指を動かしているかを区別できないということである。スマートフォンでの使用例では、これはユーザーが常に携帯電話の片側だけに描画できることを意味する。ユーザーは携帯電話と自分自身の間の領域でインタラクションする可能性が高いため、これは許容範囲である。しかし、これはスマートウォッチにとって興味深い設計上の選択肢をもたらす。図6に示すように、2つのマイクを\(H_1\)と\(H_2\)の位置に配置した場合、ユーザーは腕のどちら側でも簡単に操作できまるが、腕に沿って描くことはできない。マイクを垂直位置\(V_1\)と\(V_1\)に配置すると、腕上で操作できるが、手とユーザーの間の不完全な領域で操作することになる。妥当な妥協案としては、マイクを対角位置\(D_1\)と\(D_2\)に配置することが考えられる。別の解決策としては、3つのマイクを使用してこの対称性を排除することである。本稿の実装では、マイクの位置として水平位置\(H_1\)と\(H_2\)を使用している。
+<!--
+While in general, two ellipses can intersect in up to four
+points, in our case there can only be two intersection points.
+This is because, two ellipses that share a focal point (the
+speaker) can intersect in a maximum of two points [25].
+These two points lie on either side of the line joining the
+two microphones. This means that the system is symmetrical
+along the line joining the two microphones and the 2-D
+location can lie on either side of the phone. The implication
+for our design is that we cannot distinguish between when the
+user is moving her finger on either side of the line connecting
+the two microphones. For the smartphone use case, this
+means that the user could draw on only one side of the phone
+at any instance. It is acceptable since the user is likely to
+interact in the region between the phone and themself. This
+however raises interesting design choices for the smartwatch.
+If we place the two microphone in positions \(H_1\) and \(H_2\) as
+shown in Fig. 6 then the user can easily interact on either side
+of the arm but cannot draw along her arm. Placing them in
+the vertical positions \(V_1\) and \(V_1\) would allow us to interact on
+the arm but on a truncated region between the hand and the
+user. A reasonable compromise could be to place them along
+the diagonal positions \(D_1\) and \(D_2\). Another solution is to use
+three microphones and eliminate this symmetry. The implementation
+in this paper uses the horizontal locations, \(H_1\) and
+\(H_2\) for the microphone positions.
+-->
+</p>
+<center><img src="images/fig6.png"></center>
+<p class="margin-large">
+図6：スマートウォッチのデザイン上の選択肢。スマートウォッチの反対側にマイクを配置すると、ユーザーが腕やその下の面の一部に描画することが制限される。対角線上にマイクを配置すれば、ユーザーは腕と面の両方で操作できるため、妥当な妥協策となる可能性がある。
+<!--
+Figure 6: Design choices for the smart watch. Placing microphones on opposite sides of a smart watch either limit the user from drawing on the arm or on part of the surface below. Placing microphones along the diagonal could be a reasonable compromise as would allow users to interact both on the arm and a surface.
+-->
+</p>
+<p>
+2つのマイクを使用することで、我々の設計では任意の2D平面上の動きを追跡できる。異なる平面に沿った動きは、マイクが配置されている平面に投影される。スマートウォッチの場合、ユーザーは手首をインタラクション面（テーブルなど）に置く。ユーザーの腕の幅は約数センチメートルであり、スマートウォッチが配置されている平面はインタラクション面と平行であると近似できることに注意。したがって、インタラクション面に沿った指の動きの投影は、実際の動きの投影と類似している。3つ以上のマイク、例えばディスプレイの近くに2つのマイク、ストラップに沿ってもう1つのマイクを使用すると、上記の近似は不要になる。
+<!--
+Using two microphones, our design can track the motion on
+any 2D plane. Motion along a different plane will be projected
+to the plane along which the microphones lie. In the
+case of a smart watch, the user places the wrist on the interaction
+surface (e.g., table). Note that the width of a user’s arm is
+around a couple of centimeters and the plane along which the
+smart watch lies can be approximated to be parallel to that
+the interaction surface. Thus, the projections of the fingermotion
+along the interaction surface are similar to that of the
+actual motion. Note that using more than two microphones,
+e.g., two microphones near the display and an additional one
+along the strap, will avoid the need for the above approximations.
+-->
+</p>
+<h2>実装</h2>
+<p>
+2つのプラットフォームで FingerIO プロトタイプを実装した。
+<!--
+We implement fingerIO prototypes on two platforms.
+-->
+</p>
+<p>
+<strong>市販のスマートフォン</strong><br>
+サードパーティ製のAndroidアプリを開発し、Samsung Galaxy S4スマートフォンでテストした。このスマートフォンには、底面にスピーカーが1つ、右上と右下に13.5cm間隔で配置されたマイクが2つ搭載されている。アプリはOFDMシンボルを生成し、既存のAndroid APIであるAudioTrackクラスを使用してスマートフォンのスピーカーから再生する。アプリは、Android組み込みのAudioRecordクラスを使用して、ステレオモードで両方のマイクから同時に録音するように設定されている。
+<!--
+Off-the-shelf smartphones. We developed a third party Android
+app and tested it on a Samsung Galaxy S4 smartphone.
+The phone has one speaker at the bottom and two microphones
+one at the top right and the other at the bottom right
+spaced apart by 13.5 cm. The app generates the OFDM symbols
+and uses the AudioTrack class that is an existing Android
+API to play it on the phone’s speaker. The app is set to record
+simultaneously from both microphones using the stereo mode
+using Android’s built-in AudioRecord class.
+-->
+</p>
+<p>
+<strong>スマートウォッチ形状デバイス</strong><br>
+Appleスマートウォッチは、通話やSiriの使用を可能にする効果的なスピーカーとマイクを備えているが[2]、現時点ではスマートフォンほどプログラム可能ではなく、マイクも1つしかない。1Dトラッキングは1つのマイクで実現できるが、2Dトラッキングも実証したいため、図7に示すように、2つのマイクとスピーカーをベルクロストラップ付きの3Dプリントケースに取り付けたシンプルなプロトタイプを構築した。エレクトレットマイク（CMA-4544PF-W、CUI Inc）は、時計ケースの反対側に40 mm間隔で取り付けられている。マイクからの出力は、プリアンプ（MAX4466、Maxim）を搭載したAdafruit開発ボード[1]に接続され、データ収集のためにNI MyDAQに接続される。スマートフォンの実験に使用したのと同じOFDM信号が、スマートフォンの3.5mmヘッドフォンジャックからの入力を受け取り、スピーカーを駆動するD級アンプ（MAX98306、Maxim社製）に供給された。システムはKeysight E3631A DC電源を使用して動作させた。
+<!--
+Smart watch form-factor device. While Apple smart watch
+has effective speakers and microphones that allow them to
+make calls and use Siri [2], they are currently not as programmable
+as smart phones and further have only a single
+microphone. While 1D tracking can be achieved with a single
+microphone, since we also want to demonstrate 2D tracking,
+we built a simple prototype consisting of two microphones
+and a speaker mounted in a 3D printed case with a Velcro
+strap, as shown in Fig. 7. The electret microphones (CMA-
+4544PF-W, CUI Inc) are mounted on opposite sides of the
+watch case spaced apart by 40 mm. The output from the microphones
+are connected to a Adafruit development board [1]
+containing a preamplifier (MAX4466, Maxim) which is then
+connected to the NI MyDAQ for data acquisition. The same
+OFDM signal used for the smartphone experiments was supplied
+to a class D amplifier (MAX98306, Maxim) that takes
+input from the phone’s 3.5 mm headphone jack and drives
+the speaker. The system was powered using the Keysight
+E3631A DC power supply.
+-->
+</p>
+<center><img src="images/fig7.png"></center>
+<p class="margin-large">
+図7：スマートウォッチ形状のプロトタイプ。このプロトタイプは、2つのマイク（ケースに内蔵）と、ベルクロストラップで固定された3Dプリントケース（図では透明に表示）に取り付けられたスピーカーで構成されている。
+<!--
+Figure 7: Our Smart watch form-factor prototype. The prototype consists of two microphones (embedded in the case) and a speaker mounted in a 3D printed case (shown transparent in figure) with a Velcro strap.
+-->
+</p>
+<h2>評価</h2>
+<p>
+20～25歳の10名の参加者（女性5名、男性5名）を募集した。いずれの参加者にも金銭的な利益は提供されなかった。参加者には指を使って好きなパターンを描いてもらい、スマートフォンとスマートウォッチの両方の実装において、様々なシナリオで FingerIO の精度を評価した。参加者は好きなパターンを描けるため、正解データを収集するタッチベースのモバイルデバイスをもう1台用意した。具体的には、FingerIO 対応スマートフォン／スマートウォッチの周囲のさまざまな場所にAndroidスマートフォンを置き、参加者にこのデバイス上で指を使って自由に描いてもらった。参加者がタッチしたピクセル位置を取得するために、Android OnTouchイベントリスナーを使用した。また、draw APIを拡張して、ユーザーの指が移動した軌跡を同時に表示した。OnTouch APIは、位置を画面空間内のピクセルとしてのみ提供する。これを、ピクセル値を1センチメートルあたりのピクセル数でスケーリングすることで、画面上の位置（cm単位）に変換する。次に、この画面の位置を、FingerIO対応スマートウォッチ/スマートフォンと、正解データ収集に使用したスマートフォンとの距離に合わせてオフセットする。
+<!--
+We recruited ten participants (5 female and 5 male) between
+the ages of 20–25; none of them were provided any monetary
+benefits. The participants were asked to draw any pattern
+they wanted using their finger and we evaluate fingerIO’s accuracy
+in various scenarios for both the smartphone and smart
+watch implementations. Since the participants could draw
+any pattern, we use a second touch-based mobile device that
+collects the ground truth data. Specifically, we place an Android
+smartphone at different locations around our fingerIOenabled
+smartphone/smart watch and ask the participants to
+draw freely using their finger on this device. We use the Android
+OnTouch Event Listener to obtain the pixel locations
+that the participants touch. We also extended the draw API
+to simultaneously display the path traversed by the user’s finger.
+The OnTouch API only provides the locations as pixels
+in the screen space. We convert this into a screen location (in
+cm) by scaling the pixel value with the number of pixels per
+centimeter. We then offset this screen location with the distance
+between the fingerIO-enabled smart watch/smartphone
+and the smartphone used for ground truth data collection.
+-->
+</p>
+<p>
+このセクションの残りの部分では、まず、スマートフォンとスマートウォッチのプロトタイプ実装における、視線方向および遮蔽されたシナリオでの2D指トラッキング精度を示す。次に、両プロトタイプにおける FingerIO のインタラクション面（つまり2D範囲）を評価する。最後に、FingerIO による意図しないモーショントラッキングについて考察する。
+<!--
+In this rest of this section, we first present 2D finger tracking
+accuracy for both the smartphone and the smart watch
+prototype implementations in line-of-sight and occluded scenarios.
+We then evaluate fingerIO’s interaction surface (i.e.,
+2D-range) for both the prototypes. Finally, we address unintentional
+motion tracking with fingerIO.
+-->
+</p>
+<h3>FingerIOの指追跡精度</h3>
+<p>
+実験は組織内のオフィスの一つで行う。FingerIO を搭載したスマートフォンを、参加者の目の前に縦向きにテーブルの上に置く。正解データの収集に使用する別のスマートフォンは、FingerIO 対応スマートフォンから 25cm 離れたところに置く。参加者にはシステムのデモンストレーションが示され、実際に操作する機会が与えられる。参加者がセットアップに慣れた後、任意の指の動きからなるパターンを描くように指示される。参加者はパターンを 3 回繰り返すように指示される。参加者は全員、指を使って描画しながら手のひらをテーブルに置く。このすべてのデータを処理し、正解データから平均トラッキング誤差を計算する。指のトラッキング誤差を計算するために、FingerIO によって計算されたトレースに沿った各点と正解データとの平均最小垂直距離を測定する。
+<!--
+We run experiments in one of the offices in our organization.
+We place a smartphone running fingerIO on a table, lengthwise
+in front of the participants. A separate smartphone that
+is used to collect the ground truth was placed 25 cm from the
+fingerIO-enabled smartphone. The participants were given
+a demonstration of the system and were allowed to practice
+with it. Once the participants became familiar with the setup,
+they were instructed to draw a pattern of their choice that consisted
+a single continuous finger movement. The participants
+were asked to repeat their patterns thrice. All the participants
+placed their palm on the table while using their finger to draw.
+We process all this data and compute the average tracking error
+from the ground truth data. To compute the finger tracking
+error, we measure the average least perpendicular distance of each point along the trace computed by fingerIO with the
+ground truth.
+-->
+</p>
+<p>
+図9は、10人の参加者全員の追跡誤差のCDFを示している。この図は、追跡誤差が参加者全員で同様であることを示している。さらに、参加者全員の誤差の中央値は0.8cmだった。これは、FingerIO が実際にセンチメートルレベルの指追跡という目標を達成していることを示している。図8は、参加者が選択した最も複雑なパターンを4つ示している。これらのトレースの黒い線は参加者の真のトレースであり、緑のトレースは FingerIO によって計算され、係数5でサブサンプリングされたものである。図から、2つのトレースが互いに近いこと、そして FingerIO のアルゴリズムがトレースに示されているような複雑な動きも処理できることがわかる。
+<!--
+Fig. 9 shows the CDF of the tracking error for all ten participants.
+The figure shows that the tracking error is similar
+across all participants. Further, the median error across
+all participants was 0.8 cm. This demonstrates that fingerIO
+achieves its goal of centimeter-level finger tracking in practice.
+Fig. 8 shows four of the most complex patterns picked by
+the participants. The black line in these traces is the ground
+truth trace of the participants and the green traces are the ones
+computed by fingerIO, subsampled by a factor of five. The
+figures show that the two traces are close to each other and
+that fingerIOs algorithm can also deal with intricate motion
+such as those shown in the traces.
+-->
+</p>
+<center><img src="images/fig8.png"></center>
+<p class="margin-large">
+図8: スマートフォンのセットアップ用に FingerIOを用いて計算されたトレース。図は、4人の参加者について、真のトレース（黒線）とfingerIOによる推定トレース（緑線）の両方を示している。
+<!--
+Figure 8: Traces computed using fingerIO for smartphone setup. The figures show both the ground truth trace (black lines) as well as fingerIO’s estimated trace (green lines) for four of our participants.
+-->
+</p>
+<center><img src="images/fig9.png"></center>
+<p class="margin-large">
+図9：スマートフォンを用いた指の追跡精度。10人の参加者それぞれにおける2D追跡誤差の累積分布関数（CDF）。全参加者における追跡誤差の中央値は8mm。
+<!--
+Figure 9: Finger tracking accuracies with smartphone. Cumulative distribution functions (CDFs) for the 2D tracking errors for each of the ten participants. The median tracking error across all the participants is 8 mm.
+-->
+</p>
+<p>
+上記の一連の実験を、スマートウォッチのプロトタイプを用いて繰り返す。具体的には、参加者にスマートウォッチを腕に装着し、テーブルの上に置いてもらう。参加者は、スマートウォッチから約25cm離れたテーブル上にパターンを描く。前回と同様に、FingerIO のトレースと実際のトレース間の最小垂直距離を測定することで、指の追跡誤差を計算する。
+<!--
+We repeat the above set of experiments with our smart watch
+prototype. In particular, we ask the participants to wear the
+smart watch on their arm and place it on a table. The participants
+drew patterns on the table at a distance of around
+25 cm from the smart watch. As before, we compute the finger
+tracking error by measured the least perpendicular distance
+between the traces for fingerIO and the ground truth.
+-->
+</p>
+<p>
+図10は、スマートウォッチ実験における追跡誤差のCDFを示している。スマートフォンの場合と同様に、ほとんどの参加者で追跡誤差は同様である。全参加者の中央値誤差は約1.2cmだった。スマートウォッチのセットアップでは、スマートフォンのシナリオよりも精度が低いことがわかる。これは、指の動きがない場合でも、スマートウォッチのプロトタイプで使用しているマイクでノイズレベルが高くなっているためである。これは、ハードウェアセットアップにおいて、スピーカーとマイク間の分離が不十分であることが原因であると考えられる。分離を改善すれば、原理的には精度をさらに向上させることができる。
+<!--
+Fig. 10 shows the CDF of the tracking error for the smart
+watch experiments. As with the smartphone, the tracking error
+is similar for most participants. The median error across
+all participants was around 1.2 cm. We observe that the accuracy
+with the smart watch setup is lower than with the smartphone
+scenario. This is because we see higher noise levels at
+the microphones we use in our smart watch prototype, even
+in the absence of any finger motion. This is likely because of
+insufficient isolation between the speaker and the microphone
+in our hardware setup. Better isolation, could in principle improve
+the accuracies further.
+-->
+</p>
+<center><img src="images/fig10.png"></center>
+<p class="margin-large">
+図10：スマートウォッチを用いた指の追跡精度。10人の参加者それぞれにおける2D追跡誤差のCDF（累積分布関数）。平均追跡誤差は1.2cmであった。
+<!--
+Figure 10: Finger tracking accuracies with smart watch. CDFs for the 2D tracking errors for each of the ten participants. The mean tracking error was 1.2 cm.
+-->
+</p>
+<h3>FingerIOのインタラクション面</h3>
+<p>
+プロトタイプのスマートウォッチとスマートフォンの周囲で、FingerIO がインタラクション面をどのように拡張するかを評価する。
+<!--
+We evaluate how fingerIO extends the interaction surface
+around our prototype smart watch and smartphone.
+-->
+</p>
+<p>
+<strong>スマートウォッチのプロトタイプとFingerIOのインタラクション面</strong><br>
+参加者はスマートウォッチを装着し、手をテーブルに置くように指示された。図11に示すように、手の前の領域を5×5cmのグリッドに分割した。各グリッド内で、参加者は長さ4cmの直線を2回引いた。各試行において、fingerIOを用いて指の軌跡を計算し、これを実験で収集したグラウンドトゥルースと比較する。指の追跡誤差を計算するために、fingerIOによって計算されたトレース上の各点と正解との平均最小垂直距離を測定する。各グリッド内の平均誤差は、そのグリッド内の試行全体を平均化することで計算する。図は、スマートウォッチとのインタラクション面が腕の片側にある\(0.5×0.25 m^2\)の領域であることを示す。2つのマイクを結ぶ線を境に性能は対称であるため、実際のインタラクション面はこの領域の2倍となる。平均誤差は約1.2cmで、領域全体で均一である。図に示されているグリッドを超えると、距離とともに精度が急激に低下することがわかる。前述のように、ハードウェアプロトタイプではスピーカーとマイクの分離が不十分なため、動きがない場合でもノイズが増加している。これが、スマートフォンの場合よりもわずかに高いトラッキング誤差の原因となっている。
+<!--
+FingerIO’s interaction surface with the smart watch prototype.
+The participants were asked to wear the watch on their
+hand and place the hand on the table. We divide the area
+in front of the hand into 5×5 cm grids as shown in Fig. 11.
+Within each grid, the participants draw a straight line with a
+length of 4 cm twice. In each trial, we compute the trajectory
+of the finger with fingerIO. We compare this with the
+ground truth collected from our experiments. To compute the
+finger tracking error, we measure the average least perpendicular
+distance of each point along the trace computed by fingerIO with the ground truth. We compute the average error
+in each grid by averaging across trials in that grid. The
+figure shows that the interaction surface with the smart watch
+is a \(0.5×0.25 m^2\) region on one side of the arm. Since the
+performance is symmetric across the line joining the two microphones,
+the actual interaction surface is double is region.
+The average error is about 1.2 cm and is uniform across the
+region. We note that beyond the grids shown in the figure, the
+accuracies quickly drop off with distance. As observed before,
+because of insufficient isolation between the speaker and
+the microphone in our hardware prototype, we see increased
+noise even in the absence of any motion. This contributes to
+slightly higher tracking errors than a smartphone scenario.
+-->
+</p>
+<center><img src="images/fig11.png"></center>
+<p class="margin-large">
+図11：スマートウォッチのインタラクション面。手の周囲の表面を5cm間隔のグリッドに分割し、グリッドごとに平均指追跡精度を計算した。FingerIOは、平均指追跡精度1.2cmで、0.5×0.25 \(m^2\) のインタラクション面を実現する。
+<!--
+Figure 11: Interaction surface for smart watch. The surface around the hand was divided into 55 cm grids and the average finger tracking accuracy was computed for each grid. fingerIO enables an \(0:5×0:25 m^2\) interaction surface with an average finger tracking accuracy of 1.2 cm.
+-->
+</p>
+<p>
+<strong>スマートフォンとFingerIOのインタラクション空間</strong><br>
+スマートウォッチのプロトタイプとは異なり、スマートフォンのスピーカーの出力はAndroid APIで許可されている最大値の15に設定されている。これは、スマートウォッチの実装よりも約10dB高くなっている。さらに、スマートフォンなどの市販デバイスは、マイクとスピーカー間のアイソレーションが優れている。そこで次に、市販のスマートフォンを使用してFingerIOのインタラクション空間を評価する。これを測定するには、スマートフォンをテーブルに置き、スマートフォンの周囲を10×10cmのグリッドに分割する。良好なアイソレーションと高い送信電力で最大のインタラクション面積がどの程度になるかを確認したいため、スマートフォンの画面を下に向けて配置する。これにより、スマートフォンの背面にあるスピーカーからの送信がより遠くまで届くようになり、スマートウォッチのプロトタイプのより優れたバージョンを模倣できる。前のシナリオと同じ実験を行い、各グリッド位置でのトラッキング誤差を測定する。図12は、スマートフォンとその周囲のグリッドにおける指のトラッキング精度を示している。この図から、FingerIO がスマートフォンの周囲約0.5m²の領域にインタラクティブ面を拡大していることがわる。この範囲内での平均誤差は1cm未満で、ほぼ均一である。しかし、この距離を超えると誤差は3cmに増加する。さらに、これらの精度はスマートフォンの4辺すべてで同様であり、FingerIO がユーザーからのスマートフォンの向きに関係なく良好なパフォーマンスを発揮できることを示している。インタラクション領域の拡大は、分離の向上と電力の増加により、より広いインタラクション空間とより優れたトラッキング精度を実現できることを示している。ただし、ユーザーがスマートフォンやスマートウォッチを操作している場合、一部のインタラクションアプリケーションでは1メートル未満のトラッキング範囲で十分だと考えている。
+<!--
+FingerIO’s interaction space with the smartphone. In contrast
+to our smartwatch prototype, the output power of the smartphone
+speaker is set to the maximum value of 15 allowed
+by the Android API. This is around 10 dB greater than that
+in our smart watch implementation. Further, commercial devices
+such as smartphones have better isolation between microphones
+and speakers. So next we evaluate the interaction
+space for fingerIO using a off-the-shelf smartphone. To measure
+this, we place the smartphone on a table and divide the
+area around the phone into 10×10 cm grids. Since we would
+like to see what the maximum interaction surface area can be with good isolation and higher transmission power, we place
+the phone screen down. This ensures that the transmissions
+on the speaker that is on the back of the phone can reach much
+further distances and imitates a better version of the smart
+watch prototype. We perform the same experiments as in the
+previous scenario and measure the tracking error in each grid
+locations. Fig. 12 shows the smartphone and the finger tracking
+accuracy for the grids around it. The figure shows that,
+fingerIO expands the interactive surface to about a \(0.5 m^2\) region
+around the smartphone. The average error within this
+range is less than 1 cm and is fairly uniform; beyond this
+distance however this error increases to 3 cm. Further, these
+accuracies are similar on all four sides of the smartphone,
+demonstrating that fingerIO can perform well for different
+phone orientations from the user. The increased interaction
+area demonstrates that with better isolation and higher power,
+we can achieve a larger interaction space and better tracking
+accuracies. We believe however, a tracking range of less than
+a meter is sufficient for some interaction applications when
+the user is interacting with their smartphones or watches.
+-->
+</p>
+<center><img src="images/fig12.png"></center>
+<p class="margin-large">
+図12: スマートフォンとのインタラクション面。デバイスの周囲の表面を10×10cmのグリッドに分割し、グリッドごとに平均追跡精度を計算した。
+<!--
+Figure 12: Interaction surface with smartphone. The surface around the device was divided into 10×10 cm grids and the average tracking accuracy was computed for each grid.
+-->
+</p>
+<h3>遮蔽シナリオにおけるFingerIO</h3>
+<p>
+2 つの特定の遮蔽シナリオを評価した。
+<!-- We evaluate two specific occlusion scenarios. -->
+</p>
+<p>
+<strong>ジャケットで覆われたスマートウォッチ</strong><br>
+参加者には、スマートウォッチを完全に覆うポリエステル製のジャケットを着用してもらう。追跡誤差を計算するために、前述と同様のセットアップを使用する。参加者にはまず、スマートウォッチを装着し、図13(a)に示すようにテーブルに手を置いてもらう。次に、参加者に指で任意のパターンを描いてもらう。10人の参加者のうち5人を対象にこの実験を行い、各参加者には描いたパターンを3回繰り返すように依頼した。図13(b)は、5人の参加者全体における FingerIO と正解データ間の追跡誤差のCDFを示している。参加者全体の誤差の中央値は1.35 cmだった。これは、遮蔽がない場合の誤差よりもわずかに大きい。これは、遮蔽があっても FingerIO が動作することを示している。
+<!--
+Smart watch occluded behind a jacket. We ask the participants
+to wear a polyester jacket that fully covers the smart
+watch. We use a similar setup as before to compute the tracking
+error. The participants were first asked to wear the smart
+watch and place their hand on the table as shown in fig. 13(a).
+We then asked the participants to draw any pattern with their
+finger. We run these experiments with five of our ten participants
+where each of them was asked to repeat the pattern
+they drew 3 times. Fig. 13(b) shows the CDF of the tracking
+errors between fingerIO and the ground truth across all five
+participants. The median error across all the participants was
+1.35 cm. This is slightly greater than the error in the absence
+of the occlusion. This demonstrates that fingerIO operates
+even in the presence of occlusions.
+-->
+</p>
+<center><img src="images/fig13.png"></center>
+<p class="margin-large">
+図13：ジャケットに隠れたスマートウォッチ。この図は、スマートウォッチがジャケットに隠れた状態での5人の被験者の2DトラッキングエラーのCDF（累積分布関数）を示している。全被験者のトラッキングエラーの中央値は1.35cmで、スマートウォッチが隠れていない場合の1.2cmと比較して低下している。
+<!--
+Figure 13: Smart watch occluded behind a jacket. The figure plots the CDF for the 2D tracking errors for five participants when the smart watch was occluded behind a jacket. The median tracking error across all the participants is 1.35 cm compared to 1.2 cm when the smart watch was not occluded.
+-->
+</p>
+<p>
+<strong>ポケットの中のスマートフォン</strong><br>
+次に、図14(a)に示すように、ジーンズのポケットにスマートフォンを入れ、背面を外側に向けた状態で実験を行った。参加者のうち5名には、ポケットの前で空中で指をスワイプさせるように指示した。スワイプ動作は、親指を人差し指の上を滑らせる動作である。FingerIOアルゴリズムは、1つのマイクからのデータを処理し、指の移動距離を計算するように設定した。参加者は、スマートフォンに対して任意の角度から上記の指のスワイプ動作を行うことができた。参加者には、指の目立つ線の解像度でのみ指を動かすように依頼した。これが正解データとなる。平均して、参加者は人差し指を約5cm動かした。FingerIO によって推定された距離と真の動きの差として誤差を計算する。図14(b)は、この計算された距離の誤差のCDFを示している。グラフは、全参加者の平均誤差が1cmであることを示している。すべてのケースにおいて、我々のアルゴリズムは指の動きの方向、つまり携帯電話に向かう方向か離れる方向かを正しく識別している。これは、ポケット越しの指の動きの追跡が実現可能であることを示している。
+<!--
+Smartphone in the pocket. Next, we run experiments with
+a smartphone placed inside the pocket of a pair of jeans, with the back of the smartphone facing outward as shown in
+fig. 14(a). Five of the participants were instructed to perform
+a finger swipe in the air in front of the pocket. The swipe
+motion consists of the thumb moving over the index finger.
+We configure the fingerIO algorithm to compute the distance
+moved by the finger by processing the data from a single
+microphone. The participants were allowed to perform the
+above swipe finger motion from any angle to the smartphone.
+We ask the participants to only move their fingers at a resolution
+of the prominent lines on their finger. This provides
+us with the ground truth data. On average, the participants
+moved their index finger by around 5 cm. We compute the error
+as the difference in the distance estimated by fingerIO and
+the ground truth motion. Fig. 14(b) shows the CDF of the errors
+in this computed distance. The plots show an average error
+of 1 cm across all participants. In all cases, our algorithm
+correctly identifies the direction of the finger motion, i.e., either
+towards or away from the phone. This demonstrates the
+feasibility of through-the-pocket finger motion tracking.
+-->
+</p>
+<center><img src="images/fig14.png"></center>
+<p class="margin-large">
+図14：ポケットに入ったスマートフォン。この図は、スマートフォンがポケットに入っているときの5人の被験者の1次元トラッキングエラーのCDFを示している。全被験者のトラッキングエラーの中央値は1cmであるのに対し、スマートフォンがポケットに入っていないときのトラッキングエラーの中央値は8mmである。
+<!--
+Figure 14: Smartphone in a pocket. The figure shows the CDF for the 1D tracking errors for five participants when the smart phone was inside the pocket. The median tracking error across all the participants is 1 cm compared to 8 mm when the smartphone was not occluded.
+-->
+</p>
+<h3>FingerIOによる意図しない動きへの対処</h3>
+<p>
+FingerIOのようなシステムでは、デバイスが指を追跡する開始時間と終了時間を通知するメカニズムが必要である。これにより、デバイス近傍のランダムな動きが、インタラクションの目的で指の動きと混同されることを防ぐ。これを実現するために、開始および終了動作としてダブルスワイプを導入する。スワイプとは、少なくとも4cmの長さの直線上の指の動きと定義される。ダブルスワイプでは、ユーザーは2つの反対方向へのスワイプ動作を実行する必要がある。これは、距離の値が4cmにわたって直線的に増加し、その後少なくとも4cmにわたって減少することで検出される。デバイスから5cmの範囲内で実行されたダブルスワイプを開始/終了動作と見なす。5cmの範囲を選択したのは、より遠い距離で発生する同様の指の動きが開始/終了動作と混同されないようにするためである。
+<!--
+In a system like fingerIO, we need a mechanism to inform the
+device the beginning and end times of when it should track
+the finger. This would prevent random motion in the vicinity
+of the device from being confused for finger motion for
+the purpose of interaction. To do this, we introduce a double
+swipe as a start and stop motion. A swipe is defined as a finger
+motion in a straight line for a length of at least 4 cm. A
+double swipe requires the user to perform a swipe motion in
+two opposite directions; we detect this by looking for distance
+values linearly increasing for 4 cm and then decreases for at
+least 4 cm. We consider a double swipe that is performed
+within a range of 5 cm from our device to be our start/stop
+motion. We pick the 5 cm range to ensure that similar finger
+motion that occurs at a farther distance is not confused for the
+start/stop motion.
+-->
+</p>
+<p>
+<strong>実験：</strong><br>
+この開始/停止動作の有効性を評価するため、10人の参加者に、スマートフォンとスマートウォッチの両方を用いて、デバイスから5cm以内でダブルスワイプ動作を行ってもらった。各ユーザーは両方のデバイスで指の動作を2回実行する。これらの動作ごとに、アルゴリズムが開始/停止動作として識別できなかった場合は、偽陰性とみなす。偽陽性を計算するために、参加者にデバイスから10cm以内で30秒間、ダブルスワイプ以外のランダムパターンを描いてもらう。各ユーザーはダブルスワイプを2回実行した後、参加者全体で合計10分間にわたってダブルスワイプジェスチャーを探す。この期間中にアルゴリズムによって検出された開始/停止動作は、偽陽性とみなされる。
+<!--
+Experiments: To evaluate how well this start/stop motion
+works, we ask our ten participants to perform the double
+swipe motion with both our smartphone and smart watch setups
+within 5 cm from the devices. Each user performs the finger motion twice for both the devices. For each of these
+motions, if our algorithm fails to identify it as a start/stop motion,
+we consider it to be a false negative. To compute false
+positives, we ask our participants to draw random patterns
+other than the double swipe within 10 cm from the device for
+a period of 30 seconds. Each user performed it twice and then
+we look for the double swipe gesture over a total duration of
+10 minutes across all the participants. The start/stop motion
+detected by our algorithm during this duration, are considered
+to be false positives.
+-->
+</p>
+<p>
+<strong>偽陰性(検知漏れ): </strong><br>
+参加者がスマートフォンでダブルスワイプの開始/停止動作を実行した 20 回のうち 19 回で、アルゴリズムによって検出された。同様に、スマートウォッチで実行されたときには 20 回のうち 18 回でこの動作が検出された。動作が検出されなかったのは、ダブルスワイプ ジェスチャー中に、参加者が指と一緒に手全体を動かすためである。アルゴリズムは、検出されなかった 3 回の開始/停止動作について、最も近い距離、つまり指の動作のみを追跡するが、参加者は指とは異なる方向に腕全体を強制的に動かした。現在の実装は単一の動作方向しか処理できないため、この点と混同された。ただし、アクティブ ソナー アプローチを使用して複数の同時動作を追跡すれば、このような事態が発生する可能性は低くなる。また、現在の偽陰性率はまだ許容範囲内であり、ユーザーがシステムに慣れるにつれて信頼性が高くなる可能性があることにも留意してもらいたい。
+<!--
+False negatives: Our algorithm detected the double swipe start/stop motion 19 out of the 20 times the participants performed it with the smartphone. Similarly, we detected this motion 18 out of 20 times when it was performed with the smart watch. The undetected motions were because during a double swipe gesture, the participants move their whole hand along with the finger. While our algorithm tracks only the motion at the closest distance, i.e., the finger, for the three start/stop motions that were missed, the participants forcefully moved their entire arm in a different direction than the finger. Since our current implementation can only deal with a single motion direction, it was confused for this. This is however less likely to be the case if we use the active sonar approach to track multiple concurrent motions. We also note that the current false negative rate is still acceptable and could likely become more reliable as the users get accustomed to our system.
+-->
+</p>
+<p>
+<strong>誤検知：</strong><br>
+スマートウォッチのプロトタイプでは、10分間の計測中に開始/停止の動きは検出されなかった。つまり、この計測期間中の誤検知数はゼロだった。これは、我々のアルゴリズムがデバイスから狭い範囲内での厳密なダブルスワイプパターンを必要とするためである。一方、スマートフォンでは、10分間の計測中に2回の開始/停止の動きが検出された。データをさらに分析したところ、2回の誤検知は、1人の参加者が両方向に4cmの距離をなぞる波状のパターンを描いたことによるものであることがわかった。これにより、我々のアルゴリズムはこれを開始/停止の動きとして分類した。残りの参加者には誤検知がなかったことから、ダブルスワイプの動きはほとんどのシナリオで十分であると考えている。
+<!--
+False positives: With the smart watch prototype, we did not detect any start/stop motion during the 10 min duration, i.e., the number of false positives during this duration was zero. This is because our algorithm requires a strict double swipe pattern within a small range from the device. With the smartphone, however we detected two start/stop motions during the 10 min duration. Further analysis of the data showed that the two false positives came from a single participant who drew a wiggly pattern tracing 4 cm distance in both directions. This triggered our algorithm to classify this as a start/stop motion. Given that the rest of the participants did not have any false positives, we believe that the double-swipe motion is sufficient in most scenarios.
+-->
+</p>
+<h3>周囲のランダムな動きへの対処</h3>
+<p>
+FingerIO の最大動作範囲は 1 メートル未満である。これは、周囲の動きの影響を受けないため、重要な利点である。このセクションでは、参加者の指の追跡精度を測定することで、この特性を評価する。別の参加者が周囲にランダムな動きを与えている間に、別の参加者の指の追跡精度を測定する。1 人の被験者が 4 cm の距離の直線を描く実験を行う。FingerIO を実行しているスマートフォンを、指の位置から約 25 cm のところに置く。被験者が指を動かしている間、別の干渉する被験者が最初の被験者に向かって手を振り続ける。2 人目の被験者に対して、2 つの異なる距離で実験を繰り返す。これらの距離値ごとに、指の追跡精度を計算する。
+<!--
+The maximum operational range of fingerIO is less than a meter. This is a key advantage, as it remains unaffected by motion in the surroundings. In this section, we evaluate this property by measuring the finger tracking accuracy of a participant while another participant creates random motion in the surroundings. We conduct experiments with one subject drawing a straight line of distance 4 cm. A phone running fingerIO is placed around 25 cm from the finger location. While the subject performs finger motion, another interfering subject continuously waves their hand toward the first subject. We repeat the experiments with two different distances for the second subject. We compute the finger tracking accuracy for each of these distance values.
+-->
+</p>
+<p>
+図15は、干渉対象から携帯電話までの距離の関数として、これらの精度をプロットしている。このプロットは、干渉対象が携帯電話から50cm以内にある場合、指の追跡精度が大幅に低下することを示している。これは、ソナーベースの設計における根本的な限界ではない。むしろ、現在のアルゴリズムは単一の動きを追跡するように設計されているためである。原理的には、エコーは各距離ごとに異なる時間に到達するため、複数の距離値から同時に独立した動きを追跡するアルゴリズムを設計することも可能である。しかし、重要な観察結果は、干渉対象までの距離が1メートルを超える場合、指の追跡精度が再び高くなることである。これは、これらの距離では、干渉対象からの動きによる反射が大幅に減衰し、より近い距離で行われた指の動きによるエコーと比較して弱くなるためである。
+<!--
+Fig. 15 plots these accuracies as a function of distance of the interfering subject from the phone. The plot shows that when the interfering subject is within 50 cm from the phone, the finger tracking accuracies  significantly suffer. This is not a fundamental limit of our sonar-based design. Rather this is because our current algorithm is designed only to track a single motion. In principle, one may design algorithms to track independent motions concurrently from multiple distance values since the echoes arrive at different times for each of these distances. The key observation however is that for distances greater than a meter for the interfering subject, the finger tracking accuracies are again high. This is because, at these distances, the reflections caused due to the motion from the interfering subject are significantly attenuated and hence are weaker compared to the echoes from the finger motion that is performed at a closer distance.
+-->
+</p>
+<center><img src="images/fig15.png"></center>
+<p class="margin-large">
+図15：周囲のランダムな動きへの対応。この図は、環境内に2人目の割り込むユーザーがいた場合の2Dトラッキング誤差を示している。デバイスから50cm以内でより強い動きがあった場合、精度は低下する。しかし、割り込むユーザーが1メートル以上離れている場合は、精度は常に高いままである。
+<!--
+Figure 15: Addressing Random Motion in the Surrounding. The figure shoes the 2D tracking errors when there was a second interrupting user in the environment. The accuracy decreases when there is a stronger motion within 50 cm of the device. However, the accuracies remain consistently high when the interrupting user is beyond one meter.
+-->
+</p>
+<h2>限界と将来の方向性</h2>
+<p>
+現在の設計の限界と改善の機会について考察する。
+<!-- 
+We discuss the limitations of our current design as well as opportunities to improve it.
+-->
+</p>
+<p>
+<strong>3次元動作と不連続的な筆記の追跡</strong><br>
+現在の実装では2つのマイクを使用しており、指の動きを3次元的に追跡することはできない。しかし、これは我々のアプローチの根本的な限界ではなく、3つ目のマイクを使用することで解決できる。具体的には、3つのマイクを使用することで3次元空間における指の位置を三角測量し、3次元の指の追跡が可能になる。同様の問題は不連続的な筆記でも発生する。ユーザーは2次元面から指をわずかに離して、面上の異なる点に移動させる可能性がある。2つのマイクのみを使用すると、これは連続的な動作として追跡され、我々のアルゴリズムはこの動作を入力の一部として2次元描画面に投影する。これは、ユーザーがカメラの前で指で描画するカメラベースのシステムでも直面する同様の問題である。検討する価値のある方向性の一つは、異なる面に3つ目のマイクを組み込み（スマートウォッチのセットアップで実現可能）、それを用いてこの3次元動作を識別することである。
+<!--
+Tracking 3-D motion and non-cursive writing. Our current implementation uses two microphones and cannot achieve 3-D tracking of finger motion. This is however not a fundamental limitation of our approach and can be addressed by using a third microphone. Specifically, three microphones can be used to triangulate the position of the finger in the 3-D space enabling 3-D finger tracking. A similar problem occurs with non-cursive writing, where the user could slightly lift her finger from the 2D surface to move it across different points on the surface. Using only two microphones, this would be tracked as a continuous motion and our algorithm will project this motion on the 2-D drawing plane as part of the input. We note that this is a similar issue faced by camera-based systems where the user draws with her finger in front of a camera. One direction worth exploring is to incorporate a third microphone on a different plane (which can be done on the smart watch setup) and use it to identify this 3-D motion.
+-->
+</p>
+<p>
+<strong>複数の同時動作の追跡</strong><br>
+本論文では1本の指の追跡に焦点を当てているが、原理的には、提示されたアルゴリズムは、マイクから異なる距離で発生する限り、複数の指からの同時変化を追跡できる。これは、複数の指を同時に動かす必要があるピッチ、ズームアウト、ズームインのジェスチャーの検出に使用できる。また、デバイスの近くにいる他の人の指/体の動きを検出して分離するためにも使用できる。そのためのアルゴリズムは、Google Soliなどのレーダーベースのアプローチに類似していると予想される。これが実際にどの程度うまく機能するかについては、本論文の範囲外である。
+<!--
+Tracking multiple concurrent motions. While this paper focuses on tracking a single finger, in principle, the algorithms presented could track concurrent changes from multiple fingers as long as they occur at different distances from the microphones This can be used to detect pitch, zoom out and zoom in gestures that require multiple fingers moving at the same time. It can also be used to detect and separate the finger/body motion from other people near the device. We expect the algorithms for doing so to be similar to radar based approaches such as Google Soli. Exploring how well this works in practice is not in the scope of this paper.
+-->
+</p>
+<p>
+<strong>FingerIOの消費電力</strong><br>
+フル充電のSamsung Galaxy S4で FingerIO を実行すると、約4時間動作する。他の常時接続モバイルジェスチャーセンシング技術と同様に、電力と精度の間にはいくつかのトレードオフがある。例えば、OFDMパルスを5.92ミリ秒ごとに送信するため、フレームレートは169フレーム/秒になる。人間の動きはこのレートでは変化しない可能性が高いため、FingerIO ははるかに低いフレームレートで動作させることができる。さらに、図8に示すように、5分の1にサブサンプリングしても、実際の値に近い値が得られる。これをさらに最適化し、消費電力を削減することは、今後の有意義な方向性である。
+<!--
+FingerIO’s power consumption. A full-charged Samsung Galaxy S4 running fingerIO lasts around four hours. As with other always-on mobile gesture sensing techniques, there are a number of power-accuracy tradeoffs that could be made. For instance, we transmit OFDM pulses once every 5.92 ms which translated to a frame rate of 169 frames/s. Since human motion is unlikely to change at this rate, we can operate fingerIO with a much lower frame rate. Further, as shown in Fig. 8, subsampling by a factor of five, still gives us values that look similar to the ground truth. Optimizing this further and reducing the power consumption, would be a worthwhile future direction.
+-->
+</p>
+<p>
+<strong>移動するデバイスでの指追跡</strong><br>
+本論文で開発した指追跡アルゴリズムは、スマートフォンまたはスマートウォッチが静止しているという仮定の下で動作する。デバイスの移動性に対応するため、動作対象デバイスに既に搭載されている加速度計／ジャイロスコープを用いて、アルゴリズムにおける動きを補正することを想定している。直感的には、これは合成開口レーダーシステム（SAR）を模倣するようなものである。このようなアルゴリズムの開発は、今後の課題とする。
+<!--
+Finger tracking with a moving device. The finger tracking algorithms developed in this paper work under the assumption that the phone or the smart watch is static. To address mobility of the devices, we envision using the accelerometer/gyro, already present in the devices we imagine operating on, to compensate for the motion in our algorithms. Intuitively this would be similar to imitating a synthetic aperture radar system (SAR). We leave the development of such algorithms for future work.
+-->
+</p>
+<h2>結論</h2>
+<p>
+指にセンサーを装着する必要がなく、指とデバイスの間に遮蔽物があっても動作する、きめ細かな指追跡を実現する、新たなアクティブソナー設計を紹介した。Samsung Galaxy S4の内蔵スピーカーとマイクを用いて設計を検証し、端末周辺での指追跡を実証した。また、市販のハードウェアを用いて、スマートウォッチ型のデバイスにプロトタイプを構築した。
+<!--
+We introduce a novel active sonar design for fine-grained finger tracking that does not require instrumenting the finger with sensors and works even in the presence of occlusions between the finger and the device. We validate our design on a Samsung Galaxy S4 using its in-built speaker and microphone and demonstrate finger tracking around the phone. We also built a prototype in a smart watch form factor device using off-the-shelf hardware.
+-->
+</p>
+<h2>謝辞</h2>
+<p>
+匿名の査読者の皆様にはフィードバックをいただき、感謝申し上げます。また、ハードウェア設計に関する有益な議論をしてくださったBryce Kellogg氏とVamsi Talla氏にも感謝申し上げます。本研究は、Google Faculty Awardおよび米国国立科学財団（CNS-1420654）の助成を受けて実施されました。
+<!--
+We thank the anonymous reviewers for their feedback. We also thank Bryce Kellogg and Vamsi Talla for helpful discussions about the hardware design. This work was funded in part by a Google Faculty Award and the National Science Foundation under award CNS-1420654.
+-->
+</p>
+<h2>参考文献</h2>
+<p>
+<div class="styleRef">
+<ul>
+<li>1. Adafruit. https://www.adafruit.com/products/1063.
+</li><li>2. Apple Watch - Guided Tour: Phone Calls.
+https://www.youtube.com/watch?v=_Zj5KisMVv8.
+</li><li>3. Chirp Microsystems.
+http://www.chirpmicro.com/technology.html.
+</li><li>4. A MimioTeach Interaction Whiteboard.
+http://www.mimio.com/en-NA/Products/
+MimioTeach-Interactive-Whiteboard.aspx.
+</li><li>5. Adib, F., Kabelac, Z., Katabi, D., and Miller, R. C. 3D
+Tracking via Body Radio Reflections. NSDI 2014, 317-329.
+</li><li>6. Aumi, M. T. I., Gupta, S., Goel, M., Larson, E., and Patel,
+S. DopLink: Using the Doppler Effect for Multi-device
+Interaction. UbiComp 2013, 583-586.
+</li><li>7. Boleskei, H. Principles of MIMO-OFDM wireless systems.
+2004.
+</li><li>8. Braun, A., Krepp, S., and Kuijper, A. Acoustic Tracking of
+Hand Activities on Surfaces. WOAR 2015, 1-5.
+</li><li>9. Butler, A., Izadi, S., and Hodges, S. SideSight:
+Multi-”Touch” Interaction Around Small Devices.
+UIST 2008, 201-204.
+</li><li>10. Chan, L., Liang, R.-H., Tsai, M.-C., Cheng, K.-Y., Su,
+C.-H., Chen, M. Y., Cheng, W.-H., and Chen, B.-Y.
+FingerPad: Private and Subtle Interaction Using Fingertips.
+UIST 2013, 255-260.
+</li><li>11. Chen, K.-Y., Ashbrook, D., Goel, M., Lee, S.-H., and Patel,
+S. AirLink: Sharing Files Between Multiple Devices Using
+In-air Gestures. UbiComp 2014, 565-569.
+</li><li>12. Chen, K.-Y., Lyons, K., White, S., and Patel, S. uTrack: 3D
+Input Using Two Magnetic Sensors. UIST 2013, 237-244.
+</li><li>13. Goel, M., Lee, B., Islam Aumi, M. T., Patel, S., Borriello,
+G., Hibino, S., and Begole, B. SurfaceLink: Using Inertial
+and Acoustic Sensing to Enable Multi-device Interaction on
+a Surface. CHI 2014, 1387-1396.
+</li><li>14. Google. Project Soli.
+https://www.youtube.com/watch?v=_Zj5KisMVv8.
+</li><li>15. Gupta, S., Morris, D., Patel, S., and Tan, D. SoundWave:
+Using the Doppler Effect to Sense Gestures. CHI 2012,
+1911-1914.
+</li><li>16. Heiskala, J., and Terry, J. OFDM Wireless LANs: A
+Theoretical and Practical Guide. Sams publishing, 2001.
+</li><li>17. Huang, W., Xiong, Y., Li, X.-Y., Lin, H., Mao, X., Yang, P.,
+and Liu, Y. Shake and walk: Acoustic direction finding and
+fine-grained indoor localization using smartphones.
+INFOCOM 2014, 370-278.
+</li><li>18. Kellogg, B., Talla, V., and Gollakota, S. Bringing Gesture
+Recognition to All Devices. NSDI 2014, 303-316.
+</li><li>19. Khyam, M., Alam, M., Lambert, A., Benson, C., and
+Pickering, M. High precision multiple ultrasonic transducer
+positioning using a robust optimization approach.
+ISSPIT 2013, 192-197.
+</li><li>20. Khyam, M., Alam, M., and Pickering, M. OFDM based
+low-complexity time of arrival estimation in active sonar.
+OCEANS 2014, 1-5.
+</li><li>21. Kienzle, W., and Hinckley, K. LightRing: Always-available
+2D Input on Any Surface. UIST 2014, 157-160.
+</li><li>22. Kim, D., Hilliges, O., Izadi, S., Butler, A. D., Chen, J.,
+Oikonomidis, I., and Olivier, P. Digits: Freehand 3D
+Interactions Anywhere Using a Wrist-worn Gloveless
+Sensor. UIST 2012, 167-176.
+</li><li>23. Kratz, S., and Rohs, M. HoverFlow: Expanding the Design
+Space of Around-device Interaction. MobileHCI 2009, 1-8.
+</li><li>24. Liu, J., Wang, Y., Kar, G., Chen, Y., Yang, J., and Gruteser,
+M. Snooping Keystrokes with Mm-level Audio Ranging on
+a Single Phone. MobiCom 2015, 142-154.
+</li><li>25. MacNeish. The Intersections of Two Conic Sections with a
+Common Focus. The American Mathematical Monthly 28,
+6/7, 260–262.
+</li><li>26. Nandakumar, R., Chinatalapudi, K., Padmanaban, V., and
+Venkatesan, R. Dhwani : Secure Peer-to-Peer Acoustic
+NFC. Sigcomm 2013 2013.
+</li><li>27. Nandakumar, R., Gollakota, S., and Watson, N. Contactless
+Sleep Apnea Detection on Smartphones. Mobisys 2015,
+45-57.
+</li><li>28. Ogata, M., Sugiura, Y., Osawa, H., and Imai, M. iRing:
+Intelligent Ring Using Infrared Reflection. UIST 2012,
+131-136.
+</li><li>29. Priyantha, N. B., Chakraborty, A., and Balakrishnan, H.
+The Cricket Location-support System. Mobicom 2000,
+32-43.
+</li><li>30. Proakis, J., and Salehi, M. Digital Communications.
+McGraw-hill, 2007.
+</li><li>31. Przybyla, R., Tang, H.-Y., Guedes, A., Shelton, S., Horsley,
+D., and Boser, B. 3D Ultrasonic Rangefinder on a Chip.
+IEEE Journal of Solid-State Circuits 2015, 320-334.
+</li><li>32. Pu, Q., Gupta, S., Gollakota, S., and Patel, S. Whole-home
+Gesture Recognition Using Wireless Signals.
+Mobicom 2013, 27-38.
+</li><li>33. Reju, V., Khong, A., and Sulaiman, A. Localization of Taps
+on Solid Surfaces for Human-Computer Touch Interfaces.
+IEEE Trans. on Multimedia 2013, 1365-1376.
+</li><li>34. Saponas, T. S., Harrison, C., and Benko, H. PocketTouch:
+Through-fabric Capacitive Touch Input. UIST 2011,
+303-308.
+</li><li>35. Song, J., S¨or¨os, G., Pece, F., Fanello, S. R., Izadi, S.,
+Keskin, C., and Hilliges, O. In-air Gestures Around
+Unmodified Mobile Devices. UIST 2014, 319-329.
+</li><li>36. Sun, L., Sen, S., Koutsonikolas, D., and Kim, K.-H.
+WiDraw: Enabling Hands-free Drawing in the Air on
+Commodity WiFi Devices. Mobicom 2015, 77-89.
+</li><li>37. Sun, Z., Purohit, A., Bose, R., and Zhang, P. Spartacus:
+Spatially-aware Interaction for Mobile Devices Through
+Energy-efficient Audio Sensing. MobiSys 2013, 263-276.
+</li><li>38. Wang, J., Zhao, K., Zhang, X., and Peng, C. Ubiquitous
+Keyboard for Small Mobile Devices: Harnessing Multipath
+Fading for Fine-grained Keystroke Localization.
+MobiSys 2014, 14-27.
+</li><li>39. Xiao, R., Lew, G., Marsanico, J., Hariharan, D., Hudson, S.,
+and Harrison, C. Toffee: Enabling Ad Hoc, Around-device
+Interaction with Acoustic Time-of-arrival Correlation.
+MobileHCI 2014, 67-76.
+</li><li>40. Yang, X.-D., Grossman, T., Wigdor, D., and Fitzmaurice,
+G. Magic Finger: Always-available Input Through Finger
+Instrumentation. UIST 2012, 147-156.
+</li><li>41. Yang, X.-D., Hasan, K., Bruce, N., and Irani, P.
+Surround-see: Enabling Peripheral Vision on Smartphones
+During Active Use. UIST 2013, 291-300.
+</li><li>42. Yun, S., Chen, Y.-C., and Qiu, L. Turning a Mobile Device
+into a Mouse in the Air. Mobisys 2015, 15-29.
+</li><li>43. Zhao, C., Chen, K.-Y., Aumi, M. T. I., Patel, S., and
+Reynolds, M. S. SideSwipe: Detecting In-air Gestures
+Around Mobile Devices Using Actual GSM Signal.
+UIST 2014, 527-534.
+</ul>
+</div>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+    </body>
+</html>

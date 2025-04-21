@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>プレノプティックカメラ</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    </head>
+    <body>
+        <h1><center>Single Lens Stereo with a Plenoptic Camera</center></h1>
+<center>プレノプティックカメラによる単眼ステレオ</center>
+<br>
+<center>Edward H. Adelson and John Y.A. Wang</center>
+        <p>
+要約 - 通常のカメラはレンズの開口部の領域全体に光を集め、開口部の特定のサブ領域に当たる光は隣接するサブ領域に当たる光とは多少異なる構造になっている。この光学構造を分析することで、シーン内のオブジェクトの奥行きを推測できる。つまり、「シングル レンズ ステレオ」を実現できる。この分析を実行するための新しいカメラについて説明する。このカメラには、センサー面に配置されたレンチキュラー アレイとともに、単一のメイン レンズが組み込まれている。結果として得られる「プレノプティック カメラ」は、メイン レンズの開口部で区切られた一連の可能な視点から見たときにシーンがどのように見えるかに関する情報を提供する。対応づけの問題が最小限に抑えられるため、奥行き情報の取得は双眼ステレオ システムよりも簡単である。カメラは水平視差と垂直視差の両方に関する情報を抽出し、奥行き推定の信頼性を向上させる。
+        </p>
+<h2><center>I. はじめに</center></h2>
+        <p>
+「光と影の中のすべての物体は、周囲の空気を自身の無限のイメージで満たす。そして、これらは、空気中に拡散する無限のピラミッドによって、空間全体とあらゆる方向にこの物体を表す。」レオナルド・ダ・ヴィンチ[1]は、これらの言葉と図1の絵を合わせて、物体の光とイメージ形成の関係を説明している。絵の中の物体はあらゆる方向に光線を発しており、ピンホールカメラを空間の任意の点に配置すると、イメージが形成されることがわかる。このイメージは、レオナルドが「視覚ピラミッド」と呼んだ円錐状の光の投影です。物体の周囲の空間は、これらのピラミッドで密集しており、それぞれがわずかに異なる視点からの物体のイメージを表している。レオナルドは、これらの無限に多重化されたイメージは、私たちが気づいているかどうかに関係なく、空間全体に同時に存在すると強調した。
+        </p>
+        <p>
+<center><img src="images/fig1.png"></center>
+        </p>
+        <p class="margin-large">
+図 1. レオナルドのノートブックに記された図。物体の表面から発せられる光線は円錐の集合（レオナルドはこれを「ピラミッド」と呼んでいる）を形成し、各円錐は特定の場所にあるピンホール カメラで見られる像を構成するという事実を示している。
+        </p>
+        <p>
+通常のピンホールカメラを物体の近くに置くと、図 2(a) に示すように、1 つの視覚ピラミッドが選択され、1 つの画像が形成される。隣接する 2 つのピンホールカメラを使用すると、図 2(b) に示すように、2 つの異なる画像が形成される。2 つの画像を合わせると、物体を取り囲む光の構造に関する追加情報が得られ、物体の 3D 形状の解釈を制限するのに役立つ。
+        </p>
+        <p>
+<center><img src="images/fig2.png"></center>
+        </p>
+        <p class="margin-large">
+図 2. (a) ピンホール カメラは単一の視点から画像を形成する。(b) ステレオ システムでは、異なる視点から 2 つの画像が形成される。(c) 運動視差システムでは、多数の隣接する視点から一連の画像がキャプチャされる。(d) レンズは連続した視点から光を集める。通常のカメラでは、これらの画像はセンサー面で平均化される。
+        </p>
+        <p>
+両眼ステレオシステム[2]は、通常ピンホールカメラとして扱われる2台のカメラを使用して奥行き情報を抽出する。両眼ステレオは、おそらくパッシブな奥行き測定の最も一般的な方法である。状況によっては非常に効果的であるが、いくつかの問題があることが知られている。
+        </p>
+        <p>
+2 台の別々のカメラを使用する必要があるため、システムの大きさと費用が増加し、カメラのキャリブレーションが困難になる。対応関係については解決しなければならない曖昧さがあり、計算上の大きな課題となる可能性がある。さらに、両眼ステレオでは 1 つの軸に沿った視差を利用するため、この軸に平行な輪郭の奥行き推定を行うことはできない。
+        </p>
+        <p>
+後者の2つの問題は、三眼システム[3]、[4]の使用によってある程度改善できるが、これには3台目のカメラが必要となり、サイズ、費用、および較正が伴う。
+        </p>
+        <p>
+2枚の写真を撮るのではなく、図2(c)に示すように、カメラをトラックに沿って移動させ、密集した一連の画像を撮影することができる。このようなシステムは、運動視差[5]を利用して奥行きを抽出できる。
+        </p>
+        <p>
+図 2(d) に示すようなレンズ付きカメラは、連続した視点から光を集める。つまり、レンズの絞り面を頂点とするレオナルドのピラミッドの連続体を取り込む。通常のカメラでは、最終的な画像は、レンズの絞りのさまざまな位置から見えるすべての個別の画像の平均になる。これらの画像は、焦点面から外れたオブジェクトではすべて多少異なり、オブジェクトは焦点面からの距離に応じてぼやける。Pentland [6] は、異なるサイズの 2 つの絞りで撮影した 2 つの画像を比較することにより、レンズの絞り内の光の特性を利用する方法を説明している。ぼやけの変化を使用して深度を推定できる ([7] も参照)。
+        </p>
+        <p>
+図 2(d) の図から、レンズを通過する光の構造が非常に豊かで、潜在的に有益なものであることは明らかである。残念ながら、構造の大部分は、すべての光線が単一の平面に投影され、各センサー要素が異なる角度から当たるすべての光線の平均を記録する画像形成の最後の瞬間に失われる。
+        </p>
+        <p>
+光学情報充填空間の複雑さ全体は、単一の関数として形式化することができ、アデルソンとバーゲン[8]はこれを「プレノプティック関数」と呼んでいる。ここで、プレノプティックは「完全」と「視界」の語源に由来している。プレノプティック関数は、視角、波長、時間、および視線の位置の関数として、世界の各光線の強度を表す。これは、光学装置で見ることができる可能性のあるすべてのものを捉え、ギブソン[9]が周囲光の構造と呼んだものと関連している。
+        </p>
+        <p>
+ここでは、レンズに当たる光の光学構造の一部を捉えるカメラについて説明する。このカメラは、レンズの開口部内のあらゆる視点から世界がどのように見えるかに関する情報を記録する。これを「プレノプティック カメラ」と呼ぶ。
+        </p>
+        <p>
+このカメラは、単一のレンズで光を集めるが、レンズ開口部のさまざまなサブ領域に当たる光の構造に関する情報を保持するために、画像平面でレンチキュラー アレイを使用する。この情報が記録された後、開口部の任意のサブ領域からの画像情報を選択できる。したがって、視点が上、下、左、または右にわずかにシフトした場合に表示される画像をシミュレートできる。さらに、これらの仮想変位に対応する視差を測定し、シーン内のオブジェクトの奥行きを推定できる。仮想変位の範囲、つまり奥行きの潜在的な解像度は、レンズ開口部のサイズによって制限され、双眼ステレオ システムの場合よりも低くなる傾向がある。それでも、この技術にはいくつかの明確な利点がある。必要なカメラは 1 台だけで済み、対応の問題は最小限に抑えられ、視差は水平方向と垂直方向の両方で利用できる。
+        </p>
+<h2><center>II. 単眼ステレオ</center></h2>
+        <p>
+プレノプティックカメラについて説明する前に、カメラレンズの開口部から得られる光学情報を調べてみよう。図 3(a) に示すように、カメラが点状の物体をセンサー面上で焦点に合わせているとする。図 3(b) および (c) に示すように、物体がカメラからより近くまたは遠くに置かれると、画像は焦点がぼける。3つの画像の輝度プロファイルがカメラの図のすぐ下に表示される。焦点が合った画像は明るい小さな点であるが、焦点が合っていない画像はより広く暗くなる。レンズの開口部が円形ディスクの場合、点像分布関数 (PSF) はピルボックスになる。ピルボックスの直径は、開口部のサイズと焦点がぼけている程度の関数である。ここに示すように、1 次元では、ハードエッジの開口部の PSF は長方形になる (回折のわずかな影響は無視する)。
+        </p>
+        <p>
+<center><img src="images/fig3.png"></center>
+        </p>
+        <p class="margin-large">
+図 3. 単眼ステレオの原理: (a) 焦点の合った点物体は点像を形成する。(b) 近くの物体。(c) 遠くの物体はぼやけた像を形成する。(d) 偏心絞りの場合、焦点の合った物体の像はその位置を維持するが、近くの物体または遠くの物体の像 (e) と (f) は右または左に移動する。
+       </p>
+        <p>
+ここで、レンズに偏心絞りを配置するとどうなるか考えてみよう。図 3(d) のように物体が焦点面内にある場合、その画像は鮮明で同じ位置のままであるが、図 3(e) のように物体が近くにある場合、絞りが右側に落ちる光線を選択的に通過させるため、その (ぼやけた) 画像は中心より右側に移動する。逆に、図 3(f) のように物体が遠い場合、その画像は左側に移動する。移動の程度は、焦点ずれによって生じるぼやけの量に比例する (この事実は、後で説明するように、対応の問題を軽減する上で重要である)。
+        </p>
+        <p>
+絞りが左または右にずれると、近くの物体の画像も同様に左または右にずれ、遠くの物体の画像は右または左にずれる。ずれの振幅と方向から、物体までの距離を判定できる。
+        </p>
+        <p>
+したがって、絞りがずれた画像のシーケンスを取得し、そのシーケンスに対して変位解析を実行して、シーン内のオブジェクトの奥行きを決定することができる。この方法は「単眼ステレオ」と呼ばれる。
+        </p>
+<h2><center>III. 幾何光学</center></h2>
+        <p>
+単眼ステレオシステムにおける変位と奥行きの関係は、図 4 を参照することで理解できる。点物体の焦点が合っていない画像を形成するレンズを考え、そのレンズに偏心点絞りが装備されているものとする。
+<br>
+　F	レンズの焦点距離<br>
+　f	レンズとセンサー面の間の距離<br>
+　D	センサー面と共役な面までの距離<br>
+　d	特定の点物体までの距離<br>
+　g	物体の共役焦点までの距離<br>
+　e	センサー面を超えた共役焦点までの距離<br>
+　v	絞りの変位<br>
+　h	センサー面における物体の画像の変位<br>
+        </p>
+        <p>
+<center><img src="images/fig4.png"></center>
+        </p>
+        <p>
+<center>Fig. 4. 図4. 単眼ステレオの幾何学的形状</center>
+        </p>
+        <p>
+既知の絞り変位 \(v\) と結果として生じる像変位 \(h\) が与えられた場合、物体距離 \(d\) を決定したい。
+        </p>
+        <p>
+相似三角形を利用することで
+\[
+\frac{1}{g}=\frac{1}{f}\left(1-\frac{h}{v}\right)
+\tag{1}
+\]
+そしてレンズ方程式によって
+\[
+\frac{1}{F}=\frac{1}{g}+\frac{1}{d}
+\tag{2}
+\]
+以下が導かれる。
+\[
+\frac{1}{d}=\frac{1}{F}-\frac{1}{f}\left(1-\frac{h}{v}\right)
+\tag{3}
+\]
+または
+\[
+\frac{1}{d}=\frac{h}{v}\left(\frac{1}{F}-\frac{1}{D}\right)+\frac{1}{D}
+\tag{4}
+\]
+左辺は物体距離 \(d\) の逆数である。右辺は既知のシステムパラメータ \(F\)、\(D\)、\(v\) と測定された画像変位 \(h\) で構成される。
+        </p>
+<h2><center>IV. プレノプティックカメラ</center></h2>
+        <p>
+単眼ステレオ法は前述の通り機能するがが、時間をかけて複数のスナップショットを蓄積する必要があるという欠点がある。1枚のスナップショットですべての画像情報を取得することが望ましいであろう。そのためには特別な光学系が必要であり、これについてこれから説明する。
+        </p>
+        <p>
+通常のカメラでは、特定の光検出器素子（例えばCCDアレイの1つのセル）に入射する光はすべて同じ方法で処理される。つまり、入射角に関わらず、光子の応答が合計される。異なる方向から光検出器に入射する光の量を何らかの方法で追跡できれば、レンズ絞りの様々なサブ領域からどれだけの光が入射したかを特定できる。
+        </p>
+        <p>
+図 5 に示す配置について考えてよう。センサー アレイは、小さなピンホール カメラのアレイで覆われている。画像の各点に当たる光は 3 つのサブ部分に分割され、それぞれが特定の入射角に対応する。焦点面にある物体の場合の例を図 5(a) に示す。挿入図は、ピンホール アレイ システムの拡大図である。画像は、個々のピンホール カメラに対応するマクロピクセルで構成されていると考えられる。また、各マクロピクセルは 3 つのサブピクセルのセットに分割されている。ここではサブピクセルは 3 つのタイプで、r、s、t とラベル付けされている。レンズの右側、中央、左側を通過する光は、それぞれ r、s、t ピクセルに当たる。
+        </p>
+        <p>
+<center><img src="images/fig5.png"></center>
+        </p>
+        <p class="margin-large">
+図5. 像面に配置された小型ピンホールカメラのアレイは、各マクロピクセルに当たる光の構造を分析するために使用できる。
+        </p>
+        <p>
+実際には、それぞれの小さなピンホールカメラはメインレンズの開口部の像を形成し、この像はメインレンズの特定の領域を通過した光のサブセットに関する情報を取得する。（この動作を正しく行うには、ピンホールカメラをメインレンズの中心に向ける必要がある。図5では、ピンホールを偏心量に応じて移動させることでこれを実現している。別の方法としては、後述するように、フィールドレンズを使用する方法がある。）
+        </p>
+        <p>
+図5(a)のように物体が焦点面内にある場合、中央のマクロピクセルのr、s、tの3つのピクセルすべてが照射される。図5(b)および(c)のように物体が近いか遠い場合、光は奥行きを診断する形でピクセル全体に分散される。この分散を特徴付ける良い方法は、r、s、tのピクセルグループから個別のサブイメージを作成することである。r サブイメージはメインレンズの右側を通過する光、s サブイメージは中央を通過する光、t サブイメージは左側を通過する光に対応する。
+        </p>
+        <p>
+r、s、tとラベル付けされた3つのサブイメージは、図5の(a)、(b)、(c)のケースの下に示されている。(a)のように物体が焦点面内にある場合、3つのイメージは一直線に並ぶ。(b)のように物体が近くにある場合、イメージは左へ順番にずれる。(c)のように物体が遠い場合、イメージは右へ順番にずれる。このずれを測定することで、物体の奥行きを推定できる。
+        </p>
+        <p>
+ピンホールアレイは、マイクロレンズのアレイ、すなわちレンチキュラーアレイに置き換えることができる。レンチキュラーアレイは、1次元（円筒形）レンズで構成される場合もあれば、2次元（球形）レンズの集合で構成される場合もある。後者はフライアイ(ハエの目)アレイと呼ばれることもある。レンチキュラーシステムは、ピンホールシステムよりも入射瞳をはるかに大きくできるため、集光効率が向上し、エイリアシングアーティファクトが低減する。マイクロレンズアレイは、多数の小型カメラからなるバッテリーのようなものと考えることができる。各小型カメラは、センサー面の異なる位置から見たメインレンズの絞りの像を結像する。
+        </p>
+        <p>
+写真史を学ぶ者なら、このカメラには今世紀初頭にリップマン[10]とアイブス[11]が3D写真の実験で示した光学原理が取り入れられていることを認識するだろう。同じ原理は3Dディスプレイ[12]や一部の35mm一眼レフカメラのオートフォーカスシステム[13]の製造にも使われることがある。
+        </p>
+        <p>
+より完成度の高い光学系を図 6(a) に示す。左側の物体はメインレンズによってレンチキュラーアレイに結像され、その背後には CCD などのセンサーアレイが配置されている。各レンチキュラーは 1 つのマクロピクセルにわたって光を集め、その下にあるセンサー素子上にメインレンズの絞りの微小画像を形成する。フィールドレンズはメインレンズの絞りをレンチキュラーから光学的に無限遠に配置し、メインレンズの中心からの光線が各微小画像の中心に結像されるようにする。レンチキュラーによる画像のサンプリングによって生じるエイリアシングを防ぐため、弱い拡散板を使用することもできる (この図ではメインレンズの前に示されているが、実際にはメインレンズの絞り面に配置される)。弱い拡散板は、レンチキュラー間の間隔とほぼ同じ幅の点像分布関数を使用して、画像をわずかにぼかすように設計されている。
+        </p>
+        <p>
+<center><img src="images/fig6.png"></center>
+        </p>
+        <p class="margin-large">
+図6. (a) プレノプティックカメラの光学系、(h) リレー光学系を利用したプレノプティックカメラ。
+        </p>
+        <p>
+センサーアレイに直接結像する代わりに、リレーレンズを用いて別のセンサーアレイ上に結像させることが可能である。つまり、ビデオカメラで空中像を観察するということである。図6(h)に示すこのリレーシステムは、直接結像システムよりも扱いにくいものの、柔軟性に優れている。我々は実験でリレーシステムを使用した。これは、空中像の有効サイズをCCDセンサーのサイズに合わせることができるためである。リレーシステムではケラレが発生する場合があるが、これは光量の低下を伴うが、結像面に微細なすりガラス拡散板を配置することで改善できる。
+        </p>
+<h2><center>V. 設計上の考慮事項</center></h2>
+        <p>
+各マクロピクセルが1次元に沿ってn個のサブピクセルに分割されると、システムの空間解像度はその次元でn分の1に低下する。したがって、マクロピクセルが5×5の場合、500×500素子のCCDを搭載したシステムでは、空間解像度はわずか100×100にしかならない。原理的には、2×2ほどの小さなマクロピクセルからでも有用な深度情報を得ることができるが、我々の実験では、通常5×5程度のサイズを使用している。我々のプロトタイプシステムでは、マクロピクセルの端にあるピクセルは、周辺減光や隣接するマクロピクセルからの光漏れのために使用できないことがよくある。これらの問題は、カスタム製造されたセンサーを使用することで克服できる可能性がある。
+        </p>
+        <p>
+空間解像度と視差解像度は、互いにトレードオフの関係にある。マクロピクセルを n 個のサブピクセルに分割すると、異なるサブピクセルをアドレス指定することで、わずかに位置が異なる n 枚のビューを取得できる。さらに重要なのは、各画像の被写界深度が n に比例して増加することである。プレノプティック カメラは大口径レンズで始まるため、焦点面から外れた物体は著しくぼやけ、それらの物体の空間解像度が制限される。このぼやけにより、変位情報の重要なソースとなる微細なディテールやテクスチャが失われる。サブ画像の有効口径サイズは、元の口径サイズの 1/n に比例する。最高のパフォーマンスは、非常に高解像度のセンサーで得られる。そのため、我々の実験で使用した標準的なビデオ CCD よりもはるかに高い解像度のセンサーを使用すると有利である。
+        </p>
+        <p>
+レンチキュラーアレイが円筒形（つまり 1 次元）の場合、空間解像度の損失は 1 次元でのみ発生するが、視差情報は 1 次元でのみ取得される。
+        </p>
+        <p>
+有効なステレオベースラインは、メインレンズの絞りの物理的なサイズによって制限される。そのため、絞りの大きい、つまりF値の小さいメインレンズを使用することが有利である。しかし、絞りが大きいと被写界深度が浅くなり、用途によっては不利になる可能性がある。各サブイメージの被写界深度は有効絞りサイズによって決まるため、各マクロピクセルを分割するサブピクセル数を増やすことで、より深い被写界深度を実現できる。レンチキュラーシステムでは、メインレンズのF値をレンチキュラーアレイのF値と一致させる必要がある。
+<!--
+The effective stereo baseline is limited by the physical size of
+the main lens aperture. Therefore, it is advantageous to use a
+main lens with a large aperture, i.e., a small f/number.
+However, a large aperture also leads to a shallow depth of field,
+which may be disadvantageous in some applications. The depth
+of field in each subimage is determined by the effective aperture
+size, and therefore, a greater depth of field can be attained by
+increasing the number of subpixels that are used to divide each
+macropixel. In a lenticular system, the f/number of the main
+lens should be matched to the f/number of the lenticular array.
+-->
+        </p>
+        <p>
+奥行き分解能は、レンズ口径と被写体距離の比に依存する。したがって、カメラに比較的近い小さな物体に対して、最適な奥行き分解能が得られる。
+このため、単眼ステレオシステムは、車両ナビゲーションなどの遠距離用途よりも、部品検査などの近距離用途に適している可能性がある。
+<!--
+Depth resolution depends on the ratio of the lens aperture
+to the object distance. Therefore, the best depth resolution is obtained for small objects that are relatively close to the camera.
+For this reason, single-lens stereo systems may be better suited
+to close-range applications such as the inspection of parts rather
+than distant-range applications such as vehicle navigation
+-->
+        </p>
+<h2><center>VI. 画像処理</center></h2>
+        <p>
+プレノプティックカメラの画像がデジタル化された後、マクロピクセルの配列を解析してサブイメージのセットを取得することができる。サブイメージは、各マクロピクセルの適切なサブピクセルを選択し、様々な位置にシフトされた重み付けマスクを適用することで抽出される。次の課題は、このようにして得られた画像セットに対して変位解析を実行することである。最も直接的な方法は、隣接するサブピクセルから得られた画像ペアに標準的な2フレーム変位解析を適用することである。各画像ペアは変位推定値を与え、これらの複数の推定値を組み合わせることができる。例えば、3×3のサブイメージ配列から始める場合、変位推定に使用できる画像ペアは合計12組（水平方向に6組、垂直方向に6組）ある。
+<!--
+After a plenoptic camera’s image is digitized, the array of
+macropixels may be analyzed to obtain a set of subimages. The
+subimages are extracted by selecting the appropriate subpixels
+of each macropixel by applying a weighting mask shifted to
+the various desired positions. The next problem is to perform
+displacement analysis on the set of images so obtained.
+The most straightforward approach is to apply standard twoframe
+displacement analysis to the image pairs obtained from
+adjacent subpixels. Each image pair gives a displacement
+estimate, and these multiple estimates can be combined. For
+example, if we begin with a 3×3 array of subimages, then
+there are a total of 12 image pairs that can be used to estimate
+displacement: six in the horizontal direction and six in the
+vertical direction.
+-->
+        </p>
+        <p>
+プレノプティックカメラの場合、変位解析は通常の両眼ステレオの場合よりも簡単である。これは、対応問題を最小限に抑えられるか回避できるためである。古典的な対応問題は、動きのある画像またはステレオ画像において、2つの画像間の変位が画像内の最高周波数成分の波長の半分よりも大きい場合に発生する。カットオフ周波数 \(\omega\) 未満の空間ローパスフィルタリング（つまり、ぼかし）を施された画像は、対応問題が発生する前に最大 \(1/(2\omega)\) の変位に耐えることができる。したがって、対応問題は単にエイリスの現れであり、比較される2つの画像が十分なプレフィルタリングなしにサンプリングされた場合に発生する。動き解析の場合、エイリアスは時間次元にあり、時間にわたって平均化することでモーションブラーを生成するために再利用できる。両眼ステレオの場合、エイリアスは視点位置の次元（例：\(v_x\) または \(v_y\)）にあります。原理的には、視点位置にわたって平均化することで、つまり光学的なぼかしによって低減できるが、2台のカメラの絞りが光学的に重なり合うほど大きい場合にのみ効果的であるが、通常はそうではない。
+<!--
+The displacement analysis is simpler for the plenoptic camera
+than it is in the usual binocular stereo situation because the
+correspondence problem can be minimized or avoided. The
+classical correspondence problem occurs in motion or stereo
+when the displacement between two, images is greater than half
+of a wavelength of the highest frequency component in the
+image. An image that has been spatially low-pass filtered (i.e.,
+blurred) below a cut-off frequency of w can endure a
+displacement of up to 1/(2w) before the correspondence problem
+sets in. Thus, the correspondence problem is simply a
+manifestation of aliasing; it arises when the two images being
+compared have been sampled without sufficient prefiltering. In
+the case of motion analysis, the aliasing is in the time
+dimension, and it can be reused by averaging over time in order
+to generate motion blur. In the case of binocular stereo. the
+aliasing is in the dimension of viewing position (e.g., vx or vy);
+it can be reduced in principle by averaging over viewing
+position, i.e., through optical blur, but would only be effective
+if the apertures of the two cameras were so large as to be
+optically overlapping, which is not generally the case.
+-->
+        </p>
+        <p>
+プレノプティックカメラの場合、あるサブイメージの仮想開口が次のサブイメージの仮想開口に隣接したり、重なり合ったりする可能性がある。これらの仮想開口が十分なローパスフィルタを提供する限り、エイリアスは防止できる。さらに、図3の光学系の考察からわかるように、光学系はプレフィルタリングを適切な量で自動的にスケーリングする。物体が焦点面から離れるにつれて、その視差変位は線形に増加するが、光学的なぼかしも線形に増加する。ある深度でエイリアスを防止するのに光学的なぼかしが十分である限り、自動的に任意の深度でエイリアスを防止するのに十分となる。このため、対応関係の曖昧さは最小限に抑えられるか、または回避される。
+<!--
+In the case of the plenoptic camera, it is possible for the
+virtual aperture of one subimage to abut or even overlap the
+virtual aperture of the next; insofar as these virtual apertures
+provide sufficient low-pass filtering aliasing can be prevented.
+Moreover, the optics automatically scale the prefiltering by an
+appropriate amount, as may be seen by consideration of the
+optics in Fig. 3. As an object moves away from the plane of
+focus, its parallactic displacement grows linearly, but its optical
+blur also grows linearly. Insofar as the optical blur is sufficient
+to prevent aliasing for one depth, it is automatically sufficient
+to prevent it for any depth. For this reason, correspondence
+ambiguities are minimized or avoided.
+-->
+        </p>
+        <p>
+実際には、対応関係において大きな困難は経験しておらず、そのため、探索、粗密処理、反復処理などの手順に頼ることなく、単純なワンパス変位アルゴリズムを使用することができる。
+<!--
+In practice, we have not experienced significant difficulties
+with correspondence, and we are therefore able to use a simple
+one-pass displacement algorithm without resorting to any
+procedures involving search, coarse-to-fine processing, or iteration 
+-->
+        </p>
+        <p>
+変位解析は1次元に限定されるため、一般的な2次元運動解析システムのような「アパーチャー問題」は発生しない。視線位置の水平変位は、画像においても純粋な水平変位をもたらすことが事前に分かっている。さらに、部分画像はすべて共通平面上に形成されるため、非平行画像平面を用いる両眼立体視システムで発生する可能性のある画像間の「キーストーン」の問題もない。
+<!--
+There is no “aperture problem” as there would be in a general
+2-D motion analysis system because the displacement analysis
+is confined to one dimension. We know a priori that horizontal
+displacements in viewing position should lead to pure horizontal
+displacements in the image. In addition, since the subimages are
+all formed in a common plane, there is no “keystoning”
+problem between images as there can be in binocular stereo
+systems employing nonparallel image planes.
+-->
+        </p>
+        <p>
+変位の測定には最小二乗勾配法を用いた[14], [15]。1次元の場合を考える。I(x)を画像強度信号、Ix(x)を空間微分、Iv(x)を視点位置に関する微分とする（簡略化のためvの添え字は省略する）。すると、画像パッチの最小二乗変位推定量は以下のようになる。
+<!--
+We have used a least-squares gradient technique to measure the
+displacements [14], [15]. Consider the l-D case: Let I(x) be an
+image intensity signal; let Ix(x) be the spatial derivative, and let
+Iv(x) be the derivative with respect to viewing position
+(dropping the subscript from v for simplicity). Then, the leastsquares
+displacement estimator for a patch of the image is
+-->
+\[
+h(x)=\frac{\displaystyle\sum_P I_x(x)I_y(x)}{\displaystyle\sum_P[I_x(x)]^2}
+\tag{5}
+\]
+ここで、Pは積分パッチである。パッチサイズが大きいほどノイズは減少するが、変位推定値が滑らかになり、急激な変化がぼやけてしまう。通常、5×5から9×9のパッチサイズを使用する。
+<!--
+where P is the integration patch. A large patch size leads to
+reduced noise, but it imposes a smoothness on the displacement
+estimate that blurs over sharp changes. We typically use a patch
+size of 5×5 to 9×9.
+-->
+        </p>
+        <p>
+また、各点において、以下の式[14]に従って信頼度推定値を割り当てる。
+<!--
+We also assign a confidence estimate at each point as given
+[14] by the equation
+-->
+\[
+c(x)=\sum_P[I_x(x)]^2
+\tag{6}
+\]
+変化が急激な領域（線やエッジの近くなど）では信頼性は高くなるが、滑らかで特徴のない領域では信頼性は低くなる。各画像ペアは、それ自身の変位マップと関連する信頼性マップを生成する。
+<!--
+Confidence is high in regions with rapid change (e.g., near lines
+or edges) but low in regions that are smooth and featureless.
+Each image pair produces its own displacement map along with
+an associated confidence map.
+-->
+        </p>
+        <p>
+複数の変位推定値は、重み付け和で統合することができる。この場合、各推定値にはその信頼度に比例した重みが与えられる。水平輪郭のみを含む領域では、水平方向の変位推定値の信頼度は低くなるが、鉛直方向の推定値の信頼度は高くなる。もちろん、鉛直輪郭の場合は状況が逆になる。信頼度重み付け和則により、水平方向と鉛直方向の変位に関する情報を簡単かつ適切に統合することができる。この統合則は、付録に示すように、最小二乗推定値として正式に導出できる。
+<!--
+The multiple displacement estimates may be combined in a
+weighted sum, where each estimate is given a weight
+proportional to its confidence. In a region containing only a
+horizontal contour, the displacement estimate for the horizontal
+direction will be of low confidence, whereas the estimate for the
+vertical direction will be of high confidence; the situation is of
+course reversed for a vertical contour. The confidence weighted
+summation rule allows information about horizontal and vertical
+disparity to be simply and appropriately combined. This
+combination rule can he formally derived as a leastsquares
+estimator as is shown in the Appendix.
+-->
+        </p>
+        <p>
+あるいは、画像平面の \((x, y)\) 軸と視点位置の \((v_x, v_y)\) 軸で定義される4次元空間における方向を測定することもできる。[8] の基本概念は図5を参照することで理解でき、光学的配置によって奥行き情報が方向として表現されていることがわかる。動きが \((x, y, t)\) における方向として分析できるのと同様に [16], [5]、奥行きも \((x, y, v_x, v_y)\) における方向として分析できる。妥当な仮定のもとでは、このアプローチは付録で説明する推定量にも帰着する。
+<!--
+Alternatively, one could measure orientation in the 4-D space
+defined by the \((x, y)\) axes of the image plane and the \((v_x, v_y)\)
+axes of viewing position; the basic concept [8] may be
+understood by reference to Fig. 5, where the optical arrangement
+is seen to express depth information as orientation. Just as
+motion may be analyzed as orientation in \((x, y, t)\) [16], [5],
+depth may also be analyzed as orientation in \((x, y, v_x, v_y)\). Under
+reasonable assumptions, this approach also reduces to the
+estimator described in the Appendix.
+-->
+        </p>
+        <p>
+変位解析を行う前に、光学系、照明、サンプリングの不均一性によって生じる可能性のある低空間周波数アーティファクトを除去するために、画像を前処理することが重要であることが分かった。通常、バンドパス空間フィルタと局所ゲイン制御を適用する。
+<!--
+We find that it is important to preprocess the image before
+performing the displacement analysis to remove low-spatialfrequency
+artifacts that may be caused by nonuniformities in
+optics, lighting, or sampling. We usually apply a bandpass
+spatial filter and a local gain control.
+-->
+        </p>
+        <p>
+我々のアルゴリズムは、変位モデルが変位場が滑らかであると仮定しているため、オクルージョンとディスオクルージョン(遮蔽解除)の問題に遭遇することがあるが、これはオクルージョン境界では当てはまらない。これらの状況を正しく処理するには、より高度なアルゴリズムが必要になる。しかしながら、我々は概してこれらの問題が深刻であるとは考えていない。
+<!--
+Our algorithms sometimes encounter problems with occlusion
+and disocclusion since the displacement model assumes that
+the displacement field is smooth, which is not true at an
+occlusion boundary. More sophisticated algorithms would be
+required to handle these situations correctly. However, we have
+not generally found the problems to be grave.
+-->
+        </p>
+        <p>
+局所的な変位推定値が導出されると、それを(4)に従って深推定値に変換することができる。
+<!--
+Once the local displacement estimates are derived, they can be
+converted to depth estimates according to (4).
+-->
+        </p>
+<h2><center>VII. 結果</center></h2>
+        <p>
+図6(b)に示すリレー光学系に基づいてプレノプティックカメラを製作した。主レンズは35mm一眼レフカメラの50mmレンズとした。フレネルオプティクス社製の64ライン/インチのレンチキュラーシートを2枚交差させて2次元レンチキュラーアレイを作製した。平凸レンズを視野レンズとして用いた。レンチキュラーアレイの背面に形成された空中像は、ニコンの60mmマクロレンズによってソニーのCCDビデオカメラに再結像された。得られた画像は、データキューブフレームグラバーによってデジタル化され、Sun 4ワークステーションで処理された。デジタル化された画像の解像度は512×480であった。部分画像解析の結果、それぞれ約100×100ピクセルの部分画像セットが得られた。
+<!--
+We constructed a plenoptic camera according to the relay
+optics scheme shown in Fig. 6(b). The main lens was a 50 mm
+lens from a 35 mm SLR camera. We made a 2-D lenticular array
+by crossing a pair of 64 line/in lenticular sheets obtained from
+Fresnel Optics, Inc. A plano-convex lens served as the field
+lens. The aerial image formed at the back surface of the lenticular
+array was reimaged by a Nikon 60 mm macro lens onto a
+Sony CCD video camera. The resulting image was digitized by
+a Datacube frame grabber and processed on a Sun 4 workstation.
+The resolution of the digitized image was 512×480. After
+subimage analysis, we obtained a set of subimages of approximately
+100×100 pixels each
+-->
+        </p>
+        <p>
+エイリアスを低減するため、メインレンズの前に弱い拡散板を設置した。弱い拡散板としては、HOYA製の拡散フィルターと呼ばれるもの（ポートレート写真家がソフトフォーカス効果を出すために使用）、2) レンチキュラー素材とはわずかに屈折率が異なる屈折率マッチング液を用いて光学的に弱めた、交差した一対のレンチキュラーアレイ、3) Suave Ultraholdヘアスプレーを軽く吹き付けたガラス板、の3つの方法を試した。これら3つの方法はいずれも非常に効果的で、ここで説明する実験ではヘアスプレー拡散板を使用した。
+<!--
+To reduce aliasing, we placed a weak diffuser in front of the
+main lens. We tried several devices for the weak diffuser: 1) a
+so-called diffusion filter manufactured by Hoya and used by
+portrait photographers to give a soft-focus effect; 2) a pair of
+crossed lenticular arrays that were optically weakened by the use
+of index matching fluid with a refractive index very slightly
+different from that of the lenticular material; 3) a plate of glass
+lightly sprayed with Suave® Ultrahold hairspray. All three
+methods worked fairly well, and we used the hairspray diffuser in
+the experiments to be described here.
+-->
+        </p>
+        <p>
+カメラからデジタル化された画像を図7(a)に示す。被写体はレゴブロックで作られたピラミッドで、3つの異なる高さ（ウェディングケーキのように）がある。ブロックの上部は小さな突起で覆われており、テクスチャを形成している。各マクロピクセルは、約5×5ピクセルの領域を覆う小さな明るいパッチとして表示される。図7(b)は、画像の小さなパッチを拡大したもので、マクロピクセルをより鮮明に示している。各マクロピクセルの平均光量は、通常のカメラでレンズの絞りを完全に開いたときに記録される強度に対応する。個々のマクロピクセルは、画像面内の特定の位置から見たメインレンズの絞りの画像である。
+<!--
+A digitized image from the camera is shown in Fig. 7(a). The
+subject was a pyramid made of Lego® blocks, which provides
+three distinct heights (like a wedding cake). The tops of the
+blocks are covered with little bumps, which provide a texture.
+Each macropixel appears as a small bright patch covering an
+area of about 5 ´ 5 pixels. Fig 7(b) shows an enlargement of a
+small patch of the image, showing the macropixels more
+clearly. The mean quantity of light in each macropixel
+corresponds to the intensity one would record with an ordinary
+camera with the lens aperture fully open. An individual macropixel
+is an image of the main lens aperture as seen from a given
+location in the image plane.
+-->
+        </p>
+        <p>
+<center><img src="images/fig7.png"></center>
+        </p>
+        <p class="margin-large">
+図7. (a) プレノプティックカメラで撮影したレゴピラミッドのデジタル画像。
+(b) マクロピクセルを示す画像の拡大部分。(c)～(g) レンズ絞りを水平方向に横切る仮想視点から撮影したサブ画像のセット。(h) 深度マップ。(i) 深度マップのワイヤーフレーム表面プロット。
+<!--
+Fig. 7. (a) Digitized image of a lego pyramid, taken with the plenoptic camera.
+(b) enlarged section of the image, showing the macropixels. (c)-(g) set of
+subimages taken from virtual viewpoints traversing the lens aperture
+horizontally; (h) depth map; (i) wire-frame surface plot of the depth map.
+-->
+        </p>
+        <p>
+図7(c)～(g)の下部には、視点の水平方向のスイープに対応する合成サブイメージのセットが示されている。他の方向でも同様のスイープを生成することができる。このプレゼンテーションでは、連続する画像間の違いは分かりにくいが、シーケンスをアニメーションとして表示すると、ピラミッドが前後に揺れているのがわかる。
+<!--
+A set of synthesized subimages corresponding to a horizontal
+sweep of viewing position is shown along the bottom, in Fig.
+7(c)-(g); one can generate similar sweeps in other directions. The
+differences between successive images are difficult to see in this
+presentation, but when the sequences are shown as animations,
+the pyramid is seen to rock back and forth.
+-->
+        </p>
+        <p>
+水平方向と垂直方向の変位解析を適用した後、図7(h)に強度として、図7(i)に表面プロットとして示される深度マップが得られる。3つの別々の深度平面が正しく解析されている。
+<!--
+After applying the displacement analysis in the horizontal and
+vertical dimensions, we obtain the depth map shown as
+intensity in Fig. 7(h) and shown in a surface plot in Fig 7(i).
+The three separate depth planes have been correctly analyzed
+-->
+        </p>
+        <p>
+図8(a)に別の例を示す。被写体は小さなおもちゃのトラックであり、この画像は抽出されたサブイメージの1つを示している。この画像の多くの領域には、良好な奥行き推定を可能にするのに十分な輪郭やテクスチャが含まれていない。この制限は、両眼ステレオや運動視差など、すべての受動光学測距技術に共通する特徴である。図8(h)には、閾値信頼度を超える領域で得られた奥行き推定値を示している（信頼度の低い領域は黒で示されている）。信頼度の高い領域では、奥行き推定値は定性的に正しい。欠損領域を埋めるためには、計算視覚の他の分野で説明されているような手法（例えば、[17]-[19]）を使用する必要がある。
+<!--
+Another example is shown in Fig. 8(a). The subject was a
+small toy truck, and this image shows one of the extracted sub-images. Many regions of this image do not contain enough
+contour or texture to permit good depth estimates. This
+limitation is characteristic of all passive optical ranging
+techniques, such as binocular stereo or motion parallax. In Fig.
+8(h), we show the depth estimate obtained in the regions that
+exceed a threshold confidence level (regions of low confidence
+are shown in black). In the regions of high confidence, the depth
+estimates are qualitatively correct. In order to fill in the missing regions, one would need to use techniques such as those that
+have been described in other domains of computational vision
+(e.g., [17]-[l9]).
+-->
+        </p>
+        <p>
+<center><img src="images/fig8.png"></center>
+        </p>
+        <p class="margin-large">
+図8. (a) おもちゃのトラックの1つのサブイメージ、(b) 深度マップ。信頼度の低い値は黒で表示される。
+<!--
+Fig. 8. (a) One subimage of a toy truck; (b) depth map. Values of low
+confidence are displayed as black.
+-->
+        </p>
+<h2><center>VIII. 結論</center></h2>
+        <p>
+物体の周囲を満たす光の構造には、物体の3次元形状を特徴付けるのに役立つ膨大な情報が含まれている。通常のカメラシステムは、その情報のごく一部しか捉えられない。両眼立体視システムは、2つの離散的な視点に関する情報を捉えるが、運動視差システムは、一連の視点からの情報を捉える。
+<!--
+The structure of light that fills the space around an obiect
+contains a great deal of information that can help characterize the
+object’s 3-D shape. Ordinary camera systems capture only a tiny
+portion of the information. Binocular stereo systems capture
+information about two discrete viewpoints; motion parallax
+systems capture information from a sequence of viewpoints.
+-->
+        </p>
+        <p>
+プレノプティックカメラは、メインカメラレンズの開口部内にある連続した視点に関する情報を取得する。センサー面に入射する光の構造は、そこに設置された小型カメラ群によって保持される。カメラは、ピンホールアレイまたはレンチキュラーアレイで構成できる。それぞれの小型カメラは、メインレンズの開口部内の光の分布を表すマクロピクセルを生成する。
+<!--
+The plenoptic camera captures information about the
+continuum of viewpoints that lie within the aperture of the
+main camera lens. The structure of the light impinging on the
+sensor plane is retained by placing a set of miniature cameras
+there; the cameras can be formed by a pinhole array or a
+lenticular array. Each tiny camera creates a macropixel that
+represents the distribution of light within the main lens
+aperture.
+-->
+        </p>
+        <p>
+このようにして得られた情報により、レンズ絞り内の異なる視点に対応する画像を合成することが可能になる。つまり、画像をデジタル化した後、ソフトウェアを用いて仮想視点を上下左右に移動させることができる。光学的なプレフィルタリングが適切であれば、視点位置のエイリアスはほとんど、あるいは全く発生せず、仮想視点を連続した位置に移動させることが可能である。このような状況では、対応関係の問題は最小限に抑えられるか、あるいは完全に回避されるため、視差解析に非常に単純なアルゴリズムを使用することができる。我々は、最小二乗勾配法を用いて水平視差と垂直視差の両方に関する情報を抽出し、それらの推定値を組み合わせることで、奥行き推定値の信頼性を高めた。
+<!--
+The information so acquired allows one to synthesize images
+corresponding to different viewpoints within the lens aperture,
+that is, after the image has been digitized, one can displace the
+virtual viewing position up, down, left, or right by the
+application of software. If the optical prefiltering is adequate,
+there is little or no aliasing in viewing position, and it is
+possible to move the virtual viewpoint through a continuum of
+positions. In these circumstances, the correspondence problem is
+minimized or altogether avoided so that one can use very simple
+algorithms for disparity analysis. We have used a least-squares
+gradient procedure to extract information about both the
+horizontal and vertical parallax, combining the estimates to
+increase the reliability of the depth estimates
+-->
+        </p>
+        <p>
+このシステムの主な制限は、ステレオのベースラインがレンズの絞りの大きさに制限され、奥行きを分解する精度が低下することである。
+<!--
+The system’s main limitation is that the stereo baseline is
+restricted to the size of the lens aperture, which reduces the
+accuracy with which depth may be resolved.
+-->
+        </p>
+        <p>
+このシステムには多くの利点がある。必要なカメラは1台だけで済む。水平視差と垂直視差の両方を使用する。複数のカメラ間のキャリブレーションを確立して維持する必要がなく、対応関係の曖昧さが最小限に抑えられるため、画像処理アルゴリズムはシンプルで高速かつ堅牢である。
+<!--
+The system has a number of advantages: it requires only a
+single camera; it uses both horizontal and vertical disparity;
+there is no need to establish and maintain calibration between
+multiple cameras; because the ambiguities of correspondence are
+minimized, the image processing algorithms can be simple,
+fast, and robust.
+-->
+        </p>
+<h2><center>付録</center></h2>
+        <p>
+1次元版プレノプティックカメラの最小二乗変位推定は式(5)で説明されているが、プレノプティックカメラによって生成される画像は実際には4つのパラメータ、すなわち2つの空間次元 (x, y) と2つの視野次元 \((v_x, v_y)\) で記述される。強度は \(I(x, y, v_x, v_y)\) と表記される。この場合の最小二乗変位推定は、一見すると難しい4次元問題を伴うように見えるが、幾何光学によって課される制約によって大幅に簡素化される。
+<!--
+The least-squares displacement estimate for a 1-D version of
+the plenoptic camera is described in (5), but the images that are
+generated by the plenoptic camera are actually described by four
+parameters: the two spatial dimensions (x, y) and the two
+viewing dimensions (vx, vy). The intensity may be written as
+I(x; y, vx, vy). The least squares displacement estimation for this
+case would appear at first to involve a difficult 4-D problem, but
+the constraints imposed by the geometrical optics simplify it
+greatly.
+-->
+        </p>
+        <p>
+視点位置の変位は、画像の平行方向の変位につながる。例えば、視点を \(x\) 軸に沿って動かすと、画像内の特徴も \(x\) 方向に移動する。直交方向には視差は発生しない（光軸が平行でない双眼システムで発生する可能性がある）。したがって、次のように最小二乗推定値を設定できる。
+<!--
+A displacement in viewing position will lead to an image
+displacement in a parallel direction. For example, if the viewpoint
+is moved along the x axis, then features in the image will
+also move in the \(x\) direction; there is no induced parallax in
+the orthogonal direction (as can occur in binocular systems with nonparallel optical axes). Therefore, we can set up a leastsquares
+estimator as follows.
+-->
+        </p>
+        <p>
+視点位置を\((v_x, v_y)\)とし、方向 \(\alpha\) に小さな \(\varepsilon\) の距離だけ変位させるとします。変位は
+<!--
+Let the viewpoint position be \((v_x, v_y)\), and let it be displaced
+by a small \(\varepsilon\) distance in direction \(\alpha\). The displacements are then
+-->
+\[
+\begin{align}
+&\Delta_x=\varepsilon\cos(\alpha) \tag{7}\\
+\\
+&\Delta_y=\varepsilon\sin(\alpha) \tag{8}
+\end{align}
+\]
+視点の移動は、画像パッチを \(h\Delta_x\) と \(h\Delta_y\) だけ移動させる。この関係は次のようになる。
+<!--
+Displacement of viewpoint leads to a displacement of an image
+patch by amounts \(h\Delta_x\) and \(h\Delta_y\). The relationship takes the form
+-->
+\[
+I(x,y,v_x,v_y)=I(x-h\Delta_x-h\Delta_y,v_x+\Delta_x,v_y+\Delta_y)
+\tag{9}
+\]
+または、\(c_\alpha = \cos(\alpha)\)と\(s_\alpha = \sin(\alpha)\)の省略形を使って、次のように書くことができる。
+<!--
+or, using shorthand of \(c_\alpha = \cos(\alpha)\) and \(s_\alpha = \sin(\alpha)\), we can write
+-->
+\[
+I(x,y,v_x,v_y)=I(x-h\varepsilon c_\alpha,y-h\varepsilon s_\alpha,v_x+\varepsilon c_\alpha,v_y+\varepsilon s_\alpha) \tag{10}
+\]
+次に、\(h\)を決定するために最小化すべき二乗誤差を定義する。
+<!--
+We may then define a squared error to be minimized in order to
+determine \(h\):
+-->
+\[
+E=\int_\alpha\sum_P[I(x,y,v_x,v_y)-I(x-h\varepsilon c_\alpha,y-h\varepsilon s_\alpha, v_x+\varepsilon c_\alpha,v_y+\varepsilon s_\alpha] \tag{11}
+\]
+ここで、積分は0から2πまでのすべての変位方向 \(\alpha\) にわたって行われ、和は \((x, y, v_x, v_y)\) を軸とする4次元パッチ \(P\) にわたって行われる。テイラー展開を行い、線形項を保持すると、次の式が得られる。
+<!--
+where the integral is taken over all displacement directions \(\alpha\)
+from 0 to \(2\pi\), and the summation is taken over a 4-D patch \(P\)
+with the axes \((x, y, v_x, v_y)\). Performing a Taylor expansion and
+retaining the linear terms leads to
+-->
+\[
+E\simeq\varepsilon\int_\alpha\sum_P[c_\alpha I_x+s_\alpha I_y+hc_\alpha I_{v_x}+hs_\alpha I_{v_y}]^2 \tag{12}
+\]
+\(h\) について微分し、それをゼロにすると、
+<!--
+Taking the derivative with respect to h and setting it to zero
+leads to
+-->
+\[
+h=\frac{\displaystyle\int_\alpha\sum_P (c_\alpha I_{v_x}+s_\alpha I_{v_y})(c_\alpha I_x+s_\alpha I_y)}{\displaystyle\int_\alpha\sum_P (c_\alpha I_x+s_\alpha I_y)^2} \tag{13}
+\]
+（共通因数\(\varepsilon\) を消去した後）、\(\alpha\) 上の積分を実行すると、\(c_\alpha\) と \(s_\alpha\) の三角関数の関係により、この式は次のように簡約される。
+<!--
+(after cancellation of the common factor, \(\varepsilon\)). The integral over \(\alpha\) may now be performed, and the trigonometric relations of \(c_\alpha\) and \(s_\alpha\) cause the equation to reduce to
+-->
+\[
+h=\frac{\displaystyle\sum_P(I_x I_{v_x}+I_y I_{v_y})}{\displaystyle\sum_P(I_x^2+I_y^2)} \tag{14}
+\]
+これは4次元の場合の最小二乗推定値である。この式は(5)の単純な拡張であることがわかる。
+<!--
+which is the least-squares estimator for the 4-D case. This
+equation is seen to be a simple extension of (5).
+-->
+        </p>
+        <p>
+同じ推定値は、2つの1次元変位推定値を実行し、信頼度重み付き和を求めることによっても得られる。\(h_x\) と \(h_y\) を \(x\) と \(y\) 方向の1次元変位推定値とし、\(c_x\) と\(c_y\) をそれぞれ式(5)と式(6)で示される信頼度とする。
+<!--
+　The same estimator can be obtained by performing two l-D
+displacement estimates and forming a confidence-weighted sum.
+Let \(h_x\) and \(h_y\) be the 1-D estimates of displacement in the \(x\) and \(y\) directions, and let \(c_x\) and \(c_y\) be the corresponding confidence
+measures, as described by (5) and (6):
+-->
+\[
+\begin{align}
+h_x &=\frac{\displaystyle\sum_P I_x I_{v_x}}{\displaystyle\sum_P I_x^2} \tag{15}\\
+\\
+h_y &=\frac{\displaystyle\sum_P I_y I_{v_y}}{\displaystyle\sum_P I_y^2} \tag{16} \\
+\\
+c_x &= \displaystyle\sum_P I_x^2 \tag{17} \\
+\\
+c_y &= \displaystyle\sum_P I_y^2 \tag{18}
+\end{align}
+\]
+そして、2つの一次元推定値の信頼度加重和は
+<!--
+Then, the confidence weighted sum of the two l-D estimates is
+-->
+\[
+\begin{align}
+h_{cw} &= \frac{h_x c_x +h_y c_y}{c_x + c_y} \tag{19}\\
+\\
+&=\frac{\displaystyle\sum_P(I_x I_{v_x}+I_y I_{v_y})}{\displaystyle\sum_P (I_x^2+I_y^2)} \tag{20}
+\end{align}
+\]
+これは（14）の最小二乗推定値と同一である。
+<!--
+This is identical to the least-squares estimator of (14).
+-->
+        </p>
+<h2>謝辞</h2>
+        <p>
+S. Benton、A. Pentland、E. Simoncelliの有益な議論に感謝します。
+<!--
+We thank S. Benton, A. Pentland, and E. Simoncelli for
+useful discussions
+-->
+        </p>
+<h2>REFERENCES</h2>
+        <p>
+<div class="styleRef">
+<ul>
+<li>[1] J. P. Richter, ed., The Notebooks of Leonardo da Vinci. New York: Dover,
+1970, p. 39, vol. 1.
+</li><li>[2] W. L. L. Grimson, From Images to Surfaces: A Computational Study of the
+Human Early Visual System. Cambridge, MA: MIT, 1981.
+</li><li>[3] M. Ito and A. Ishii, “Three view stereo analysis,” IEEE Trans. Patt. Anal.
+Machine Intell., vol. PAMI-8, pp. 524-531, 1986.
+</li><li>[4] N. Ayache and F. Lustman, “Fast and reliable passive trinocular stereo
+vision,” in Proc. ICCV, pp. 422-427.
+</li><li>[5] R. C. Bolles, H. H. Baker, and D. H. Marimont. “Epipolar-plane image
+analysis: An approach to determining structure from motion,” Int. J.
+Comp. Vis., vol. 1, pp. 7-55, 1987.
+</li><li>[6] A. P. Pentland, "A new sense for depth of field," IEEE Trans. Patt. Anal.
+Machine Intell., vol. PAMI-9, pp. 523-531, 19-37.
+</li><li>[7] V. M. Bove, Jr., “Probabilistic method for integrating multiple sources of
+range data,” J. Opt. Soc Amer. A, vol. 7, pp. 2193-2207, 1990.
+</li><li>[8] E. H. Adelson and J R. Bergen, “The plenoptic function and the elements
+of early vision,” in Computational Models of Visual Processing (M. Landy
+and J. A. Movshon, Eds.). Cambridge, MA: MIT Press, 1991.
+</li><li>[9] J. J. Gibson, The Senses Considered as Perceptual Systems. Boston:
+Houghton Mifflin, 1966.
+</li><li>[10] G. Lippmann, “Epreuves reversibles donnant la sensation du relief." J.
+Phys.7, pp.821-825, 1908.
+</li><li>[11] H. E. Ives, “Parallax panoramagrams made with a large diameter lens,”
+J. Opt. Soc. Amer., vol. 20, pp 332-342, 1930.
+</li><li>[12] T. Okoshi. Three Dimensional Imaging Techniques. New York Academic,
+1976.
+</li><li>[13] S. F. Ray, Applied Photographic Optics: Imaging Systems for
+Photography, Film, and Video. Boston: Focal, 1988.
+</li><li>[14] B. D. Lucas and T. Kanade, “An iterative image registration technique
+with an application to stereo vision,” in Proc. Image Understanding Workshop,
+pp. 121-130.
+</li><li>[15] C. Cafforio and F. Rocca, “Methods for measuring small displacements of
+television images,” IEEE- Trans. Inform. Theory, vol. IT-22, pp. 573-579,
+1976.
+</li><li>[16] E. H. Adelson and J. R. Bergen, "Spatiotemporal energy models for the
+perception of motion," J. Opt. Soc. Amer., vol. A2, pp. 284-299, l985.
+</li><li>[17] W. E. L. Grimson, "An implementation of a computational theory of
+visual surface interpolation," Comput. Vision Graphics, Image Processing,
+vol. 2, pp. 39-69, 1983.
+</li><li>[18] D. Terzopoulos, “The computation of visible surface representations,”
+IEEE Trans. Patt. Anal. Machine Intell., vol. 10, pp. 417-439, 1988.
+</li><li>[l9] T. Poggio, V. Torre, and C. Koch, “Computational vision and regularization
+theory ,” Nature, vol. 317, pp. 314-319, 1985.</li>
+</ul>
+        </p>
+    </body>
+</html>
