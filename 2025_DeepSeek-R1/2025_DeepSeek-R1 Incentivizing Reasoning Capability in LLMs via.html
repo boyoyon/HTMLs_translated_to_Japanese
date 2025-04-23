@@ -1,0 +1,1224 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>DeepSeek-R1</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via
+Reinforcement Learning</center></h1>
+<center>DeepSeek-R1：強化学習によるLLMの推論能力の促進</center><br>
+<br>
+<center>DeepSeek-AI</center>
+<center>research@deepseek.com</center>
+<h2><center>要旨</center></h2>
+<p>
+第一世代の推論モデルであるDeepSeek-R1-ZeroとDeepSeek-R1を紹介します。DeepSeek-R1-Zeroは、教師あり微調整（SFT）を前段階として用いず、大規模強化学習（RL）によって学習されたモデルであり、優れた推論能力を発揮します。DeepSeek-R1-Zeroは、RLを通して、多くの強力で興味深い推論動作を自然に獲得します。しかし、可読性の低さや言語の混在といった課題に直面しています。これらの問題を解決し、推論性能をさらに向上させるために、RLの前に多段階学習とコールドスタートデータを組み込んだDeepSeek-R1を紹介します。DeepSeek-R1は、推論タスクにおいてOpenAI-o1-1217に匹敵する性能を達成しています。研究コミュニティをサポートするために、DeepSeek-R1-Zero、DeepSeek-R1、およびQwenとLlamaに基づいてDeepSeek-R1から抽出された6つの高密度モデル（1.5B、7B、8B、14B、32B、70B）をオープンソース化しています。
+<!--
+We introduce our first-generation reasoning models, DeepSeek-R1-Zero and DeepSeek-R1. DeepSeek-R1-Zero, a model trained via large-scale reinforcement learning (RL) without supervised fine-tuning (SFT) as a preliminary step, demonstrates remarkable reasoning capabilities. Through RL, DeepSeek-R1-Zero naturally emerges with numerous powerful and intriguing reasoning behaviors. However, it encounters challenges such as poor readability, and language mixing. To address these issues and further enhance reasoning performance, we introduce DeepSeek-R1, which incorporates multi-stage training and cold-start data before RL. DeepSeek-R1 achieves performance comparable to OpenAI-o1-1217 on reasoning tasks. To support the research community, we open-source DeepSeek-R1-Zero, DeepSeek-R1, and six dense models (1.5B, 7B, 8B, 14B, 32B, 70B) distilled from DeepSeek-R1 based on Qwen and Llama.
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<center>図 1 | DeepSeek-R1 のベンチマーク パフォーマンス</center>
+</p>
+<h2>1. はじめに</h2>
+<p>
+近年、大規模言語モデル（LLM）は急速な反復と進化を遂げており（Anthropic、2024年、Google、2024年、OpenAI、2024a）、汎用人工知能（AGI）とのギャップは徐々に縮小しています。
+<!--
+In recent years, Large Language Models (LLMs) have been undergoing rapid iteration and
+evolution (Anthropic, 2024; Google, 2024; OpenAI, 2024a), progressively diminishing the gap
+towards Artificial General Intelligence (AGI).
+-->
+</p>
+<p>
+最近、事後学習は学習パイプライン全体の重要な要素として浮上しています。
+事後学習は、推論タスクの精度を向上させ、社会的価値観と整合させ、ユーザーの嗜好に適応することが示されていますが、事前学習と比較して比較的少ない計算リソースで済みます。推論能力の観点では、OpenAIのo1 (OpenAI, 2024b) シリーズモデルは、Chain-of-Thought 推論プロセスの長さを増やすことで推論時間のスケーリングを導入した最初のモデルです。このアプローチは、数学、コーディング、科学的推論など、様々な推論タスクにおいて大幅な改善を実現しました。しかし、効果的なテスト時間のスケーリングという課題は、研究コミュニティにとって未解決のままです。先行研究では、プロセスベース報酬モデル（Lightman et al., 2023; Uesato et al., 2022; Wang et al., 2023）、強化学習（Kumar et al., 2024）、モンテカルロ木探索やビーム探索などの探索アルゴリズム（Feng et al., 2024; Trinh et al., 2024; Xin et al., 2024）など、様々なアプローチが検討されてきました。しかし、これらの手法のいずれも、OpenAIのo1シリーズモデルに匹敵する汎用推論性能を達成していません。
+<!--
+Recently, post-training has emerged as an important component of the full training pipeline.
+It has been shown to enhance accuracy on reasoning tasks, align with social values, and adapt
+to user preferences, all while requiring relatively minimal computational resources against
+pre-training. In the context of reasoning capabilities, OpenAI’s o1 (OpenAI, 2024b) series models
+were the first to introduce inference-time scaling by increasing the length of the Chain-of-
+Thought reasoning process. This approach has achieved significant improvements in various
+reasoning tasks, such as mathematics, coding, and scientific reasoning. However, the challenge
+of effective test-time scaling remains an open question for the research community. Several prior
+works have explored various approaches, including process-based reward models (Lightman
+et al., 2023; Uesato et al., 2022;Wang et al., 2023), reinforcement learning (Kumar et al., 2024),
+and search algorithms such as Monte Carlo Tree Search and Beam Search (Feng et al., 2024; Trinh
+et al., 2024; Xin et al., 2024). However, none of these methods has achieved general reasoning
+performance comparable to OpenAI’s o1 series models.
+-->
+</p>
+<p>
+本稿では、純粋強化学習（RL）を用いて言語モデルの推論能力向上に向けた第一歩を踏み出します。目標は、教師データなしでLLMが推論能力を開発する可能性を探り、純粋RLプロセスによる自己進化に焦点を当てることです。具体的には、DeepSeek-V3-Baseをベースモデルとして用い、GRPO（Shao et al., 2024）をRLフレームワークとして採用することで、推論におけるモデル性能を向上させます。
+トレーニング中、DeepSeek-R1-Zeroは、数多くの強力で興味深い推論動作を自然に発現しました。数千回のRLステップを経て、DeepSeek-R1-Zeroは推論ベンチマークで優れた性能を発揮します。例えば、AIME 2024のpass@1スコアは15.6%から71.0%に向上し、多数決投票を適用するとスコアはさらに86.7%に向上し、OpenAI-o1-0912の性能に匹敵します。
+<!--
+In this paper, we take the first step toward improving language model reasoning capabilities
+using pure reinforcement learning (RL). Our goal is to explore the potential of LLMs to develop
+reasoning capabilities without any supervised data, focusing on their self-evolution through
+a pure RL process. Specifically, we use DeepSeek-V3-Base as the base model and employ
+GRPO (Shao et al., 2024) as the RL framework to improve model performance in reasoning.
+During training, DeepSeek-R1-Zero naturally emerged with numerous powerful and interesting
+reasoning behaviors. After thousands of RL steps, DeepSeek-R1-Zero exhibits super performance
+on reasoning benchmarks. For instance, the pass@1 score on AIME 2024 increases from 15.6% to
+71.0%, and with majority voting, the score further improves to 86.7%, matching the performance
+of OpenAI-o1-0912.
+-->
+</p>
+<p>
+しかし、DeepSeek-R1-Zeroは、可読性の低さや言語の混在といった課題に直面しています。これらの問題に対処し、推論性能をさらに向上させるために、少量のコールドスタートデータと多段階のトレーニングパイプラインを組み込んだDeepSeek-R1を導入します。具体的には、まず数千のコールドスタートデータを収集し、DeepSeek-V3-Baseモデルを微調整します。その後、DeepSeek-R1-Zeroと同様に推論指向の強化学習を実行します。強化学習プロセスの収束に近づくと、強化学習チェックポイントで拒否サンプリングを行い、新しいSFTデータを作成します。このデータと、ライティング、事実に基づく品質保証、自己認識などの領域におけるDeepSeek-V3の教師ありデータを組み合わせて、DeepSeek-V3-Baseモデルを再学習します。新しいデータで微調整した後、チェックポイントは、すべてのシナリオからのプロンプトを考慮した追加の強化学習プロセスにかけられます。これらの手順を経て、DeepSeek-R1と呼ばれるチェックポイントを取得しました。これはOpenAI-o1-1217と同等のパフォーマンスを達成しました。
+<!--
+However, DeepSeek-R1-Zero encounters challenges such as poor readability, and language
+mixing. To address these issues and further enhance reasoning performance, we introduce
+DeepSeek-R1, which incorporates a small amount of cold-start data and a multi-stage training
+pipeline. Specifically, we begin by collecting thousands of cold-start data to fine-tune the
+DeepSeek-V3-Base model. Following this, we perform reasoning-oriented RL like DeepSeek-R1-
+Zero. Upon nearing convergence in the RL process, we create new SFT data through rejection
+sampling on the RL checkpoint, combined with supervised data from DeepSeek-V3 in domains
+such as writing, factual QA, and self-cognition, and then retrain the DeepSeek-V3-Base model.
+After fine-tuning with the new data, the checkpoint undergoes an additional RL process, taking
+into account prompts from all scenarios. After these steps, we obtained a checkpoint referred to
+as DeepSeek-R1, which achieves performance on par with OpenAI-o1-1217.
+-->
+</p>
+<p>
+DeepSeek-R1からより小規模な密モデルへの蒸留についてさらに調査しました。Qwen2.5-32B (Qwen, 2024b) をベースモデルとして用いた場合、DeepSeek-R1からの直接蒸留は、これに強化学習を適用した場合よりも優れた性能を示しました。これは、より大規模なベースモデルによって発見された推論パターンが推論能力の向上に不可欠であることを示しています。蒸留したQwenおよびLlama (Dubey et al., 2024) シリーズをオープンソース化しました。特に、蒸留した14Bモデルは最先端のオープンソースQwQ-32B-Preview (Qwen, 2024a) を大幅に上回り、蒸留した32Bおよび70Bモデルは密モデルの中で推論ベンチマークの新記録を樹立しました。
+<!--
+We further explore distillation from DeepSeek-R1 to smaller dense models. Using Qwen2.5-
+32B (Qwen, 2024b) as the base model, direct distillation from DeepSeek-R1 outperforms applying
+RL on it. This demonstrates that the reasoning patterns discovered by larger base models are crucial
+for improving reasoning capabilities. We open-source the distilled Qwen and Llama (Dubey
+et al., 2024) series. Notably, our distilled 14B model outperforms state-of-the-art open-source
+QwQ-32B-Preview (Qwen, 2024a) by a large margin, and the distilled 32B and 70B models set a
+new record on the reasoning benchmarks among dense models.
+-->
+</p>
+<h3>1.1. 貢献</h3>
+<p>
+<strong>学習後：ベースモデルにおける大規模強化学習</strong>
+<div class="styleBullet">
+<ul>
+<li>
+• 予備段階として教師あり微調整（SFT）に依存せず、ベースモデルに直接強化学習を適用します。このアプローチにより、モデルは複雑な問題を解決するための思考の連鎖（CoT）を探索できるようになり、DeepSeek-R1-Zeroが開発されました。DeepSeek-R1-Zeroは、自己検証、リフレクション、長い思考の連鎖生成といった機能を実証しており、研究コミュニティにとって重要なマイルストーンとなります。特に、これはSFTを必要とせず、強化学習のみでLLMの推論能力をインセンティブ化できることを検証した初のオープンリサーチです。この画期的な進歩は、この分野における将来の進歩への道を開くものです。
+</li><br><li>• DeepSeek-R1を開発するためのパイプラインを紹介します。このパイプラインには、改善された推論パターンを発見し、人間の嗜好に合わせることを目的とした2つのRLステージと、モデルの推論機能と非推論機能の種となる2つのSFTステージが組み込まれています。このパイプラインは、より優れたモデルを作成することで業界に貢献すると考えています。
+<!--
+<strong>Post-Training: Large-Scale Reinforcement Learning on the Base Model</strong>
+<div class="styleBullet">
+<ul>
+<li>
+• We directly apply RL to the base model without relying on supervised fine-tuning (SFT) as
+a preliminary step. This approach allows the model to explore chain-of-thought (CoT) for
+solving complex problems, resulting in the development of DeepSeek-R1-Zero. DeepSeek-
+R1-Zero demonstrates capabilities such as self-verification, reflection, and generating
+long CoTs, marking a significant milestone for the research community. Notably, it is the
+first open research to validate that reasoning capabilities of LLMs can be incentivized
+purely through RL, without the need for SFT. This breakthrough paves the way for future
+advancements in this area.
+</li><br><li>• We introduce our pipeline to develop DeepSeek-R1. The pipeline incorporates two RL
+stages aimed at discovering improved reasoning patterns and aligning with human preferences,
+as well as two SFT stages that serve as the seed for the model’s reasoning and
+non-reasoning capabilities. We believe the pipeline will benefit the industry by creating
+better models.
+-->
+</li>
+</ul>
+</div>
+</p>
+<p>
+<strong>蒸留：小規模モデルも強力になり得る</strong>
+<div class="styleBullet">
+<ul>
+<li>
+• 大規模モデルの推論パターンを小規模モデルに蒸留することで、小規模モデルで強化学習によって発見された推論パターンと比較して、優れたパフォーマンスが得られることを実証しました。オープンソースのDeepSeek-R1とそのAPIは、研究コミュニティが将来、より優れた小規模モデルを蒸留する上で役立つでしょう。
+</li><br><li>• DeepSeek-R1によって生成された推論データを使用して、研究コミュニティで広く使用されている複数の高密度モデルを微調整しました。評価結果から、蒸留された小規模高密度モデルはベンチマークで非常に優れたパフォーマンスを発揮することが示されました。DeepSeek-R1-Distill-Qwen-7BはAIME 2024で55.5%を達成し、QwQ-32B-Previewを上回りました。さらに、DeepSeek-R1-Distill-Qwen-32Bは、AIME 2024で72.6%、MATH-500で94.3%、LiveCodeBenchで57.2%のスコアを達成しました。これらの結果は、従来のオープンソースモデルを大幅に上回り、o1-miniに匹敵するものです。私たちは、Qwen2.5およびLlama3シリーズに基づいて、15億、70億、80億、140億、320億、700億のチェックポイントを抽出し、コミュニティにオープンソース化しました。
+<!--
+<strong>Distillation: Smaller Models Can Be Powerful Too</strong>
+<div class="styleBullet">
+<ul>
+<li>
+• We demonstrate that the reasoning patterns of larger models can be distilled into smaller
+models, resulting in better performance compared to the reasoning patterns discovered
+through RL on small models. The open source DeepSeek-R1, as well as its API, will benefit
+the research community to distill better smaller models in the future.
+</li><br><li>• Using the reasoning data generated by DeepSeek-R1, we fine-tuned several dense models
+that are widely used in the research community. The evaluation results demonstrate that
+the distilled smaller dense models perform exceptionally well on benchmarks. DeepSeek-
+R1-Distill-Qwen-7B achieves 55.5% on AIME 2024, surpassing QwQ-32B-Preview. Additionally,
+DeepSeek-R1-Distill-Qwen-32B scores 72.6% on AIME 2024, 94.3% on MATH-500,
+and 57.2% on LiveCodeBench. These results significantly outperform previous opensource
+models and are comparable to o1-mini. We open-source distilled 1.5B, 7B, 8B, 14B,
+32B, and 70B checkpoints based on Qwen2.5 and Llama3 series to the community.
+-->
+</li>
+</ul>
+</div>
+</p>
+<h3>1.2. 評価結果の概要</h3>
+<p>
+<div class="styleBullet">
+<ul>
+<li>
+<strong>• 推論タスク：</strong>(1) DeepSeek-R1はAIME 2024で79.8% Pass@1のスコアを達成し、OpenAI-o1-1217をわずかに上回りました。MATH-500では97.3%という驚異的なスコアを達成し、OpenAI-o1-1217と同等の性能を発揮し、他のモデルを大きく上回りました。(2)
+コーディング関連タスクでは、DeepSeek-R1はコード競技タスクにおいてエキスパートレベルを示し、Codeforcesで2,029 Eloレーティングを達成し、競技参加者の96.3%を上回りました。エンジニアリング関連タスクでは、DeepSeek-R1はDeepSeek-V3をわずかに上回り、開発者の実用化に貢献する可能性があります。 </li><br><li><strong>• 知識:</strong> MMLU、MMLU-Pro、GPQA Diamondなどのベンチマークにおいて、DeepSeek-R1は優れた結果を達成し、MMLUで90.8%、MMLU-Proで84.0%、GPQA Diamondで71.5%のスコアでDeepSeek-V3を大きく上回りました。これらのベンチマークにおけるパフォーマンスはOpenAI-o1-1217をわずかに下回っていますが、DeepSeek-R1は他のクローズドソースモデルを上回り、教育タスクにおける競争力を示しています。事実に基づくベンチマークであるSimpleQAでは、DeepSeek-R1はDeepSeek-V3を上回り、事実に基づくクエリの処理能​​力を示しています。同様の傾向が見られ、OpenAI-o1はこのベンチマークで4oを上回りました。 </li><br><li><strong>• その他:</strong> DeepSeek-R1は、クリエイティブライティング、一般的な質問への回答、編集、要約など、幅広いタスクでも優れた性能を発揮します。AlpacaEval 2.0では長さ制御の勝率87.6%、ArenaHardでは勝率92.3%という優れた性能を達成し、試験以外のクエリをインテリジェントに処理する優れた能力を示しています。さらに、DeepSeek-R1は、ロングコンテキスト理解を必要とするタスクにおいても優れたパフォーマンスを発揮し、ロングコンテキストベンチマークにおいてDeepSeek-V3を大幅に上回りました。
+<!--
+<strong>• Reasoning tasks: </strong>(1) DeepSeek-R1 achieves a score of 79.8% Pass@1 on AIME 2024, slightly
+surpassing OpenAI-o1-1217. On MATH-500, it attains an impressive score of 97.3%,
+performing on par with OpenAI-o1-1217 and significantly outperforming other models. (2)
+On coding-related tasks, DeepSeek-R1 demonstrates expert level in code competition tasks,
+as it achieves 2,029 Elo rating on Codeforces outperforming 96.3% human participants in
+the competition. For engineering-related tasks, DeepSeek-R1 performs slightly better than
+DeepSeek-V3, which could help developers in real world tasks.
+</li><br><li><strong>• Knowledge:</strong> On benchmarks such as MMLU, MMLU-Pro, and GPQA Diamond, DeepSeek-
+R1 achieves outstanding results, significantly outperforming DeepSeek-V3 with scores
+of 90.8% on MMLU, 84.0% on MMLU-Pro, and 71.5% on GPQA Diamond. While its
+performance is slightly below that of OpenAI-o1-1217 on these benchmarks, DeepSeek-R1
+surpasses other closed-source models, demonstrating its competitive edge in educational
+tasks. On the factual benchmark SimpleQA, DeepSeek-R1 outperforms DeepSeek-V3,
+demonstrating its capability in handling fact-based queries. A similar trend is observed
+where OpenAI-o1 surpasses 4o on this benchmark.
+</li><br><li><strong>• Others:</strong> DeepSeek-R1 also excels in a wide range of tasks, including creative writing,
+general question answering, editing, summarization, and more. It achieves an impressive
+length-controlled win-rate of 87.6% on AlpacaEval 2.0 and a win-rate of 92.3% on ArenaHard,
+showcasing its strong ability to intelligently handle non-exam-oriented queries.
+Additionally, DeepSeek-R1 demonstrates outstanding performance on tasks requiring
+long-context understanding, substantially outperforming DeepSeek-V3 on long-context
+benchmarks.
+-->
+</li>
+</ul>
+</div>
+</p>
+<h2>2. アプローチ</h2>
+<h3>2.1. 概要</h3>
+<p>
+これまでの研究では、モデルの性能向上のために大量の教師ありデータに大きく依存してきました。本研究では、コールドスタートとして教師あり微調整（SFT）を用いなくても、大規模な強化学習（RL）によって推論能力を大幅に向上できることを実証します。さらに、少量のコールドスタートデータを加えることで、性能をさらに向上させることができます。以下のセクションでは、(1) SFTデータなしでベースモデルに直接強化学習を適用するDeepSeek-R1-Zero、および(2) 数千の長い思考連鎖（CoT）例で微調整されたチェックポイントから強化学習を適用するDeepSeek-R1を紹介します。3) DeepSeek-R1の推論能力を小規模な密なモデルに抽出します。
+<!--
+Previous work has heavily relied on large amounts of supervised data to enhance model
+performance. In this study, we demonstrate that reasoning capabilities can be significantly
+improved through large-scale reinforcement learning (RL), even without using supervised
+fine-tuning (SFT) as a cold start. Furthermore, performance can be further enhanced with
+the inclusion of a small amount of cold-start data. In the following sections, we present: (1)
+DeepSeek-R1-Zero, which applies RL directly to the base model without any SFT data, and
+(2) DeepSeek-R1, which applies RL starting from a checkpoint fine-tuned with thousands of
+long Chain-of-Thought (CoT) examples. 3) Distill the reasoning capability from DeepSeek-R1 to
+small dense models.
+-->
+</p>
+<h3>2.2. 2.2. DeepSeek-R1-Zero: ベースモデルにおける強化学習</h3>
+<p>
+強化学習は、これまでの研究（Shao et al., 2024; Wang et al., 2023）で実証されているように、推論タスクにおいて大きな有効性を示しています。しかしながら、これらの研究は教師ありデータに大きく依存しており、その収集には膨大な時間がかかります。本セクションでは、教師ありデータなしでLLMが推論能力を開発する可能性を探り、純粋な強化学習プロセスによる自己進化に焦点を当てます。まず、私たちの強化学習アルゴリズムの概要を簡単に説明し、その後、いくつかの興味深い結果を紹介します。これがコミュニティに貴重な洞察を提供することを願っています。
+<!--
+Reinforcement learning has demonstrated significant effectiveness in reasoning tasks, as evidenced
+by our previous works (Shao et al., 2024; Wang et al., 2023). However, these works
+heavily depended on supervised data, which are time-intensive to gather. In this section, we
+explore the potential of LLMs to develop reasoning capabilities without any supervised data,
+focusing on their self-evolution through a pure reinforcement learning process. We start with a
+brief overview of our RL algorithm, followed by the presentation of some exciting results, and
+hope this provides the community with valuable insights.
+-->
+</p>
+<h4>2.2.1. 強化学習アルゴリズム</h4>
+<p>
+<strong>グループ相対ポリシー最適化</strong><br> 強化学習の学習コストを削減するため、グループ相対ポリシー最適化 (GRPO) (Shao et al., 2024) を採用します。GRPO では、通常ポリシーモデルと同じサイズの批評モデルを使用せず、代わりにグループスコアからベースラインを推定します。具体的には、各質問 \(𝑞\) に対して、GRPO は古いポリシー \(𝜋_{𝜃_{𝑜𝑙𝑑}}\) から出力のグループ \(\{𝑜_1, 𝑜_2, · · · , 𝑜_𝐺\}\) をサンプリングし、次の目的関数を最大化することでポリシーモデル \(𝜋_𝜃\) を最適化します。
+<!--
+<strong>Group Relative Policy Optimization</strong><br> In order to save the training costs of RL, we adopt Group
+Relative Policy Optimization (GRPO) (Shao et al., 2024), which foregoes the critic model that is
+typically the same size as the policy model, and estimates the baseline from group scores instead.
+Specifically, for each question \(𝑞\), GRPO samples a group of outputs \(\{𝑜_1, 𝑜_2, · · · , 𝑜_𝐺\}\) from the old
+policy \(𝜋_{𝜃_𝑜𝑙𝑑}\) and then optimizes the policy model \(𝜋_𝜃\) by maximizing the following objective:
+-->
+\[
+\begin{align}
+&\mathcal J_{GRPO}(\theta) =\mathbb E[q\sim P(Q),\{o_i\}_{i=0}^G\sim \pi_{\theta_{old}}(O|q)] \\
+\\
+&\frac{1}{G}\sum_{i=1}^G 
+\Big(\min\Big(\frac{\pi_\theta(o_i|q)}{\pi_{\theta_{old}}(o_i|q)}A_i,clip
+\Big(\frac{\pi_\theta(o_i|q)}{\pi_{\theta_{old}}(o_i|q)}
+,1-\varepsilon,1+\varepsilon\Big) 
+A_i\Big)-\beta\mathbb D_{KL}(\pi_\theta||\pi_{ref})\Big) 
+\tag{1} \\
+\\
+&\mathbb D_{KL}(\pi_\theta||\pi_{ref})=\frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)}-\log\frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)}-1
+\tag{2}
+\end{align}
+\]
+ここで、\(𝜀\) と \(𝛽\) はハイパーパラメータであり、\(𝐴_𝑖\) は各グループ内の出力に対応する報酬のグループ \(\{𝑟_1, 𝑟_2, . . . , 𝑟_𝐺\}\) を使用して計算される利点です。
+<!--
+where \(𝜀\) and \(𝛽\) are hyper-parameters, and \(𝐴_𝑖\) is the advantage, computed using a group of
+rewards \(\{𝑟_1, 𝑟_2, . . . , 𝑟_𝐺\}\) corresponding to the outputs within each group:
+-->
+\[
+A_i=\frac{r_i-mean(\{r_1,r_2,.\cdots,r_G\})}{std(\{r_1,r_2,\cdots,r_G\})}
+\tag{3}
+\]
+</p>
+<h4>2.2.2. 報酬モデリング</h4>
+<p>
+報酬は学習信号の源であり、RL の最適化方向を決定します。
+DeepSeek-R1-Zero を学習するために、主に 2 種類の報酬で構成されるルールベースの報酬システムを採用しています。
+<div class="styleBullet">
+<ul>
+<li>
+</li><br><li><strong>• 精度報酬：</strong>精度報酬モデルは、回答が正しいかどうかを評価します。
+
+例えば、結果が確定的な数学の問題の場合、モデルは最終解答を指定された形式（例：ボックス内）で提供する必要があります。これにより、信頼性の高いルールベースの正しさ検証が可能になります。同様に、LeetCode の問題の場合、コンパイラを使用して、定義済みのテストケースに基づいてフィードバックを生成できます。
+</li><br><li><strong>• フォーマット報酬：</strong>精度報酬モデルに加えて、モデルが思考プロセスを「&lt;think&gt;」タグと「&lt;/think&gt;」タグの間に配置することを強制するフォーマット報酬モデルを採用しています。
+<!--
+The reward is the source of the training signal, which decides the optimization direction of RL.
+To train DeepSeek-R1-Zero, we adopt a rule-based reward system that mainly consists of two
+types of rewards:
+<div class="styleBullet">
+<ul>
+<li>
+</li><br><li><strong>• Accuracy rewards: </strong>The accuracy reward model evaluates whether the response is correct.
+For example, in the case of math problems with deterministic results, the model is required
+to provide the final answer in a specified format (e.g., within a box), enabling reliable
+rule-based verification of correctness. Similarly, for LeetCode problems, a compiler can be
+used to generate feedback based on predefined test cases.
+</li><br><li><strong>• Format rewards:</strong> In addition to the accuracy reward model, we employ a format reward
+model that enforces the model to put its thinking process between ‘<think>’ and ‘</think>’
+tags.
+-->
+</li>
+</ul>
+</div>
+</p>
+<p>
+DeepSeek-R1-Zeroの開発では、結果型またはプロセス型のニューラル報酬モデルは適用していません。これは、ニューラル報酬モデルが大規模な強化学習プロセスにおいて報酬ハッキングの影響を受ける可能性があること、また、報酬モデルの再学習には追加の学習リソースが必要となり、学習パイプライン全体が複雑化する可能性があるためです。
+<!--
+We do not apply the outcome or process neural reward model in developing DeepSeek-R1-Zero,
+because we find that the neural reward model may suffer from reward hacking in the large-scale
+reinforcement learning process, and retraining the reward model needs additional training
+resources and it complicates the whole training pipeline.
+-->
+</p>
+<h4>2.2.3. 学習テンプレート</h4>
+<p>
+DeepSeek-R1-Zero を学習するために、まずベースモデルが指定した指示に従うように導く、わかりやすいテンプレートを設計します。表 1 に示すように、このテンプレートでは、DeepSeek-R1-Zero がまず推論プロセスを生成し、次に最終的な答えを生成する必要があります。私たちは意図的にこの構造形式に制約を限定し、コンテンツ固有のバイアス（例えば、反射的推論の強制や特定の問題解決戦略の促進など）を避けています。これにより、強化学習プロセス中のモデルの自然な進化を正確に観察できるようになります。
+<!--
+To train DeepSeek-R1-Zero, we begin by designing a straightforward template that guides
+the base model to adhere to our specified instructions. As depicted in Table 1, this template
+requires DeepSeek-R1-Zero to first produce a reasoning process, followed by the final answer.
+We intentionally limit our constraints to this structural format, avoiding any content-specific
+biases—such as mandating reflective reasoning or promoting particular problem-solving strategies—
+to ensure that we can accurately observe the model’s natural progression during the RL
+process.
+-->
+</p>
+<hr class="thin-line">
+<p>
+ユーザーとアシスタント間の会話。ユーザーが質問し、アシスタントがそれを解決します。
+アシスタントはまず頭の中で推論プロセスを考え、それからユーザーに答えを提供します。推論プロセスと答えはそれぞれ &lt;think&gt; &lt;/think&gt; タグと &lt;answer&gt;  &lt;/answer&gt; タグで囲まれます。つまり、&lt;think&gt; 推論プロセスはここに &lt;/think&gt;, &lt;answer&gt; 答えはここに &lt;/answer&gt; となります。ユーザー：<span class="highlight">プロンプト</span>。アシスタント：
+<!--
+A conversation between User and Assistant. The user asks a question, and the Assistant solves it.
+The assistant first thinks about the reasoning process in the mind and then provides the user
+with the answer. The reasoning process and answer are enclosed within <think> </think> and
+<answer> </answer> tags, respectively, i.e., <think> reasoning process here </think>
+<answer> answer here </answer>. User: <span class="highlight">prompt</span>. Assistant:
+-->
+</p>
+<hr class="thin-line">
+<p>
+表1 | DeepSeek-R1-Zeroのテンプレート。<span class="highlight">プロンプト</span>は、トレーニング中に具体的な推論質問に置き換えられます。
+<!--
+Table 1 | Template for DeepSeek-R1-Zero. <span class="highlight">prompt</span> will be replaced with the specific reasoning
+question during training.
+-->
+</p>
+<h4>2.2.4. DeepSeek-R1-Zero のパフォーマンス、自己進化プロセス、そして「なるほど！(アハ)」という瞬間</h4>
+<p>
+<strong>DeepSeek-R1-Zero のパフォーマンス</strong><br> 図2は、AIME 2024ベンチマークにおけるDeepSeek-R1-Zeroのパフォーマンスの軌跡を、RL学習プロセス全体を通して示しています。図に示すように、DeepSeek-R1-Zeroは、RL学習が進むにつれて着実かつ一貫したパフォーマンス向上を示しています。特に、AIME 2024における平均pass@1スコアは大幅に向上し、当初の15.6%から驚異的な71.0%へと飛躍的に向上し、OpenAI-o1-0912に匹敵するパフォーマンスレベルに達しています。この大幅な改善は、当社のRLアルゴリズムがモデルのパフォーマンスを時間の経過とともに最適化する有効性を浮き彫りにしています。
+<!--
+<strong>Performance of DeepSeek-R1-Zero</strong><br> Figure 2 depicts the performance trajectory of DeepSeek-
+R1-Zero on the AIME 2024 benchmark throughout the RL training process. As illustrated,
+DeepSeek-R1-Zero demonstrates a steady and consistent enhancement in performance as the
+RL training advances. Notably, the average pass@1 score on AIME 2024 shows a significant
+increase, jumping from an initial 15.6% to an impressive 71.0%, reaching performance levels
+comparable to OpenAI-o1-0912. This significant improvement highlights the efficacy of our RL
+algorithm in optimizing the model’s performance over time.
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2 | 学習中のDeepSeek-R1-ZeroのAIME精度。各質問に対して16件の回答をサンプリングし、全体の平均精度を計算することで、安定した評価を確保しています。
+<!--
+Figure 2 | AIME accuracy of DeepSeek-R1-Zero during training. For each question, we sample
+16 responses and calculate the overall average accuracy to ensure a stable evaluation.
+-->
+</p>
+<p>
+表2は、様々な推論関連ベンチマークにおけるDeepSeek-R1-ZeroとOpenAI o1-0912モデルの比較分析を示しています。この結果から、RLによって強化されることが明らかになっています。
+<!--
+Table 2 provides a comparative analysis between DeepSeek-R1-Zero and OpenAI’s o1-0912
+models across a variety of reasoning-related benchmarks. The findings reveal that RL empowers
+-->
+</p>
+<center><img src="images/table2.png"></center>
+<p>
+表2 | 推論関連ベンチマークにおけるDeepSeek-R1-ZeroとOpenAI o1モデルの比較。
+<!--
+Table 2 | Comparison of DeepSeek-R1-Zero and OpenAI o1 models on reasoning-related
+benchmarks.
+-->
+</p>
+<p>
+DeepSeek-R1-Zeroは、教師あり微調整データなしで堅牢な推論能力を獲得しました。これは注目すべき成果であり、RLのみで効果的に学習および一般化できるモデルの能力を強調しています。さらに、DeepSeek-R1-Zeroの性能は、多数決を適用することでさらに向上します。例えば、AIMEベンチマークで多数決を適用すると、DeepSeek-R1-Zeroの性能は71.0%から86.7%に向上し、OpenAI-o1-0912の性能を上回ります。多数決の有無にかかわらず、DeepSeek-R1-Zeroがこれほど競争力のある性能を達成できることは、その強力な基礎能力と、推論タスクにおけるさらなる進歩の可能性を浮き彫りにしています。
+<!--
+DeepSeek-R1-Zero to attain robust reasoning capabilities without the need for any supervised
+fine-tuning data. This is a noteworthy achievement, as it underscores the model’s ability to
+learn and generalize effectively through RL alone. Additionally, the performance of DeepSeek-
+R1-Zero can be further augmented through the application of majority voting. For example,
+when majority voting is employed on the AIME benchmark, DeepSeek-R1-Zero’s performance
+escalates from 71.0% to 86.7%, thereby exceeding the performance of OpenAI-o1-0912. The
+ability of DeepSeek-R1-Zero to achieve such competitive performance, both with and without
+majority voting, highlights its strong foundational capabilities and its potential for further
+advancements in reasoning tasks.
+-->
+</p>
+<p>
+<strong>DeepSeek-R1-Zero の自己進化プロセス</strong><br> DeepSeek-R1-Zero の自己進化プロセスは、強化学習がモデルの推論能力を自律的に向上させる様子を示す興味深い例です。ベースモデルから直接強化学習を開始することで、教師あり微調整段階の影響を受けずに、モデルの進化を綿密に監視できます。このアプローチにより、モデルが時間の経過とともにどのように進化するか、特に複雑な推論タスクを処理する能力に関して、明確な可視化が可能になります。
+<!--
+<strong>Self-evolution Process of DeepSeek-R1-Zero</strong><br> The self-evolution process of DeepSeek-R1-Zero
+is a fascinating demonstration of how RL can drive a model to improve its reasoning capabilities
+autonomously. By initiating RL directly from the base model, we can closely monitor the model’s
+progression without the influence of the supervised fine-tuning stage. This approach provides
+a clear view of how the model evolves over time, particularly in terms of its ability to handle
+complex reasoning tasks.
+-->
+</p>
+<p>
+図3に示すように、DeepSeek-R1-Zeroの思考時間は学習プロセス全体を通して着実に改善しています。この改善は外部調整によるものではなく、モデル内部の本質的な進化によるものです。DeepSeek-R1-Zeroは、テスト時間の延長計算を活用することで、ますます複雑な推論タスクを解く能力を自然に獲得します。この計算は数百から数千の推論トークンを生成することから始まり、モデルが思考プロセスをより深く探求し、洗練させることを可能にします。
+<!--
+As depicted in Figure 3, the thinking time of DeepSeek-R1-Zero shows consistent improve-ment throughout the training process. This improvement is not the result of external adjustments
+but rather an intrinsic development within the model. DeepSeek-R1-Zero naturally acquires the
+ability to solve increasingly complex reasoning tasks by leveraging extended test-time computation.
+This computation ranges from generating hundreds to thousands of reasoning tokens,
+allowing the model to explore and refine its thought processes in greater depth.
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+図3 | 強化学習プロセス中のトレーニングセットにおけるDeepSeek-R1-Zeroの平均応答長。DeepSeek-R1-Zeroは、より多くの思考時間で推論タスクを解くことを自然に学習します。
+<!--
+Figure 3 | The average response length of DeepSeek-R1-Zero on the training set during the RL
+process. DeepSeek-R1-Zero naturally learns to solve reasoning tasks with more thinking time.
+-->
+</p>
+<p>
+この自己進化の最も注目すべき点の一つは、テスト時の計算が増加するにつれて、洗練された動作が出現することです。モデルが以前のステップを再訪して再評価するリフレクションや、問題解決のための代替アプローチの探索といった動作は、自発的に発生します。これらの動作は明示的にプログラムされているわけではなく、モデルと強化学習環境との相互作用の結果として出現します。この自発的な発達により、DeepSeek-R1-Zeroの推論能力が大幅に向上し、より困難なタスクにもより高い効率と精度で取り組むことができるようになります。
+<!--
+One of the most remarkable aspects of this self-evolution is the emergence of sophisticated
+behaviors as the test-time computation increases. Behaviors such as reflection—where the model
+revisits and reevaluates its previous steps—and the exploration of alternative approaches to
+problem-solving arise spontaneously. These behaviors are not explicitly programmed but instead
+emerge as a result of the model’s interaction with the reinforcement learning environment. This
+spontaneous development significantly enhances DeepSeek-R1-Zero’s reasoning capabilities,
+enabling it to tackle more challenging tasks with greater efficiency and accuracy.
+-->
+</p>
+<p>
+<strong>DeepSeek-R1-Zero のアハ体験</strong><br> DeepSeek-R1-Zero の学習中に観察された特に興味深い現象は、「アハ体験」の発生です。表3 に示すように、この瞬間はモデルの中間バージョンで発生します。このフェーズでは、DeepSeek-R1-Zero は初期のアプローチを再評価することで、問題により多くの思考時間を割り当てることを学習します。この動作は、モデルの推論能力の向上を証明するだけでなく、強化学習が予期せぬ高度な結果をもたらす可能性があることを示す魅力的な例でもあります。
+<!--
+<strong>Aha Moment of DeepSeek-R1-Zero</strong><br> A particularly intriguing phenomenon observed during
+the training of DeepSeek-R1-Zero is the occurrence of an “aha moment”. This moment, as
+illustrated in Table 3, occurs in an intermediate version of the model. During this phase,
+DeepSeek-R1-Zero learns to allocate more thinking time to a problem by reevaluating its initial
+approach. This behavior is not only a testament to the model’s growing reasoning abilities
+but also a captivating example of how reinforcement learning can lead to unexpected and
+sophisticated outcomes.
+-->
+</p>
+<p>
+この瞬間は、モデルにとってだけでなく、その行動を観察する研究者にとっても「アハ体験」となります。これは強化学習の力と美しさを際立たせるものです。モデルに問題の解決方法を明示的に教えるのではなく、適切なインセンティブを与えるだけで、モデルは自律的に高度な問題解決戦略を開発します。この「アハ体験」は、強化学習が人工システムの知能を新たなレベルに引き上げる可能性を強く示唆し、将来、より自律的で適応性の高いモデルへの道を開くでしょう。
+<!--
+This moment is not only an “aha moment” for the model but also for the researchers
+observing its behavior. It underscores the power and beauty of reinforcement learning: rather
+than explicitly teaching the model on how to solve a problem, we simply provide it with the
+right incentives, and it autonomously develops advanced problem-solving strategies. The
+“aha moment” serves as a powerful reminder of the potential of RL to unlock new levels of
+intelligence in artificial systems, paving the way for more autonomous and adaptive models in
+the future.
+-->
+</p>
+<hr class="thick-line">
+<p>
+質問: 𝑎 > 1 の場合、\(\sqrt{a-\sqrt{a+x}}=x\) の実数解の和は?
+<!--
+Question: If 𝑎 > 1, then the sum of the real solutions of \(\sqrt{a-\sqrt{a+x}}=x\) is equal to
+-->
+<hr class="thin-line">
+<p>
+応答: &lt;think&gt;<br>
+方程式 \(\sqrt{a-\sqrt{a+x}}= 𝑥\) を解くには、まず両方の平方根を二乗することから始めましょう。<br>
+\(\left(\sqrt{a-\sqrt{a+x}}\right)^2=x^2\implies a-\sqrt{a+x}=x^2\)<br>
+内側の平方根項を分離するように変形します。<br>
+\((𝑎 − 𝑥^2)^2 = 𝑎 + 𝑥 \implies 𝑎^2 − 2𝑎𝑥^2 + (𝑥^2)^2 = 𝑎 + 𝑥 \implies 𝑥^4 − 2𝑎𝑥^2 - 𝑥 + (𝑎^2 − 𝑎) = 0\)<br>
+\(\cdots\)<br>
+<span class="highlight">ちょっと待って。ちょっと待って。これは「なるほど！」という瞬間だ。</span><br>
+正しい和が · · · になるかどうか、段階的に再評価してみましょう。<br>
+まず、次の式から始めました。<br>
+\(\sqrt{a-\sqrt{a+x}}=x\)<br>
+まず、両辺を2乗してみましょう。<br>
+\(𝑎 −\sqrt{a+x}=x^2 \implies \sqrt{a+x}=a-x^2\)<br>
+次に、両辺をもう一度2乗して、次の式を扱います。· · ·<br>
+· · ·<br>
+<!--
+Response: <think><br>
+To solve the equation \(\sqrt{a-\sqrt{a+x}}= 𝑥\), let’s start by squaring both · · ·<br>
+\(\left(\sqrt{a-\sqrt{a+x}}\right)^2=x^2\therefore a-\sqrt{a+x}=x^2\)<br>
+Rearrange to isolate the inner square root term:<br>
+\((𝑎 − 𝑥^2)^2 = 𝑎 + 𝑥 \implies 𝑎^2 − 2𝑎𝑥^2 + (𝑥^2)^2 = 𝑎 + 𝑥 \implies 𝑥^4 − 2𝑎𝑥^2 - 𝑥 + (𝑎^2 − 𝑎) = 0\)<br>
+\(\cdots\)<br>
+<span class="highlight">Wait, wait. Wait. That's an aha moment I can flag here.</span><br>
+
+Let’s reevaluate this step-by-step to identify if the correct sum can be · · ·<br>
+We started with the equation:<br>
+\(\sqrt{a-\sqrt{a+x}}=x\)<br>
+First, let’s square both sides:<br>
+\(𝑎 −\sqrt{a+x}=x^2 \implies \sqrt{a+x}=a-x^2\)<br>
+Next, I could square both sides again, treating the equation: · · ·<br>
+· · ·<br>
+-->
+<hr class="thin-line">
+</p>
+<p>
+表3 | DeepSeek-R1-Zeroの中級バージョンにおける興味深い「アハ体験」。モデルは擬人化された口調で考え直すことを学習します。これは私たちにとっても「アハ体験」であり、強化学習の力と美しさを目の当たりにする機会となりました。
+<!--
+Table 3 | An interesting “aha moment” of an intermediate version of DeepSeek-R1-Zero. The
+model learns to rethink using an anthropomorphic tone. This is also an aha moment for us,
+allowing us to witness the power and beauty of reinforcement learning.
+-->
+</p>
+<p>
+<strong>DeepSeek-R1-Zero の欠点</strong><br> DeepSeek-R1-Zero は強力な推論能力を示し、予期せぬ強力な推論行動を自律的に構築しますが、いくつかの課題に直面しています。例えば、DeepSeek-R1-Zero は可読性の低さや言語の混在といった課題を抱えています。推論プロセスの可読性を高め、オープンコミュニティと共有するために、人間が理解しやすいコールドスタートデータを用いた強化学習（RL）を利用する手法である DeepSeek-R1 を検討します。
+<!--
+<strong>Drawback of DeepSeek-R1-Zero</strong><br> Although DeepSeek-R1-Zero exhibits strong reasoning
+capabilities and autonomously develops unexpected and powerful reasoning behaviors, it faces
+several issues. For instance, DeepSeek-R1-Zero struggles with challenges like poor readability,
+and language mixing. To make reasoning processes more readable and share them with the
+open community, we explore DeepSeek-R1, a method that utilizes RL with human-friendly
+cold-start data.
+-->
+</p>
+<h3>2.3. DeepSeek-R1: コールドスタートを用いた強化学習</h3>
+<p>
+DeepSeek-R1-Zero の有望な結果に触発され、2つの自然な疑問が浮かび上がります。1) 少量の高品質データをコールドスタートとして組み込むことで、推論性能をさらに向上させたり、収束を加速したりできるでしょうか？ 2) 明確で一貫性のある思考の連鎖 (CoT) を生成するだけでなく、強力な汎用能力を発揮する、ユーザーフレンドリーなモデルをどのように学習できるでしょうか？ これらの疑問を解決するために、DeepSeek-R1 を学習するためのパイプラインを設計します。このパイプラインは、以下に概説する4つのステージで構成されています。
+<!--
+Inspired by the promising results of DeepSeek-R1-Zero, two natural questions arise: 1) Can
+reasoning performance be further improved or convergence accelerated by incorporating a small
+amount of high-quality data as a cold start? 2) How can we train a user-friendly model that
+not only produces clear and coherent Chains of Thought (CoT) but also demonstrates strong
+general capabilities? To address these questions, we design a pipeline to train DeepSeek-R1. The
+pipeline consists of four stages, outlined as follows.
+-->
+</p>
+<h4>2.3.1. コールドスタート</h4>
+<p>
+DeepSeek-R1-Zeroとは異なり、ベースモデルからの強化学習トレーニングの初期段階における不安定なコールドスタートを防ぐため、DeepSeek-R1では少量の長いCoTデータを構築・収集し、モデルを初期強化学習アクターとして微調整します。このようなデータを収集するために、私たちはいくつかのアプローチを検討しました。長いCoTを例として、少数のショットのプロンプトを使用する、モデルに直接プロンプトを出して熟考と検証を伴う詳細な回答を生成する、DeepSeek-R1-Zeroの出力を読み取り可能な形式で収集する、そして人間の注釈者による後処理によって結果を改良する、といったアプローチです。
+<!--
+Unlike DeepSeek-R1-Zero, to prevent the early unstable cold start phase of RL training from
+the base model, for DeepSeek-R1 we construct and collect a small amount of long CoT data
+to fine-tune the model as the initial RL actor. To collect such data, we have explored several
+approaches: using few-shot prompting with a long CoT as an example, directly prompting
+models to generate detailed answers with reflection and verification, gathering DeepSeek-R1-
+Zero outputs in a readable format, and refining the results through post-processing by human
+annotators.
+-->
+</p>
+<p>
+本研究では、DeepSeek-V3-BaseをRLの出発点として微調整するために、数千のコールドスタートデータを収集します。DeepSeek-R1-Zeroと比較したコールドスタートデータの利点は次のとおりです。
+<div class="styleBullet">
+<ul>
+<li>
+• 可読性：DeepSeek-R1-Zeroの主な制約は、そのコンテンツが読みにくいことが多いことです。回答に複数の言語が混在したり、ユーザーにとって回答を分かりやすくするためのマークダウン形式が欠けている場合があります。これに対し、DeepSeek-R1のコールドスタートデータを作成する際には、各回答の最後に要約を含む読みやすいパターンを設計し、読みにくい回答を除外します。ここでは、出力形式を「|special_token|&lt;reasoning_process&gt;|special_token|&lt;summary&gt;」と定義します。ここで、推論プロセスはクエリのCoTであり、要約は推論結果を要約するために使用されます。
+</li><br><li>• 可能性：人間の事前分布を用いたコールドスタートデータのパターンを慎重に設計することで、DeepSeek-R1-Zeroよりも優れたパフォーマンスが得られることが確認されました。反復学習は推論モデルにとってより優れた方法であると考えています。
+<!--
+In this work, we collect thousands of cold-start data to fine-tune the DeepSeek-V3-Base as
+the starting point for RL. Compared to DeepSeek-R1-Zero, the advantages of cold start data include:
+<div class="styleBullet">
+<ul>
+<li>
+• Readability: A key limitation of DeepSeek-R1-Zero is that its content is often not suitable
+for reading. Responses may mix multiple languages or lack markdown formatting to
+highlight answers for users. In contrast, when creating cold-start data for DeepSeek-R1,
+we design a readable pattern that includes a summary at the end of each response and
+filters out responses that are not reader-friendly. Here, we define the output format as
+|special_token|<reasoning_process>|special_token|<summary>, where the reasoning
+process is the CoT for the query, and the summary is used to summarize the reasoning
+results.
+</li><br><li>• Potential: By carefully designing the pattern for cold-start data with human priors, we
+observe better performance against DeepSeek-R1-Zero. We believe the iterative training is
+a better way for reasoning models.
+-->
+</li>
+</ul>
+</div>
+</p>
+<h4>2.3.2. 推論指向強化学習</h4>
+<p>
+DeepSeek-V3-Baseをコールドスタートデータで微調整した後、DeepSeek-R1-Zeroで採用されているものと同じ大規模強化学習トレーニングプロセスを適用します。このフェーズでは、特にコーディング、数学、科学、論理推論といった、明確に定義された問題と明確な解決策を伴う推論集約型タスクにおいて、モデルの推論能力を強化することに重点を置いています。トレーニングプロセス中、特に強化学習プロンプトに複数の言語が含まれる場合、CoTが言語の混合を示すことが観察されました。言語の混合の問題を軽減するために、強化学習トレーニング中に言語の一貫性報酬を導入します。これは、CoTにおけるターゲット言語の単語の割合として計算されます。アブレーション実験では、このような調整によってモデルのパフォーマンスがわずかに低下することが示されていますが、この報酬は人間の好みと一致し、より読みやすくなります。最後に、推論タスクの精度と言語一貫性の報酬を直接加算して最終的な報酬を算出します。その後、微調整されたモデルに強化学習を適用し、推論タスクで収束するまで学習を継続します。
+<!--
+After fine-tuning DeepSeek-V3-Base on the cold start data, we apply the same large-scale
+reinforcement learning training process as employed in DeepSeek-R1-Zero. This phase focuses
+on enhancing the model’s reasoning capabilities, particularly in reasoning-intensive tasks such
+as coding, mathematics, science, and logic reasoning, which involve well-defined problems with
+clear solutions. During the training process, we observe that CoT often exhibits language mixing,
+particularly when RL prompts involve multiple languages. To mitigate the issue of language
+mixing, we introduce a language consistency reward during RL training, which is calculated
+as the proportion of target language words in the CoT. Although ablation experiments show
+that such alignment results in a slight degradation in the model’s performance, this reward
+aligns with human preferences, making it more readable. Finally, we combine the accuracy of
+reasoning tasks and the reward for language consistency by directly summing them to form the
+final reward. We then apply RL training on the fine-tuned model until it achieves convergence
+on reasoning tasks.
+-->
+</p>
+<h4>2.3.3. 棄却サンプリングと教師あり微調整</h4>
+<p>
+推論指向強化学習が収束すると、得られたチェックポイントを利用して、次のラウンドのためのSFT（教師あり微調整）データを収集します。主に推論に焦点を当てた初期のコールドスタートデータとは異なり、この段階では、ライティング、ロールプレイング、その他の汎用タスクにおけるモデルの能力を強化するために、他のドメインからのデータを組み込みます。具体的には、以下のようにデータを生成し、モデルを微調整します。
+<!--
+When reasoning-oriented RL converges, we utilize the resulting checkpoint to collect SFT
+(Supervised Fine-Tuning) data for the subsequent round. Unlike the initial cold-start data, which
+primarily focuses on reasoning, this stage incorporates data from other domains to enhance the
+model’s capabilities in writing, role-playing, and other general-purpose tasks. Specifically, we
+generate the data and fine-tune the model as described below
+-->
+</p>
+<p>
+<strong>推論データ</strong><br> 上記の強化学習トレーニングのチェックポイントから拒否サンプリングを行うことで、推論プロンプトをキュレートし、推論軌跡を生成します。前の段階では、ルールベースの報酬を使用して評価できるデータのみを含めていました。しかし、この段階では、追加データを取り込んでデータセットを拡張します。その一部は、生成報酬モデルを使用して、グラウンドトゥルース値とモデル予測をDeepSeek-V3に入力して判断を行います。
+さらに、モデルの出力は時に混乱を招き、読みにくくなるため、言語の混在、長い言い換え、コードブロックなどによる思考の連鎖を除外しました。各プロンプトに対して複数の回答をサンプリングし、正解のみを保持します。合計で、推論関連のトレーニングサンプルを約60万件収集します。
+<!--
+<strong>Reasoning data</strong><br> We curate reasoning prompts and generate reasoning trajectories by performing
+rejection sampling from the checkpoint from the above RL training. In the previous stage,
+we only included data that could be evaluated using rule-based rewards. However, in this stage,
+we expand the dataset by incorporating additional data, some of which use a generative reward
+model by feeding the ground-truth and model predictions into DeepSeek-V3 for judgment.
+Additionally, because the model output is sometimes chaotic and difficult to read, we have
+filtered out chain-of-thought with mixed languages, long parapraphs, and code blocks. For
+each prompt, we sample multiple responses and retain only the correct ones. In total, we collect
+about 600k reasoning related training samples.
+-->
+</p>
+<p>
+<strong>非推論データ</strong><br> 文章作成、事実に基づくQA、自己認識、翻訳といった非推論データについては、DeepSeek-V3パイプラインを採用し、DeepSeek-V3のSFTデータセットの一部を再利用します。特定の非推論タスクでは、プロンプトで質問に答える前に、DeepSeek-V3を呼び出して潜在的な思考の連鎖を生成します。ただし、「こんにちは」などの単純なクエリについては、CoTは提供しません。最終的に、推論とは無関係なトレーニングサンプルを合計約20万個収集しました。
+<!--
+<strong>Non-Reasoning data</strong><br> For non-reasoning data, such as writing, factual QA, self-cognition,
+and translation, we adopt the DeepSeek-V3 pipeline and reuse portions of the SFT dataset of
+DeepSeek-V3. For certain non-reasoning tasks, we call DeepSeek-V3 to generate a potential
+chain-of-thought before answering the question by prompting. However, for simpler queries,
+such as “hello” we do not provide a CoT in response. In the end, we collected a total of
+approximately 200k training samples that are unrelated to reasoning.
+-->
+</p>
+<p>
+上記のキュレーション済みデータセット（約80万サンプル）を用いて、DeepSeek-V3-Baseを2エポックにわたって微調整します。
+<!--
+We fine-tune DeepSeek-V3-Base for two epochs using the above curated dataset of about
+800k samples.
+-->
+</p>
+<h4>2.3.4. あらゆるシナリオに対応する強化学習</h4>
+<p>
+モデルを人間の嗜好にさらに適合させるため、モデルの有用性と無害性を向上させると同時に推論能力を洗練させることを目的とした二次強化学習段階を実装します。具体的には、報酬信号と多様なプロンプト分布を組み合わせてモデルを学習します。推論データについては、DeepSeek-R1-Zeroで概説されている方法論に従います。この方法は、ルールベースの報酬を用いて数学、コード、論理的推論の領域における学習プロセスを導きます。一般データについては、複雑で微妙なシナリオにおける人間の嗜好を捉えるために報酬モデルを使用します。DeepSeek-V3パイプラインを基盤とし、同様の嗜好ペアと学習プロンプトの分布を採用します。有用性については、最終的な要約のみに焦点を当て、評価においてユーザーへの応答の有用性と関連性を重視しつつ、基盤となる推論プロセスへの干渉を最小限に抑えます。無害性については、推論プロセスと要約の両方を含むモデルの応答全体を評価することで、生成プロセス中に発生する可能性のある潜在的なリスク、バイアス、または有害なコンテンツを特定し、軽減します。最終的には、報酬シグナルと多様なデータ分布を統合することで、有用性と無害性を優先しながら推論に優れたモデルを学習できるようになります。
+<!--
+To further align the model with human preferences, we implement a secondary reinforcement
+learning stage aimed at improving the model’s helpfulness and harmlessness while simultaneously
+refining its reasoning capabilities. Specifically, we train the model using a combination
+of reward signals and diverse prompt distributions. For reasoning data, we adhere to the
+methodology outlined in DeepSeek-R1-Zero, which utilizes rule-based rewards to guide the
+learning process in math, code, and logical reasoning domains. For general data, we resort to
+reward models to capture human preferences in complex and nuanced scenarios. We build
+upon the DeepSeek-V3 pipeline and adopt a similar distribution of preference pairs and training
+prompts. For helpfulness, we focus exclusively on the final summary, ensuring that the
+assessment emphasizes the utility and relevance of the response to the user while minimizing
+interference with the underlying reasoning process. For harmlessness, we evaluate the entire
+response of the model, including both the reasoning process and the summary, to identify and
+mitigate any potential risks, biases, or harmful content that may arise during the generation
+process. Ultimately, the integration of reward signals and diverse data distributions enables us
+to train a model that excels in reasoning while prioritizing helpfulness and harmlessness.
+-->
+</p>
+<h3>2.4. 蒸留：小規模モデルに推論能力を付与</h3>
+<p>
+DeepSeek-R1のような推論能力をより効率的な小規模モデルに搭載するため、DeepSeek-R1でキュレーションされた80万サンプルを用いて、Qwen (Qwen, 2024b)やLlama (AI@Meta, 2024)などのオープンソースモデルを直接微調整しました（§2.3.3参照）。その結果、この単純な抽出手法によって、小規模モデルの推論能力が大幅に向上することが示されました。ここで使用したベースモデルは、Qwen2.5-Math-1.5B、Qwen2.5-Math-7B、Qwen2.5-14B、Qwen2.5-32B、Llama-3.1-8B、およびLlama-3.3-70B-Instructです。Llama-3.3を選択したのは、その推論能力がLlama-3.1よりもわずかに優れているためです。
+<!--
+To equip more efficient smaller models with reasoning capabilities like DeepSeek-R1, we directly
+fine-tuned open-source models like Qwen (Qwen, 2024b) and Llama (AI@Meta, 2024) using
+the 800k samples curated with DeepSeek-R1, as detailed in §2.3.3. Our findings indicate that
+this straightforward distillation method significantly enhances the reasoning abilities of smaller
+models. The base models we use here are Qwen2.5-Math-1.5B, Qwen2.5-Math-7B, Qwen2.5-
+14B, Qwen2.5-32B, Llama-3.1-8B, and Llama-3.3-70B-Instruct. We select Llama-3.3 because its
+reasoning capability is slightly better than that of Llama-3.1.
+-->
+</p>
+<p>
+蒸留モデルでは、強化学習（RL）を組み込むことでモデルのパフォーマンスを大幅に向上させることができるにもかかわらず、SFTのみを適用し、強化学習（RL）段階は含めません。ここでの主な目的は、蒸留手法の有効性を実証することであり、強化学習段階の検討はより広範な研究コミュニティに委ねます。
+<!--
+For distilled models, we apply only SFT and do not include an RL stage, even though
+incorporating RL could substantially boost model performance. Our primary goal here is to
+demonstrate the effectiveness of the distillation technique, leaving the exploration of the RL
+stage to the broader research community.
+-->
+</p>
+<h2>3. 実験</h2>
+<p>
+ベンチマーク：MMLU (Hendrycks et al., 2020)、MMLU-Redux (Gema et al., 2024)、MMLU-Pro (Wang et al., 2024)、C-Eval (Huang et al., 2023)、CMMLU (Li et al., 2023)、IFEval (Zhou et al., 2023)、FRAMES (Krishna et al., 2024)、GPQA Diamond (Rein et al., 2023)、SimpleQA (OpenAI, 2024c)、C-SimpleQA (He et al., 2024)、SWE-Bench Verified (OpenAI, 2024d)、Aider <sup>1</sup>、LiveCodeBench (Jain et al., 2024) を用いてモデルを評価しました。 (2024-08 – 2025-01)、Codeforces <sup>2</sup>、中国全国高校数学オリンピック (CNMO 2024)<sup>3</sup>、およびアメリカ招待数学試験2024 (AIME 2024) (MAA, 2024) で評価されています。標準ベンチマークに加えて、LLMを審査員として用いたオープンエンド生成タスクでもモデルを評価します。具体的には、GPT-4-Turbo-1106を一対比較の審査員として利用するAlpacaEval 2.0 (Dubois et al., 2024) とArena-Hard (Li et al., 2024) のオリジナル設定に準拠しています。ここでは、長さのバイアスを回避するため、最終要約のみを評価に使用しています。抽出モデルについては、AIME 2024、MATH-500、GPQA Diamond、Codeforces、LiveCodeBench における代表的な結果を報告します。
+<!--
+Benchmarks We evaluate models on MMLU (Hendrycks et al., 2020), MMLU-Redux (Gema
+et al., 2024), MMLU-Pro (Wang et al., 2024), C-Eval (Huang et al., 2023), and CMMLU (Li et al.,
+2023), IFEval (Zhou et al., 2023), FRAMES (Krishna et al., 2024), GPQA Diamond (Rein et al.,
+2023), SimpleQA (OpenAI, 2024c), C-SimpleQA (He et al., 2024), SWE-Bench Verified (OpenAI, 2024d), Aider 1, LiveCodeBench (Jain et al., 2024) (2024-08 – 2025-01), Codeforces 2, Chinese
+National High School Mathematics Olympiad (CNMO 2024)3, and American Invitational Mathematics
+Examination 2024 (AIME 2024) (MAA, 2024). In addition to standard benchmarks, we
+also evaluate our models on open-ended generation tasks using LLMs as judges. Specifically, we
+adhere to the original configurations of AlpacaEval 2.0 (Dubois et al., 2024) and Arena-Hard (Li
+et al., 2024), which leverage GPT-4-Turbo-1106 as judges for pairwise comparisons. Here, we
+only feed the final summary to evaluation to avoid the length bias. For distilled models, we
+report representative results on AIME 2024, MATH-500, GPQA Diamond, Codeforces, and
+LiveCodeBench.
+-->
+</p>
+<p class="margin-large">
+<sup>1</sup>  https://aider.chat<br>
+<sup>2</sup> https://codeforces.com<br>
+<sup>3</sup> https://www.cms.org.cn/Home/comp/comp/cid/12.html
+<p>
+<p>
+<strong>評価プロンプト</strong><br> DeepSeek-V3のセットアップに従い、MMLU、DROP、GPQA Diamond、SimpleQAなどの標準ベンチマークは、simpleevalsフレームワークのプロンプトを使用して評価されます。MMLU-Reduxでは、ゼロショット設定でZero-Evalプロンプト形式（Lin, 2024）を採用しています。MMLU-Pro、C-Eval、CLUE-WSCについては、元のプロンプトがfew-shotであるため、ゼロショット設定に合わせてプロンプトをわずかに変更しています。few-shotのCoTはDeepSeek-R1のパフォーマンスに悪影響を与える可能性があります。他のデータセットは、作成者が提供するデフォルトのプロンプトを使用して、元の評価プロトコルに従います。コードと数学のベンチマークについては、HumanEval-Mulデータセットが8つの主要なプログラミング言語（Python、Java、C++、C#、JavaScript、TypeScript、PHP、Bash）をカバーしています。 LiveCodeBenchにおけるモデルのパフォーマンスは、2024年8月から2025年1月の間に収集されたデータを用いてCoT形式で評価されます。Codeforcesデータセットは、10のDiv.2コンテストの問題と専門家が作成したテストケースを用いて評価され、その後、競技者の予想レーティングと割合が算出されます。SWE-Benchで検証された結果は、エージェントレスフレームワーク（Xia et al., 2024）を介して取得されます。AIDER関連のベンチマークは「diff」形式で測定されます。DeepSeek-R1の出力は、各ベンチマークで最大32,768トークンに制限されます。
+<!--
+<strong>Evaluation Prompts</strong><br> Following the setup in DeepSeek-V3, standard benchmarks such as
+MMLU, DROP, GPQA Diamond, and SimpleQA are evaluated using prompts from the simpleevals
+framework. For MMLU-Redux, we adopt the Zero-Eval prompt format (Lin, 2024) in a
+zero-shot setting. In terms of MMLU-Pro, C-Eval and CLUE-WSC, since the original prompts
+are few-shot, we slightly modify the prompt to the zero-shot setting. The CoT in few-shot
+may hurt the performance of DeepSeek-R1. Other datasets follow their original evaluation
+protocols with default prompts provided by their creators. For code and math benchmarks, the
+HumanEval-Mul dataset covers eight mainstream programming languages (Python, Java, C++,
+C#, JavaScript, TypeScript, PHP, and Bash). Model performance on LiveCodeBench is evaluated
+using CoT format, with data collected between August 2024 and January 2025. The Codeforces
+dataset is evaluated using problems from 10 Div.2 contests along with expert-crafted test cases,
+after which the expected ratings and percentages of competitors are calculated. SWE-Bench
+verified results are obtained via the agentless framework (Xia et al., 2024). AIDER-related
+benchmarks are measured using a "diff" format. DeepSeek-R1 outputs are capped at a maximum
+of 32,768 tokens for each benchmark.
+-->
+</p>
+<p>
+<strong>ベースライン</strong><br> DeepSeek-V3、Claude-Sonnet-3.5-1022、GPT-4o-0513、OpenAI-o1-mini、OpenAI-o1-1217など、複数の強力なベースラインに対して包括的な評価を実施します。
+中国本土ではOpenAI-o1-1217 APIへのアクセスが困難なため、公式レポートに基づいてパフォーマンスを報告します。抽出モデルについては、オープンソースモデルであるQwQ-32B-Preview (Qwen, 2024a) とも比較します。
+<!--
+<strong>Baselines</strong><br> We conduct comprehensive evaluations against several strong baselines, including
+DeepSeek-V3, Claude-Sonnet-3.5-1022, GPT-4o-0513, OpenAI-o1-mini, and OpenAI-o1-1217.
+Since accessing the OpenAI-o1-1217 API is challenging in mainland China, we report its performance
+based on official reports. For distilled models, we also compare the open-source model
+QwQ-32B-Preview (Qwen, 2024a).
+-->
+</p>
+<p>
+<strong>評価設定</strong><br> モデルの最大生成長を32,768トークンに設定しました。
+長出力推論モデルの評価に貪欲デコードを使用すると、繰り返し率が高くなり、チェックポイント間で大きなばらつきが生じることがわかりました。そのため、デフォルトでpass@𝑘評価 (Chen et al., 2021) を使用し、温度を0以外の値に設定してpass@1を報告します。
+具体的には、サンプリング温度0.6、トップ𝑝値0.95を用いて、各質問に対して𝑘回答（テストセットのサイズに応じて、通常は4～64）を生成します。Pass@1は次のように計算されます。
+<!--
+<strong>Evaluation Setup</strong><br> We set the maximum generation length to 32,768 tokens for the models.
+We found that using greedy decoding to evaluate long-output reasoning models results in
+higher repetition rates and significant variability across different checkpoints. Therefore, we
+default to pass@𝑘 evaluation (Chen et al., 2021) and report pass@1 using a non-zero temperature.
+Specifically, we use a sampling temperature of 0.6 and a top-𝑝 value of 0.95 to generate 𝑘
+responses (typically between 4 and 64, depending on the test set size) for each question. Pass@1
+is then calculated as
+-->
+\[
+pass@1=\frac{1}{k}\sum_{i=1}^k p_i
+\]
+ここで、\(𝑝_𝑖\) は \(𝑖\) 番目の回答の正しさを表します。この手法は、より信頼性の高いパフォーマンス推定値を提供します。AIME 2024 については、64 サンプルを使用したコンセンサス（多数決）結果 (Wang et al., 2022) も報告しており、cons@64 と表記しています。
+<!--
+where \(𝑝_𝑖\) denotes the correctness of the \(𝑖\)-th response. This method provides more reliable
+performance estimates. For AIME 2024, we also report consensus (majority vote) results (Wang
+et al., 2022) using 64 samples, denoted as cons@64.
+-->
+</p>
+<h3>3.1. DeepSeek-R1 の評価</h3>
+<center><img src="images/table4.png"></center>
+<p>
+<center>表 4 | DeepSeek-R1 と他の代表的モデルとの比較</center>
+<!--
+Table 4 | Comparison between DeepSeek-R1 and other representative models.
+-->
+</p>
+<p>
+MMLU、MMLU-Pro、GPQA Diamond などの教育指向の知識ベンチマークにおいて、DeepSeek-R1 は DeepSeek-V3 と比較して優れたパフォーマンスを示しています。この改善は主に、大規模強化学習によって大幅な向上が達成された STEM 関連の問題における精度の向上によるものです。さらに、DeepSeek-R1は、長時間のコンテキスト依存QAタスクであるFRAMESにおいて優れた性能を示し、その強力なドキュメント分析能力を実証しています。これは、AI駆動型検索およびデータ分析タスクにおける推論モデルの潜在能力を浮き彫りにしています。事実に基づくベンチマークであるSimpleQAでは、DeepSeek-R1はDeepSeek-V3を上回り、事実に基づくクエリの処理能​​力を実証しています。同様の傾向が見られ、OpenAI-o1はこのベンチマークでGPT-4oを上回っています。しかし、DeepSeek-R1は、中国のSimpleQAベンチマークではDeepSeek-V3よりもパフォーマンスが低く、これは主に安全強化学習（Safety RL）後に特定のクエリへの回答を拒否する傾向があるためです。安全強化学習（Safety RL）がない場合、DeepSeek-R1は70%を超える精度を達成できます。
+<!--
+For education-oriented knowledge benchmarks such as MMLU, MMLU-Pro, and GPQA
+Diamond, DeepSeek-R1 demonstrates superior performance compared to DeepSeek-V3. This improvement
+is primarily attributed to enhanced accuracy in STEM-related questions, where significant
+gains are achieved through large-scale reinforcement learning. Additionally, DeepSeek-R1
+excels on FRAMES, a long-context-dependent QA task, showcasing its strong document analysis
+capabilities. This highlights the potential of reasoning models in AI-driven search and data
+analysis tasks. On the factual benchmark SimpleQA, DeepSeek-R1 outperforms DeepSeek-V3,
+demonstrating its capability in handling fact-based queries. A similar trend is observed where
+OpenAI-o1 surpasses GPT-4o on this benchmark. However, DeepSeek-R1 performs worse than
+DeepSeek-V3 on the Chinese SimpleQA benchmark, primarily due to its tendency to refuse
+answering certain queries after safety RL. Without safety RL, DeepSeek-R1 could achieve an
+accuracy of over 70%
+-->
+</p>
+<p>
+DeepSeek-R1は、モデルのフォーマット指示に従う能力を評価するために設計されたベンチマークであるIF-Evalでも印象的な結果を示しています。これらの改善は、教師あり微調整（SFT）と強化学習（RL）のトレーニングの最終段階で指示に従うデータを組み込んだことに起因しています。さらに、AlpacaEval2.0とArenaHardでも顕著なパフォーマンスが見られ、DeepSeek-R1がライティングタスクとオープンドメインの質問応答において強みを発揮していることを示しています。DeepSeek-V3を大幅に上回るパフォーマンスは、大規模RLの一般化の利点を強調しており、推論能力を高めるだけでなく、多様なドメインにわたるパフォーマンスも向上させます。さらに、DeepSeek-R1によって生成される要約の長さは簡潔で、ArenaHardでは平均689トークン、AlpacaEval 2.0では平均2,218文字です。これは、DeepSeek-R1がGPTベースの評価において長さのバイアスを回避し、複数のタスクにわたる堅牢性をさらに強化していることを示しています。
+<!--
+DeepSeek-R1 also delivers impressive results on IF-Eval, a benchmark designed to assess a
+model’s ability to follow format instructions. These improvements can be linked to the inclusion
+of instruction-following data during the final stages of supervised fine-tuning (SFT) and RL
+training. Furthermore, remarkable performance is observed on AlpacaEval2.0 and ArenaHard,
+indicating DeepSeek-R1’s strengths in writing tasks and open-domain question answering. Its
+significant outperformance of DeepSeek-V3 underscores the generalization benefits of large-scale
+RL, which not only boosts reasoning capabilities but also improves performance across diverse
+domains. Moreover, the summary lengths generated by DeepSeek-R1 are concise, with an
+average of 689 tokens on ArenaHard and 2,218 characters on AlpacaEval 2.0. This indicates that DeepSeek-R1 avoids introducing length bias during GPT-based evaluations, further solidifying
+its robustness across multiple tasks.
+-->
+</p>
+<p>
+数学タスクにおいて、DeepSeek-R1はOpenAI-o1-1217と同等のパフォーマンスを示し、他のモデルを大きく上回っています。LiveCodeBenchやCodeforcesなどのコーディングアルゴリズムタスクでも同様の傾向が見られ、これらのベンチマークでは推論重視のモデルが優勢を占めています。エンジニアリング指向のコーディングタスクにおいて、OpenAI-o1-1217はAiderではDeepSeek-R1を上回りますが、SWE Verifiedでは同等のパフォーマンスを達成しています。関連するRLトレーニングデータの量は現在非常に限られているため、DeepSeek-R1のエンジニアリングパフォーマンスは次期バージョンで向上すると考えています。
+<!--
+On math tasks, DeepSeek-R1 demonstrates performance on par with OpenAI-o1-1217,
+surpassing other models by a large margin. A similar trend is observed on coding algorithm
+tasks, such as LiveCodeBench and Codeforces, where reasoning-focused models dominate these
+benchmarks. On engineering-oriented coding tasks, OpenAI-o1-1217 outperforms DeepSeek-R1
+on Aider but achieves comparable performance on SWE Verified. We believe the engineering
+performance of DeepSeek-R1 will improve in the next version, as the amount of related RL
+training data currently remains very limited.
+-->
+</p>
+<h3>3.2. 蒸留モデル評価</h3>
+<p>
+表5に示すように、DeepSeek-R1の出力を単純に抽出することで、効率的なDeepSeek-R1-7B（DeepSeek-R1-Distill-Qwen-7B、以下同様に略記）は、GPT-4o-0513などの非推論モデルを全面的に上回る性能を発揮します。DeepSeek-R1-14Bはすべての評価指標でQwQ-32BPreviewを上回り、DeepSeek-R1-32BとDeepSeek-R1-70Bはほとんどのベンチマークでo1-miniを大幅に上回ります。これらの結果は、抽出モデルの大きな可能性を示しています。さらに、これらの抽出モデルに強化学習を適用すると、大幅な性能向上が得られることがわかりました。これについてはさらなる検討が必要であると考え、ここでは単純なSFT抽出モデルの結果のみを示します。
+<!--
+As shown in Table 5, simply distilling DeepSeek-R1’s outputs enables the efficient DeepSeek-
+R1-7B (i.e., DeepSeek-R1-Distill-Qwen-7B, abbreviated similarly below) to outperform nonreasoning
+models like GPT-4o-0513 across the board. DeepSeek-R1-14B surpasses QwQ-32BPreview
+on all evaluation metrics, while DeepSeek-R1-32B and DeepSeek-R1-70B significantly
+exceed o1-mini on most benchmarks. These results demonstrate the strong potential of distillation.
+Additionally, we found that applying RL to these distilled models yields significant further
+gains. We believe this warrants further exploration and therefore present only the results of the
+simple SFT-distilled models here.
+-->
+</p>
+<center><img src="images/table5.png"></center>
+<p>
+<center>表5 | DeepSeek-R1の抽出モデルと推論関連ベンチマークにおける他の類似モデルの比較</center>
+<!--
+Table 5 | Comparison of DeepSeek-R1 distilled models and other comparable models on
+reasoning-related benchmarks
+-->
+</p>
+<h2>4. 考察</h2>
+<h3>4.1. 蒸留 vs. 強化学習</h3>
+<p>
+セクション3.2では、DeepSeek-R1を蒸留することで、小規模モデルでも優れた結果を達成できることがわかりました。しかし、まだ1つの疑問が残っています。論文で議論されている大規模RL学習において、抽出を行わずに同等のパフォーマンスを達成できるのでしょうか？
+<!--
+In Section 3.2, we can see that by distilling DeepSeek-R1, the small model can achieve impressive
+results. However, there is still one question left: can the model achieve comparable performance
+through the large-scale RL training discussed in the paper without distillation?
+-->
+</p>
+<p>
+この疑問に答えるために、数学、コード、STEMデータを用いてQwen-32B-Baseで大規模なRL学習を実施し、1万ステップ以上の学習を経てDeepSeek-R1-Zero-Qwen-32Bを作成しました。表6に示す実験結果は、32Bベースモデルが大規模RL学習後、QwQ-32B-Previewと同等の性能を達成することを示しています。しかし、DeepSeek-R1から抽出されたDeepSeek-R1-Distill-Qwen-32Bは、すべてのベンチマークにおいてDeepSeek-R1-Zero-Qwen-32Bよりも大幅に優れた性能を示しました。
+<!--
+To answer this question, we conduct large-scale RL training on Qwen-32B-Base using math,
+code, and STEM data, training for over 10K steps, resulting in DeepSeek-R1-Zero-Qwen-32B. The
+experimental results, shown in Table 6, demonstrate that the 32B base model, after large-scale 
+RL training, achieves performance on par with QwQ-32B-Preview. However, DeepSeek-R1-
+Distill-Qwen-32B, which is distilled from DeepSeek-R1, performs significantly better than
+DeepSeek-R1-Zero-Qwen-32B across all benchmarks
+-->
+</p>
+<center><img src="images/table6.png"></center>
+<p>
+<center>表 6 | 推論関連ベンチマークにおける蒸留モデルと RL モデルの比較</center>
+<!--
+Table 6 | Comparison of distilled and RL Models on Reasoning-Related Benchmarks.
+-->
+</p>
+<p>
+したがって、2つの結論を導き出すことができます。第一に、より強力なモデルをより小さなモデルに蒸留することで優れた結果が得られます。一方、本論文で述べた大規模強化学習に依存する小規模モデルは膨大な計算能力を必要とし、蒸留の性能にさえ達しない可能性があります。第二に、蒸留戦略は経済的かつ効果的ですが、知能の限界を超えるには、より強力なベースモデルとより大規模な強化学習が必要になる可能性があります。
+<!--
+Therefore, we can draw two conclusions: First, distilling more powerful models into smaller
+ones yields excellent results, whereas smaller models relying on the large-scale RL mentioned in
+this paper require enormous computational power and may not even achieve the performance
+of distillation. Second, while distillation strategies are both economical and effective, advancing
+beyond the boundaries of intelligence may still require more powerful base models and largerscale
+reinforcement learning.
+-->
+</p>
+<h3>4.2. 失敗した試み</h3>
+<p>
+DeepSeek-R1の開発初期段階では、途中で失敗や挫折にも遭遇しました。ここで失敗体験を共有するのは、洞察を提供するためですが、これらのアプローチが効果的な推論モデルを開発できないことを意味するものではありません。
+<!--
+In the early stages of developing DeepSeek-R1, we also encountered failures and setbacks along
+the way. We share our failure experiences here to provide insights, but this does not imply that
+these approaches are incapable of developing effective reasoning models
+-->
+</p>
+<p>
+<strong>プロセス報酬モデル（PRM）</strong><br> PRMは、モデルを推論タスクの解決に向けたより良いアプローチへと導く合理的な手法です（Lightman et al., 2023; Uesato et al., 2022; Wang et al., 2023）。しかし、実際には、PRMには最終的な成功を妨げる可能性のある3つの主な制限があります。
+第一に、一般的な推論における細粒度のステップを明示的に定義することは困難です。第二に、現在の中間ステップが正しいかどうかを判断することは困難なタスクです。モデルを使用した自動アノテーションでは満足のいく結果が得られない可能性があり、手動アノテーションはスケールアップに適していません。第三に、モデルベースのPRMを導入すると、必然的に報酬ハッキング（Gao et al., 2022）につながり、報酬モデルの再学習には追加の学習リソースが必要になり、学習パイプライン全体が複雑になります。結論として、PRMはモデルによって生成された上位N個の回答を再ランク付けしたり、誘導探索を支援したりする優れた能力を示していますが（Snell et al., 2024）、その利点は、私たちの実験における大規模強化学習プロセス中に導入される追加の計算オーバーヘッドと比較すると限られています。
+<!--
+<strong>Process Reward Model (PRM)</strong><br> PRM is a reasonable method to guide the model toward better
+approaches for solving reasoning tasks (Lightman et al., 2023; Uesato et al., 2022;Wang et al.,
+2023). However, in practice, PRM has three main limitations that may hinder its ultimate success.
+First, it is challenging to explicitly define a fine-grain step in general reasoning. Second,
+determining whether the current intermediate step is correct is a challenging task. Automated
+annotation using models may not yield satisfactory results, while manual annotation is not conducive
+to scaling up. Third, once a model-based PRM is introduced, it inevitably leads to reward
+hacking (Gao et al., 2022), and retraining the reward model needs additional training resources
+and it complicates the whole training pipeline. In conclusion, while PRM demonstrates a good
+ability to rerank the top-N responses generated by the model or assist in guided search (Snell
+et al., 2024), its advantages are limited compared to the additional computational overhead it
+introduces during the large-scale reinforcement learning process in our experiments.
+-->
+</p>
+<p>
+<strong>モンテカルロ木探索（MCTS）</strong><br> AlphaGo（Silver et al., 2017b）とAlphaZero（Silver et al., 2017a）に着想を得て、モンテカルロ木探索（MCTS）を用いてテスト時の計算スケーラビリティを向上させることを検討しました。このアプローチでは、回答をより小さな部分に分割することで、モデルが解空間を体系的に探索できるようにします。これを促進するために、モデルに、探索に必要な特定の推論ステップに対応する複数のタグを生成するように促します。トレーニングでは、まず収集したプロンプトを用いて、事前学習済みの価値モデルに基づくMCTSで回答を見つけます。次に、得られた質問と回答のペアを用いて、アクターモデルと価値モデルの両方をトレーニングし、反復的にプロセスを改良していきます。
+<!--
+<strong>Monte Carlo Tree Search (MCTS)</strong><br> Inspired by AlphaGo (Silver et al., 2017b) and AlphaZero (Silver
+et al., 2017a), we explored using Monte Carlo Tree Search (MCTS) to enhance test-time
+compute scalability. This approach involves breaking answers into smaller parts to allow the
+model to explore the solution space systematically. To facilitate this, we prompt the model to
+generate multiple tags that correspond to specific reasoning steps necessary for the search. For
+training, we first use collected prompts to find answers via MCTS guided by a pre-trained value
+model. Subsequently, we use the resulting question-answer pairs to train both the actor model
+and the value model, iteratively refining the process.
+-->
+</p>
+<p>
+しかし、このアプローチは、トレーニングのスケールアップ時にいくつかの課題に直面します。まず、探索空間が比較的明確に定義されているチェスとは異なり、トークン生成では探索空間が指数関数的に大きくなります。この問題に対処するために、各ノードに最大拡張制限を設定しましたが、これによりモデルが局所最適解に陥る可能性があります。次に、価値モデルは探索プロセスの各ステップを導くため、生成の品質に直接影響を与えます。細粒度の価値モデルのトレーニングは本質的に困難であり、モデルを反復的に改善することが困難です。AlphaGoの成功の核心は、価値モデルをトレーニングしてパフォーマンスを徐々に向上させることに依存していましたが、トークン生成の複雑さのため、この原理を私たちの環境で再現することは困難です。
+<!--
+However, this approach encounters several challenges when scaling up the training. First,
+unlike chess, where the search space is relatively well-defined, token generation presents an exponentially larger search space. To address this, we set a maximum extension limit for each
+node, but this can lead to the model getting stuck in local optima. Second, the value model
+directly influences the quality of generation since it guides each step of the search process.
+Training a fine-grained value model is inherently difficult, which makes it challenging for the
+model to iteratively improve. While AlphaGo’s core success relied on training a value model to
+progressively enhance its performance, this principle proves difficult to replicate in our setup
+due to the complexities of token generation.
+-->
+</p>
+<p>
+結論として、MCTSは事前学習済みの価値モデルと組み合わせることで推論時のパフォーマンスを向上させることができますが、自己探索を通じてモデルのパフォーマンスを反復的に向上させることは依然として大きな課題です。
+<!--
+In conclusion, while MCTS can improve performance during inference when paired with a
+pre-trained value model, iteratively boosting model performance through self-search remains a
+significant challenge.
+-->
+</p>
+<h2>5. 結論、限界、そして今後の課題</h2>
+<p>
+さらに、推論能力を小規模な密モデルに蒸留する方法について検討します。DeepSeek-R1を教師モデルとして用い、80万個の学習サンプルを生成し、複数の小規模な密モデルをファインチューニングしました。結果は有望です。DeepSeek-R1-Distill-Qwen-1.5Bは、数学ベンチマークにおいてGPT-4oおよびClaude-3.5-Sonnetを上回り、AIMEで28.9%、MATHで83.9%の性能を達成しました。他の高密度モデルも同様に優れた結果を達成し、同じチェックポイントに基づく他の命令チューニングモデルを大幅に上回りました。
+<!--
+In this work, we share our journey in enhancing model reasoning abilities through reinforcement
+learning. DeepSeek-R1-Zero represents a pure RL approach without relying on cold-start
+data, achieving strong performance across various tasks. DeepSeek-R1 is more powerful,
+leveraging cold-start data alongside iterative RL fine-tuning. Ultimately, DeepSeek-R1 achieves
+performance comparable to OpenAI-o1-1217 on a range of tasks.
+-->
+</p>
+<p>
+推論能力の蒸留を小規模な密モデルに適用する手法をさらに検討しました。DeepSeek-R1を教師モデルとして80万個の学習サンプルを生成し、複数の小規模な密モデルを微調整しました。その結果は有望で、DeepSeek-R1-Distill-Qwen-1.5Bは、数学ベンチマークにおいてGPT-4oおよびClaude-3.5-Sonnetを上回り、AIMEで28.9%、MATHで83.9%の性能を達成しました。他の密モデルも同様に優れた結果を達成し、同じチェックポイントに基づく他の命令チューニングモデルを大幅に上回りました。
+<!--
+We further explore distillation the reasoning capability to small dense models. We use
+DeepSeek-R1 as the teacher model to generate 800K training samples, and fine-tune several small
+dense models. The results are promising: DeepSeek-R1-Distill-Qwen-1.5B outperforms GPT-4o
+and Claude-3.5-Sonnet on math benchmarks with 28.9% on AIME and 83.9% on MATH. Other
+dense models also achieve impressive results, significantly outperforming other instructiontuned
+models based on the same underlying checkpoints.
+-->
+</p>
+<p>
+今後、DeepSeek-R1については、以下の方向性で研究に投資していく予定です。 <div class="styleBullet">
+<ul>
+<li>
+<strong>• 一般的な機能:</strong> 現在、DeepSeek-R1 の機能は、関数呼び出し、マルチターン、複雑なロールプレイング、JSON 出力などのタスクにおいて DeepSeek-V3 に劣っています。
+今後、これらの分野のタスクを強化するために CoT をどの程度活用できるかを検討する予定です。
+</li><br><li><strong>• 言語の混在:</strong> DeepSeek-R1 は現在、中国語と英語に最適化されているため、他の言語のクエリを処理する際に言語の混在の問題が発生する可能性があります。例えば、クエリが英語または中国語以外の言語であっても、DeepSeek-R1 は推論と応答に英語を使用する可能性があります。この制限は、今後のアップデートで解決する予定です。
+</li><br><li><strong>• プロンプトエンジニアリング:</strong> DeepSeek-R1 を評価したところ、プロンプトに敏感であることがわかりました。少数ショットのプロンプトは一貫してパフォーマンスを低下させます。したがって、最適な結果を得るには、ユーザーが問題を直接記述し、ゼロショット設定を使用して出力形式を指定することをお勧めします。
+</li><br><li><strong>• ソフトウェアエンジニアリングタスク：</strong> 評価時間が長く、RL プロセスの効率に影響するため、大規模 RL はソフトウェアエンジニアリングタスクに広く適用されていません。その結果、DeepSeek-R1 はソフトウェアエンジニアリングベンチマークにおいて DeepSeek-V3 と比べて大きな改善を示していません。将来のバージョンでは、ソフトウェアエンジニアリングデータに拒否サンプリングを実装するか、RL プロセス中に非同期評価を組み込むことで効率を向上させることで、この問題に対処します。
+<!--
+In the future, we plan to invest in research across the following directions for DeepSeek-R1.
+<div class="styleBullet">
+<ul>
+<li>
+<strong>• General Capability:</strong> Currently, the capabilities of DeepSeek-R1 fall short of DeepSeek-V3
+in tasks such as function calling, multi-turn, complex role-playing, and JSON output.
+Moving forward, we plan to explore how long CoT can be leveraged to enhance tasks in
+these fields.
+</li><br><li><strong>• Language Mixing:</strong> DeepSeek-R1 is currently optimized for Chinese and English, which
+may result in language mixing issues when handling queries in other languages. For
+instance, DeepSeek-R1 might use English for reasoning and responses, even if the query is
+in a language other than English or Chinese. We aim to address this limitation in future
+updates.
+</li><br><li><strong>• Prompting Engineering:</strong> When evaluating DeepSeek-R1, we observe that it is sensitive
+to prompts. Few-shot prompting consistently degrades its performance. Therefore, we
+recommend users directly describe the problem and specify the output format using a
+zero-shot setting for optimal results.
+</li><br><li><strong>• Software Engineering Tasks:</strong> Due to the long evaluation times, which impact the efficiency
+of the RL process, large-scale RL has not been applied extensively in software
+engineering tasks. As a result, DeepSeek-R1 has not demonstrated a huge improvement
+over DeepSeek-V3 on software engineering benchmarks. Future versions will address
+this by implementing rejection sampling on software engineering data or incorporating
+asynchronous evaluations during the RL process to improve efficiency.
+-->
+</li>
+</ul>
+</div>
+</p>
+<h2>参考文献</h2>
+<p>
+<div class="styleRef">
+<ul>
+<li>AI@Meta. Llama 3.1 model card, 2024. URL https://github.com/meta-llama/llama-m
+odels/blob/main/models/llama3_1/MODEL_CARD.md.
+</li><br><li>Anthropic. Claude 3.5 sonnet, 2024. URL https://www.anthropic.com/news/claude-3
+-5-sonnet.
+</li><br><li>M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. de Oliveira Pinto, J. Kaplan, H. Edwards, Y. Burda,
+N. Joseph, G. Brockman, A. Ray, R. Puri, G. Krueger, M. Petrov, H. Khlaaf, G. Sastry, P. Mishkin,
+B. Chan, S. Gray, N. Ryder, M. Pavlov, A. Power, L. Kaiser, M. Bavarian, C. Winter, P. Tillet,
+F. P. Such, D. Cummings, M. Plappert, F. Chantzis, E. Barnes, A. Herbert-Voss, W. H. Guss,
+A. Nichol, A. Paino, N. Tezak, J. Tang, I. Babuschkin, S. Balaji, S. Jain, W. Saunders, C. Hesse,
+A. N. Carr, J. Leike, J. Achiam, V. Misra, E. Morikawa, A. Radford, M. Knight, M. Brundage,
+M. Murati, K. Mayer, P.Welinder, B. McGrew, D. Amodei, S. McCandlish, I. Sutskever, and
+W. Zaremba. Evaluating large language models trained on code. CoRR, abs/2107.03374, 2021.
+URL https://arxiv.org/abs/2107.03374.
+</li><br><li>A. Dubey, A. Jauhri, A. Pandey, A. Kadian, A. Al-Dahle, A. Letman, A. Mathur, A. Schelten,
+A. Yang, A. Fan, et al. The llama 3 herd of models. arXiv preprint arXiv:2407.21783, 2024.
+</li><br><li>Y. Dubois, B. Galambosi, P. Liang, and T. B. Hashimoto. Length-controlled alpacaeval: A simple
+way to debias automatic evaluators. arXiv preprint arXiv:2404.04475, 2024.
+</li><br><li>X. Feng, Z. Wan, M. Wen, S. M. McAleer, Y. Wen, W. Zhang, and J. Wang. Alphazero-like
+tree-search can guide large language model decoding and training, 2024. URL https:
+//arxiv.org/abs/2309.17179.
+</li><br><li>L. Gao, J. Schulman, and J. Hilton. Scaling laws for reward model overoptimization, 2022. URL
+https://arxiv.org/abs/2210.10760.
+</li><br><li>A. P. Gema, J. O. J. Leang, G. Hong, A. Devoto, A. C. M. Mancino, R. Saxena, X. He, Y. Zhao,
+X. Du, M. R. G. Madani, C. Barale, R. McHardy, J. Harris, J. Kaddour, E. van Krieken, and
+P. Minervini. Are we done with mmlu? CoRR, abs/2406.04127, 2024. URL https://doi.or
+g/10.48550/arXiv.2406.04127.
+</li><br><li>Google. Our next-generation model: Gemini 1.5, 2024. URL https://blog.google/techno
+logy/ai/google-gemini-next-generation-model-february-2024.
+</li><br><li>Y. He, S. Li, J. Liu, Y. Tan, W. Wang, H. Huang, X. Bu, H. Guo, C. Hu, B. Zheng, et al. Chinese
+simpleqa: A chinese factuality evaluation for large language models. arXiv preprint
+arXiv:2411.07140, 2024.
+</li><br><li>D. Hendrycks, C. Burns, S. Basart, A. Zou, M. Mazeika, D. Song, and J. Steinhardt. Measuring
+massive multitask language understanding. arXiv preprint arXiv:2009.03300, 2020.
+</li><br><li>Y. Huang, Y. Bai, Z. Zhu, J. Zhang, J. Zhang, T. Su, J. Liu, C. Lv, Y. Zhang, J. Lei, et al. C-Eval: A
+multi-level multi-discipline chinese evaluation suite for foundation models. arXiv preprint
+arXiv:2305.08322, 2023.
+</li><br><li>N. Jain, K. Han, A. Gu,W. Li, F. Yan, T. Zhang, S.Wang, A. Solar-Lezama, K. Sen, and I. Stoica.
+Livecodebench: Holistic and contamination free evaluation of large language models for code.
+CoRR, abs/2403.07974, 2024. URL https://doi.org/10.48550/arXiv.2403.07974.
+
+</li><br><li>S. Krishna, K. Krishna, A. Mohananey, S. Schwarcz, A. Stambler, S. Upadhyay, and M. Faruqui.
+Fact, fetch, and reason: A unified evaluation of retrieval-augmented generation. CoRR,
+abs/2409.12941, 2024. doi: 10.48550/ARXIV.2409.12941. URL https://doi.org/10.485
+50/arXiv.2409.12941.
+</li><br><li>A. Kumar, V. Zhuang, R. Agarwal, Y. Su, J. D. Co-Reyes, A. Singh, K. Baumli, S. Iqbal, C. Bishop,
+R. Roelofs, et al. Training language models to self-correct via reinforcement learning. arXiv
+preprint arXiv:2409.12917, 2024.
+</li><br><li>H. Li, Y. Zhang, F. Koto, Y. Yang, H. Zhao, Y. Gong, N. Duan, and T. Baldwin. CMMLU: Measuring
+massive multitask language understanding in Chinese. arXiv preprint arXiv:2306.09212,
+2023.
+</li><br><li>T. Li, W.-L. Chiang, E. Frick, L. Dunlap, T. Wu, B. Zhu, J. E. Gonzalez, and I. Stoica. From
+crowdsourced data to high-quality benchmarks: Arena-hard and benchbuilder pipeline. arXiv
+preprint arXiv:2406.11939, 2024.
+</li><br><li>H. Lightman, V. Kosaraju, Y. Burda, H. Edwards, B. Baker, T. Lee, J. Leike, J. Schulman,
+I. Sutskever, and K. Cobbe. Let’s verify step by step. arXiv preprint arXiv:2305.20050, 2023.
+</li><br><li>B. Y. Lin. ZeroEval: A Unified Framework for Evaluating Language Models, July 2024. URL
+https://github.com/WildEval/ZeroEval.
+</li><br><li>MAA. American invitational mathematics examination - aime. In American Invitational
+Mathematics Examination - AIME 2024, February 2024. URL https://maa.org/math
+-competitions/american-invitational-mathematics-examination-aime.
+</li><br><li>OpenAI. Hello GPT-4o, 2024a. URL https://openai.com/index/hello-gpt-4o/.
+</li><br><li>OpenAI. Learning to reason with llms, 2024b. URL https://openai.com/index/learnin
+g-to-reason-with-llms/.
+</li><br><li>OpenAI. Introducing SimpleQA, 2024c. URL https://openai.com/index/introducing
+-simpleqa/.
+</li><br><li>OpenAI. Introducing SWE-bench verified we’re releasing a human-validated subset of swebench
+that more, 2024d. URL https://openai.com/index/introducing-swe-bench
+-verified/.
+</li><br><li>Qwen. Qwq: Reflect deeply on the boundaries of the unknown, 2024a. URL https://qwenlm
+.github.io/blog/qwq-32b-preview/.
+</li><br><li>Qwen. Qwen2.5: A party of foundation models, 2024b. URL https://qwenlm.github.io/b
+log/qwen2.5.
+</li><br><li>D. Rein, B. L. Hou, A. C. Stickland, J. Petty, R. Y. Pang, J. Dirani, J. Michael, and S. R. Bowman.
+GPQA: A graduate-level google-proof q&a benchmark. arXiv preprint arXiv:2311.12022, 2023.
+</li><br><li>Z. Shao, P.Wang, Q. Zhu, R. Xu, J. Song, M. Zhang, Y. Li, Y.Wu, and D. Guo. Deepseekmath:
+Pushing the limits of mathematical reasoning in open language models. arXiv preprint
+arXiv:2402.03300, 2024.
+</li><br><li>D. Silver, T. Hubert, J. Schrittwieser, I. Antonoglou, M. Lai, A. Guez, M. Lanctot, L. Sifre,
+D. Kumaran, T. Graepel, T. P. Lillicrap, K. Simonyan, and D. Hassabis. Mastering chess and
+shogi by self-play with a general reinforcement learning algorithm. CoRR, abs/1712.01815,
+2017a. URL http://arxiv.org/abs/1712.01815.
+</li><br><li>D. Silver, J. Schrittwieser, K. Simonyan, I. Antonoglou, A. Huang, A. Guez, T. Hubert, L. Baker,
+M. Lai, A. Bolton, Y. Chen, T. P. Lillicrap, F. Hui, L. Sifre, G. van den Driessche, T. Graepel, and
+</li><br><li>D. Hassabis. Mastering the game of go without human knowledge. Nat., 550(7676):354–359,
+2017b. doi: 10.1038/NATURE24270. URL https://doi.org/10.1038/nature24270.
+</li><br><li>C. Snell, J. Lee, K. Xu, and A. Kumar. Scaling llm test-time compute optimally can be more
+effective than scaling model parameters, 2024. URL https://arxiv.org/abs/2408.033
+14.
+</li><br><li>T. Trinh, Y. Wu, Q. Le, H. He, and T. Luong. Solving olympiad geometry without human
+demonstrations. Nature, 2024. doi: 10.1038/s41586-023-06747-5.
+</li><br><li>J. Uesato, N. Kushman, R. Kumar, F. Song, N. Siegel, L. Wang, A. Creswell, G. Irving, and
+I. Higgins. Solving math word problems with process-and outcome-based feedback. arXiv
+preprint arXiv:2211.14275, 2022.
+</li><br><li>P. Wang, L. Li, Z. Shao, R. Xu, D. Dai, Y. Li, D. Chen, Y. Wu, and Z. Sui. Math-shepherd: A labelfree
+step-by-step verifier for llms in mathematical reasoning. arXiv preprint arXiv:2312.08935,
+2023.
+</li><br><li>X. Wang, J. Wei, D. Schuurmans, Q. Le, E. Chi, S. Narang, A. Chowdhery, and D. Zhou.
+Self-consistency improves chain of thought reasoning in language models. arXiv preprint
+arXiv:2203.11171, 2022.
+</li><br><li>Y.Wang, X. Ma, G. Zhang, Y. Ni, A. Chandra, S. Guo,W. Ren, A. Arulraj, X. He, Z. Jiang, T. Li,
+M. Ku, K. Wang, A. Zhuang, R. Fan, X. Yue, and W. Chen. Mmlu-pro: A more robust and
+challenging multi-task language understanding benchmark. CoRR, abs/2406.01574, 2024.
+URL https://doi.org/10.48550/arXiv.2406.01574.
+</li><br><li>C. S. Xia, Y. Deng, S. Dunn, and L. Zhang. Agentless: Demystifying llm-based software
+engineering agents. arXiv preprint, 2024.
+</li><br><li>H. Xin, Z. Z. Ren, J. Song, Z. Shao,W. Zhao, H.Wang, B. Liu, L. Zhang, X. Lu, Q. Du,W. Gao,
+Q. Zhu, D. Yang, Z. Gou, Z. F.Wu, F. Luo, and C. Ruan. Deepseek-prover-v1.5: Harnessing
+proof assistant feedback for reinforcement learning and monte-carlo tree search, 2024. URL
+https://arxiv.org/abs/2408.08152.
+</li><br><li>J. Zhou, T. Lu, S. Mishra, S. Brahma, S. Basu, Y. Luan, D. Zhou, and L. Hou. Instruction-following
+evaluation for large language models. arXiv preprint arXiv:2311.07911, 2023.</li>
+</ul>
+</div>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+    </body>
+</html>
