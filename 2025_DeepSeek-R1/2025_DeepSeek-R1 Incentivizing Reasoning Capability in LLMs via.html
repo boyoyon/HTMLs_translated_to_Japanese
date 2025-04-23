@@ -105,7 +105,7 @@ Reinforcement Learning</center></h1>
 <center>research@deepseek.com</center>
 <h2><center>要旨</center></h2>
 <p>
-第一世代の推論モデルであるDeepSeek-R1-ZeroとDeepSeek-R1を紹介します。DeepSeek-R1-Zeroは、教師あり微調整（SFT）を前段階として用いず、大規模強化学習（RL）によって学習されたモデルであり、優れた推論能力を発揮します。DeepSeek-R1-Zeroは、RLを通して、多くの強力で興味深い推論動作を自然に獲得します。しかし、可読性の低さや言語の混在といった課題に直面しています。これらの問題を解決し、推論性能をさらに向上させるために、RLの前に多段階学習とコールドスタートデータを組み込んだDeepSeek-R1を紹介します。DeepSeek-R1は、推論タスクにおいてOpenAI-o1-1217に匹敵する性能を達成しています。研究コミュニティをサポートするために、DeepSeek-R1-Zero、DeepSeek-R1、およびQwenとLlamaに基づいてDeepSeek-R1から抽出された6つの高密度モデル（1.5B、7B、8B、14B、32B、70B）をオープンソース化しています。
+第一世代の推論モデルであるDeepSeek-R1-ZeroとDeepSeek-R1を紹介します。DeepSeek-R1-Zeroは、教師あり微調整（SFT）を前段階として用いず、大規模強化学習（RL）によって学習されたモデルであり、優れた推論能力を発揮します。DeepSeek-R1-Zeroは、RLを通して、多くの強力で興味深い推論動作を自然に獲得します。しかし、可読性の低さや言語の混在といった課題に直面しています。これらの問題を解決し、推論性能をさらに向上させるために、RLの前に多段階学習とコールドスタートデータを組み込んだDeepSeek-R1を紹介します。DeepSeek-R1は、推論タスクにおいてOpenAI-o1-1217に匹敵する性能を達成しています。研究コミュニティをサポートするために、DeepSeek-R1-Zero、DeepSeek-R1、およびQwenとLlamaに基づいてDeepSeek-R1から蒸留された6つの高密度モデル（1.5B、7B、8B、14B、32B、70B）をオープンソース化しています。
 <!--
 We introduce our first-generation reasoning models, DeepSeek-R1-Zero and DeepSeek-R1. DeepSeek-R1-Zero, a model trained via large-scale reinforcement learning (RL) without supervised fine-tuning (SFT) as a preliminary step, demonstrates remarkable reasoning capabilities. Through RL, DeepSeek-R1-Zero naturally emerges with numerous powerful and intriguing reasoning behaviors. However, it encounters challenges such as poor readability, and language mixing. To address these issues and further enhance reasoning performance, we introduce DeepSeek-R1, which incorporates multi-stage training and cold-start data before RL. DeepSeek-R1 achieves performance comparable to OpenAI-o1-1217 on reasoning tasks. To support the research community, we open-source DeepSeek-R1-Zero, DeepSeek-R1, and six dense models (1.5B, 7B, 8B, 14B, 32B, 70B) distilled from DeepSeek-R1 based on Qwen and Llama.
 -->
@@ -223,7 +223,7 @@ better models.
 <ul>
 <li>
 • 大規模モデルの推論パターンを小規模モデルに蒸留することで、小規模モデルで強化学習によって発見された推論パターンと比較して、優れたパフォーマンスが得られることを実証しました。オープンソースのDeepSeek-R1とそのAPIは、研究コミュニティが将来、より優れた小規模モデルを蒸留する上で役立つでしょう。
-</li><br><li>• DeepSeek-R1によって生成された推論データを使用して、研究コミュニティで広く使用されている複数の高密度モデルを微調整しました。評価結果から、蒸留された小規模高密度モデルはベンチマークで非常に優れたパフォーマンスを発揮することが示されました。DeepSeek-R1-Distill-Qwen-7BはAIME 2024で55.5%を達成し、QwQ-32B-Previewを上回りました。さらに、DeepSeek-R1-Distill-Qwen-32Bは、AIME 2024で72.6%、MATH-500で94.3%、LiveCodeBenchで57.2%のスコアを達成しました。これらの結果は、従来のオープンソースモデルを大幅に上回り、o1-miniに匹敵するものです。私たちは、Qwen2.5およびLlama3シリーズに基づいて、15億、70億、80億、140億、320億、700億のチェックポイントを抽出し、コミュニティにオープンソース化しました。
+</li><br><li>• DeepSeek-R1によって生成された推論データを使用して、研究コミュニティで広く使用されている複数の高密度モデルを微調整しました。評価結果から、蒸留された小規模高密度モデルはベンチマークで非常に優れたパフォーマンスを発揮することが示されました。DeepSeek-R1-Distill-Qwen-7BはAIME 2024で55.5%を達成し、QwQ-32B-Previewを上回りました。さらに、DeepSeek-R1-Distill-Qwen-32Bは、AIME 2024で72.6%、MATH-500で94.3%、LiveCodeBenchで57.2%のスコアを達成しました。これらの結果は、従来のオープンソースモデルを大幅に上回り、o1-miniに匹敵するものです。私たちは、Qwen2.5およびLlama3シリーズに基づいて、15億、70億、80億、140億、320億、700億のチェックポイントを蒸留し、コミュニティにオープンソース化しました。
 <!--
 <strong>Distillation: Smaller Models Can Be Powerful Too</strong>
 <div class="styleBullet">
@@ -284,7 +284,7 @@ benchmarks.
 <h2>2. アプローチ</h2>
 <h3>2.1. 概要</h3>
 <p>
-これまでの研究では、モデルの性能向上のために大量の教師ありデータに大きく依存してきました。本研究では、コールドスタートとして教師あり微調整（SFT）を用いなくても、大規模な強化学習（RL）によって推論能力を大幅に向上できることを実証します。さらに、少量のコールドスタートデータを加えることで、性能をさらに向上させることができます。以下のセクションでは、(1) SFTデータなしでベースモデルに直接強化学習を適用するDeepSeek-R1-Zero、および(2) 数千の長い思考連鎖（CoT）例で微調整されたチェックポイントから強化学習を適用するDeepSeek-R1を紹介します。3) DeepSeek-R1の推論能力を小規模な密なモデルに抽出します。
+これまでの研究では、モデルの性能向上のために大量の教師ありデータに大きく依存してきました。本研究では、コールドスタートとして教師あり微調整（SFT）を用いなくても、大規模な強化学習（RL）によって推論能力を大幅に向上できることを実証します。さらに、少量のコールドスタートデータを加えることで、性能をさらに向上させることができます。以下のセクションでは、(1) SFTデータなしでベースモデルに直接強化学習を適用するDeepSeek-R1-Zero、および(2) 数千の長い思考連鎖（CoT）例で微調整されたチェックポイントから強化学習を適用するDeepSeek-R1を紹介します。3) DeepSeek-R1の推論能力を小規模な密なモデルに蒸留します。
 <!--
 Previous work has heavily relied on large amounts of supervised data to enhance model
 performance. In this study, we demonstrate that reasoning capabilities can be significantly
@@ -733,7 +733,7 @@ to train a model that excels in reasoning while prioritizing helpfulness and har
 </p>
 <h3>2.4. 蒸留：小規模モデルに推論能力を付与</h3>
 <p>
-DeepSeek-R1のような推論能力をより効率的な小規模モデルに搭載するため、DeepSeek-R1でキュレーションされた80万サンプルを用いて、Qwen (Qwen, 2024b)やLlama (AI@Meta, 2024)などのオープンソースモデルを直接微調整しました（§2.3.3参照）。その結果、この単純な抽出手法によって、小規模モデルの推論能力が大幅に向上することが示されました。ここで使用したベースモデルは、Qwen2.5-Math-1.5B、Qwen2.5-Math-7B、Qwen2.5-14B、Qwen2.5-32B、Llama-3.1-8B、およびLlama-3.3-70B-Instructです。Llama-3.3を選択したのは、その推論能力がLlama-3.1よりもわずかに優れているためです。
+DeepSeek-R1のような推論能力をより効率的な小規模モデルに搭載するため、DeepSeek-R1でキュレーションされた80万サンプルを用いて、Qwen (Qwen, 2024b)やLlama (AI@Meta, 2024)などのオープンソースモデルを直接微調整しました（§2.3.3参照）。その結果、この単純な蒸留手法によって、小規模モデルの推論能力が大幅に向上することが示されました。ここで使用したベースモデルは、Qwen2.5-Math-1.5B、Qwen2.5-Math-7B、Qwen2.5-14B、Qwen2.5-32B、Llama-3.1-8B、およびLlama-3.3-70B-Instructです。Llama-3.3を選択したのは、その推論能力がLlama-3.1よりもわずかに優れているためです。
 <!--
 To equip more efficient smaller models with reasoning capabilities like DeepSeek-R1, we directly
 fine-tuned open-source models like Qwen (Qwen, 2024b) and Llama (AI@Meta, 2024) using
@@ -755,7 +755,7 @@ stage to the broader research community.
 </p>
 <h2>3. 実験</h2>
 <p>
-ベンチマーク：MMLU (Hendrycks et al., 2020)、MMLU-Redux (Gema et al., 2024)、MMLU-Pro (Wang et al., 2024)、C-Eval (Huang et al., 2023)、CMMLU (Li et al., 2023)、IFEval (Zhou et al., 2023)、FRAMES (Krishna et al., 2024)、GPQA Diamond (Rein et al., 2023)、SimpleQA (OpenAI, 2024c)、C-SimpleQA (He et al., 2024)、SWE-Bench Verified (OpenAI, 2024d)、Aider <sup>1</sup>、LiveCodeBench (Jain et al., 2024) を用いてモデルを評価しました。 (2024-08 – 2025-01)、Codeforces <sup>2</sup>、中国全国高校数学オリンピック (CNMO 2024)<sup>3</sup>、およびアメリカ招待数学試験2024 (AIME 2024) (MAA, 2024) で評価されています。標準ベンチマークに加えて、LLMを審査員として用いたオープンエンド生成タスクでもモデルを評価します。具体的には、GPT-4-Turbo-1106を一対比較の審査員として利用するAlpacaEval 2.0 (Dubois et al., 2024) とArena-Hard (Li et al., 2024) のオリジナル設定に準拠しています。ここでは、長さのバイアスを回避するため、最終要約のみを評価に使用しています。抽出モデルについては、AIME 2024、MATH-500、GPQA Diamond、Codeforces、LiveCodeBench における代表的な結果を報告します。
+ベンチマーク：MMLU (Hendrycks et al., 2020)、MMLU-Redux (Gema et al., 2024)、MMLU-Pro (Wang et al., 2024)、C-Eval (Huang et al., 2023)、CMMLU (Li et al., 2023)、IFEval (Zhou et al., 2023)、FRAMES (Krishna et al., 2024)、GPQA Diamond (Rein et al., 2023)、SimpleQA (OpenAI, 2024c)、C-SimpleQA (He et al., 2024)、SWE-Bench Verified (OpenAI, 2024d)、Aider <sup>1</sup>、LiveCodeBench (Jain et al., 2024) を用いてモデルを評価しました。 (2024-08 – 2025-01)、Codeforces <sup>2</sup>、中国全国高校数学オリンピック (CNMO 2024)<sup>3</sup>、およびアメリカ招待数学試験2024 (AIME 2024) (MAA, 2024) で評価されています。標準ベンチマークに加えて、LLMを審査員として用いたオープンエンド生成タスクでもモデルを評価します。具体的には、GPT-4-Turbo-1106を一対比較の審査員として利用するAlpacaEval 2.0 (Dubois et al., 2024) とArena-Hard (Li et al., 2024) のオリジナル設定に準拠しています。ここでは、長さのバイアスを回避するため、最終要約のみを評価に使用しています。蒸留モデルについては、AIME 2024、MATH-500、GPQA Diamond、Codeforces、LiveCodeBench における代表的な結果を報告します。
 <!--
 Benchmarks We evaluate models on MMLU (Hendrycks et al., 2020), MMLU-Redux (Gema
 et al., 2024), MMLU-Pro (Wang et al., 2024), C-Eval (Huang et al., 2023), and CMMLU (Li et al.,
@@ -798,7 +798,7 @@ of 32,768 tokens for each benchmark.
 </p>
 <p>
 <strong>ベースライン</strong><br> DeepSeek-V3、Claude-Sonnet-3.5-1022、GPT-4o-0513、OpenAI-o1-mini、OpenAI-o1-1217など、複数の強力なベースラインに対して包括的な評価を実施します。
-中国本土ではOpenAI-o1-1217 APIへのアクセスが困難なため、公式レポートに基づいてパフォーマンスを報告します。抽出モデルについては、オープンソースモデルであるQwQ-32B-Preview (Qwen, 2024a) とも比較します。
+中国本土ではOpenAI-o1-1217 APIへのアクセスが困難なため、公式レポートに基づいてパフォーマンスを報告します。蒸留モデルについては、オープンソースモデルであるQwQ-32B-Preview (Qwen, 2024a) とも比較します。
 <!--
 <strong>Baselines</strong><br> We conduct comprehensive evaluations against several strong baselines, including
 DeepSeek-V3, Claude-Sonnet-3.5-1022, GPT-4o-0513, OpenAI-o1-mini, and OpenAI-o1-1217.
@@ -884,7 +884,7 @@ training data currently remains very limited.
 </p>
 <h3>3.2. 蒸留モデル評価</h3>
 <p>
-表5に示すように、DeepSeek-R1の出力を単純に抽出することで、効率的なDeepSeek-R1-7B（DeepSeek-R1-Distill-Qwen-7B、以下同様に略記）は、GPT-4o-0513などの非推論モデルを全面的に上回る性能を発揮します。DeepSeek-R1-14Bはすべての評価指標でQwQ-32BPreviewを上回り、DeepSeek-R1-32BとDeepSeek-R1-70Bはほとんどのベンチマークでo1-miniを大幅に上回ります。これらの結果は、抽出モデルの大きな可能性を示しています。さらに、これらの抽出モデルに強化学習を適用すると、大幅な性能向上が得られることがわかりました。これについてはさらなる検討が必要であると考え、ここでは単純なSFT抽出モデルの結果のみを示します。
+表5に示すように、DeepSeek-R1の出力を単純に蒸留することで、効率的なDeepSeek-R1-7B（DeepSeek-R1-Distill-Qwen-7B、以下同様に略記）は、GPT-4o-0513などの非推論モデルを全面的に上回る性能を発揮します。DeepSeek-R1-14Bはすべての評価指標でQwQ-32BPreviewを上回り、DeepSeek-R1-32BとDeepSeek-R1-70Bはほとんどのベンチマークでo1-miniを大幅に上回ります。これらの結果は、蒸留モデルの大きな可能性を示しています。さらに、これらの蒸留モデルに強化学習を適用すると、大幅な性能向上が得られることがわかりました。これについてはさらなる検討が必要であると考え、ここでは単純なSFT蒸留モデルの結果のみを示します。
 <!--
 As shown in Table 5, simply distilling DeepSeek-R1’s outputs enables the efficient DeepSeek-
 R1-7B (i.e., DeepSeek-R1-Distill-Qwen-7B, abbreviated similarly below) to outperform nonreasoning
@@ -898,7 +898,7 @@ simple SFT-distilled models here.
 </p>
 <center><img src="images/table5.png"></center>
 <p>
-<center>表5 | DeepSeek-R1の抽出モデルと推論関連ベンチマークにおける他の類似モデルの比較</center>
+<center>表5 | DeepSeek-R1の蒸留モデルと推論関連ベンチマークにおける他の類似モデルの比較</center>
 <!--
 Table 5 | Comparison of DeepSeek-R1 distilled models and other comparable models on
 reasoning-related benchmarks
@@ -907,7 +907,7 @@ reasoning-related benchmarks
 <h2>4. 考察</h2>
 <h3>4.1. 蒸留 vs. 強化学習</h3>
 <p>
-セクション3.2では、DeepSeek-R1を蒸留することで、小規模モデルでも優れた結果を達成できることがわかりました。しかし、まだ1つの疑問が残っています。論文で議論されている大規模RL学習において、抽出を行わずに同等のパフォーマンスを達成できるのでしょうか？
+セクション3.2では、DeepSeek-R1を蒸留することで、小規模モデルでも優れた結果を達成できることがわかりました。しかし、まだ1つの疑問が残っています。論文で議論されている大規模RL学習において、蒸留を行わずに同等のパフォーマンスを達成できるのでしょうか？
 <!--
 In Section 3.2, we can see that by distilling DeepSeek-R1, the small model can achieve impressive
 results. However, there is still one question left: can the model achieve comparable performance
@@ -915,7 +915,7 @@ through the large-scale RL training discussed in the paper without distillation?
 -->
 </p>
 <p>
-この疑問に答えるために、数学、コード、STEMデータを用いてQwen-32B-Baseで大規模なRL学習を実施し、1万ステップ以上の学習を経てDeepSeek-R1-Zero-Qwen-32Bを作成しました。表6に示す実験結果は、32Bベースモデルが大規模RL学習後、QwQ-32B-Previewと同等の性能を達成することを示しています。しかし、DeepSeek-R1から抽出されたDeepSeek-R1-Distill-Qwen-32Bは、すべてのベンチマークにおいてDeepSeek-R1-Zero-Qwen-32Bよりも大幅に優れた性能を示しました。
+この疑問に答えるために、数学、コード、STEMデータを用いてQwen-32B-Baseで大規模なRL学習を実施し、1万ステップ以上の学習を経てDeepSeek-R1-Zero-Qwen-32Bを作成しました。表6に示す実験結果は、32Bベースモデルが大規模RL学習後、QwQ-32B-Previewと同等の性能を達成することを示しています。しかし、DeepSeek-R1から蒸留されたDeepSeek-R1-Distill-Qwen-32Bは、すべてのベンチマークにおいてDeepSeek-R1-Zero-Qwen-32Bよりも大幅に優れた性能を示しました。
 <!--
 To answer this question, we conduct large-scale RL training on Qwen-32B-Base using math,
 code, and STEM data, training for over 10K steps, resulting in DeepSeek-R1-Zero-Qwen-32B. The
