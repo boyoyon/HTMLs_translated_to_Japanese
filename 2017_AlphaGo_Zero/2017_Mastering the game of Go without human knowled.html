@@ -1,0 +1,1467 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>AlphaGo_Zero</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1>Mastering the game of Go without
+human knowledge</h1>
+人間の知識なしに囲碁をマスターする<br>
+<br>
+David Silver1*, Julian Schrittwieser1*, Karen Simonyan1*, Ioannis Antonoglou1, Aja Huang1, Arthur Guez1,
+Thomas Hubert1, Lucas Baker1, Matthew Lai1, Adrian Bolton1, Yutian Chen1, Timothy Lillicrap1, Fan Hui1, Laurent Sifre1,
+George van den Driessche1, Thore Graepel1 & Demis Hassabis1
+<h2>(要旨)</h2>
+<p>
+人工知能の長年の目標は、困難な分野において、全くの白紙の状態から超人的な能力を習得するアルゴリズムです。最近、AlphaGoは囲碁の世界チャンピオンを破った最初のプログラムとなりました。AlphaGoの木探索は、ディープニューラルネットワークを用いて局面を評価し、手を選択します。これらのニューラルネットワークは、人間の専門家の手からの教師あり学習と、自己対戦からの強化学習によって学習されました。本稿では、人間のデータ、ガイダンス、ゲームルール以外のドメイン知識を必要とせず、強化学習のみに基づくアルゴリズムを紹介します。AlphaGoは自らを教師とします。ニューラルネットワークは、AlphaGo自身の手の選択と、AlphaGoの対局の勝者を予測するように学習されます。このニューラルネットワークは木探索の強度を向上させ、次の反復におけるより質の高い手の選択と、より強力な自己対戦を実現します。白紙の状態からスタートした私たちの新しいプログラムAlphaGo Zeroは、超人的なパフォーマンスを達成し、以前に公開され、チャンピオンを破ったAlphaGoに100対0で勝利しました。
+<!--
+A long-standing goal of artificial intelligence is an algorithm that learns, tabula rasa, superhuman proficiency in
+challenging domains. Recently, AlphaGo became the first program to defeat a world champion in the game of Go. The
+tree search in AlphaGo evaluated positions and selected moves using deep neural networks. These neural networks were
+trained by supervised learning from human expert moves, and by reinforcement learning from self-play. Here we introduce
+an algorithm based solely on reinforcement learning, without human data, guidance or domain knowledge beyond game
+rules. AlphaGo becomes its own teacher: a neural network is trained to predict AlphaGo’s own move selections and also
+the winner of AlphaGo’s games. This neural network improves the strength of the tree search, resulting in higher quality
+move selection and stronger self-play in the next iteration. Starting tabula rasa, our new program AlphaGo Zero achieved
+superhuman performance, winning 100–0 against the previously published, champion-defeating AlphaGo.
+-->
+</p>
+<h2>(はじめに)</h2>
+<p>
+人工知能の開発は、人間の専門家の意思決定を再現するように学習させる教師あり学習システムを用いることで大きく進歩してきました<sup>1–4</sup>。しかし、専門家のデータセットは高価であったり、信頼性が低い場合が多く、あるいは入手困難な場合もあります。たとえ信頼できるデータセットが利用可能であったとしても、このように学習させたシステムの性能には限界がある可能性があります<sup>5</sup>。これに対し、強化学習システムは自身の経験から学習するため、原理的には人間の能力を超え、人間の専門知識が不足している領域でも動作することができます。近年、強化学習によって学習させたディープニューラルネットワークを用いることで、この目標に向けた急速な進歩が見られます。これらのシステムは、Atari<sup>6,7</sup>などのコンピュータゲームや3D仮想環境<sup>8–10</sup>において、人間を上回る性能を発揮しています。しかし、囲碁のように人間の知性にとって最も困難な領域では、広大な探索空間における正確かつ高度な先読みが求められます。囲碁は人工知能<sup>11</sup>にとって大きな課題と広く考えられています。完全に汎用的な手法は、これまでこれらの領域において人間レベルのパフォーマンスを達成していません。
+<!--
+Much progress towards artificial intelligence has been made using
+supervised learning systems that are trained to replicate the decisions
+of human experts1–4. However, expert data sets are often expensive,
+unreliable or simply unavailable. Even when reliable data sets are
+available, they may impose a ceiling on the performance of systems
+trained in this manner5. By contrast, reinforcement learning systems
+are trained from their own experience, in principle allowing them to
+exceed human capabilities, and to operate in domains where human
+expertise is lacking. Recently, there has been rapid progress towards this
+goal, using deep neural networks trained by reinforcement learning.
+These systems have outperformed humans in computer games, such
+as Atari6,7 and 3D virtual environments8–10. However, the most challenging
+domains in terms of human intellect—such as the game of Go,
+widely viewed as a grand challenge for artificial intelligence11—require
+a precise and sophisticated lookahead in vast search spaces. Fully general
+methods have not previously achieved human-level performance
+in these domains.
+-->
+</p>
+<p>
+AlphaGoは、囲碁において超人的なパフォーマンスを達成した最初のプログラムでした。公開されたバージョン<sup>12</sup>（AlphaGo Fanと名付けました）は、2015年10月にヨーロッパチャンピオンの樊慧を破りました。AlphaGo Fanは、2つのディープニューラルネットワーク、すなわち手の確率を出力するポリシーネットワークと、局面の評価を出力するバリューネットワークを使用していました。ポリシーネットワークは、最初に教師あり学習によって人間の専門家の手を正確に予測するように学習され、その後、ポリシー勾配強化学習によって改良されました。バリューネットワークは、ポリシーネットワークが自身と対戦したゲームの勝者を予測するように学習されました。学習後、これらのネットワークはモンテカルロ木探索（MCTS: Monte Carlo Tree Search）<sup>13-15</sup>と組み合わせられ、先読み探索が行われました。ポリシーネットワークは、高確率の手に探索を絞り込み、バリューネットワーク（高速ロールアウトポリシーを使用したモンテカルロロールアウトと組み合わせて）は、木内の局面を評価しました。その後のバージョンであるAlphaGo Leeも同様のアプローチ（「方法」参照）を採用し、2016年3月に18回の国際タイトル獲得者であるイ・セドルを破りました。
+<!--
+AlphaGo was the first program to achieve superhuman performance
+in Go. The published version12, which we refer to as AlphaGo Fan,
+defeated the European champion Fan Hui in October 2015. AlphaGo
+Fan used two deep neural networks: a policy network that outputs
+move probabilities and a value network that outputs a position evaluation.
+The policy network was trained initially by supervised learning
+to accurately predict human expert moves, and was subsequently
+refined by policy-gradient reinforcement learning. The value network
+was trained to predict the winner of games played by the policy network
+against itself. Once trained, these networks were combined with
+a Monte Carlo tree search (MCTS)13–15 to provide a lookahead search,
+using the policy network to narrow down the search to high-probability
+moves, and using the value network (in conjunction with Monte Carlo
+rollouts using a fast rollout policy) to evaluate positions in the tree. A
+subsequent version, which we refer to as AlphaGo Lee, used a similar
+approach (see Methods), and defeated Lee Sedol, the winner of 18 international
+titles, in March 2016.
+-->
+</p>
+<p>
+我々のプログラムAlphaGo Zeroは、AlphaGo FanやAlphaGo Lee<sup>12</sup>とはいくつかの重要な点で異なります。第一に、教師や人間のデータを用いることなく、ランダムプレイから開始する自己対戦強化学習のみで学習されます。第二に、入力特徴として盤上の白と黒の石のみを使用します。第三に、方策ネットワークと価値ネットワークを別々に使用せず、単一のニューラルネットワークを使用します。最後に、モンテカルロロールアウトを一切行わず、この単一のニューラルネットワークに基づくより単純な木探索を用いて局面を評価し、手番をサンプルします。これらの結果を達成するために、我々は学習ループ内に先読み探索を組み込んだ新しい強化学習アルゴリズムを導入し、迅速な改善と正確で安定した学習を実現しました。探索アルゴリズム、学習手順、ネットワークアーキテクチャにおけるその他の技術的な違いについては、「方法」で説明します。
+<!--
+Our program, AlphaGo Zero, differs from AlphaGo Fan and
+AlphaGo Lee12 in several important aspects. First and foremost, it is trained solely by self-play reinforcement learning, starting from random
+play, without any supervision or use of human data. Second, it
+uses only the black and white stones from the board as input features.
+Third, it uses a single neural network, rather than separate policy and
+value networks. Finally, it uses a simpler tree search that relies upon
+this single neural network to evaluate positions and sample moves,
+without performing any Monte Carlo rollouts. To achieve these results,
+we introduce a new reinforcement learning algorithm that incorporates
+lookahead search inside the training loop, resulting in rapid improvement
+and precise and stable learning. Further technical differences in
+the search algorithm, training procedure and network architecture are
+described in Methods.
+-->
+</p>
+<h2>AlphaGo Zero における強化学習</h2>
+<p>
+私たちの新しい手法では、パラメータ \(θ\) を持つディープニューラルネットワーク \(f_θ\) を使用します。
+このニューラルネットワークは、局面とその履歴の生の盤面表現 \(s\) を入力として受け取り、手確率と値 \((\mathbf p, v) = f_θ(s)\) の両方を出力します。手確率のベクトル \(\mathbf p\) は、各手 \(a\)（パスを含む）を選択する確率を表します \(p_a = Pr(a|s)\)。値 \(v\) はスカラー評価であり、局面 \(s\) から現在のプレイヤーが勝利する確率を推定します。このニューラルネットワークは、ポリシーネットワークとバリューネットワーク<sup>12</sup> の両方の役割を単一のアーキテクチャに統合します。
+ニューラルネットワークは、バッチ正規化<sup>18</sup>とReLU<sup>19</sup>を備えた畳み込み層<sup>16,17</sup>の多数の残差ブロック<sup>4</sup>で構成されています（方法を参照）。
+<!--
+<strong>Reinforcement learning in AlphaGo Zero</strong><br>
+Our new method uses a deep neural network \(f_θ\) with parameters \(θ\).
+This neural network takes as an input the raw board representation s
+of the position and its history, and outputs both move probabilities and
+a value, \((\mathbf p, v) = f_θ(s)\). The vector of move probabilities p represents the
+probability of selecting each move a (including pass), \(p_a = Pr(a|s)\). The
+value v is a scalar evaluation, estimating the probability of the current
+player winning from position s. This neural network combines the roles
+of both policy network and value network12 into a single architecture.
+The neural network consists of many residual blocks4 of convolutional
+layers<sup>16,17</sup> with batch normalization<sup>18</sup> and rectifier nonlinearities<sup>19</sup> (see Methods).
+-->
+</p>
+<p>
+AlphaGo Zeroのニューラルネットワークは、新たな強化学習アルゴリズムによって自己対戦のゲームから学習される。各局面 \(s\) において、ニューラルネットワーク \(f_θ\) の誘導によりMCTS探索が実行される。MCTS探索は、各手を指す確率 \(\mathbf π\) を出力する。これらの探索確率は通常、ニューラルネットワーク \(f_θ(s)\) の生の手確率 \(\mathbf p\) よりもはるかに強い手を選択する。したがって、MCTSは強力な方策改善演算子と見なすことができる<sup>20,21</sup>。探索を伴う自己対戦（改良されたMCTSベースの方策を用いて各手を選択し、ゲームの勝者zを値のサンプルとして使用する）は、強力な方策評価演算子と見なすことができる。私たちの強化学習アルゴリズムの主なアイデアは、これらの探索演算子を方策反復手順<sup>22,23</sup>において繰り返し用いることです。ニューラルネットワークのパラメータは、移動確率と値 \((\mathbf p,v) = f_θ(s)\) が、改善された探索確率と自己対戦の勝者 \((\mathbf π, z)\) に近づくように更新されます。これらの新しいパラメータは、次の自己対戦の反復で使用され、探索をさらに強化します。図1は、自己対戦のトレーニングパイプラインを示しています。
+<!--
+The neural network in AlphaGo Zero is trained from games of selfplay
+by a novel reinforcement learning algorithm. In each position \(s\),
+an MCTS search is executed, guided by the neural network \(f_θ\). The
+MCTS search outputs probabilities \(\mathbf π\) of playing each move. These
+search probabilities usually select much stronger moves than the raw
+move probabilities \(\mathbf p\) of the neural network \(f_θ(s)\); MCTS may therefore
+be viewed as a powerful policy improvement operator<sup>20,21</sup>. Self-play
+with search—using the improved MCTS-based policy to select each
+move, then using the game winner z as a sample of the value—may
+be viewed as a powerful policy evaluation operator. The main idea of
+our reinforcement learning algorithm is to use these search operators repeatedly in a policy iteration procedure<sup>22,23</sup>: the neural network’s
+parameters are updated to make the move probabilities and value \((\mathbf p,v) = f_θ(s)\) more closely match the improved search probabilities and selfplay
+winner \((\mathbf π, z)\); these new parameters are used in the next iteration
+of self-play to make the search even stronger. Figure 1 illustrates the
+self-play training pipeline.
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p class="margin-large">
+<strong>図1 | AlphaGo Zeroにおける自己対戦強化学習。a</strong> プログラムは自身と対戦し、対局\(s_1, ..., s_T\)を行う。各局面\(s_t\)において、最新のニューラルネットワーク\(f_θ\)を用いてMCTS \(α_θ\)が実行される（図2参照）。手はMCTSによって計算された探索確率、\(a_t\sim π_t\)に従って選択される。最終局面\(s_T\)はゲームのルールに従って得点され、ゲームの勝者\(z\)が算出される。<strong>b</strong> AlphaGo Zeroにおけるニューラルネットワークの学習。ニューラルネットワークは、生の盤面の位置 \(s_t\) を入力として受け取り、パラメータ \(θ\) を持つ多数の畳み込み層にそれを通し、動きの確率分布を表すベクトル \(\mathbf p_t\) と、現在のプレイヤーが位置 \(s_t\) で勝つ確率を表すスカラー値 \(v_t\) の両方を出力します。ニューラルネットワークのパラメータ \(θ\) は、方策ベクトル \(\mathbf p_t\) と探索確率 \(\mathbf π_t\) の類似度を最大化し、予測される勝者 \(v_t\) とゲームの勝者 \(z\) の間の誤差を最小化するように更新されます (式 (1) を参照)。新しいパラメータは、<strong>a</strong> と同様に、次の自己対戦の反復で使用されます。
+<!--
+Figure 1 | Self-play reinforcement learning in AlphaGo Zero. \(\mathbf a\), The
+program plays a game \(s_1, ..., s_T\) against itself. In each position \(s_t\), an MCTS
+ \(α_θ\) is executed (see Fig. 2) using the latest neural network \(f_θ\). Moves are
+selected according to the search probabilities computed by the MCTS,
+ \(a_t\sim π_t\). The terminal position \(s_T\) is scored according to the rules of the
+game to compute the game winner \(z\).  \(\mathbf b\), Neural network training in
+AlphaGo Zero. The neural network takes the raw board position \(s_t\) as its
+input, passes it through many convolutional layers with parameters \(θ\),
+and outputs both a vector \(\mathbf p_t\), representing a probability distribution over
+moves, and a scalar value \(v_t\), representing the probability of the current
+player winning in position \(s_t\). The neural network parameters \(θ\) are
+updated to maximize the similarity of the policy vector \(\mathbf p_t\) to the search
+probabilities \(\mathbf π_t\), and to minimize the error between the predicted winner  \(v_t\) and the game winner \(z\) (see equation (1)). The new parameters are used in
+the next iteration of self-play as in \(\mathbf a\).
+-->
+</p>
+<p>
+MCTSはニューラルネットワーク\(f_θ\)を用いてシミュレーションを誘導する（図2参照）。探索木の各辺\((s, a)\)には、事前確率\(P(s, a)\)、訪問回数\(N(s, a)\)、行動値\(Q(s, a)\)が格納される。各シミュレーションはルート状態から開始し、上側信頼限界\(Q(s, a) + U(s, a)\)（ただし\(U(s, a) ∝ P(s, a) /(1 + N(s, a))\)（参考文献12、24）を最大化する動きを、リーフノードs′に到達するまで反復的に選択する。この葉の位置は、ネットワークによって一度だけ拡張および評価され、事前確率と評価の両方が生成されます。\((P(s^\prime, ·),V(s^\prime)) = f_θ(s^\prime)\)。
+シミュレーションで通過する各エッジ\((s, a)\)は、訪問回数\(N(s, a)\)を増分するように更新され、アクション値はこれらのシミュレーション全体の平均評価に更新されます。\(Q(s,a)= 1/N(s,a)\sum_{s^\prime|s,a\to s^\prime}V(s^\prime)\)。ここで、\(s, a→ s^\prime\)は、シミュレーションが位置 \(s\) から移動 \(a\) を実行した後、最終的に \(s^\prime\) に到達したことを示します。
+<!--
+The MCTS uses the neural network \(f_θ\) to guide its simulations (see
+Fig. 2). Each edge \((s, a)\) in the search tree stores a prior probability
+\(P(s, a)\), a visit count \(N(s, a)\), and an action value \(Q(s, a)\). Each simulation
+starts from the root state and iteratively selects moves that maximize an upper confidence bound \(Q(s, a) + U(s, a)\), where \(U(s, a) ∝ P(s, a) /(1 + N(s, a))\) (refs 12, 24), until a leaf node s′ is encountered. This leaf
+position is expanded and evaluated only once by the network to generate
+both prior probabilities and evaluation, \((P(s^' , ·),V(s^' )) = f_θ(s^' )\).
+Each edge \((s, a)\) traversed in the simulation is updated to increment its
+visit count \(N(s, a)\), and to update its action value to the mean evaluation
+over these simulations, \(Q(s,a)= 1/N(s,a)\sum_{s^\prime|s,a\tos^\prime}V(s^\prime) where \(s, a→ s^'\) indicates that a simulation eventually reached \(s^\prime\) after taking
+move a from position \(s\).
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p class="margin-large">
+<strong>図2 | AlphaGo ZeroにおけるMCTS。a</strong> 各シミュレーションは、最大のアクション値 \(Q\) と、そのエッジの保存された事前確率 \(P\) と訪問回数 \(N\)（走査ごとに増加）に依存する信頼上限 \(U\) を持つエッジを選択して、ツリーを走査します。<strong>b</strong>リーフノードが展開され、関連する位置 \(s\) がニューラルネットワーク \((P(s, ·),V(s)) = f_θ(s)\) によって評価されます。\(P\) 値のベクトルは \(s\) からの出力エッジに格納されます。<strong>c</strong>アクション値 \(Q\) は、そのアクションの下位のサブツリー内のすべての評価 \(V\) の平均を追跡するように更新されます。 <strong>d</strong> 探索が完了すると、\(N^{1/τ}\) に比例する探索確率 \(π\) が返されます。ここで、\(N\) はルート状態からの各移動の訪問回数、\(τ\) は温度を制御するパラメーターです。
+<!--
+<strong>Figure 2 | MCTS in AlphaGo Zero. a</strong>, Each simulation traverses the
+tree by selecting the edge with maximum action value \(Q\), plus an upper
+confidence bound \(U\) that depends on a stored prior probability \(P\) and
+visit count \(N\) for that edge (which is incremented once traversed). <strong>b</strong> The
+leaf node is expanded and the associated position \(s\) is evaluated by the
+neural network \((P(s, ·),V(s)) = f_θ(s)\); the vector of \(P\) values are stored in the outgoing edges from \(s\). <strong>c</strong> Action value \(Q\) is updated to track the mean
+of all evaluations \(V\) in the subtree below that action. <strong>d</strong> Once the search is
+complete, search probabilities π are returned, proportional to \(N^{1/τ}\), where
+\(N\) is the visit count of each move from the root state and \(τ\) is a parameter
+controlling temperature.
+-->
+</p>
+<p>
+MCTSは、ニューラルネットワークパラメータ \(θ\) とルートポジション \(s\) が与えられたときに、各手の指数化された訪問回数 \(π_a​​ ∝ N(s, a)^{1/τ}\) に比例する、プレイすべき手を推奨する探索確率のベクトル \(\mathbf π = α_θ(s)\) を計算する自己プレイアルゴリズムと見なすことができます。ここで、\(τ\) は温度パラメータです。
+<!--
+MCTS may be viewed as a self-play algorithm that, given neural
+network parameters \(θ\) and a root position \(s\), computes a vector of search probabilities recommending moves to play, \(\mathbf π = α_θ(s)\), proportional to the exponentiated visit count for each move, \(π_a ∝ N(s, a)^{1/τ}\), where \(τ\) is a temperature parameter.
+-->
+</p>
+<p>
+ニューラルネットワークは、各手に対してMCTSを用いてプレイするセルフプレイ強化学習アルゴリズムによって学習される。まず、ニューラルネットワークはランダムな重み \(θ_0\) に初期化される。その後の各反復 \(i ≥ 1\) において、セルフプレイのゲームが生成される（図1a）。各タイムステップ \(t\) において、ニューラルネットワークの前回の反復 \(f_{θ_{l-1}}\) を用いてMCTS探索 \(\mathbf π_t =α_{θ_{l-1}}(s_t)\) が実行され、探索確率 \(\mathbf π_t\) をサンプリングすることで手がプレイされる。両プレイヤーがパスするか、探索値が投了閾値を下回るか、ゲームが最大長を超えると、ステップ \(T\) でゲームは終了する。その後、ゲームはスコアリングされ、最終報酬 \(r_T ∈ \{-1,+1\}\) が与えられる（詳細は「方法」を参照）。各タイムステップ t のデータは \((s_t, \mathbf π_t, z_t)\) として保存されます。ここで、zt = ± rT は、ステップ t における現在のプレイヤーの視点からのゲームの勝者です。並行して (図 1b)、新しいネットワークパラメータ \(θ_i\) が、最後のセルフプレイの反復の全タイムステップから均一にサンプリングされたデータ \((s, \mathbf π, z)\) から学習されます。ニューラルネットワーク \((\mathbf p, v)= f_{θ_i} (s)\) は、予測値  \(v\) とセルフプレイの勝者 \(z\) の間の誤差を最小化し、ニューラルネットワークの移動確率 \(\mathbf p\) と検索確率 \(\mathbf π\) の類似性を最大化するように調整されます。具体的には、パラメータθは、平均二乗誤差とクロスエントロピー損失をそれぞれ合計する損失関数lの勾配降下法によって調整されます。
+<!--
+The neural network is trained by a self-play reinforcement learning
+algorithm that uses MCTS to play each move. First, the neural network
+is initialized to random weights θ0. At each subsequent iteration i ≥ 1,
+games of self-play are generated (Fig. 1a). At each time-step t, an MCTS
+search π =αθ − t i 1(st) is executed using the previous iteration of neural
+network θ − f i 1 and a move is played by sampling the search probabilities
+πt. A game terminates at step T when both players pass, when the
+search value drops below a resignation threshold or when the game
+exceeds a maximum length; the game is then scored to give a final
+reward of rT ∈ {− 1,+ 1} (see Methods for details). The data for each
+time-step t is stored as (st, πt, zt), where zt = ± rT is the game winner
+from the perspective of the current player at step t. In parallel (Fig. 1b),
+new network parameters θi are trained from data (s, π, z) sampled
+uniformly among all time-steps of the last iteration(s) of self-play. The
+neural network = (p, v) fθ (s) i is adjusted to minimize the error between
+the predicted value v and the self-play winner z, and to maximize the
+similarity of the neural network move probabilities p to the search
+probabilities π. Specifically, the parameters \(θ\) are adjusted by gradient
+descent on a loss function l that sums over the mean-squared error and
+cross-entropy losses, respectively:
+-->
+\[
+(\mathbf p,v)=f_\theta(s)　and　l=(z-v)^2-\boldsymbol{\pi}^T \log \mathbf p+c||\theta||^2 \tag{1}
+\]
+ここで、\(c\) は L2 重み正則化のレベルを制御するパラメータです（過学習を防ぐため）。
+<!--
+where \(c\) is a parameter controlling the level of L2 weight regularization
+(to prevent overfitting).
+-->
+</p>
+<h2>AlphaGo Zero の学習に関する実証的分析</h2>
+<p>
+強化学習パイプラインを適用し、プログラム AlphaGo Zero を学習しました。学習は完全にランダムな動作から始まり、約 3 日間、人間の介入なしに継続されました。
+<!--
+<strong>Empirical analysis of AlphaGo Zero training</strong><br>
+We applied our reinforcement learning pipeline to train our program
+AlphaGo Zero. Training started from completely random behaviour and
+continued without human intervention for approximately three days.
+-->
+</p><p>
+訓練期間中、各MCTSについて1,600回のシミュレーションを用いて490万局の自己対局が生成されました。これは、1手あたり約0.4秒の思考時間に対応します。パラメータは、2,048局面からなる70万回のミニバッチから更新されました。ニューラルネットワークには20個の残差ブロックが含まれていました（詳細は「方法」を参照）。
+<!--
+Over the course of training, 4.9 million games of self-play were generated,
+using 1,600 simulations for each MCTS, which corresponds to
+approximately 0.4 s thinking time per move. Parameters were updated 
+from 700,000 mini-batches of 2,048 positions. The neural network
+contained 20 residual blocks (see Methods for further details).
+-->
+</p><p>
+図3aは、自己対戦強化学習中のAlphaGo Zeroの性能を、訓練時間の関数としてEloスケール25上で示しています。学習は訓練全体を通してスムーズに進行し、先行研究26-28で示唆されている振動や壊滅的な忘却は発生しませんでした。驚くべきことに、AlphaGo Zeroはわずか36時間でAlphaGo Leeを上回りました。比較すると、AlphaGo Leeは数か月かけて訓練されました。72時間後、ソウルでのマンマシン対局で使用されたのと同じ2時間の時間制限と対局条件下で、イ・セドルを破ったAlphaGo Leeの正確なバージョンとAlphaGo Zeroを評価しました（方法を参照）。AlphaGo Zeroは4つのテンソル処理ユニット（TPU）29を搭載した単一のマシンを使用していましたが、AlphaGo Leeは複数のマシンに分散され、48個のTPUを使用していました。 AlphaGo ZeroはAlphaGo Leeを100対0で破りました（拡張データ図1および補足情報を参照）。
+<!--
+Figure 3a shows the performance of AlphaGo Zero during self-play
+reinforcement learning, as a function of training time, on an Elo scale25.
+Learning progressed smoothly throughout training, and did not suffer
+from the oscillations or catastrophic forgetting that have been suggested
+in previous literature26–28. Surprisingly, AlphaGo Zero outperformed
+AlphaGo Lee after just 36 h. In comparison, AlphaGo Lee was trained
+over several months. After 72 h, we evaluated AlphaGo Zero against the
+exact version of AlphaGo Lee that defeated Lee Sedol, under the same
+2 h time controls and match conditions that were used in the man–
+machine match in Seoul (see Methods). AlphaGo Zero used a single
+machine with 4 tensor processing units (TPUs)29, whereas AlphaGo
+Lee was distributed over many machines and used 48 TPUs. AlphaGo
+Zero defeated AlphaGo Lee by 100 games to 0 (see Extended Data Fig. 1
+and Supplementary Information).
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p class="margin-large">
+<strong>図3 | AlphaGo Zero の実証的評価。a</strong> セルフプレイ強化学習の性能。このグラフは、AlphaGo Zero における強化学習の各反復 i における各 MCTS プレイヤー αθi の性能を示しています。Elo レーティングは、異なるプレイヤー間の評価ゲームから計算され、1手あたり0.4秒の思考時間を使用しました（「方法」を参照）。比較のために、KGS データセットを用いて人間のデータから教師あり学習によって訓練された同様のプレイヤーも示されています。<strong>b</strong> 人間のプロの指し手の予測精度。このグラフは、GoKifu データセットから人間のプロの指し手を予測する際の、セルフプレイ \(i\) の各反復におけるニューラルネットワーク \(f_{θ_i}\) の精度を示しています。この精度は、ニューラルネットワークが人間の指し手に最も高い確率を割り当てた局面の割合を測定します。教師あり学習によって訓練されたニューラルネットワークの精度も示されています。<strong>c</strong> 人間のプロの対局結果の平均二乗誤差（MSE）。このグラフは、GoKifuデータセットから人間のプロの対局結果を予測する際の、ニューラルネットワーク\(f_{θ_i}\)の自己対局\(i\)の各反復におけるMSEを示しています。MSEは、実際の結果\(z ∈ \{-1, +1\}\)とニューラルネットワーク値\(v\)との間の値であり、\(\frac{1}{4}\)倍して0～1の範囲にスケーリングされています。教師あり学習によって訓練されたニューラルネットワークのMSEも示されています。
+<!--
+<strong>Figure 3 | Empirical evaluation of AlphaGo Zero. a</strong>  Performance of selfplay
+reinforcement learning. The plot shows the performance of each
+MCTS player αθi from each iteration i of reinforcement learning in
+AlphaGo Zero. Elo ratings were computed from evaluation games between
+different players, using 0.4 s of thinking time per move (see Methods). For
+comparison, a similar player trained by supervised learning from human
+data, using the KGS dataset, is also shown. <strong>b</strong>  Prediction accuracy on
+human professional moves. The plot shows the accuracy of the neural
+network \(f_{θ_i}\), at each iteration of self-play \(i\), in predicting human
+professional moves from the GoKifu dataset. The accuracy measures the percentage of positions in which the neural network assigns the highest
+probability to the human move. The accuracy of a neural network trained
+by supervised learning is also shown. <strong>c</strong>  Mean-squared error (MSE) of
+human professional game outcomes. The plot shows the MSE of the neural
+network \(f_{θ_i}\), at each iteration of self-play \(i\), in predicting the outcome of
+human professional games from the GoKifu dataset. The MSE is between
+the actual outcome \(z ∈ \{-1, +1\}\) and the neural network value \(v\), scaled by
+a factor of \(\frac{1}{4}\) to the range of 0–1. The MSE of a neural network trained by
+supervised learning is also shown.
+-->
+</p>
+<p>
+人間のデータからの学習と比較した自己対戦強化学習のメリットを評価するために、KGSサーバーデータセットで専門家の手を予測するように、同じアーキテクチャを使用した2つ目のニューラルネットワークを訓練しました。このネットワークは、以前の研究12,30–33と比較して最先端の予測精度を達成しました（現在の結果と以前の結果については、それぞれ拡張データ表1と表2を参照）。教師あり学習はより良い初期パフォーマンスを達成し、人間のプロの手を予測する能力も優れていました（図3）。注目すべきは、教師あり学習の方が高い手予測精度を達成したにもかかわらず、自己学習したプレイヤーは全体的にはるかに優れたパフォーマンスを発揮し、訓練開始から24時間以内に人間が訓練したプレイヤーに勝利したことです。これは、AlphaGo Zeroが人間のプレイとは質的に異なる戦略を学習している可能性があることを示唆しています。
+<!--
+To assess the merits of self-play reinforcement learning, compared to
+learning from human data, we trained a second neural network (using
+the same architecture) to predict expert moves in the KGS Server dataset;
+this achieved state-of-the-art prediction accuracy compared to previous
+work12,30–33 (see Extended Data Tables 1 and 2 for current and
+previous results, respectively). Supervised learning achieved a better
+initial performance, and was better at predicting human professional
+moves (Fig. 3). Notably, although supervised learning achieved higher
+move prediction accuracy, the self-learned player performed much
+better overall, defeating the human-trained player within the first 24 h
+of training. This suggests that AlphaGo Zero may be learning a strategy
+that is qualitatively different to human play.
+-->
+</p>
+<p>
+アーキテクチャとアルゴリズムの寄与を分離するため、AlphaGo Zeroのニューラルネットワークアーキテクチャの性能を、AlphaGo Leeで使用されていた以前のニューラルネットワークアーキテクチャと比較しました（図4参照）。4つのニューラルネットワークが作成されました。AlphaGo Leeで使用されていたポリシーと値のネットワークが別々に使用されているもの、またはAlphaGo Zeroで使用されていたポリシーと値のネットワークを組み合わせたもの、そしてAlphaGo Leeの畳み込みネットワークアーキテクチャまたはAlphaGo Zeroの残差ネットワークアーキテクチャのいずれかが使用されていました。各ネットワークは、72時間のセルフプレイトレーニング後にAlphaGo Zeroによって生成されたセルフプレイゲームの固定データセットを使用して、同じ損失関数（式（1））を最小化するようにトレーニングされました。残差ネットワークの使用により、より正確で、エラーが少なくなり、AlphaGoのパフォーマンスが600 Elo以上向上しました。ポリシーと値を単一のネットワークに統合すると、着手の予測精度はわずかに低下しましたが、値のエラーが減少し、AlphaGoのプレイパフォーマンスがさらに約600 Elo向上しました。これは計算効率の向上によるところが大きいですが、より重要なのは、二重目的関数によってネットワークが複数のユースケースをサポートする共通表現に正規化されることです。
+<!--
+To separate the contributions of architecture and algorithm, we
+compared the performance of the neural network architecture in
+AlphaGo Zero with the previous neural network architecture used in
+AlphaGo Lee (see Fig. 4). Four neural networks were created, using either separate policy and value networks, as were used in AlphaGo
+Lee, or combined policy and value networks, as used in AlphaGo Zero;
+and using either the convolutional network architecture from AlphaGo
+Lee or the residual network architecture from AlphaGo Zero. Each
+network was trained to minimize the same loss function (equation (1)),
+using a fixed dataset of self-play games generated by AlphaGo Zero
+after 72 h of self-play training. Using a residual network was more
+accurate, achieved lower error and improved performance in AlphaGo
+by over 600 Elo. Combining policy and value together into a single
+network slightly reduced the move prediction accuracy, but reduced the
+value error and boosted playing performance in AlphaGo by around another 600 Elo. This is partly due to improved computational efficiency,
+but more importantly the dual objective regularizes the network
+to a common representation that supports multiple use cases.
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p class="margin-large">
+<strong>図4 | AlphaGo ZeroとAlphaGo Leeのニューラルネットワークアーキテクチャの比較</strong> 個別（sep）ネットワークまたはポリシーと値を組み合わせた（dual）ネットワーク、そして畳み込み（conv）ネットワークまたは残差（res）ネットワークを使用したニューラルネットワークアーキテクチャの比較。「dual-res」と「sep-conv」の組み合わせは、それぞれAlphaGo ZeroとAlphaGo Leeで使用されているニューラルネットワークアーキテクチャに対応しています。各ネットワークは、AlphaGo Zeroの以前の実行によって生成された固定データセットで学習されました。<strong>a</strong> 学習済みの各ネットワークは、異なるプレイヤーを取得するためにAlphaGo Zeroの探索と組み合わせられました。Eloレーティングは、これらの異なるプレイヤー間の評価ゲームから、1手あたり5秒の思考時間を使用して計算されました。<strong>b</strong> 各ネットワークアーキテクチャにおける、人間のプロの手に対する予測精度（GoKifuデータセットより）。 <strong>c</strong>  各ネットワークアーキテクチャにおける、人間のプロのゲーム結果（GoKifuデータセットより）のMSE。
+<!--
+<strong>Figure 4 | Comparison of neural network architectures in AlphaGo
+Zero and AlphaGo Lee.</strong>  Comparison of neural network architectures
+using either separate (sep) or combined policy and value (dual) networks,
+and using either convolutional (conv) or residual (res) networks. The
+combinations ‘dual–res’ and ‘sep–conv’ correspond to the neural network
+architectures used in AlphaGo Zero and AlphaGo Lee, respectively. Each
+network was trained on a fixed dataset generated by a previous run of AlphaGo Zero. <strong>a</strong>  Each trained network was combined with AlphaGo
+Zero’s search to obtain a different player. Elo ratings were computed from
+evaluation games between these different players, using 5 s of thinking
+time per move. <strong>b</strong>  Prediction accuracy on human professional moves
+(from the GoKifu dataset) for each network architecture. c MSE of human
+professional game outcomes (from the GoKifu dataset) for each network
+architecture.
+-->
+</p>
+<h2>AlphaGo Zero が学習した知識</h2>
+<p>
+AlphaGo Zero は、自己対局の学習プロセス中に、驚くべきレベルの囲碁の知識を発見しました。これには、人間の囲碁の基本的な知識だけでなく、従来の囲碁の知識の範囲を超えた非標準的な戦略も含まれていました。
+<!--
+<strong>Knowledge learned by AlphaGo Zero</strong><br>
+AlphaGo Zero discovered a remarkable level of Go knowledge during
+its self-play training process. This included not only fundamental
+elements of human Go knowledge, but also non-standard strategies
+beyond the scope of traditional Go knowledge.
+-->
+</p>
+<p>
+図5は、プロの定石（コーナーシーケンス）が発見された時期を示すタイムラインを示しています（図5aおよび拡張データ図2）。最終的に、AlphaGo Zeroは、これまで知られていなかった新しい定石のバリエーションを好みました（図5bおよび拡張データ図3）。図5cは、トレーニングのさまざまな段階で行われたいくつかの高速セルフプレイゲームを示しています（補足情報を参照）。トレーニング中に定期的に行われたトーナメントの長さのゲームは、拡張データ図4および補足情報に示されています。AlphaGo Zeroは、完全にランダムな手から、布石（オープニング）、手筋（戦術）、死活、コウ（繰り返しの盤面状況）、寄せ（エンドゲーム）、競争の獲得、先手（イニシアチブ）、形、影響力、領土など、囲碁の概念を基礎から発見し、高度な理解へと急速に進歩しました。驚くべきことに、人間が最初に習得した囲碁の知識の要素の一つである「しちょう」（盤全体にまたがることもある「梯子」状の捕捉手順）は、AlphaGo Zero がトレーニングのずっと後になって初めて理解したものでした。
+<!--
+Figure 5 shows a timeline indicating when professional joseki
+(corner sequences) were discovered (Fig. 5a and Extended Data Fig. 2); ultimately AlphaGo Zero preferred new joseki variants that
+were previously unknown (Fig. 5b and Extended Data Fig. 3). Figure 5c
+shows several fast self-play games played at different stages of training
+(see Supplementary Information). Tournament length games
+played at regular intervals throughout training are shown in Extended
+Data Fig. 4 and in the Supplementary Information. AlphaGo Zero
+rapidly progressed from entirely random moves towards a sophisticated
+understanding of Go concepts, including fuseki (opening), tesuji
+(tactics), life-and-death, ko (repeated board situations), yose
+(endgame), capturing races, sente (initiative), shape, influence and
+territory, all discovered from first principles. Surprisingly, shicho
+(‘ladder’ capture sequences that may span the whole board)—one of
+the first elements of Go knowledge learned by humans—were only
+understood by AlphaGo Zero much later in training.
+-->
+</p>
+<center><img src="images/fig5.png"></center>
+<p class="margin-large">
+<strong>図5 | AlphaGo Zeroが学習した囲碁の知識。a</strong> AlphaGo Zeroのトレーニング中に発見された5つの人間の定石（一般的な角の並び）。
+関連するタイムスタンプは、自己対局トレーニング中に各並びが最初に発生した時刻（回転と反射を考慮）を示しています。
+拡張データ 図2は、各並びのトレーニング中の出現頻度を示しています。<strong>b</strong> 自己対局トレーニングのさまざまな段階で好まれた5つの定石。表示されている各角の並びは、自己対局トレーニングの反復中に、すべての角の並びの中で最も頻繁にプレイされました。その反復のタイムスタンプはタイムラインに示されています。10時間後には、弱い角の手が好まれました。47時間後には、3-3の侵入が最も頻繁にプレイされました。この定石は人間のプロ対局でも一般的ですが、AlphaGo Zeroは後に新しい変化を発見し、好むようになりました。
+拡張データ 図3は、5つのすべての並びと新しい変化の経時的な出現頻度を示しています。 <strong>c</strong> 訓練段階の異なる3つのセルフプレイゲームの最初の80手。1回の探索あたり1,600回のシミュレーション（約0.4秒）を用いて行われた。3時間では、ゲームは人間の初心者のように貪欲に石を取ることに焦点を当てている。19時間では、ゲームは生死、影響力、領土の基本を示している。70時間では、ゲームは驚くほどバランスが取れており、複数の戦闘と複雑なコウの戦いを経て、最終的に白の半点勝利に終わった。
+完全なゲームについては補足情報を参照。
+<!--
+<strong>Figure 5 | Go knowledge learned by AlphaGo Zero. a</strong>  Five human joseki
+(common corner sequences) discovered during AlphaGo Zero training.
+The associated timestamps indicate the first time each sequence occurred
+(taking account of rotation and reflection) during self-play training.
+Extended Data Figure 2 provides the frequency of occurence over training
+for each sequence. <strong>b</strong>  Five joseki favoured at different stages of self-play
+training. Each displayed corner sequence was played with the greatest
+frequency, among all corner sequences, during an iteration of self-play
+training. The timestamp of that iteration is indicated on the timeline. At
+10 h a weak corner move was preferred. At 47 h the 3–3 invasion was most
+frequently played. This joseki is also common in human professional play; however AlphaGo Zero later discovered and preferred a new variation.
+Extended Data Figure 3 provides the frequency of occurence over time
+for all five sequences and the new variation. <strong>c</strong>  The first 80 moves of three
+self-play games that were played at different stages of training, using 1,600
+simulations (around 0.4 s) per search. At 3 h, the game focuses greedily
+on capturing stones, much like a human beginner. At 19 h, the game
+exhibits the fundamentals of life-and-death, influence and territory. At
+70 h, the game is remarkably balanced, involving multiple battles and a
+complicated ko fight, eventually resolving into a half-point win for white.
+See Supplementary Information for the full games.
+-->
+</p>
+<h2>AlphaGo Zero の最終パフォーマンス</h2>
+<p>
+その後、より大規模なニューラルネットワークとより長い期間を用いて、2つ目のAlphaGo Zeroインスタンスに強化学習パイプラインを適用しました。トレーニングは再び完全にランダムな動作から開始し、約40日間継続しました。
+<!--
+<strong>Final performance of AlphaGo Zero</strong><br>
+We subsequently applied our reinforcement learning pipeline to a
+second instance of AlphaGo Zero using a larger neural network and
+over a longer duration. Training again started from completely random
+behaviour and continued for approximately 40 days.
+-->
+</p>
+<p>
+訓練期間中、2,900万回の自己対戦ゲームが生成されました。パラメータは、それぞれ2,048個のポジションからなる310万回のミニバッチから更新されました。ニューラルネットワークには40個の残差ブロックが含まれていました。学習曲線は図6aに示されています。訓練期間中、一定の間隔で行われたゲームは、拡張データ図5と補足情報に示されています。
+<!--
+Over the course of training, 29 million games of self-play were generated.
+Parameters were updated from 3.1 million mini-batches of 2,048
+positions each. The neural network contained 40 residual blocks. The
+learning curve is shown in Fig. 6a. Games played at regular intervals
+throughout training are shown in Extended Data Fig. 5 and in the
+Supplementary Information.
+-->
+</p>
+<p>
+我々は、完全に学習済みのAlphaGo Zeroを、AlphaGo Fan、AlphaGo Lee、そして過去のいくつかの囲碁プログラムとの内部トーナメントを用いて評価しました。また、現存する最強プログラムであるAlphaGo Masterとも対局を行いました。AlphaGo Masterは、本論文で紹介したアルゴリズムとアーキテクチャに基づき、人間のデータと特徴量を使用しています（方法の項を参照）。AlphaGo Masterは、2017年1月にオンライン対局で最強のプロ棋士を60対0で破りました34。評価では、すべてのプログラムに1手あたり5秒の思考時間を与えました。AlphaGo ZeroとAlphaGo Masterはそれぞれ4つのTPUを搭載した単一のマシンで対戦しました。AlphaGo FanとAlphaGo Leeは、それぞれ176個のGPUと48個のTPUに分散配置されました。また、AlphaGo Zeroの生のニューラルネットワークのみに基づいたプレイヤーも含めました。このプレイヤーは、単に最大確率で手を選択しました。
+<!--
+We evaluated the fully trained AlphaGo Zero using an internal
+tournament against AlphaGo Fan, AlphaGo Lee and several previous
+Go programs. We also played games against the strongest existing
+program, AlphaGo Master—a program based on the algorithm and
+architecture presented in this paper but using human data and features
+(see Methods)—which defeated the strongest human professional
+players 60–0 in online games in January 201734. In our evaluation, all
+programs were allowed 5 s of thinking time per move; AlphaGo Zero
+and AlphaGo Master each played on a single machine with 4 TPUs;
+AlphaGo Fan and AlphaGo Lee were distributed over 176 GPUs and
+48 TPUs, respectively. We also included a player based solely on the raw
+neural network of AlphaGo Zero; this player simply selected the move
+with maximum probability.
+-->
+</p>
+<center><img src="images/fig6.png"></center>
+<p class="margin-large">
+図6bは、各プログラムのEloスケールでのパフォーマンスを示しています。
+先読みを一切行っていない生のニューラルネットワークは、Eloレーティング3,055を達成しました。AlphaGo Zeroのレーティングは5,185で、AlphaGo Masterは4,858、AlphaGo Leeは3,739、AlphaGo Fanは3,144でした。
+<!--
+Figure 6b shows the performance of each program on an Elo scale.
+The raw neural network, without using any lookahead, achieved an Elo
+rating of 3,055. AlphaGo Zero achieved a rating of 5,185, compared to 4,858 for AlphaGo Master, 3,739 for AlphaGo Lee and 3,144 for
+AlphaGo Fan.
+-->
+</p>
+<p>
+最後に、2時間の制限時間を設けた100局対局で、AlphaGo ZeroとAlphaGo Masterの直接対決を評価しました。AlphaGo Zeroは89対11で勝利しました（拡張データ図6および補足情報を参照）。
+<!--
+Finally, we evaluated AlphaGo Zero head to head against AlphaGo
+Master in a 100-game match with 2-h time controls. AlphaGo Zero
+won by 89 games to 11 (see Extended Data Fig. 6 and Supplementary
+Information).
+-->
+</p>
+<h2>結論</h2>
+<p>
+我々の研究結果は、純粋な強化学習アプローチが最も困難な領域においても完全に実行可能であることを包括的に示しています。人間の例や指導なしに、基本的なルール以外の知識がなくても、超人的なレベルまで訓練することが可能です。さらに、純粋な強化学習アプローチは、人間の専門家のデータを用いた訓練と比較して、訓練にわずか数時間長くかかるだけで、はるかに優れた漸近的性能を達成します。このアプローチを用いることで、AlphaGo Zeroは、人間のデータと人為的に作成された特徴を用いて訓練された、これまでの最強バージョンのAlphaGoを、大きな差で打ち負かしました。
+<!--
+<strong>Conclusion</strong><br>
+Our results comprehensively demonstrate that a pure reinforcement
+learning approach is fully feasible, even in the most challenging of
+domains: it is possible to train to superhuman level, without human
+examples or guidance, given no knowledge of the domain beyond basic
+rules. Furthermore, a pure reinforcement learning approach requires
+just a few more hours to train, and achieves much better asymptotic
+performance, compared to training on human expert data. Using this
+approach, AlphaGo Zero defeated the strongest previous versions of
+AlphaGo, which were trained from human data using handcrafted features,
+by a large margin.
+-->
+</p>
+<p>
+人類は数千年にわたり、数百万もの囲碁のゲームから知識を蓄積し、それらをパターン、ことわざ、書物へと凝縮してきました。AlphaGo Zeroは、わずか数日間で、白紙の状態からスタートし、囲碁に関する知識の多くを再発見するとともに、最古のゲームへの新たな洞察をもたらす斬新な戦略を発見しました。
+<!--
+Humankind has accumulated Go knowledge from millions of games
+played over thousands of years, collectively distilled into patterns, proverbs
+and books. In the space of a few days, starting tabula rasa, AlphaGo
+Zero was able to rediscover much of this Go knowledge, as well as novel
+strategies that provide new insights into the oldest of games
+-->
+</p>
+<h2>(参考文献)</h2>
+<p>
+<div class="styleRef">
+<ul>
+<li>1. Friedman, J., Hastie, T. & Tibshirani, R. The Elements of Statistical Learning: Data
+Mining, Inference, and Prediction (Springer, 2009).
+</li><br><li>2. LeCun, Y., Bengio, Y. & Hinton, G. Deep learning. Nature 521, 436–444 (2015).
+</li><br><li>3. Krizhevsky, A., Sutskever, I. & Hinton, G. ImageNet classification with deep
+convolutional neural networks. In Adv. Neural Inf. Process. Syst. Vol. 25
+(eds Pereira, F., Burges, C. J. C., Bottou, L. & Weinberger, K. Q.) 1097–1105
+(2012).
+</li><br><li>4. He, K., Zhang, X., Ren, S. & Sun, J. Deep residual learning for image recognition.
+In Proc. 29th IEEE Conf. Comput. Vis. Pattern Recognit. 770–778 (2016).
+</li><br><li>5. Hayes-Roth, F., Waterman, D. & Lenat, D. Building Expert Systems (Addison-
+Wesley, 1984).
+</li><br><li>6. Mnih, V. et al. Human-level control through deep reinforcement learning.
+Nature 518, 529–533 (2015).
+</li><br><li>7. Guo, X., Singh, S. P., Lee, H., Lewis, R. L. & Wang, X. Deep learning for real-time
+Atari game play using offline Monte-Carlo tree search planning. In Adv. Neural
+Inf. Process. Syst. Vol. 27 (eds Ghahramani, Z., Welling, M., Cortes, C., Lawrence,
+N. D. & Weinberger, K. Q.) 3338–3346 (2014).
+</li><br><li>8. Mnih, V. et al. Asynchronous methods for deep reinforcement learning. In
+Proc. 33rd Int. Conf. Mach. Learn. Vol. 48 (eds Balcan, M. F. & Weinberger, K. Q.)
+1928–1937 (2016).
+</li><br><li>9. Jaderberg, M. et al. Reinforcement learning with unsupervised auxiliary tasks.
+In 5th Int. Conf. Learn. Representations (2017).
+</li><br><li>10. Dosovitskiy, A. & Koltun, V. Learning to act by predicting the future. In 5th Int.
+Conf. Learn. Representations (2017).
+</li><br><li>11. Man´dziuk, J. in Challenges for Computational Intelligence (Duch, W. &
+Man´dziuk, J.) 407–442 (Springer, 2007).
+</li><br><li>12. Silver, D. et al. Mastering the game of Go with deep neural networks and tree
+search. Nature 529, 484–489 (2016).
+</li><br><li>13. Coulom, R. Efficient selectivity and backup operators in Monte-Carlo tree
+search. In 5th Int. Conf. Computers and Games (eds Ciancarini, P. & van den
+Herik, H. J.) 72–83 (2006).
+</li><br><li>14. Kocsis, L. & Szepesvári, C. Bandit based Monte-Carlo planning. In 15th Eu.
+Conf. Mach. Learn. 282–293 (2006).
+</li><br><li>15. Browne, C. et al. A survey of Monte Carlo tree search methods. IEEE Trans.
+Comput. Intell. AI Games 4, 1–49 (2012).
+</li><br><li>16. Fukushima, K. Neocognitron: a self organizing neural network model for a
+mechanism of pattern recognition unaffected by shift in position. Biol. Cybern.
+36, 193–202 (1980).
+</li><br><li>17. LeCun, Y. & Bengio, Y. in The Handbook of Brain Theory and Neural Networks
+Ch. 3 (ed. Arbib, M.) 276–278 (MIT Press, 1995).
+</li><br><li>18. Ioffe, S. & Szegedy, C. Batch normalization: accelerating deep network training
+by reducing internal covariate shift. In Proc. 32nd Int. Conf. Mach. Learn. Vol. 37
+448–456 (2015).
+</li><br><li>19. Hahnloser, R. H. R., Sarpeshkar, R., Mahowald, M. A., Douglas, R. J. &
+Seung, H. S. Digital selection and analogue amplification coexist in a
+cortex-inspired silicon circuit. Nature 405, 947–951 (2000).
+</li><br><li>20. Howard, R. Dynamic Programming and Markov Processes (MIT Press, 1960).
+</li><br><li>21. Sutton, R. & Barto, A. Reinforcement Learning: an Introduction (MIT Press,
+1998).
+</li><br><li>22. Bertsekas, D. P. Approximate policy iteration: a survey and some new methods.
+J. Control Theory Appl. 9, 310–335 (2011).
+</li><br><li>23. Scherrer, B. Approximate policy iteration schemes: a comparison. In Proc. 31st
+Int. Conf. Mach. Learn. Vol. 32 1314–1322 (2014).
+</li><br><li>24. Rosin, C. D. Multi-armed bandits with episode context. Ann. Math. Artif. Intell.
+61, 203–230 (2011).
+</li><br><li>25. Coulom, R. Whole-history rating: a Bayesian rating system for players of
+time-varying strength. In Int. Conf. Comput. Games (eds van den Herik, H. J., Xu,
+X. Ma, Z. & Winands, M. H. M.) Vol. 5131 113–124 (Springer, 2008).
+</li><br><li>26. Laurent, G. J., Matignon, L. & Le Fort-Piat, N. The world of independent learners
+is not Markovian. Int. J. Knowledge-Based Intelligent Engineering Systems 15,
+55–64 (2011).
+</li><br><li>27. Foerster, J. N. et al. Stabilising experience replay for deep multi-agent reinforcement
+learning. In Proc. 34th Int. Conf. Mach. Learn. Vol. 70 1146–1155 (2017).
+</li><br><li>28. Heinrich, J. & Silver, D. Deep reinforcement learning from self-play in
+imperfect-information games. In NIPS Deep Reinforcement Learning Workshop
+(2016).
+</li><br><li>29. Jouppi, N. P. et al. In-datacenter performance analysis of a Tensor
+Processing Unit. Proc. 44th Annu. Int. Symp. Comp. Architecture Vol. 17 1–12
+(2017).
+</li><br><li>30. Maddison, C. J., Huang, A., Sutskever, I. & Silver, D. Move evaluation in Go
+using deep convolutional neural networks. In 3rd Int. Conf. Learn.
+Representations. (2015).
+</li><br><li>31. Clark, C. & Storkey, A. J. Training deep convolutional neural networks
+to play Go. In Proc. 32nd Int. Conf. Mach. Learn. Vol. 37 1766–1774
+(2015).
+</li><br><li>32. Tian, Y. & Zhu, Y. Better computer Go player with neural network and long-term
+prediction. In 4th Int. Conf. Learn. Representations (2016).
+</li><br><li>33. Cazenave, T. Residual networks for computer Go. IEEE Trans. Comput. Intell. AI
+Games https://doi.org/10.1109/TCIAIG.2017.2681042 (2017).
+</li><br><li>34. Huang, A. AlphaGo master online series of games. https://deepmind.com/
+research/AlphaGo/match-archive/master (2017).
+</ul>
+</div>
+</p>
+<h2>謝辞</h2>
+<p>
+図表作成にご協力いただいたA. Cain氏、論文査読にご協力いただいたA. Barreto氏、G. Ostrovski氏、T. Ewalds氏、T. Schoul氏、J. Oh氏、N. Heess氏、そしてDeepMindチームの皆様のご支援に感謝申し上げます。
+<!--
+We thank A. Cain for work on the visuals; A. Barreto,
+G. Ostrovski, T. Ewalds, T. Schaul, J. Oh and N. Heess for reviewing the paper;
+and the rest of the DeepMind team for their support.
+-->
+</p>
+<h2>方法</h2>
+<p>
+<strong>強化学習</strong><br>
+方策反復<sup>20,21</sup>は、方策評価（現在の方策の価値関数を推定する）と方策改善（現在の価値関数を用いてより良い方策を生成する）を交互に行うことで、改善する方策のシーケンスを生成する古典的なアルゴリズムです。方策評価への単純なアプローチは、サンプリングされた軌跡の結果から価値関数を推定することです<sup>35,36</sup>。方策改善への単純なアプローチは、価値関数に関して貪欲に行動を選択することです<sup>20</sup>。大きな状態空間では、各方策を評価し、その改善を表すために近似値が必要です<sup>22,23</sup>。
+<!--
+Reinforcement learning. Policy iteration<sup>20,21</sup> is a classic algorithm that generates
+a sequence of improving policies, by alternating between policy evaluation—
+estimating the value function of the current policy—and policy improvement—
+using the current value function to generate a better policy. A simple approach to
+policy evaluation is to estimate the value function from the outcomes of sampled
+trajectories<sup>35,36</sup>. A simple approach to policy improvement is to select actions
+greedily with respect to the value function<sup>20</sup>. In large state spaces, approximations
+are necessary to evaluate each policy and to represent its improvement<sup>22,23</sup>.
+-->
+</p><p>
+分類ベースの強化学習<sup>37</sup>は、単純なモンテカルロ探索を用いて方策を改善する。各行動に対して多数のロールアウトが実行され、平均値が最大となる行動が正の訓練例となり、それ以外の行動は負の訓練例となる。その後、行動を正または負に分類するように方策が訓練され、後続のロールアウトで使用される。これは、\(τ→ 0\) の場合のAlphaGo Zeroの訓練アルゴリズムの方策コンポーネントの前身と見なすことができる。
+<!--
+Classification-based reinforcement learning<sup>37</sup> improves the policy using a
+simple Monte Carlo search. Many rollouts are executed for each action; the
+action with the maximum mean value provides a positive training example, while
+all other actions provide negative training examples; a policy is then trained to
+classify actions as positive or negative, and used in subsequent rollouts. This
+may be viewed as a precursor to the policy component of AlphaGo Zero’s training
+algorithm when \(τ→ 0\).
+-->
+</p><p>
+より最近の例として、分類ベースの修正ポリシー反復（CBMPI: Classification-based modified policy iteration）が挙げられます。CBMPIは、AlphaGo Zeroの価値要素と同様に、価値関数を切り捨てロールアウト値に回帰させることでポリシー評価を実行します。この手法は、テトリスのゲームにおいて最先端の結果を達成しました38。しかし、この先行研究は、単純なロールアウトと、手作業で作成された特徴量を用いた線形関数近似に限られていました。
+<!--
+A more recent instantiation, classification-based modified policy iteration
+(CBMPI), also performs policy evaluation by regressing a value function towards
+truncated rollout values, similar to the value component of AlphaGo Zero; this
+achieved state-of-the-art results in the game of Tetris38. However, this previous
+work was limited to simple rollouts and linear function approximation using handcrafted
+features.
+-->
+</p><p>
+AlphaGo Zeroのセルフプレイアルゴリズムも同様に、MCTSをポリシー改善とポリシー評価の両方に用いる近似ポリシー反復スキームとして理解できる。ポリシー改善はニューラルネットワークポリシーから始まり、そのポリシーの推奨に基づいてMCTSを実行し、（より強力な）探索ポリシーをニューラルネットワークの関数空間に投影し直す。ポリシー評価は（より強力な）探索ポリシーに適用され、セルフプレイゲームの結果もニューラルネットワークの関数空間に投影し直される。これらの投影ステップは、ニューラルネットワークパラメータを、それぞれ探索確率とセルフプレイゲームの結果に一致するように訓練することによって実現される。
+<!--
+The AlphaGo Zero self-play algorithm can similarly be understood as an
+approximate policy iteration scheme in which MCTS is used for both policy
+improvement and policy evaluation. Policy improvement starts with a neural
+network policy, executes an MCTS based on that policy’s recommendations, and
+then projects the (much stronger) search policy back into the function space of
+the neural network. Policy evaluation is applied to the (much stronger) search
+policy: the outcomes of self-play games are also projected back into the function
+space of the neural network. These projection steps are achieved by training the
+neural network parameters to match the search probabilities and self-play game
+outcome respectively.
+-->
+</p><p>
+Guo et al.<sup>7</sup> もまた、MCTS の出力をニューラルネットワークに投影します。これは、価値ネットワークを探索値に回帰させるか、MCTS によって選択された行動を分類することによって行われます。このアプローチは、Atari ゲームをプレイするためのニューラルネットワークの学習に使用されました。しかし、MCTS は固定されており、方策反復は行われず、学習済みのネットワークは利用されませんでした。ゲームにおける自己対戦強化学習。私たちのアプローチは、完全情報ゼロサムゲームに最も直接的に適用できます。私たちは、以前の研究<sup>12</sup> で説明した交代マルコフゲームの形式主義に従いますが、価値または方策反復に基づくアルゴリズムは、この設定に自然に拡張できることに留意します<sup>39</sup>。
+<!--
+Guo et al.<sup>7</sup> also project the output of MCTS into a neural network, either by
+regressing a value network towards the search value, or by classifying the action
+selected by MCTS. This approach was used to train a neural network for playing
+Atari games; however, the MCTS was fixed—there was no policy iteration—and
+did not make any use of the trained networks.
+Self-play reinforcement learning in games. Our approach is most directly applicable
+to Zero-sum games of perfect information. We follow the formalism of alternating
+Markov games described in previous work<sup>12</sup>, noting that algorithms based
+on value or policy iteration extend naturally to this setting<sup>39</sup>.
+-->
+</p><p>
+自己対戦強化学習は、これまで囲碁に適用されてきました。NeuroGo<sup>40,41</sup>は、連結性、陣地、そして目に関する囲碁の知識に基づいた洗練されたアーキテクチャを用いて、ニューラルネットワークによって価値関数を表現しました。このニューラルネットワークは、先行研究<sup>43</sup>に基づき、時間差分学習<sup>42</sup>によって学習され、自己対戦における陣地予測を実現しました。関連するアプローチであるRLGO<sup>44</sup>は、特徴量の線形結合によって価値関数を表現し、3×3の石のパターンをすべて網羅的に列挙しました。RLGOは時間差分学習によって学習され、自己対戦における勝者を予測しました。NeuroGoとRLGOはどちらも、アマチュアレベルの弱いレベルのプレイを達成しました。
+<!--
+Self-play reinforcement learning has previously been applied to the game of
+Go. NeuroGo<sup>40,41</sup> used a neural network to represent a value function, using a
+sophisticated architecture based on Go knowledge regarding connectivity, territory
+and eyes. This neural network was trained by temporal-difference learning<sup>42</sup>
+to predict territory in games of self-play, building on previous work<sup>43</sup>. A related
+approach, RLGO<sup>44</sup>, represented the value function instead by a linear combination
+of features, exhaustively enumerating all 3 × 3 patterns of stones; it was trained
+by temporal-difference learning to predict the winner in games of self-play. Both
+NeuroGo and RLGO achieved a weak amateur level of play.
+-->
+</p><p>
+MCTSは、自己対戦強化学習<sup>45</sup>の一種と見なすこともできます。探索木のノードには、探索中に遭遇した局面の価値関数が含まれており、これらの値が更新されて、自己対戦のシミュレーションゲームの勝者を予測します。MCTSプログラムは、これまでに囲碁でアマチュアレベルの実力を発揮してきました<sup>46,47</sup>が、その際には相当の専門知識が用いられています。具体的には、ゲーム終了までシミュレーションを実行して局面を評価する、手作業で作成された特徴に基づく高速ロールアウトポリシー<sup>13,48</sup>と、探索木内の動きを選択する、同じく手作業で作成された特徴に基づくツリーポリシー<sup>47</sup>です。
+<!--
+MCTS may also be viewed as a form of self-play reinforcement learning<sup>45</sup>. The
+nodes of the search tree contain the value function for the positions encountered
+during search; these values are updated to predict the winner of simulated games of
+self-play. MCTS programs have previously achieved strong amateur level in Go<sup>46,47</sup>,
+but used substantial domain expertise: a fast rollout policy, based on handcrafted
+features<sup>13,48</sup>, that evaluates positions by running simulations until the end of the
+game; and a tree policy, also based on handcrafted features, that selects moves
+within the search tree<sup>47</sup>.
+-->
+</p><p>
+セルフプレイ強化学習アプローチは、チェス<sup>49–51</sup>、チェッカー<sup>52</sup>、バックギャモン<sup>53</sup>、オセロ<sup>54</sup>、スクラブル<sup>55</sup>、そして最近ではポーカー<sup>56</sup>といった他のゲームにおいても高いレベルのパフォーマンスを達成しています。これらの例すべてにおいて、価値関数は、セルフプレイによって生成された学習データから、回帰<sup>54–56</sup>または時間差分学習<sup>49–53</sup>によって学習されました。学習された価値関数は、アルファベータ探索<sup>49–54</sup>、単純モンテカルロ探索<sup>55,57</sup>、または反事実的後悔最小化56における評価関数として使用されました。しかし、これらの手法では、手作業で作成された入力特徴<sup>49–53,56</sup>
+または手作業で作成された特徴テンプレート<sup>54,55</sup>が使用されていました。さらに、学習プロセスでは、重みの初期化に教師あり学習が使用され<sup>58</sup>、駒の価値に対する重みが手作業で選択され<sup>49,51,52</sup>、行動空間に対する制約が手作業で作成され56、既存のコンピュータプログラムがトレーニング用の対戦相手として使用され<sup>49,50</sup>、または棋譜が生成され<sup>51</sup>ていました。
+<!--
+Self-play reinforcement learning approaches have achieved high levels of performance
+in other games: chess<sup>49–51</sup>, checkers<sup>52</sup>, backgammon<sup>53</sup>, othello<sup>54</sup>, Scrabble<sup>55</sup>
+and most recently poker<sup>56</sup>. In all of these examples, a value function was trained by
+regression<sup>54–56</sup> or temporal-difference learning<sup>49–53</sup> from training data generated
+by self-play. The trained value function was used as an evaluation function in an
+alpha–beta search<sup>49–54</sup>, a simple Monte Carlo search<sup>55,57</sup> or counterfactual regret
+minimization56. However, these methods used handcrafted input features<sup>49–53,56</sup>
+or handcrafted feature templates<sup>54,55</sup>. In addition, the learning process used supervised
+learning to initialize weights<sup>58</sup>, hand-selected weights for piece values<sup>49,51,52</sup>,
+handcrafted restrictions on the action space56 or used pre-existing computer programs
+as training opponents<sup>49,50</sup>, or to generate game records<sup>51</sup>.
+-->
+</p><p>
+最も成功し、広く使用されている強化学習手法の多くは、ゼロサムゲームの文脈で初めて導入されました。例えば、時間差分学習はチェッカーをプレイするプログラム59で初めて導入され、MCTSは囲碁で導入されました<sup>13</sup>。しかし、非常によく似たアルゴリズムがその後、ビデオゲーム<sup>6–8,10</sup>、ロボット工学<sup>60</sup>、産業制御<sup>61–63</sup>、オンラインレコメンデーションシステム<sup>64,65</sup>において非常に効果的であることが証明されました。
+<!--
+Many of the most successful and widely used reinforcement learning methods
+were first introduced in the context of Zero-sum games: temporal-difference learning
+was first introduced for a checkers-playing program59, while MCTS was introduced
+for the game of Go<sup>13</sup>. However, very similar algorithms have subsequently proven highly effective in video games<sup>6–8,10</sup>, robotics<sup>60</sup>, industrial control<sup>61–63</sup> and
+online recommendation systems<sup>64,65</sup>.
+-->
+</p><p>
+<strong>AlphaGo のバージョン</strong><br>
+AlphaGo の3つの異なるバージョンを比較します。
+<div class="styleBullet">
+<ul>
+<li>(1) AlphaGo Fan は、2015年10月に樊慧と対戦した、以前に公開されたプログラム<sup>12</sup> です。このプログラムは、176台のGPUを使用して多数のマシンに分散されていました。
+</li><br><li>(2) AlphaGo Lee は、2016年3月に李世ドルを4対1で破ったプログラムです。
+これは以前は未公開でしたが、ほとんどの点で AlphaGo Fan12 に似ています。
+しかし、公平な比較を行うために、いくつかの重要な違いを強調します。まず、価値ネットワークは、ポリシーネットワークによる自己対戦のゲームではなく、AlphaGo による高速自己対戦のゲームの結果から学習されました。この手順は複数回反復されました。これは、本論文で提示するタブラ・ラサ・アルゴリズムへの最初のステップです。第二に、方策ネットワークと価値ネットワークは、元の論文で説明されたもの（256平面の畳み込み層を12層使用）よりも大規模であり、より多くの反復で学習されました。また、このプレイヤーはGPUではなく48個のTPUを使用して多数のマシンに分散されており、探索中にニューラルネットワークをより高速に評価することができました。
+</li><br><li>(3) AlphaGo Masterは、2017年1月にトッププレイヤーを60対0で破ったプログラムです34。これは未発表でしたが、本論文で説明されているものと同じニューラルネットワークアーキテクチャ、強化学習アルゴリズム、MCTSアルゴリズムを使用しています。ただし、AlphaGo Lee12と同じ手作業で作成された特徴量とロールアウトを使用しており、学習は人間のデータを用いた教師あり学習によって初期化されています。
+</li><br><li>(4) AlphaGo Zeroは、本論文で説明されているプログラムです。 AlphaGo Zeroは、ランダムな初期重みから開始し、ロールアウトや人間の監督なしに、生の盤面履歴のみを入力特徴として用いるセルフプレイ強化学習によって学習します。Google Cloud内の4つのTPUを搭載したマシン1台のみを使用します（AlphaGo Zeroは分散配置も可能ですが、可能な限りシンプルな探索アルゴリズムを使用することにしました）。</li>
+</ul>
+</div>
+<!--
+<strong>AlphaGo versions.</strong><br> 
+We compare three distinct versions of AlphaGo:
+(1) AlphaGo Fan is the previously published program<sup>12</sup> that played against Fan
+Hui in October 2015. This program was distributed over many machines using
+176 GPUs.
+(2) AlphaGo Lee is the program that defeated Lee Sedol 4–1 in March 2016.
+It was previously unpublished, but is similar in most regards to AlphaGo Fan12.
+However, we highlight several key differences to facilitate a fair comparison. First,
+the value network was trained from the outcomes of fast games of self-play by
+AlphaGo, rather than games of self-play by the policy network; this procedure
+was iterated several times—an initial step towards the tabula rasa algorithm presented
+in this paper. Second, the policy and value networks were larger than those
+described in the original paper—using 12 convolutional layers of 256 planes—
+and were trained for more iterations. This player was also distributed over many
+machines using 48 TPUs, rather than GPUs, enabling it to evaluate neural networks
+faster during search.
+(3) AlphaGo Master is the program that defeated top human players by 60–0
+in January 201734. It was previously unpublished, but uses the same neural
+network architecture, reinforcement learning algorithm, and MCTS algorithm
+as described in this paper. However, it uses the same handcrafted features and
+rollouts as AlphaGo Lee12 and training was initialized by supervised learning from
+human data.
+(4) AlphaGo Zero is the program described in this paper. It learns from selfplay
+reinforcement learning, starting from random initial weights, without using
+rollouts, with no human supervision and using only the raw board history as input
+features. It uses just a single machine in the Google Cloud with 4 TPUs (AlphaGo
+Zero could also be distributed, but we chose to use the simplest possible search
+algorithm).
+-->
+</p><p>
+<strong>ドメイン知識</strong><br>
+私たちの主な貢献は、人間のドメイン知識がなくても超人的なパフォーマンスを達成できることを実証することです。この貢献を明確にするために、AlphaGo Zeroがトレーニング手順またはMCTSにおいて明示的または暗黙的に使用するドメイン知識を列挙します。これらは、AlphaGo Zeroが異なる（交代マルコフ）ゲームを学習するために置き換える必要がある知識項目です。
+<div class="styleBullet">
+<ul>
+<li>(1) AlphaGo Zeroには、ゲームルールに関する完全な知識が提供されます。これらは、MCTS中に、一連の動きから生じる局面をシミュレートし、終了状態に到達したシミュレーションのスコアリングに使用されます。ゲームは、両方のプレイヤーがパスするか、19 × 19 × 2 = 722手後に終了します。さらに、プレイヤーには各局面における有効な動きのセットが提供されます。
+</li><br><li>(2) AlphaGo Zeroは、MCTSシミュレーションおよび自己対戦トレーニング中にTromp–Taylorスコアリング66を使用します。これは、人間のスコア（中国、日本、韓国のルール）は、領土の境界が解決される前にゲームが終了した場合、明確に定義されないためです。ただし、すべてのトーナメントおよび評価ゲームは中国のルールを使用してスコア付けされました。
+</li><br><li>(3) 局面を記述する入力特徴は19×19の画像として構造化されています。つまり、ニューラルネットワークのアーキテクチャは盤のグリッド構造と一致しています。
+</li><br><li>(4) 囲碁のルールは回転と反射に対して不変です。この知識は、AlphaGo Zeroで、トレーニング中にデータセットを拡張して各局面の回転と反射を含めることと、MCTS中に局面のランダムな回転または反射をサンプリングすることの両方によって活用されています（探索アルゴリズムを参照）。コミ以外にも、囲碁のルールは色の転置に対して不変です。この知識は、現在のプレイヤーの視点から盤を表現することで活用されています（ニューラルネットワークアーキテクチャを参照）。</li>
+</ul>
+</div>
+<!--
+<strong>Domain knowledge.</strong><br> 
+Our primary contribution is to demonstrate that superhuman
+performance can be achieved without human domain knowledge. To clarify
+this contribution, we enumerate the domain knowledge that AlphaGo Zero uses,
+explicitly or implicitly, either in its training procedure or its MCTS; these are the
+items of knowledge that would need to be replaced for AlphaGo Zero to learn a
+different (alternating Markov) game.
+(1) AlphaGo Zero is provided with perfect knowledge of the game rules. These
+are used during MCTS, to simulate the positions resulting from a sequence of
+moves, and to score any simulations that reach a terminal state. Games terminate
+when both players pass or after 19 × 19 × 2 = 722 moves. In addition, the player is
+provided with the set of legal moves in each position.
+(2) AlphaGo Zero uses Tromp–Taylor scoring66 during MCTS simulations and
+self-play training. This is because human scores (Chinese, Japanese or Korean
+rules) are not well-defined if the game terminates before territorial boundaries
+are resolved. However, all tournament and evaluation games were scored using
+Chinese rules.
+(3) The input features describing the position are structured as a 19 × 19 image;
+that is, the neural network architecture is matched to the grid-structure of the board.
+(4) The rules of Go are invariant under rotation and reflection; this knowledge
+has been used in AlphaGo Zero both by augmenting the dataset during training to
+include rotations and reflections of each position, and to sample random rotations
+or reflections of the position during MCTS (see Search algorithm). Aside from
+komi, the rules of Go are also invariant to colour transposition; this knowledge is
+exploited by representing the board from the perspective of the current player (see
+Neural network architecture).
+-->
+</p><p>
+AlphaGo Zeroは、上記に挙げた点以外、いかなるドメイン知識も使用しません。ディープニューラルネットワークは、葉ノードの評価と着手の選択にのみ使用します（「探索アルゴリズム」参照）。ロールアウトポリシーやツリーポリシーは使用せず、MCTSは他のヒューリスティックやドメイン固有のルールによって拡張されていません。有効な着手は排除されません。たとえ対局者の目が塞がっている着手であってもです（これは、これまでのすべてのプログラムで使用されている標準的なヒューリスティックです<sup>67</sup>）。
+<!--
+AlphaGo Zero does not use any form of domain knowledge beyond the points
+listed above. It only uses its deep neural network to evaluate leaf nodes and to select
+moves (see ‘Search algorithm’). It does not use any rollout policy or tree policy, and
+the MCTS is not augmented by any other heuristics or domain-specific rules. No
+legal moves are excluded—even those filling in the player’s own eyes (a standard
+heuristic used in all previous programs<sup>67</sup>).
+-->
+</p><p>
+アルゴリズムは、ニューラルネットワークの初期パラメータをランダムに設定して開始されました。ニューラルネットワークのアーキテクチャ（「ニューラルネットワークのアーキテクチャ」を参照）は、画像認識における最新の技術4,18に基づいており、トレーニング用のハイパーパラメータはそれに応じて選択されました（「セルフプレイトレーニングパイプライン」を参照）。MCTS探索パラメータは、予備実行で学習されたニューラルネットワークを用いてAlphaGo Zeroのセルフプレイ性能を最適化するために、ガウス過程最適化68によって選択されました。より大規模な実行（40ブロック、40日間）では、より小規模な実行（20ブロック、3日間）で学習されたニューラルネットワークを用いてMCTS探索パラメータが再最適化されました。トレーニングアルゴリズムは、人間の介入なしに自律的に実行されました。
+<!--
+The algorithm was started with random initial parameters for the neural network.
+The neural network architecture (see ‘Neural network architecture’) is based
+on the current state of the art in image recognition4,18, and hyperparameters for
+training were chosen accordingly (see ‘Self-play training pipeline’). MCTS search
+parameters were selected by Gaussian process optimization68, so as to optimize
+self-play performance of AlphaGo Zero using a neural network trained in a
+preliminary run. For the larger run (40 blocks, 40 days), MCTS search parameters
+were re-optimized using the neural network trained in the smaller run
+(20 blocks, 3 days). The training algorithm was executed autonomously without
+human intervention.
+-->
+</p><p>
+<strong>セルフプレイ学習パイプライン</strong><br>
+AlphaGo Zero のセルフプレイ学習パイプラインは、3 つの主要コンポーネントで構成され、すべて非同期かつ並列に実行されます。ニューラルネットワークパラメータ \(θ_i\) は、最新のセルフプレイデータから継続的に最適化され、AlphaGo Zero のプレイヤー \(α_{θ_i}\) は継続的に評価され、これまでの最高のパフォーマンスを示すプレイヤー \(α_{θ_∗}\) が、新しいセルフプレイデータの生成に使用されます。
+<!--
+<strong>Self-play training pipeline.</strong><br>
+AlphaGo Zero’s self-play training pipeline consists of
+three main components, all executed asynchronously in parallel. Neural network
+parameters θi are continually optimized from recent self-play data; AlphaGo Zero
+players αθi are continually evaluated; and the best performing player so far, αθ∗, is
+used to generate new self-play data.
+-->
+</p><p>
+<strong>最適化</strong><br>
+各ニューラルネットワーク \(f_{θ_i}\) は、Google Cloud 上で TensorFlow を使用して最適化され、64 台の GPU ワーカーと 19 台の CPU パラメータサーバーが稼働しています。バッチサイズはワーカーあたり 32 で、合計ミニバッチサイズは 2,048 です。各ミニバッチのデータは、最新の 500,000 回のセルフプレイの全ポジションから均一にランダムにサンプリングされます。ニューラルネットワークのパラメータは、式 (1) の損失を用いて、モメンタム法と学習率アニーリング法を用いた確率的勾配降下法によって最適化されます。学習率は、拡張データ表 3 の標準スケジュールに従ってアニーリングされます。モメンタムパラメータは 0.9 に設定されています。クロスエントロピー損失とMSE損失は均等に重み付けされ（報酬は単位スケール、\(r ∈ \{-1, +1\}\) であるため、これは妥当です）、L2正則化パラメータは \(c = 10^{−4}\) に設定されます。最適化プロセスは、1,000回の訓練ステップごとに新しいチェックポイントを生成します。このチェックポイントは評価器によって評価され、次に説明するように、次の一連のセルフプレイゲームを生成するために使用される場合があります。
+<!--
+<strong>Optimization.</strong><br>
+Each neural network fθi is optimized on the Google Cloud using
+TensorFlow, with 64 GPU workers and 19 CPU parameter servers. The batch-size
+is 32 per worker, for a total mini-batch size of 2,048. Each mini-batch of data is
+sampled uniformly at random from all positions of the most recent 500,000 games
+of self-play. Neural network parameters are optimized by stochastic gradient
+descent with momentum and learning rate annealing, using the loss in equation
+(1). The learning rate is annealed according to the standard schedule in Extended
+Data Table 3. The momentum parameter is set to 0.9. The cross-entropy and MSE
+losses are weighted equally (this is reasonable because rewards are unit scaled,
+r ∈ {− 1, + 1}) and the L2 regularization parameter is set to c = 10−4. The optimization
+process produces a new checkpoint every 1,000 training steps. This checkpoint
+is evaluated by the evaluator and it may be used for generating the next batch of
+self-play games, as we explain next.
+-->
+</p><p>
+<strong>評価器</strong><br>
+常に最高品質のデータを生成するために、データ生成に使用する前に、新しいニューラルネットワークのチェックポイントを現在の最良ネットワーク \(f_{θ_∗}\) と比較します。ニューラルネットワーク \(f_{θ_i}\) は、\(f_{θ_i}\) を使用して葉の位置と事前確率を評価する MCTS 検索 \(α_{θ_i}\) のパフォーマンスによって評価されます（検索アルゴリズムを参照）。各評価は 400 回のゲームで構成され、MCTS を使用して 1,600 回のシミュレーションで各手を選択し、微小温度 \(τ→ 0\) を使用します（つまり、最も強いプレイを提供するために、訪問回数が最大となる手を決定論的に選択します）。新しいプレイヤーが 55% を超える差で勝った場合（ノイズのみに基づいて選択することを避けるため）、そのプレイヤーは最良プレイヤー \(α_{θ_∗}\) となり、その後、自己プレイ生成に使用され、また、後続の比較の基準にもなります。
+<!--
+<strong>Evaluator.</strong><br>
+To ensure we always generate the best quality data, we evaluate each
+new neural network checkpoint against the current best network θ∗ f before using
+it for data generation. The neural network fθi is evaluated by the performance of
+an MCTS search αθi that uses fθi to evaluate leaf positions and prior probabilities
+(see Search algorithm). Each evaluation consists of 400 games, using an MCTS
+with 1,600 simulations to select each move, using an infinitesimal temperature
+τ→ 0 (that is, we deterministically select the move with maximum visit count, to
+give the strongest possible play). If the new player wins by a margin of > 55% (to
+avoid selecting on noise alone) then it becomes the best player αθ∗, and is subsequently
+used for self-play generation, and also becomes the baseline for subsequent
+comparisons.
+-->
+</p><p>
+<strong>自己対局</strong><br>
+評価者によって選択された、現在最も優れたプレイヤー αθ∗ を用いてデータを生成します。各反復において、\(α_{θ_∗}\) は 25,000 回の自己対局を行い、各手を選択するために 1,600 回の MCTS シミュレーションを使用します（これには 1 回の探索あたり約 0.4 秒かかります）。各ゲームの最初の 30 手については、温度は \(τ = 1\) に設定されます。これにより、MCTS における移動回数に比例して手が選択され、多様な局面に遭遇することが保証されます。ゲームの残りの部分では、無限小温度、\(τ→ 0\) が使用されます。追加の探索は、ルートノード s0 の事前確率にディリクレノイズを追加することで実現されます。具体的には、\(P(s, a) = (1 − ε)p_a + εη_a\) です。ここで、\(\mathbf η ∼ Dir(0.03)\) かつ \(ε = 0.25\) です。このノイズにより、すべての手を試すことができますが、探索によって悪い手が却下される可能性があります。計算時間を節約するために、明らかに負けているゲームは投了されます。投了しきい値 vresign は、偽陽性（AlphaGo が投了していなければ勝てたはずのゲーム）の割合を 5% 未満に保つように自動的に選択されます。偽陽性を測定するために、自己対戦ゲームの 10% で投了を無効にして、終了までプレイします。
+<!--
+<strong>Self-play.</strong><br>
+The best current player αθ∗, as selected by the evaluator, is used to
+generate data. In each iteration, \(α_{θ_∗}\) plays 25,000 games of self-play, using 1,600
+simulations of MCTS to select each move (this requires approximately 0.4 s per
+search). For the first 30 moves of each game, the temperature is set to \(τ = 1\); this
+selects moves proportionally to their visit count in MCTS, and ensures a diverse
+set of positions are encountered. For the remainder of the game, an infinitesimal
+temperature is used, \(τ→ 0\). Additional exploration is achieved by adding Dirichlet
+noise to the prior probabilities in the root node s0, specifically \(P(s, a) =
+(1 − ε)p_a + εη_a\), where \(\mathbf η ∼ Dir(0.03)\) and \(ε = 0.25\); this noise ensures that all
+moves may be tried, but the search may still overrule bad moves. In order to save
+computation, clearly lost games are resigned. The resignation threshold vresign is
+selected automatically to keep the fraction of false positives (games that could
+have been won if AlphaGo had not resigned) below 5%. To measure false positives,
+we disable resignation in 10% of self-play games and play until termination.
+-->
+</p><p>
+<strong>教師あり学習</strong><br>
+比較のため、ニューラルネットワークパラメータ(θ_{SL}\)も教師あり学習によって学習させました。ニューラルネットワークのアーキテクチャはAlphaGo Zeroと同一です。KGSデータセットからデータ\((s, \mathbf π, z)\)のミニバッチをランダムにサンプリングし、人間の熟練者の手aを\(π_a​​ = 1\)に設定しました。パラメータは、モメンタム法と学習率アニーリング法を用いた確率的勾配降下法によって最適化されました。損失は式(1)と同じですが、MSE成分に0​​.01の重み付けをしました。学習率は、拡張データ表3の標準スケジュールに従ってアニーリングされました。モメンタムパラメータは0.9、L2正則化パラメータは\(c = 10^{-4}\)に設定されました。
+<!--
+<strong>Supervised learning.</strong><br>
+For comparison, we also trained neural network parameters
+(θ_{SL}\) by supervised learning. The neural network architecture was identical to
+AlphaGo Zero. Mini-batches of data \((s, \mathbf π, z)\) were sampled at random from the
+KGS dataset, setting \(π_a = 1\) for the human expert move a. Parameters were optimized
+by stochastic gradient descent with momentum and learning rate annealing,
+using the same loss as in equation (1), but weighting the MSE component by a
+factor of 0.01. The learning rate was annealed according to the standard schedule
+in Extended Data Table 3. The momentum parameter was set to 0.9, and the L2
+regularization parameter was set to \(c = 10^{−4}\).
+-->
+</p><p>
+方策と価値ネットワークを組み合わせたアーキテクチャを使用し、価値コンポーネントの重みを低くすることで、価値への過剰適合（前研究<sup>12</sup>で報告された問題）を回避することができました。72時間後、着手予測精度は前研究<sup>12,30–33</sup>で報告された最先端技術を上回り、KGSテストセットで60.4%に達しました。価値予測誤差も、前研究<sup>12</sup>よりも大幅に改善されました。検証セットは、囲碁棋譜のプロの対局で構成されました。精度とMSEは、それぞれ拡張データ表1と拡張データ表2に報告されています。
+<!--
+By using a combined policy and value network architecture, and by using a
+low weight on the value component, it was possible to avoid overfitting to the
+values (a problem described in previous work<sup>12</sup>). After 72 h the move prediction
+accuracy exceeded the state of the art reported in previous work<sup>12,30–33</sup>, reaching
+60.4% on the KGS test set; the value prediction error was also substantially better
+than previously reported<sup>12</sup>. The validation set was composed of professional games
+from GoKifu. Accuracies and MSEs are reported in Extended Data Table 1 and
+Extended Data Table 2, respectively.
+-->
+</p><p>
+<strong>探索アルゴリズム</strong><br>
+AlphaGo Zero は、AlphaGo Fan と AlphaGo Lee で使用されている非同期ポリシー・値 MCTS アルゴリズム (APV-MCTS) の、よりシンプルな派生版を使用しています。
+<!--
+<strong>Search algorithm.</strong><br>
+AlphaGo Zero uses a much simpler variant of the asynchronous
+policy and value MCTS algorithm (APV-MCTS) used in AlphaGo Fan and
+AlphaGo Lee.
+-->
+</p><p>
+探索木の各ノードsには、すべての法的アクション\(a∈A(s)\)に対するエッジ\((s, a)\)が含まれます。
+各エッジには統計量のセットが格納されます。
+<!--
+Each node s in the search tree contains edges \((s, a)\) for all legal actions \(a ∈A(s)\).
+Each edge stores a set of statistics,
+-->
+\[
+\{N(s,a),W(s,a),Q(s,a),P(s,a)\}
+\]
+ここで、\(N(s, a)\) は訪問回数、\(W(s, a)\) は合計アクション値、\(Q(s, a)\) は平均アクション値、\(P(s, a)\) はそのエッジを選択する事前確率です。複数のシミュレーションは別々の探索スレッドで並列に実行されます。アルゴリズムは3つのフェーズ（図2a～c）を反復して進行し、次にプレイする手を選択します（図2d）。
+<!--
+where \(N(s, a)\) is the visit count, \(W(s, a)\) is the total action value, \(Q(s, a)\) is the mean
+action value and \(P(s, a)\) is the prior probability of selecting that edge. Multiple
+simulations are executed in parallel on separate search threads. The algorithm
+proceeds by iterating over three phases (Fig. 2a–c), and then selects a move to
+play (Fig. 2d).
+-->
+</p><p>
+<strong>選択（図2a）</strong><br>
+選択フェーズはAlphaGo Fan<sup>12</sup>とほぼ同じです。ここでは完全性のために要約します。各シミュレーションの最初の木内フェーズは、探索木の根ノード \(s_0\) から始まり、タイムステップ \(L\) で葉ノード \(s_L\) に到達したときに終了します。これらのタイムステップ \(t < L\) において、探索木内の統計値 \(a_t =\underset{a}{argmax}(Q(s_t , a)+U(s_t , a))\) に基づいて、PUCTアルゴリズム<sup>24</sup>の変種を用いてアクションが選択されます。
+<!--
+<strong>Select (Fig. 2a).</strong><br>
+The selection phase is almost identical to AlphaGo Fan<sup>12</sup>; we
+recapitulate here for completeness. The first in-tree phase of each simulation begins
+at the root node of the search tree, \(s_0\), and finishes when the simulation reaches a leaf node \(s_L\) at time-step \(L\). At each of these time-steps, \(t < L\), an action is selected
+according to the statistics in the search tree, \(a_t =\argmax\limits_a(Q(s_t , a)+U(s_t , a))\), using a variant of the PUCT algorithm<sup>24</sup>,
+-->
+\[
+U(s,a)=c_{puct}P(s,a)\frac{\sqrt{\sum_b N(s,b)}}{1+N(s,a)}
+\]
+ここで、\(c_{puct}\) は探索レベルを決定する定数です。この探索制御戦略は、最初は事前確率が高く訪問回数が少ない行動を優先しますが、漸近的には行動価値の高い行動を優先します。
+<!--
+where \(c_{puct}\) is a constant determining the level of exploration; this search control
+strategy initially prefers actions with high prior probability and low visit count, but
+asympotically prefers actions with high action value.
+-->
+</p><p>
+<strong>展開して評価します (図 2b)。</strong><br>
+リーフノード sL は、ニューラルネットワークの評価キューに追加されます。\((d_i(\mathbf p), v) = f_θ(d_i(s_L))\)。ここで、\(d_i\) は、[1..8] の範囲内の \(i\) から一様ランダムに選択された二面角反射または回転です。キュー内の位置は、ニューラルネットワークによって 8 のミニバッチサイズを使用して評価されます。評価が完了するまで、検索スレッドはロックされます。リーフノードが展開され、各エッジ \((s_L, a)\) は次のように初期化されます。\(\{N(s_L, a) = 0, W(s_L, a) = 0, Q(s_L, a) = 0, P(s_L, a) = p_a\}\);次に値 v がバックアップされます。
+<!--
+<strong>Expand and evaluate (Fig. 2b).</strong?<br>
+The leaf node sL is added to a queue for neural network
+evaluation, \((d_i(\mathbf p), v) = f_θ(d_i(s_L))\), where \(d_i\) is a dihedral reflection or rotation
+selected uniformly at random from \(i\) in [1..8]. Positions in the queue are evaluated
+by the neural network using a mini-batch size of 8; the search thread is locked until
+evaluation completes. The leaf node is expanded and each edge \((s_L, a)\) is initialized to
+ \(\{N(s_L, a) = 0, W(s_L, a) = 0, Q(s_L, a) = 0, P(s_L, a) = p_a\}\); the value v is then backed up.
+-->
+</p><p>
+<strong>バックアップ（図2c）</strong><br>
+エッジ統計は、各ステップ（t ≤ L）を逆方向にパスして更新されます。訪問回数は増加し（N(s_t, a_t) = N(s_t, a_t) + 1）、アクション値は平均値に更新されます（W(s_t, a_t) = W(s_t, a_t) + v,Q(s_t, a_t) = \frac{
+W(s_t, a_t)}{N(s_t, a_t)}\)
+各スレッドが異なるノードを評価することを保証するために、仮想損失を使用します <sup>12,69</sup>。
+<!--
+<strong>Backup (Fig. 2c).</strong><br>
+The edge statistics are updated in a backward pass through each
+step \(t ≤ L\). The visit counts are incremented, \(N(s_t, a_t) = N(s_t, a_t) + 1\), and the action
+value is updated to the mean value, \(W(s_t, a_t)=W(s_t, a_t)+v,Q(s_t, a_t) =\frac{
+W(s_t,a_t)}{N(s_t, a_t)}\)
+We use virtual loss to ensure each thread evaluates different nodes <sup>12,69</sup>.
+-->
+</p><p>
+<strong>プレイ（図2d）</strong><br>
+探索の終了時に、AlphaGo Zeroはルートポジションs0で、その指数化された訪問回数に比例する手aを選択します。\(π(a|s_0)=N(s_0, a)-{1/τ}/Σ_bN(s_0, b)^{1/τ}\)、ここで\(τ\)は探索レベルを制御する温度パラメータです。探索木は後続のタイムステップで再利用されます。つまり、プレイされたアクションに対応する子ノードが新しいルートノードになります。この子ノードの下のサブツリーは、そのすべての統計情報とともに保持され、ツリーの残りの部分は破棄されます。AlphaGo Zeroは、ルート値と最良の子ノード値が閾値\(v_{resign}\)よりも低い場合、投了します。
+<!--
+<strong>Play (Fig. 2d).</strong><br>
+At the end of the search AlphaGo Zero selects a move a to play
+in the root position s0, proportional to its exponentiated visit count,
+ \(π(a|s_0)=N(s_0, a)-{1/τ}/Σ_bN(s_0, b)^{1/τ}\), where \(τ\) is a temperature parameter that
+controls the level of exploration. The search tree is reused at subsequent time-steps:
+the child node corresponding to the played action becomes the new root node; the
+subtree below this child is retained along with all its statistics, while the remainder
+of the tree is discarded. AlphaGo Zero resigns if its root value and best child value
+are lower than a threshold value \(v_{resign}\).
+-->
+</p><p>
+AlphaGo FanとAlphaGo LeeのMCTSと比較した主な違いは、AlphaGo Zeroはロールアウトを一切使用しないこと、別々のポリシーネットワークとバリューネットワークではなく単一のニューラルネットワークを使用すること、リーフノードは動的拡張ではなく常に拡張されること、各探索スレッドは評価とバックアップを非同期的に実行するのではなく、ニューラルネットワークの評価を単に待機すること、そしてツリーポリシーが存在しないことです。AlphaGo Zeroの大規模インスタンス（40ブロック、40日間）では、転置テーブルも使用されました。
+<!--
+Compared to the MCTS in AlphaGo Fan and AlphaGo Lee, the principal differences
+are that AlphaGo Zero does not use any rollouts; it uses a single neural
+network instead of separate policy and value networks; leaf nodes are always
+expanded, rather than using dynamic expansion; each search thread simply waits
+for the neural network evaluation, rather than performing evaluation and backup
+asynchronously; and there is no tree policy. A transposition table was also used in
+the large (40 blocks, 40 days) instance of AlphaGo Zero.
+-->
+</p><p>
+<strong>ニューラルネットワークのアーキテクチャ</strong><br>
+ニューラルネットワークへの入力は、17個の2値特徴平面で構成される19 × 19 × 17の画像スタックです。8つの特徴平面 (\(X_t\)) は、現在のプレイヤーの石の存在を示す2値で構成されます。((X_t^i=1\) は、時間ステップ (\(t\)) において、交差点 i にプレイヤーの色の石が含まれている場合、交差点が空であるか、相手の石が含まれているか、または (\(t < 0\)) の場合は0です。さらに8つの特徴平面 (\(Y_t\)) は、相手の石に対応する特徴を表します。最後の特徴平面 (C) は、打つべき色を表し、黒が打つ場合は1、白が打つ場合は0の定数値を持ちます。これらの平面は連結されて入力特徴 \(s_t = [X_t, Y_t, X_{t−1}, Y_{t−1},..., X_{t−7}, Y_{t−7}, C]\) を生成します。繰り返しが禁止されているため、囲碁は現在の石のみから完全には観察できないため、履歴特徴 \(X_t, Y_t\) は必要です。同様に、コミは観察できないため、色特徴 C も必要です。
+<!--
+<strong>Neural network architecture.</strong><br>
+The input to the neural network is a 19 × 19 × 17
+image stack comprising 17 binary feature planes. Eight feature planes, \(X_t\), consist
+of binary values indicating the presence of the current player’s stones \((X_t^i=1\)   if
+intersection i contains a stone of the player’s colour at time-step \(t\); 0 if the intersection
+is empty, contains an opponent stone, or if \(t < 0\)). A further 8 feature planes,
+ \(Y_t\), represent the corresponding features for the opponent’s stones. The final feature
+plane, C, represents the colour to play, and has a constant value of either 1 if black
+is to play or 0 if white is to play. These planes are concatenated together to give
+input features \(s_t = [X_t, Y_t, X_{t−1}, Y_{t−1},..., X_{t−7}, Y_{t−7}, C]\). History features \(X_t, Y_t\) are
+necessary, because Go is not fully observable solely from the current stones, as
+repetitions are forbidden; similarly, the colour feature C is necessary, because the
+komi is not observable.
+-->
+</p><p>
+入力特徴量stは、1つの畳み込みブロックとそれに続く19個または39個の残差ブロック<sup>4</sup>で構成される残差タワーによって処理されます。
+<!--
+The input features st are processed by a residual tower that consists of a single
+convolutional block followed by either 19 or 39 residual blocks<sup>4</sup>.
+-->
+</p><p>
+畳み込みブロックは以下のモジュールを適用します。
+<div class="styleBullet">
+<ul>
+<li>(1) カーネルサイズ3×3、ストライド1の256個のフィルタの畳み込み
+</li><li>(2) バッチ正規化 <sup>18</sup>
+</li><li>(3) ReLU</li>
+</ul>
+</div>
+<!--
+The convolutional block applies the following modules:
+(1) A convolution of 256 filters of kernel size 3 × 3 with stride 1
+(2) Batch normalization <sup>18</sup>
+(3) A rectifier nonlinearity
+-->
+</p><p>
+各残差ブロックは、入力に対して以下のモジュールを順次適用します。
+<div class="styleBullet">
+<ul>
+<li>
+(1) カーネルサイズ3×3、ストライド1の256個のフィルタの畳み込み
+</li><li>(2) バッチ正規化
+</li><li>(3) ReLU
+</li><li>(4) カーネルサイズ3×3、ストライド1の256個のフィルタの畳み込み
+</li><li>(5) バッチ正規化
+</li><li>(6) 入力をブロックに追加するスキップ接続
+</li><li>(7) ReLU
+</li>
+</ul>
+</div>
+<!--
+Each residual block applies the following modules sequentially to its input:
+(1) A convolution of 256 filters of kernel size 3 × 3 with stride 1
+(2) Batch normalization
+(3) A rectifier nonlinearity
+(4) A convolution of 256 filters of kernel size 3 × 3 with stride 1
+(5) Batch normalization
+(6) A skip connection that adds the input to the block
+(7) A rectifier nonlinearity
+-->
+</p><p>
+残差タワーの出力は、方策と値を計算するために2つの別々の「ヘッド」に渡​​されます。方策ヘッドは以下のモジュールを適用します。
+<div class="styleBullet">
+<ul>
+<li>
+(1) カーネルサイズ1×1、ストライド1の2つのフィルタの畳み込み
+</li><li>(2) バッチ正規化
+</li><li>(3) ReLU
+</li><li>(4) サイズ192 + 1 = 362のベクトルを出力する全結合線形層
+</li>
+</ul>
+</div>
+<!--
+The output of the residual tower is passed into two separate ‘heads’ for
+computing the policy and value. The policy head applies the following modules:
+(1) A convolution of 2 filters of kernel size 1 × 1 with stride 1
+(2) Batch normalization
+(3) A rectifier nonlinearity
+(4) A fully connected linear layer that outputs a vector of size 192 + 1 = 362,
+-->
+</p><p>
+すべての交差点とパスムーブのロジット確率に対応する。
+値ヘッドは以下のモジュールを適用する。
+<div class="styleBullet">
+<ul>
+<li>
+(1) カーネルサイズ1×1、ストライド1のフィルタ1個の畳み込み
+</li><li>(2) バッチ正規化
+</li><li>(3) ReLU
+</li><li>(4) サイズ256の隠れ層への完全結合線形層
+</li><li>(5) ReLU
+</li><li>(6) スカラーへの完全結合線形層
+</li><li>(7) [-1, 1] の範囲のスカラーを出力するtanh非線形性
+</li>
+</ul>
+</div>
+<!--
+corresponding to logit probabilities for all intersections and the pass move
+The value head applies the following modules:
+(1) A convolution of 1 filter of kernel size 1 × 1 with stride 1
+(2) Batch normalization
+(3) A rectifier nonlinearity
+(4) A fully connected linear layer to a hidden layer of size 256
+(5) A rectifier nonlinearity
+(6) A fully connected linear layer to a scalar
+(7) A tanh nonlinearity outputting a scalar in the range [− 1, 1]
+-->
+</p><p>
+20ブロックまたは40ブロックのネットワークにおける全体的なネットワーク深度は、残差タワーの場合はそれぞれ39層または79層のパラメータ化層で、これにポリシーヘッドの場合は2層、バリューヘッドの場合は3層が加わります。
+<!--
+The overall network depth, in the 20- or 40-block network, is 39 or 79 parameterized
+layers, respectively, for the residual tower, plus an additional 2 layers for
+the policy head and 3 layers for the value head.
+-->
+</p><p>
+残差ネットワークの異なる変種が同時にコンピュータ囲碁<sup>33</sup>に適用され、アマチュア段位レベルのパフォーマンスを達成したことに注目してください。ただし、これは教師あり学習のみで学習された単頭ポリシーネットワークに限定されていました。
+<!--
+We note that a different variant of residual networks was simultaneously applied
+to computer Go<sup>33</sup> and achieved an amateur dan-level performance; however, this
+was restricted to a single-headed policy network trained solely by supervised
+learning.
+-->
+</p><p>
+<strong>ニューラルネットワークアーキテクチャの比較</strong><br>
+図4は、ネットワークアーキテクチャの比較結果を示しています。具体的には、4つの異なるニューラルネットワークを比較しました。
+<div class="styleBullet">
+<ul>
+<li>
+(1) Dual-Res: ネットワークは、前述のように20ブロックの残差タワーを含み、その後にポリシーヘッドと値ヘッドが続きます。これはAlphaGo Zeroで使用されているアーキテクチャです。
+</li><br><li>(2) Sep-Res: ネットワークは20ブロックの残差タワーを2つ含みます。最初のタワーの後にはポリシーヘッドが、2番目のタワーの後には値ヘッドが続きます。
+</li><br><li>(3) Dual-Conv: ネットワークは12個の畳み込みブロックからなる非残差タワーを含み、その後にポリシーヘッドと値ヘッドが続きます。
+</li><br><li>(4) Sep-Conv: ネットワークは12個の畳み込みブロックからなる非残差タワーを2つ含みます。最初のタワーの後にはポリシーヘッドが、2番目のタワーの後には値ヘッドが続きます。これはAlphaGo Leeで使用されているアーキテクチャです。
+各ネットワークは、AlphaGo Zeroの前回実行で生成された最終200万局の自己対戦データを含む固定データセットを用いて、教師あり学習実験で説明したアニーリング率、モメンタム、正則化ハイパーパラメータを用いた確率的勾配降下法を用いて学習されました。ただし、利用可能なデータが多かったため、クロスエントロピーとMSEコンポーネントには均等に重み付けが行われました。
+</li>
+</ul>
+</div>
+<!--
+<strong>Neural network architecture comparison.</strong><br>
+Figure 4 shows the results of a comparison
+between network architectures. Specifically, we compared four different
+neural networks:
+(1) dual–res: the network contains a 20-block residual tower, as described above,
+followed by both a policy head and a value head. This is the architecture used in
+AlphaGo Zero.
+(2) sep–res: the network contains two 20-block residual towers. The first tower
+is followed by a policy head and the second tower is followed by a value head.
+(3) dual–conv: the network contains a non-residual tower of 12 convolutional
+blocks, followed by both a policy head and a value head.
+(4) sep–conv: the network contains two non-residual towers of 12 convolutional
+blocks. The first tower is followed by a policy head and the second tower is followed
+by a value head. This is the architecture used in AlphaGo Lee.
+Each network was trained on a fixed dataset containing the final 2 million
+games of self-play data generated by a previous run of AlphaGo Zero, using
+stochastic gradient descent with the annealing rate, momentum and regularization
+hyperparameters described for the supervised learning experiment; however,
+cross-entropy and MSE components were weighted equally, since more data was
+available.
+-->
+</p><p>
+<strong>評価</strong><br>
+AlphaGo Zero の相対的な強さ（図3a、6）を、各プレイヤーのEloレーティングを測定することで評価しました。プレイヤーaがプレイヤーbに勝つ確率をロジスティック関数 \(P(a\,defeats\,b)=\frac{1}{1+exp(c_{elo}(e(b)-e(a)}\) を用いて推定し、ベイズロジスティック回帰分析によってレーティング \(e(·)\) を推定しました。このレーティングは、BayesElo プログラム<sup>25</sup> を用いて、標準定数 \(c_{elo} = 1/400\) を用いて計算しました。
+<!--
+<strong>Evaluation.</strong><br>
+We evaluated the relative strength of AlphaGo Zero (Figs 3a, 6) by
+measuring the Elo rating of each player. We estimate the probability that player a
+will defeat player b by a logistic function \(P(a\,defeats\,b)=\frac{1}{1+exp(c_{elo}(e(b)-e(a)}\), and estimate the ratings \(e(·)\) by Bayesian logistic regression, computed by the BayesElo
+program<sup>25</sup> using the standard constant \(c_{elo} = 1/400\).
+-->
+</p><p>
+Eloレーティングは、AlphaGo Zero、AlphaGo Master、AlphaGo Lee、AlphaGo Fanによる1手5秒のトーナメント結果から計算されました。トーナメントには、AlphaGo Zeroの生のニューラルネットワークも使用されました。AlphaGo Fan、Crazy Stone、Pachi、GnuGoのEloレーティングは、以前の研究<sup>12</sup>のトーナメント値にアンカーされており、その研究で報告されたプレイヤーに対応しています。AlphaGo Fan対Fan Hui戦とAlphaGo Lee対Lee Sedol戦の結果も、スケールを人間の基準に合わせるために使用されました。そうしないと、AlphaGoのEloレーティングは、自己プレーバイアスにより非現実的に高くなります。
+<!--
+Elo ratings were computed from the results of a 5 s per move tournament
+between AlphaGo Zero, AlphaGo Master, AlphaGo Lee and AlphaGo Fan. The
+raw neural network from AlphaGo Zero was also included in the tournament.
+The Elo ratings of AlphaGo Fan, Crazy Stone, Pachi and GnuGo were anchored
+to the tournament values from previous work<sup>12</sup>, and correspond to the players
+reported in that work. The results of the matches of AlphaGo Fan against Fan
+Hui and AlphaGo Lee against Lee Sedol were also included to ground the scale
+to human references, as otherwise the Elo ratings of AlphaGo are unrealistically
+high due to self-play bias.
+-->
+</p><p>
+図3a、4a、6aのEloレーティングは、プレイヤー\(α_{θ_i}\)の自己対戦トレーニング中の各反復間の評価ゲームの結果から計算された。さらに、以前に公表された値<sup>12</sup>に固定されたEloレーティングを持つベースラインプレイヤーに対しても評価が行われた。
+<!--
+The Elo ratings in Figs 3a, 4a, 6a were computed from the results of evaluation
+games between each iteration of player \(α_{θ_i}\) during self-play training. Further evaluations
+were also performed against baseline players with Elo ratings anchored to
+the previously published values<sup>12</sup>.
+-->
+</p><p>
+2016年ソウルで李世ドルと対戦した際に使用されたのと同じプレイヤーと対戦条件を用いて、AlphaGo ZeroとAlphaGo Leeの直接対決、およびAlphaGo ZeroとAlphaGo Masterの40ブロックインスタンスのパフォーマンスを測定しました。
+各プレイヤーには2時間の思考時間と、1手あたり60秒の3つの秒読みが与えられました。
+すべての対局は中国式ルールで採点され、コミは7.5点でした。
+<!--
+We measured the head-to-head performance of AlphaGo Zero against AlphaGo
+Lee, and the 40-block instance of AlphaGo Zero against AlphaGo Master, using the
+same player and match conditions that were used against Lee Sedol in Seoul, 2016.
+Each player received 2 h of thinking time plus 3 byoyomi periods of 60 s per move.
+All games were scored using Chinese rules with a komi of 7.5 points.
+-->
+</p><p>
+<strong>データの入手可能性</strong><br>
+検証とテストに使用したデータセットは、GoKifuデータセット（http://gokifu.com/ から入手可能）とKGSデータセット（https://u-go.net/gamerecords/ から入手可能）です。
+<!--
+<strong>Data availability.</strong><br>
+ The datasets used for validation and testing are the GoKifu
+dataset (available from http://gokifu.com/) and the KGS dataset (available from
+https://u-go.net/gamerecords/).
+-->
+</p>
+<h2>(参考文献：つづき)</h2>
+<p>
+<div class="styleRef">
+<ul>
+</li><br><li>35. Barto, A. G. & Duff, M. Monte Carlo matrix inversion and reinforcement
+learning. Adv. Neural Inf. Process. Syst. 6, 687–694 (1994).
+</li><br><li>36. Singh, S. P. & Sutton, R. S. Reinforcement learning with replacing eligibility traces. Mach. Learn. 22, 123–158 (1996).
+</li><br><li>37. Lagoudakis, M. G. & Parr, R. Reinforcement learning as classification:
+leveraging modern classifiers. In Proc. 20th Int. Conf. Mach. Learn. 424–431
+(2003).
+</li><br><li>38. Scherrer, B., Ghavamzadeh, M., Gabillon, V., Lesner, B. & Geist, M. Approximate
+modified policy iteration and its application to the game of Tetris. J. Mach.
+Learn. Res. 16, 1629–1676 (2015).
+</li><br><li>39. Littman, M. L. Markov games as a framework for multi-agent reinforcement
+learning. In Proc. 11th Int. Conf. Mach. Learn. 157–163 (1994).
+</li><br><li>40. Enzenberger, M. The integration of a priori knowledge into a Go playing neural
+network. http://www.cgl.ucsf.edu/go/Programs/neurogo-html/neurogo.html
+(1996).
+</li><br><li>41. Enzenberger, M. in Advances in Computer Games (eds Van Den Herik, H. J., Iida,
+H. & Heinz, E. A.) 97–108 (2003).
+</li><br><li>42. Sutton, R. Learning to predict by the method of temporal differences. Mach.
+Learn. 3, 9–44 (1988).
+</li><br><li>43. Schraudolph, N. N., Dayan, P. & Sejnowski, T. J. Temporal difference learning of
+position evaluation in the game of Go. Adv. Neural Inf. Process. Syst. 6, 817–824
+(1994).
+</li><br><li>44. Silver, D., Sutton, R. & Müller, M. Temporal-difference search in computer Go.
+Mach. Learn. 87, 183–219 (2012).
+</li><br><li>45. Silver, D. Reinforcement Learning and Simulation-Based Search in Computer Go.
+PhD thesis, Univ. Alberta, Edmonton, Canada (2009).
+</li><br><li>46. Gelly, S. & Silver, D. Monte-Carlo tree search and rapid action value estimation
+in computer Go. Artif. Intell. 175, 1856–1875 (2011).
+</li><br><li>47. Coulom, R. Computing Elo ratings of move patterns in the game of Go. Int.
+Comput. Games Assoc. J. 30, 198–208 (2007).
+</li><br><li>48. Gelly, S., Wang, Y., Munos, R. & Teytaud, O. Modification of UCT with patterns in
+Monte-Carlo Go. Report No. 6062 (INRIA, 2006).
+</li><br><li>49. Baxter, J., Tridgell, A. & Weaver, L. Learning to play chess using temporal
+differences. Mach. Learn. 40, 243–263 (2000).
+</li><br><li>50. Veness, J., Silver, D., Blair, A. & Uther, W. Bootstrapping from game tree search.
+In Adv. Neural Inf. Process. Syst. 1937–1945 (2009).
+</li><br><li>51. Lai, M. Giraffe: Using Deep Reinforcement Learning to Play Chess. MSc thesis,
+Imperial College London (2015).
+</li><br><li>52. Schaeffer, J., Hlynka, M. & Jussila, V. Temporal difference learning applied to a
+high-performance game-playing program. In Proc. 17th Int. Jt Conf. Artif. Intell.
+Vol. 1 529–534 (2001).
+</li><br><li>53. Tesauro, G. TD-gammon, a self-teaching backgammon program, achieves
+master-level play. Neural Comput. 6, 215–219 (1994).
+</li><br><li>54. Buro, M. From simple features to sophisticated evaluation functions. In Proc.
+1st Int. Conf. Comput. Games 126–145 (1999).
+</li><br><li>55. Sheppard, B. World-championship-caliber Scrabble. Artif. Intell. 134, 241–275
+(2002).
+</li><br><li>56. Moravcˇík, M. et al. DeepStack: expert-level artificial intelligence in heads-up
+no-limit poker. Science 356, 508–513 (2017).
+</li><br><li>57. Tesauro, G & Galperin, G. On-line policy improvement using Monte-Carlo
+search. In Adv. Neural Inf. Process. Syst. 1068–1074 (1996).
+</li><br><li>58. Tesauro, G. Neurogammon: a neural-network backgammon program. In Proc.
+Int. Jt Conf. Neural Netw. Vol. 3, 33–39 (1990).
+</li><br><li>59. Samuel, A. L. Some studies in machine learning using the game of checkers II -
+recent progress. IBM J. Res. Develop. 11, 601–617 (1967).
+</li><br><li>60. Kober, J., Bagnell, J. A. & Peters, J. Reinforcement learning in robotics: a survey.
+Int. J. Robot. Res. 32, 1238–1274 (2013).
+</li><br><li>61. Zhang, W. & Dietterich, T. G. A reinforcement learning approach to job-shop
+scheduling. In Proc. 14th Int. Jt Conf. Artif. Intell. 1114–1120 (1995).
+</li><br><li>62. Cazenave, T., Balbo, F. & Pinson, S. Using a Monte-Carlo approach for bus
+regulation. In Int. IEEE Conf. Intell. Transport. Syst. 1–6 (2009).
+</li><br><li>63. Evans, R. & Gao, J. Deepmind AI reduces Google data centre cooling bill by
+40%. https://deepmind.com/blog/deepmind-ai-reduces-google-data-centrecooling-
+bill-40/ (2016).
+</li><br><li>64. Abe, N. et al. Empirical comparison of various reinforcement learning strategies
+for sequential targeted marketing. In IEEE Int. Conf. Data Mining 3–10 (2002).
+</li><br><li>65. Silver, D., Newnham, L., Barker, D., Weller, S. & McFall, J. Concurrent
+reinforcement learning from customer interactions. In Proc. 30th Int. Conf.
+Mach. Learn. Vol. 28 924–932 (2013).
+</li><br><li>66. Tromp, J. Tromp–Taylor rules. http://tromp.github.io/go.html (1995).
+</li><br><li>67. Müller, M. Computer Go. Artif. Intell. 134, 145–179 (2002).
+</li><br><li>68. Shahriari, B., Swersky, K., Wang, Z., Adams, R. P. & de Freitas, N. Taking the
+human out of the loop: a review of Bayesian optimization. Proc. IEEE 104,
+148–175 (2016).
+</li><br><li>69. Segal, R. B. On the scalability of parallel UCT. Comput. Games 6515, 36–47
+(2011).</li>
+</ul>
+</div>
+</p>
+<h2>(拡張データ：図表)</h2>
+<center><img src="images/figE1.png"></center>
+<p>
+拡張データ図1｜2時間制限を用いたAlphaGo Zero（20ブロック、3日間）対AlphaGo Leeのトーナメント対局。最初の20局の100手を表示。全対局は補足情報に掲載されている。
+<!--
+Extended Data Figure 1 | Tournament games between AlphaGo Zero (20 blocks, 3 days) versus AlphaGo Lee using 2 h time controls. One hundred
+moves of the first 20 games are shown; full games are provided in the Supplementary Information.
+-->
+</p>
+<center><img src="images/figE2.png"></center>
+<p>
+拡張データ 図2 | 図5aの各定石（AlphaGo Zeroによって発見された、プロの対局でよく見られるコーナーシーケンス）のトレーニング中の出現頻度の経時変化。対応する定石は右側に表示されている。
+<!--
+Extended Data Figure 2 | Frequency of occurence over time during training, for each joseki from Fig. 5a (corner sequences common in professional
+play that were discovered by AlphaGo Zero). The corresponding joseki are shown on the right.
+-->
+</p>
+<center><img src="images/figE3.png"></center>
+<p>
+拡張データ 図3 | 図5bの各定石（AlphaGo Zeroが少なくとも1回の反復で有利と判定したコーナーシーケンス）と追加のバリエーション1つについて、訓練中の時間経過に伴う出現頻度。対応する定石は右側に示されています。
+<!--
+Extended Data Figure 3 | Frequency of occurence over time during training, for each joseki from Fig. 5b (corner sequences that AlphaGo Zero
+favoured for at least one iteration), and one additional variation. The corresponding joseki are shown on the right.
+-->
+</p>
+<center><img src="images/figE4.png"></center>
+<p>
+拡張データ 図4 | AlphaGo Zero（20ブロック）の自己対局。3日間のトレーニングランは20期間に分割されました。各期間の最強プレイヤー（評価者によって選出）が、2時間の制限時間を設け、自身と1対局を行いました。各対局には100手が表示されています。完全な対局は補足情報に記載されています。
+<!--
+Extended Data Figure 4 | AlphaGo Zero (20 blocks) self-play games. The 3-day training run was subdivided into 20 periods. The best player from each
+period (as selected by the evaluator) played a single game against itself, with 2 h time controls. One hundred moves are shown for each game; full games
+are provided in the Supplementary Information.
+-->
+</p>
+<center><img src="images/figE5.png"></center>
+<p>
+拡張データ 図5 | AlphaGo Zero（40ブロック）の自己対局。40日間のトレーニング期間は20期間に分割された。各期間の最高位プレイヤー（評価者によって選出）が、2時間の制限時間を設け、自身と1対局を行った。各対局には100手が示されており、完全な対局は補足情報に記載されている。
+<!--
+Extended Data Figure 5 | AlphaGo Zero (40 blocks) self-play games. The 40-day training run was subdivided into 20 periods. The best player from
+each period (as selected by the evaluator) played a single game against itself, with 2 h time controls. One hundred moves are shown for each game; full
+games are provided in the Supplementary Information.
+-->
+</p>
+<center><img src="images/figE6.png"></center>
+<p>
+拡張データ図6 | AlphaGo Zero（40ブロック、40日間）とAlphaGo Masterトーナメントの2時間制対局。最初の20局の100手を表示。全局は補足情報に掲載。
+<!--
+Extended Data Figure 6 | AlphaGo Zero (40 blocks, 40 days) versus AlphaGo Master tournament games using 2 h time controls. One hundred moves
+of the first 20 games are shown; full games are provided in the Supplementary Information.
+-->
+</p>
+<center><img src="images/table1.png"></center>
+<p>
+拡張データ表 1 | 手予測精度<br>
+強化学習（AlphaGo Zero）または教師あり学習によって学習されたニューラルネットワークの手予測精度（パーセント）。教師あり学習では、ネットワークはKGSデータ（アマチュア対局）を用いて3日間学習されました。比較結果は参考文献12にも示されています。強化学習では、20ブロックのネットワークは3日間、40ブロックのネットワークは40日間学習されました。ネットワークは、GoKifuデータセットのプロの対局に基づく検証セットでも評価されました。
+<!--
+Extended Data Table 1 | Move prediction accuracy<br>
+Percentage accuracies of move prediction for neural networks trained by reinforcement learning (that is, AlphaGo Zero) or supervised learning. For supervised learning, the network was trained for 3
+days on KGS data (amateur games); comparative results are also shown from ref. 12. For reinforcement learning, the 20-block network was trained for 3 days and the 40-block network was trained for
+40 days. Networks were also evaluated on a validation set based on professional games from the GoKifu dataset.
+-->
+</p>
+<center><img src="images/table2.png"></center>
+<p>
+拡張データ表 2 | 対局結果予測誤差<br>
+強化学習（AlphaGo Zero）または教師あり学習によって学習されたニューラルネットワークの対局結果予測における平均二乗誤差。教師あり学習の場合、ネットワークはKGSデータ（アマチュア対局）を用いて3日間学習されました。比較結果は参考文献12にも示されています。強化学習の場合、20ブロックのネットワークは3日間、40ブロックのネットワークは40日間学習されました。ネットワークは、GoKifuデータセットのプロの対局に基づく検証セットでも評価されました。
+<!--
+Extended Data Table 2 | Game outcome prediction error<br>
+Mean squared error on game outcome predictions for neural networks trained by reinforcement learning (that is, AlphaGo Zero) or supervised learning. For supervised
+learning, the network was trained for 3 days on KGS data (amateur games); comparative results are also shown from ref. 12. For reinforcement learning, the 20 block
+network was trained for 3 days and the 40 block network was trained for 40 days. Networks were also evaluated on a validation set based on professional games from
+the GoKifu dataset.
+-->
+</p>
+<center><img src="images/table3.png"></center>
+<p>
+拡張データ表 3 | 学習率スケジュール<br>
+強化学習および教師あり学習の実験中に使用される学習率。ステップ数（ミニバッチ更新）で測定されます。
+<!--
+Extended Data Table 3 | Learning rate schedule<br>
+Learning rate used during reinforcement learning and supervised learning experiments, measured in thousands of steps (mini-batch updates).
+-->
+</p>
+    </body>
+</html>
