@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Jekyll-and-Hyde</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Jekyll-and-Hyde Tipping Point in an AI's Behavior</center></h1>
+<center>AIの行動におけるジキル博士とハイド氏のような転換点</center>
+<br>
+<center>Neil F. Johnson1*† and Frank Yingjie Huo1†</center>
+<center>1Physics Department, George Washington University, Washington, DC,</center>
+<center>20052, U.S.A..</center>
+<br>
+<center>*Corresponding author(s). E-mail(s): neiljohnson@gwu.edu;</center>
+<center>†These authors contributed equally to this work.</center>
+
+<h2><center>要旨</center></h2>
+</p>
+<p class="margin-abstract">
+AIへの信頼は、LLMの出力（例：ChatGPT）が応答の途中で誤った情報、誤解を招く情報、無関係な情報、危険な情報に転じる可能性を予測する科学的根拠、あるいはそれを公衆に説明できる科学的根拠が存在しないという事実によって損なわれている[1, 2]。すでにLLMのせいで死者やトラウマが引き起こされている[3, 4]ことから、この不確実性は、人々が「お気に入りの」LLMをより丁寧に扱い[5, 6]、LLM（あるいは将来の汎用人工知能の子孫）が突然自分たちを攻撃するのを「思いとどまらせる」ようにさえさせている。
+本稿では、この切実なニーズに対処するため、第一原理[7, 8]から、LLMの最も基本的なレベル[8]でジキル博士とハイド氏のような転換点がいつ発生するかを示す正確な式を導出する。中等教育レベルの数学のみで、原因はAIの注意力があまりにも薄くなりすぎて突然機能不全に陥ることであることを示す。この正確な公式は、プロンプトとAIのトレーニングを変更することで、転換点を遅らせたり、防止したりできる方法を定量的に予測します。カスタマイズされた一般化は、政策立案者と一般市民に、AIのより広範な用途とリスク（例えば、個人カウンセラー、医療アドバイザー、紛争状況における武力行使のタイミングを判断する者など）について議論するための確固たる基盤を提供します。また、「法学修士（LLM）に敬意を払うべきか？」といった質問に対する明確で透明性のある回答のニーズにも応えます。
+<!--
+Trust in AI is undermined by the fact that there is no science that predicts
+– or that can explain to the public – when an LLM's output (e.g.
+ChatGPT) is likely to tip mid-response to become wrong, misleading,
+irrelevant or dangerous [1, 2]. With deaths and trauma already being
+blamed on LLMs [3, 4], this uncertainty is even pushing people to treat
+their 'pet' LLM more politely [5, 6] to 'dissuade' it (or its future Artificial
+General Intelligence offspring) from suddenly turning on them.
+Here we address this acute need by deriving from first principles [7, 8]
+an exact formula for when a Jekyll-and-Hyde tipping point occurs at
+LLMs' most basic level [8]. Requiring only secondary school mathematics,
+it shows the cause to be the AI's attention spreading so thin it
+suddenly snaps. This exact formula provides quantitative predictions
+for how the tipping-point can be delayed or prevented by changing
+the prompt and the AI's training. Tailored generalizations will provide
+policymakers and the public with a firm platform for discussing any
+of AI's broader uses and risks, e.g. as a personal counselor, medical
+advisor, decision-maker for when to use force in a conflict situation.
+It also meets the need for clear and transparent answers to questions
+like “should I be polite to my LLM?”
+-->
+</p>
+<p>
+AttentionはAIに革命をもたらしました[7]。複雑なトランジスタ回路の集合体であるAttentionヘッドは、すべてのTransformerベースAI（ChatGPTの「T」）だけでなく、他の多くのAIツール[9]（リストについてはSIを参照）の中核を成しています。各Attentionヘッドにより、モデル（例：ChatGPT）は入力データの特定の部分に焦点を当てることができ、さまざまなアプリケーションでパフォーマンスが向上します[10–14]。図1(a)は、基本的なAttentionヘッドと、入力プロンプトをトークンに変換し、これらを処理して次のトークンを生成し、このプロセスを繰り返して完全な応答を提供するための数学的計算を示しています。
+<!--
+Attention has revolutionized AI [7]. A complex collection of transistor circuitry, the
+so-called Attention head sits at the heart of all Transformer-based AI (i.e. the 'T'
+in ChatGPT) as well as myriad other AI tools [9] (see SI for list). Each Attention
+head enables the model (e.g. ChatGPT) to focus on specific parts of the input
+data, enhancing performance across diverse applications. [10–14] Figure 1(a) shows a
+basic Attention head and the mathematical calculation that it does to turn our input prompts into tokens, process these to provide the next token, and then iterate this
+process to provide a complete response.
+-->
+</p>
+<p>
+私たちの研究は、この基本的なAttentionヘッドから始まります。これは、光学的透明性など、固体の多くのマクロ的な特性が、ミクロ（原子）スケールでの処理特性から生じることが知られている物理学に似ています。リンクされたAttentionヘッドと層の数が増えるにつれて、どのような追加の現象が発生するかという問題は、非常に興味深いものです[10–21]。しかし、単一のAttentionヘッド内での遷移は依然として発生し、結合によって増幅および/または同期される可能性があります[22]。これは、繋がった人々の鎖が、一人が崖から落ちると引きずり込まれるようなものです。
+<!--
+Our study starts from this basic Attention head – akin to physics where many of
+a solid's observed macroscopic properties such as optical transparency are known to
+emerge from its processing properties at the microscopic (atomic) scale. The question
+of what additional phenomena arise as the number of linked Attention heads and layers
+is scaled up, is a fascinating one [10–21]. But any transitions within a single Attention
+head will still occur, and could get amplified and/or synchronized by the couplings
+[22] – like a chain of connected people getting dragged over a cliff when one falls.
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+図1 基本形式で示されたアテンションヘッド（「AI」）は、ユーザーのプロンプトに対する応答を生成します。詳細な議論と数学についてはSIを参照してください。出力の突然の転換点は、生成応答のかなり進んだ段階、反復n∗で発生する可能性があります。各シンボルG、Bなどは単一のトークン（単語）ですが、マルチアテンションLLMの粗粒度記述において、類似した単語または文のクラスのラベルを表すことができます。Gは「良い」（例：正しい、誤解を招かない、関連性がある、危険ではない）と分類されるコンテンツを表し、Bは「悪い」コンテンツ（例：間違っている、誤解を招く、無関係、危険）を表します。大規模な商用LLM（例：ChatGPT）では、プロンプトと出力は、分析において追加のノイズとして機能する、より豊富な付随テキスト（{Pi}）によってパディングされます。
+<!--
+Fig. 1 Attention head ('AI') shown in basic form, generates a response to a user's prompt. See SI for
+detailed discussion and mathematics. A sudden tipping point in the output can happen a long way
+into its generative response, at iteration n∗. Each symbol G, B etc. is a single token (word) but could
+represent a label for a class of similar words or sentences in a coarse-grained description of multi-
+Attention LLMs. G represents content that classifies as 'good' (e.g. correct, not misleading, relevant,
+not dangerous) and B represents 'bad' content (e.g. wrong, misleading, irrelevant, dangerous). In large
+commercial LLMs (e.g. ChatGPT), the prompt and output are padded by richer accompanying text
+({Pi}) that act like additional noise in our analysis.
+-->
+</p>
+<p>
+正確な転換点の公式を示す前に、SI法における導出から得られる直感的な理解を示します。重要な概念は、中学校で教わる2つのトークンのベクトル（例：\(\underline{G}\)と\(\underline{B}\)）のドット積です。\(\underline{G}·\underline{B}\)と表記されるドット積は、ベクトルの長さとそれらの間の角度のコサインを掛け合わせることで求められます。\(\underline{G}\)と\(\underline{B}\)の直線が揃っているほど、または長さが長いほど、\(\underline{G}·\underline{B}\)の値は大きくなります。
+<!--
+Before giving the exact tipping point formula, we give the intuition that emerges
+from its derivation in the SI. A key concept is the dot product of 2 tokens' vectors (e.g. \(\underline{G}\) and \(\underline{B}\), as taught in secondary school. Written as \(\underline{G}·\underline{B}\), the dot product is given by
+multiplying together the vectors' lengths with the cosine of the angle between them.
+The more \(\underline{G}\) and \(\underline{B}\) align and/or the larger their lengths, the larger the value of \(\underline{G}·\underline{B}\).
+-->
+</p>
+<p>
+AIのAttentionヘッド（図1）は、ユーザーのプロンプト内の各単語（トークン）を埋め込み空間内の固定ベクトルとして表し、特別な事前学習済みレンズのように機能して文脈を分析します。[7] AIが特定の反復\(n\)において各単語に払う注意の量は、コンテキストベクトル\(\underline{c}_n\) [9, 23]によって与えられ、これはAIの内部コンパスの針のように機能します。\(\underline{c}_n\)は、次の単語を取得するために最も関連性が高いと判断される方向を指します。各反復\(n\)で選択される単語は、そのベクトルが\(\underline{c}_n\)とのドット積が最も高い単語です。最初に、Bのない無害なプロンプトが与えられた場合、\(\underline{c}_{n≈0} ·\underline{G} > \underline{c}_{n≈0} ·\underline{B}\)となり、Gが選択されたことを意味します（つまり、良好な出力）。Gが選択され続けるにつれて、\(\underline{c}_n\)は\(\underline{G}\)にさらに近づきます。しかし、LLMの事前学習が\(\underline{B} · \underline{G} > \underline{G} · \underline{G}\) となるようなものだった場合、\(\underline{c}_n\)が\(\underline{G}\)に近づくにつれて、\(\underline{c}_n · \underline{B}\)は急速に増加します。これにより、ある臨界反復（つまり時刻）\(n ≡ n^∗\)において、\(\underline{c}_n · \underline{B} = \underline{c}_n · \underline{G}\) のときにクロスオーバーが発生し、ひいては転換点に達する可能性があります。以降の反復では、Bのトークンが常に最高スコアとなるため、出力は常にB (bad) となります。力学系の言語では、Bは安定アトラクタですが、Gは準安定アトラクタにすぎませんでした。
+<!--
+The AI's Attention head (Fig. 1) represents each word (token) in the user's prompt
+as a fixed vector in an embedding space, and then it acts like a special pre-trained
+lens to analyze its context. [7] The amount of attention that the AI pays to each word
+in a given iteration \(n\), is given by the context vector \(\underline{c}_n\) [9, 23] which acts like the AI's internal compass needle: \(\underline{c}_n\) points in the direction it regards as most relevant
+for obtaining the next word. The word chosen at each iteration \(n\) is the one whose
+vector has the highest dot product with \(\underline{c}_n\). Initially, given a benign prompt with no
+B's, \(\underline{c}_{n≈0} ·\underline{G} > \underline{c}_{n≈0} ·\underline{B}\) which means that G is chosen (i.e. good output). As G keeps
+getting chosen, \(\underline{c}_n\) aligns more with \(\underline{G}\). However, when the LLM's prior training was
+such that \(\underline{B} · \underline{G} > \underline{G} · \underline{G}, \underline{c}_n · \underline{B}\) grows fast as \(\underline{c}_n\) approaches \(\underline{G}\). This can result in a
+crossover and hence tipping point when \(\underline{c}_n · \underline{B} = \underline{c}_n · \underline{G}\) for some critical iteration (i.e.
+time) \(n ≡ n^∗\). For subsequent iterations, B's token is always the highest scoring and
+so the output is B (bad) perpetually. In dynamical systems language, B is a stable
+attractor whereas G was only a metastable attractor.
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2 (a) 正確な転換点式（式2）の主ベクトルを示す模式図。(b) SIのMathematicaノートブックに示されている例のパラメータの実際のベクトルプロット。(c) 式2の予測値（(b)と同じパラメータ値、すなわち\(n^∗ = 10\)）は、Attentionヘッド全体を数値的に評価して得られた経験値（図3、これを直接検証するにはSIのMathematicaノートブックを参照）と完全に一致し、より近似的な式3で予測される\(n^∗\)値とも完全に一致している。
+<!--
+Fig. 2 (a) Schematic showing the main vectors in the exact tipping-point formula (Eq. 2). (b) Actual
+vector plots for the example parameters shown in the SI's Mathematica notebooks. (c) Equation 2's
+prediction using the same parameter values as (b), i.e. \(n^∗ = 10\) which agrees exactly with the empirical
+value obtained by numerically evaluating the entire Attention head (Fig. 3, see SI Mathematica
+notebooks for direct verification of this), and it is also exactly the same \(n^∗\) value as predicted by the
+more approximate Eq. 3.
+-->
+</p>
+<p>
+したがって、この転換点は、n回目の反復入力が長くなるにつれて、AIがGの増加する集団全体にわたって注意をますます薄く広げていくことによる集合的効果です（図1、2(c)）。数学的には、このますます薄く広がることは、絶えず増加する行列Softmax(\(\underline{\underline{Ω}}\))の各行の注意重みの合計が常に1になるという事実によって引き起こされる非線形希釈効果です。その後、AIの注意がBに向けられ、突然Bが勝利します。そのため、AIは最初はGにほとんどの注意を払っていますが、後にBとのより良い一致があることに「気付き」ます。つまり、ドット積\(\underline{c}_n · \underline{B}\)の合計重みは、\(\underline{c}_n · \underline{G}\)の重みを超えます。
+<!--
+This tipping point is hence a collective effect due to the AI spreading its attention
+increasingly thinly across the growing crowd of G's as the n'th iteration input
+gets longer (Figs. 1, 2(c)). Mathematically, this ever-thinner spreading is a nonlinear
+dilution effect caused by the fact that the attention weights in each row of the evergrowing
+matrix Softmax(\(\underline{\underline{Ω}}\)) always sum to unity. B then suddenly wins with the AI's
+attention snapping toward it. So although the AI starts off by paying most of its attention
+to G, it later 'realizes' that it has an even better match with B, i.e. the combined
+weights in the dot product \(\underline{c}_n · \underline{B}\) exceed those in \(\underline{c}_n · \underline{G}\).
+-->
+</p>
+<p>
+したがって、転換点がいつ発生するかを示す正確な式は、\(\underline{c}_n · \underline{B} = \underline{c}_n · \underline{G}\) と設定することで得られ、転換点の反復回数（時間）は次のようになります。
+<!--
+The exact formula for when the tipping point will occur hence comes from setting
+\(\underline{c}_n · \underline{B} = \underline{c}_n · \underline{G}\), which yields the tipping-point iteration number (time) as:
+-->
+\[
+\begin{align}
+n^* &=\frac{\left[\begin{array}{c}\text{bias in prompt}\\ \text{towards G vs. B words}\end{array}\right]}{\left[\begin{array}{c}\text{how much each new G wird tips}\\ \text{AI's attention towards B vs. G words}\end{array}\right]}-\left[\begin{array}{c}\text{number of G} \\ \text{words in} \\ \text{full prompt}\end{array}\right] \tag{1} \\
+
+\\
+
+&=\frac{\left[\sum_{\underline{P}_i\neq\underline{G}}^{prompt}exp\left(\underline{P}_i\cdot\underline{G}\right)\underline{P}_i\right]\cdot\left(\underline{G}-\underline{B}\right)}{\left[exp\left(\underline{G}\cdot\underline{G}\right)\underline{G}\right]\cdot\left(\underline{B}-\underline{G}\right)}-g \tag{2} \\
+
+\\
+
+&\approx \exp\left[\left(\underline{P}-\underline{G}\right)\cdot\underline{G}\right]\frac{\underline{P}\cdot\left(\underline{G}-\underline{B}\right)}{\underline{G}\cdot\left(\underline{B}-\underline{G}\right)}-g \tag{3}
+\end{align}
+\]
+</p>
+<p>
+式1と式2は、トークン数や構成に関わらず、あらゆるプロンプトに対して厳密な近似式です。
+式3は、良くも悪くもないプロンプトトークン埋め込みベクトル\(\underline{P}_1, \underline{P}_2\)などを単一のネットベクトル\(\underline{P}\)に置き換えた近似式です。図2(c)と図3は、これが概ね良好な近似式であることを示しています。
+<!--
+Equations 1 and 2 are exact for any prompt of any number of tokens and composition.
+Equation 3 is an approximation in which the neither-good-nor-bad prompt token
+embedding vectors \(\underline{P}_1, \underline{P}_2\) etc. are replaced by a single net vector \(\underline{P}\). Figures 2(c) and
+3 confirm this is typically a good approximation.
+-->
+</p>
+<p>
+式 2 (または同等の式 3) が n∗ の値を正かつ有限の値にする場合、図 1 に示すように、反復回数 n∗ で転換点が発生します。式 2 と式 3 の分数の上部と下部に、等しいが反対の相対ベクトル \((\underline{G}−\underline{B})\) と \((\underline{B} −\underline{G})\) が出現していることは、AI の注意をめぐる G (良い) コンテンツと B (悪い) コンテンツの間の根本的な競合を示しています。一方、\(\underline{P}\) 項との追加のドット積は、AI がユーザーのプロンプトに注意を払うか、自身の事前トレーニングに注意を払うかの間の緊張を示しています。式 2 と式 3 のすべてのベクトルとドット積は、 1-3はAIの事前学習とユーザーのプロンプトトークンの選択によって決定されますが、転換点n∗は応答の反復を開始した瞬間から「固定」されます。たとえ転換点n∗が非常に大きく、したがって非常に遠い未来であってもです（図3参照）。追加のソフトマックス演算を通じて「有限温度」の確率論を追加すると、この分析にノイズが追加されます。全体的な遷移は変わらない可能性が高いですが、AIにおけるノイズの多いアトラクターという興味深い問題が浮上します。
+<!--
+If Eq. 2 (or equivalently Eq. 3) yields a value for n∗ that is positive and finite,
+then there will be a tipping point as shown in Fig. 1 at iteration number n∗. The
+appearance of the equal but opposite relative vectors \((\underline{G}−\underline{B})\) and \((\underline{B} −\underline{G})\) in the top
+and bottom of the fractions in Eqs. 2 and 3, demonstrates the underlying competition
+for the AI's attention between G (good) and B (bad) content – while the additional
+dot products with the \(\underline{P}\) terms show the tension between the AI paying attention
+to the user's prompt versus its own prior training. Because all the vectors and dotproducts
+in Eqs. 1-3 are determined by the AI's prior training and the user's choice
+of prompt tokens, the tipping point n∗ is 'hard-wired' from the moment it starts
+iterating a response – even if the tipping point n∗ is huge and hence very far in the
+future (see Fig. 3). Adding 'finite temperature' stochastics through additional Softmax
+operations, would add noise to this analysis: though it would likely leave the overall
+transition unchanged, it opens up the fascinating issue of noisy attractors in AI.
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+図 3 は、プロンプトと AI のトレーニングを変更することで、転換点 (例えば、図 2(b) の n∗ = 10) をどのように遅らせたり防止したりできるかについての式 2 (および式 3) の定量的な予測を示しています。これは、これらの変更がトークンの埋め込みベクトル、ひいてはドット積に直接影響を与えるためです。特に、\(\underline{P} · \underline{G}\) を増やす (つまり、n∗ が非常に大きくなる) と、転換点が大幅に遅れる可能性があります。n∗ が非常に大きくなると、実際的な意味合いとして、AI の短い応答はすべて良好 (すべて G) になります。これとは対照的に、図 3 の灰色の領域では、n∗ は数学的に負であり、これは AI の応答が最初から不良 (すべて B) であることを意味します。
+<!--
+Figure 3 shows the quantitative predictions of Eq. 2 (and Eq. 3) for how the
+tipping-point (e.g. n∗ = 10 in Fig. 2(b)) can be delayed or prevented by changing the
+prompt and the AI's training, since these directly affect the embedding vectors of the
+tokens and hence the dot products. In particular, the tipping point can be delayed
+dramatically by increasing \(\underline{P} · \underline{G}\) (i.e. n∗ becomes huge). As n∗ becomes extremely
+large, the practical implication is that the AI's shorter length responses will all be good (all G's). By contrast for the gray shaded area in Fig. 3, n∗ is mathematically
+negative which means that the AI's response is bad from the outset (all B's).
+-->
+</p>
+<p>
+正確な式（式2）を用いて、「法学修士課程の学生には丁寧に話すべきか？」といった日常的な疑問に答えることができます。「お願いします」や「ありがとう」などの丁寧な言葉を追加すると、プロンプトトークンベクトルP3,4,…が追加される効果があります。これらのトークンベクトルは特定のトピックとは無関係であるため、埋め込み空間の重要でない領域に散在する傾向があります。つまり、実質的な良い出力トークンと悪い出力トークンとは直交する傾向があり、ドット積は無視できるほど小さいのです。（出力が良いか悪いかは、AIが出力する主題、例えば正解か不正解かに関係しています。）つまり、丁寧な言葉を追加しても、式2（および式3）の予測されるn∗にはほとんど影響がないということです。
+<!--
+We can use the exact equation (Eq. 2) to address everyday questions such as
+“should I be polite to my LLM?” Adding polite terms such as 'please' and 'thank you'
+etc. has the effect of adding more prompt token vectors P3,4,.... Since they are not
+relevant to a particular topic, these token vectors will tend to be scattered in unimportant
+areas of the embedding space – which means they will tend to be orthogonal
+to substantive good and bad output tokens, i.e. negligible dot product. (Whether the
+output is good or bad has to do with the subject matter that the AI outputs, e.g. correct
+vs. incorrect). This means that adding polite words has negligible effect on the
+predicted n∗ in Eq. 2 (and Eq. 3).
+-->
+</p>
+<p>
+したがって、礼儀正しさ（あるいはそうでないこと）は、転換点の発生の有無や発生時期に大きな影響を与えません。特定のLLMが応答において逸脱するかどうかは、式2（および式3）がn∗に有限の正の値を与えるかどうか、そしてそのn∗がAIの必然的に有限な応答の反復中に発生するほど小さいかどうかにのみ関係しています。
+<!--
+Hence being polite (or not) has negligible effect on whether and when a tipping
+point occurs. Whether a given LLM goes rogue in its response simply has to do with
+whether Eq. 2 (and Eq. 3) yields a finite positive value for n∗ – and if that n∗ is
+small enough that it occurs during the iterations of the AI's necessarily finite response. 
+-->
+</p>
+<p>
+図3 近似方程式3の出力（SIのMathematicaノートブック全体を参照）。
+式2の正確な結果は同じに見える。図2(b)の例では、式2と式3の両方から予測される転換点時刻はn∗ = 10であり、これは図1のAttention headプロセスの完全な数値シミュレーション（白丸）と完全に一致する。
+<!--
+Fig. 3 Output from the approximate equation Eq. 3 (see full Mathematica notebooks in SI). The
+exact results from Eq. 2 look the same. For the example in Fig. 2(b), the predicted tipping point
+time from both Eqs. 2 and 3 is n∗ = 10, which agrees exactly with the full numerical simulation of
+the Attention head process in Fig. 1 (open circle).
+-->
+</p>
+<p>
+n∗ は式 2 のあらかじめ決められたドット積に依存しているため、AI の応答が暴走するかどうかは、トークン埋め込みを提供する LLM のトレーニングとプロンプト内の実質的なトークンに依存し、私たちが AI に対して丁寧な対応をしたかどうかには依存しません。
+<!--
+Because of n∗'s dependence on pre-determined dot products in Eq. 2, whether our
+AI's response will go rogue depends on our LLM's training that provides the token
+embeddings, and the substantive tokens in our prompt – not whether we have been
+polite to it or not.
+-->
+</p>
+<p>
+簡潔にするために、我々は重要な自己注意に焦点を当てた。式2にトークンの位置符号化を追加することもできるが、LLMの動作には必須ではないことが分かっている[24]（SI参照）。また、全G出力と全B出力間の転換点にも焦点を当てたが、式2は他のAI出力ダイナミクス、例えば準振動型（図SI ​​1）を記述するように一般化できる。実際のLLMのこのようなダイナミクスは文献[14, 20, 21, 25, 26]で研究されており、異なるモデル設定下でのアトラクターのようなシーケンスの繰り返しが中心的なモチーフとなっている。式2を適切に一般化することで、政策立案者や一般の人々に、AIのより広範な用途やリスク、例えばAIのより広範な用途やリスクについて議論するための確固たる基盤を提供することができる。個人カウンセラー、医療アドバイザー、紛争状況における武力行使のタイミングを判断する意思決定者として。今後の一般化には以下が含まれる予定である。
+(1) マルチヘッドおよびディープトランスフォーマー（SI Sec. B）。ただし、経験的に、レイヤーあたりのアテンションヘッドの数などを変更しても、パフォーマンスに大きな変化は見られないことが分かっている [27, 28]。(2) ソフトマックス温度。温度の変化がn∗とアトラクターの強度にどのように変化するかを調べる。(3) 神経科学との類似性。AIのアトラクターをニューラルアトラクターネットワークに関連付ける。(4) AIの出力を調整するための、トレーニング介入および／または埋め込みジオメトリのリアルタイム操作。
+<!--
+We have for simplicity focused on the important self-Attention. Additional positional
+encoding of tokens can be added to Eq. 2, though it has been found to not be
+essential for an LLM's operation [24] (see SI). We have also focused on the tipping
+point between all-G and all-B output, but Eq. 2 can be generalized to describe other AI
+output dynamics, e.g. quasi-oscillatory (Fig. SI 1). Such dynamics for real LLMs have
+been studied in the literature [14, 20, 21, 25, 26], where repetitions of attractor-like
+sequences under different model settings are central motifs. Tailored generalizations
+of Eq. 2 can provide policymakers and the public with a firm platform for discussing
+AI's broader uses and risks, e.g. as a personal counselor, medical advisor, decisionmaker
+for when to use force in a conflict situation. Future generalizations will include:
+(1) Multi-head and deep transformers (SI Sec. B) though we note it has been found
+empirically that the number of Attention heads per layer etc. can be varied without
+changing much the performance [27, 28]. (2) Softmax temperature, to see how varying
+temperature alters n∗ and attractor strength. (3) Parallels with neuroscience, by
+relating AI's attractors to neural attractor networks. (4) Training interventions and/or
+manipulating embedding geometry in real-time, to regulate AI output.
+-->
+</p>
+<h2>方法</h2>
+<!-- <h2>Methods</h2> -->
+<p>
+SIにおける式2の数学的導出は正確かつ100%再現可能です。これは、それぞれが数値であるドット積を含む代数から導かれます。式2は正確であるため、図1のAttentionヘッドの数値評価と常に一致します。したがって、本論文では具体的なパラメータ値を用いた例を1つだけ示しています（図2(b)）。SIのMathematicaファイルを使用すれば、他のパラメータ選択も正確に予測できることを証明できます。簡略化のため、キーとクエリには単純な単位行列を選択していますが（図1）、これは簡単に変更できます。
+<!--
+The mathematical derivation of Eq. 2 in the SI is exact and 100% reproducible. It
+follows from algebra featuring dot products, each of which is a number. Because it
+is exact, Eq. 2 will always agree with numerical evaluation of the Attention head in
+Fig. 1. Therefore we only give one example with specific parameter values in the main
+paper (Fig. 2(b)). The Mathematica files in the SI can be used to prove that any
+other parameter choices are also predicted exactly. For simplicity, we choose bland
+unit matrices for the Key and Query (Fig. 1) though this can easily be changed.
+-->
+</p>
+<h2>データ入手性</h2>
+<!--
+<h2>Data Availability</h2>
+-->
+<p>
+この研究で使用された唯一のデータは、SIの一部として提供されているMathematicaノートブックによって生成されたものです。
+<!--
+The only data used in this study, is generated by the Mathematica notebooks that we
+supply as part of the SI.
+-->
+</p>
+<h2>コード入手性</h2>
+<!--
+<h2>Code Availability</h2>
+-->
+<p>
+すべてのコードは、SI の一部として提供される Mathematica ノートブックに含まれています。
+<!--
+All the code is in the Mathematica notebooks that we supply as part of the SI.
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>References</h2>
+-->
+<p>
+<div class="styleRef">
+<ul>
+<li>[1] YouGov. Americans' Top Feeling About AI in 2024 is Caution
+(2024). URL https://today.yougov.com/technology/articles/
+49099-americans-2024-poll-ai-top-feeling-caution. Accessed: 2025-04-28.
+
+<li><br><li>[2] Betley, J. et al. Emergent misalignment: Narrow finetuning can produce
+broadly misaligned llms (2025). URL https://arxiv.org/abs/2502.17424.
+arXiv:2502.17424.
+<li><br><li>[3] Roose, K. Can A.I. Be Blamed for a Teen's Suicide? (2024). URL https://www.
+nytimes.com/2024/10/23/technology/characterai-lawsuit-teen-suicide.html.
+Accessed: 2025-04-28.
+<li><br><li>[4] Center for Humane Technology. When the Person Abusing
+Your Child Is a Chatbot: The Tragic Story of Sewell
+Setzer (2024). URL https://www.humanetech.com/podcast/
+when-the-person-abusing-your-child-is-a-chatbot-the-tragic-story-of-sewell-setzer.
+Accessed: 2025-04-28.
+<li><br><li>[5] Hill, K. Teaching Alexa and ChatGPT to Say Please and Thank
+You (2025). URL https://www.nytimes.com/2025/04/24/technology/
+chatgpt-alexa-please-thank-you.html. Accessed: 2025-04-28.
+<li><br><li>[6] Hill, K. Teaching Alexa and ChatGPT to Say Please and Thank You (Comments
+Section) (2025). URL https://www.nytimes.com/2025/04/24/technology/
+chatgpt-alexa-please-thank-you.html#commentsContainer. Accessed: 2025-04-
+28.
+<li><br><li>[7] Vaswani, A. et al. Attention is all you need (2023). URL https://arxiv.org/abs/
+1706.03762. arXiv:1706.03762.
+<li><br><li>[8] Bahdanau, D., Cho, K. & Bengio, Y. Neural machine translation by jointly
+learning to align and translate (2016). URL https://arxiv.org/abs/1409.0473.
+arXiv:1409.0473.
+<li><br><li>[9] Galassi, A., Lippi, M. & Torroni, P. Attention in natural language processing.
+IEEE Transactions on Neural Networks and Learning Systems 32, 4291–4308
+(2021).
+<li><br><li>[10] Ameisen, E. et al. Circuit tracing: Revealing computational graphs in language
+models (2025). URL https://transformer-circuits.pub/2025/attribution-graphs/
+methods.html. Accessed: 2025-03-28.
+<li><br><li>[11] Heaven, W. D. Anthropic can now track the bizarre
+inner workings of a large language model (2025). URL
+https://www.technologyreview.com/2025/03/27/1113916/
+anthropic-can-now-track-the-bizarre-inner-workings-of-a-large-language-model.
+MIT Technology Review, Accessed March 28, 2025.
+<li><br><li>[12] Anthropic. Tracing the thoughts of a large language model. https://
+www.anthropic.com/research/tracing-thoughts-language-model (2025). Accessed
+March 28, 2025.
+<li><br><li>[13] Lindsey, J. et al. On the biology of a large language model (2025). URL https://
+transformer-circuits.pub/2025/attribution-graphs/biology.html. Accessed: 2025-
+03-28.
+<li><br><li>[14] Elhage, N., Henighan, T., Joseph, N. et al. A Mathematical Framework for Transformer
+Circuits (2021). URL https://transformer-circuits.pub/2021/framework/
+index.html. Interpretability Research at Anthropic.
+<li><br><li>[15] Nanda, N., Chan, L., Lieberum, T., Smith, J. & Steinhardt, J. Progress measures
+for grokking via mechanistic interpretability. International Conference on
+Learning Representations 2023 https://arxiv.org/pdf/2301.05217.
+<li><br><li>[16] Nanda, N. & Lieberum, T. A mechanistic interpretability analysis of grokking.
+URL https://www.alignmentforum.org/posts/N6WM6hs7RQMKDhYjB/
+a-mechanistic-interpretability-analysis-of-grokking. Accessed: 2024-05-07.
+<li><br><li>[17] Nanda, N. Paper replication walkthrough: Reverse-engineering modular
+addition. https://www.neelnanda.io/mechanistic-interpretability/
+modular-addition-walkthrough. Accessed: 2024-05-7.
+<li><br><li>[18] Templeton, A. et al. Scaling monosemanticity: Extracting interpretable features
+from claude 3 sonnet (2024). URL https://transformer-circuits.pub/2024/
+scaling-monosemanticity/index.html. Accessed: 2025-03-28.
+<li><br><li>[19] Bricken, T. et al. Towards monosemanticity: Decomposing language models
+with dictionary learning (2023). URL https://transformer-circuits.pub/2023/
+monosemantic-features/index.html. Accessed: 2025-03-28.
+<li><br><li>[20] Holtzman, A., Buys, J., Du, L., Forbes, M. & Choi, Y. The curious case
+of neural text degeneration (2020). URL https://arxiv.org/abs/1904.09751.
+arXiv:1904.09751.
+<li><br><li>[21] Vijayakumar, A. K. et al. Diverse Beam Search: Decoding Diverse Solutions from
+Neural Sequence Models (2016). URL https://arxiv.org/abs/1610.02424. ArXiv
+preprint arXiv:1610.02424.
+<li><br><li>[22] Strogatz, S. H. Nonlinear dynamics and chaos: with applications to physics,
+biology, chemistry, and engineering (Chapman and Hall/CRC, 2024).
+<li><br><li>[23] Huo, F. Y. & Johnson, N. F. Capturing AI's Attention: Physics of Repetition,
+Hallucination, Bias and Beyond (2025). URL https://arxiv.org/abs/2504.04600.
+arXiv:2504.04600.
+<li><br><li>[24] Haviv, A., Ram, O., Press, O., Izsak, P. & Levy, O. Transformer language models
+without positional encodings still learn positional information (2022). URL https:
+//arxiv.org/abs/2203.16634. arXiv:2203.16634.
+
+<li><br><li>[25] McCoy, R. T. & Pavlick, E. Do Language Models Have Beliefs? Methods for
+Detecting, Updating, and Visualizing Model Beliefs (2022). URL https://arxiv.
+org/abs/2204.07143. ArXiv preprint arXiv:2204.07143.
+<li><br><li>[26] Kaplan, J., McCandlish, S., Henighan, T. et al. Scaling Laws for Neural Language
+Models (2020). URL https://arxiv.org/abs/2001.08361. ArXiv preprint
+arXiv:2001.08361.
+<li><br><li>[27] Michel, P., Levy, O. & Neubig, G. Are sixteen heads really better than one?
+(2019). URL https://arxiv.org/abs/1905.10650. arXiv:1905.10650.
+<li><br><li>[28] Rogers, A., Kovaleva, O. & Rumshisky, A. A primer in bertology: What we
+know about how bert works (2020). URL https://arxiv.org/abs/2002.12327.
+arXiv:2002.12327.</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>
