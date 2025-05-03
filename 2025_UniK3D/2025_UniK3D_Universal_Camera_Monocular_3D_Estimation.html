@@ -1,0 +1,2234 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>UniK3D</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>UniK3D: Universal Camera Monocular 3D Estimation</center></h1>
+<center>UniK3D: ユニバーサルカメラ単眼3D推定</center>
+<br>
+<center>Luigi Piccinelli1 Christos Sakaridis1 Mattia Segu1</center>
+<center>Yung-Hsu Yang1 Siyuan Li1 Wim Abbeloos2 Luc Van Gool1,3</center>
+<center>1ETH Z¨urich 2Toyota Motor Europe 3INSAIT, Sofia University St. Kliment Ohridski</center>
+
+<h2>要旨</h2>
+<!--
+<h2>Abstract</h2>
+-->
+<p>
+単眼3D推定は視覚認識にとって極めて重要です。しかしながら、現在の手法は、ピンホールカメラモデルや補正画像といった過度に単純化された仮定に依存しているため、不十分です。これらの制限により、汎用性が大幅に制限され、魚眼レンズやパノラマ画像を用いた現実世界のシナリオでは性能が低下し、コンテキストの大幅な損失につながります。この問題を解決するため、我々は、あらゆるカメラをモデル化できる、単眼3D推定のための初めての汎用化手法であるUniK3D1を紹介します。この手法は、球面3D表現を導入することで、カメラとシーンの形状をより適切に分離し、制約のないカメラモデルに対して正確なメトリック3D再構成を可能にします。このカメラコンポーネントは、球面調和関数の学習された重ね合わせによって実現される、モデルに依存しない新しい光線束表現を特徴としています。また、カメラモジュールの設計と相まって、広視野カメラの3D出力の縮小を防ぐ角度損失も導入しました。 13種類の多様なデータセットを用いた包括的なゼロショット評価により、3D、深度、カメラメトリクスにおけるUniK3Dの最先端の性能が実証されました。従来のピンホールによる小視野領域では最高の精度を維持しながら、困難な広視野角やパノラマ撮影において大幅な性能向上が見られました。コードとモデルはgithub.com/lpiccinelli-eth/unik3dで入手できます。
+<!--
+Monocular 3D estimation is crucial for visual perception.
+However, current methods fall short by relying on oversimplified
+assumptions, such as pinhole camera models or rectified
+images. These limitations severely restrict their general applicability,
+causing poor performance in real-world scenarios
+with fisheye or panoramic images and resulting in substantial
+context loss. To address this, we present UniK3D1,
+the first generalizable method for monocular 3D estimation
+able to model any camera. Our method introduces a spherical
+3D representation which allows for better disentanglement
+of camera and scene geometry and enables accurate
+metric 3D reconstruction for unconstrained camera models.
+Our camera component features a novel, model-independent
+representation of the pencil of rays, achieved through a
+learned superposition of spherical harmonics. We also introduce
+an angular loss, which, together with the camera module
+design, prevents the contraction of the 3D outputs for
+wide-view cameras. A comprehensive zero-shot evaluation
+on 13 diverse datasets demonstrates the state-of-the-art performance
+of UniK3D across 3D, depth, and camera metrics,
+with substantial gains in challenging large-field-of-view and
+panoramic settings, while maintaining top accuracy in conventional
+pinhole small-field-of-view domains. Code and
+models are available at github.com/lpiccinelli-eth/unik3d.
+-->
+</p>
+<h2>1. はじめに</h2>
+<!--
+<h2>1. Introduction</h2>
+-->
+<p>
+3Dシーンの形状推定は、コンピュータビジョンにおける基本的なタスクです。なぜなら、そのような3D情報は、行動計画と実行のための重要な手がかりとなるからです[14, 89]。シーンの3D形状推定タスクは、正確な空間理解が不可欠な、自律航法[56, 76]や3Dモデリング[13]など、幅広いアプリケーションにとって不可欠です。一般化可能な単眼深度推定(MDE)[32, 63, 81]の最近の進歩は、様々な領域で優れた性能と視覚品質をもたらしますが、これらのモデルは相対的な出力スケールに制限されています。それでもなお、実用的なアプリケーションでは、一貫性と信頼性のあるメトリックスケールの単眼深度推定(MMDE)が不可欠です。これは、具現化されたエージェントに必要な正確な3D再構築とシーンの形状理解を可能にするためです。
+<!--
+Estimating 3D scene geometry is a fundamental task in computer
+vision since such 3D information serves as a crucial
+cue for action planning and execution [14, 89]. The scene’s
+geometry 3D estimation task is vital for a wide range of applications,
+including autonomous navigation [56, 76] and 3D
+modeling [13], where accurate spatial understanding is essential.
+Recent advances in generalizable monocular depth estimation
+(MDE) [32, 63, 81] deliver impressive performance
+and visual quality across various domains, but these mod-els are constrained to a relative output scale. Nonetheless,
+for practical applications, a consistent and reliable metricscaled
+monocular depth estimate (MMDE) is crucial, as it
+enables accurate 3D reconstruction and geometric scene understanding
+necessary for embodied agents.
+-->
+</p><p>
+既存の手法は、上記のメトリック推定の方向において大きな進歩を遂げてきました。初期のアプローチでは、テスト時にカメラの内部情報が既知であると仮定していました [24, 85]。一方、最近の研究ではこの仮定が緩和されています [9, 60, 61]。しかし、これらのアプローチは、入力カメラに関して依然として制限的な仮定を課しており、例えば、基本的なピンホールカメラモデルに依存すること [9, 60]、または正解補正パラメータへのアクセスを必要とすること [85] などが挙げられます。これらの単純化は、魚眼レンズやパノラマレンズなど、強い非線形変形を伴う様々なカメラ投影モデルが一般的である現実世界の設定において、上記の手法の適用性を大幅に阻害し、性能を低下させます。この制限は、深度マップのみではなく完全なメトリック3Dジオメトリを推定する場合により顕著になります。これは、前者がカメラ推定の品質に大きく依存するためです。既存モデルにおける制約的な仮定のため、様々な種類のカメラからの画像を用いてモデルを学習したとしても、一般的なカメラ推定を効果的に学習することができません。さらに、従来の最先端のMMDE法の出力空間には固有の限界があり、例えば、視野角（FoV）が180度を超えると、視差予測と対数深度予測はどちらも数学的に不良設定となります。
+<!--
+Existing methods have made considerable strides in the
+above direction of metric estimation. Earlier approaches assumed
+known camera intrinsics at test time [24, 85], while
+more recent works have relaxed this assumption [9, 60, 61].
+However, these approaches still impose restrictive assumptions
+about input cameras, such as relying on a basic pinhole
+camera model [9, 60] or requiring access to ground-truth
+rectification parameters [85]. These simplifications substantially
+hinder the applicability and degrade the performance of the above methods in real-world settings, where a wide
+range of camera projection models with strong non-linear deformations
+are common, such as fisheye or panoramic lenses.
+This limitation is more pronounced when estimating complete
+metric 3D geometry instead of only depth maps, as the
+former depends more heavily on the quality of camera estimation.
+Due to the restrictive assumptions in existing models,
+general camera estimation can not be effectively learned,
+even when models are exposed to images from varied camera
+types. Furthermore, the output space of previous state-ofthe-
+art MMDE methods has inherent limitations, e.g. both
+disparity and log-depth prediction become mathematically
+ill-posed when the field of view (FoV) exceeds 180 degrees.
+-->
+</p><p>
+これらの課題に対処するため、我々は、図1に示すように、ピンホールから魚眼レンズ、パノラマ構成まで、幅広いカメラモデルに一般化できる、単眼メトリック3Dシーンの形状推定のための初のフレームワークであるUniK3Dを導入する。我々の手法は、2つの意味で球面的な単眼3D推定のための新しい定式化を提案する。第一に、UniK3Dは完全に球面の出力3D空間を活用し、垂直深度ではなく放射距離で範囲次元をモデル化する。このアプローチは、光軸からの角度が大きい場合に特に有益であり、極端な視野における従来の方法の不適正性を効果的に解決する。第二に、最近提案されたカメラ予測と深度推定の分解[60]に基づき、UniK3Dは光線束を表すカメラモジュールの直接出力空間として、一般的な球面調和関数基底を新たに提示する。先行研究 [9, 60] では、ピンホールカメラのパラメータを明示的に予測し、球面基底を用いて誘導光線を符号化していましたが [60]、本研究ではカメラの仮定を排除し、光線を直接モデル化します。その結果、UniK3D はカメラモデルの可能な範囲を無制限に拡張し、カメラの固有値に関わらず、柔軟かつ正確な深度予測を可能にします。本研究の仮定フリーの球面カメラ表現は、その柔軟性により、非標準カメラでシーンを撮影することが一般的である現実世界での展開に本モデルが適していることを保証します。
+<!--
+To address these challenges, we introduce UniK3D, the
+first framework for monocular metric 3D scene’s geometry
+estimation that generalizes across a wide variety of camera
+models, from pinhole to fisheye and panoramic configurations,
+as shown in Fig. 1. Our method proposes a novel formulation
+for monocular 3D estimation which is spherical in
+two senses. First, UniK3D leverages a fully spherical output
+3D space, modeling the range dimension through radial
+distance instead of perpendicular depth. This approach is especially
+beneficial at large angles from the optical axis, effectively
+resolving the ill-posed nature of traditional methods
+at extreme fields of view. Second, while building on
+the recently proposed decomposition [60] of camera prediction
+from depth estimation, UniK3D newly presents a general
+spherical harmonics basis as the direct output space of
+the camera module that represents the pencil of rays. Unlike
+previous works [9, 60] which predict explicit pinhole camera
+parameters and then encode [60] induced rays using a
+spherical basis, we remove the camera assumption and directly
+model the rays. As a result, UniK3D spans an unrestricted
+space of possible camera models, allowing for flexible
+and accurate depth prediction regardless of camera intrinsics.
+Our assumption-free spherical camera representation,
+with its flexibility, ensures that our model is well-suited
+for real-world deployment, where capturing scenes with nonstandard
+cameras is common.
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p class="margin-large">
+図1. UniK3Dは、カメラ情報を必要とせずに、ピンホールからパノラマまで、あらゆるタイプのカメラで、単一の画像から正確なメトリック3Dジオメトリ推定を実現する、斬新で汎用的なアプローチを導入します。(i) 3D空間の半径方向とカメラモデルに依存する2つの方向方向の両方に対する柔軟で汎用的な球面定式化と、(ii) 高度な調整戦略を活用することで、UniK3Dはカメラのキャリブレーションやドメイン固有のチューニングを必要とせずに、従来のモデルよりも優れた性能を発揮します。
+<!--
+Figure 1. UniK3D introduces a novel and versatile approach that
+delivers precise metric 3D geometry estimation from a single image
+and for any camera type, ranging from pinhole to panoramic,
+without requiring any camera information. By leveraging (i) a flexible
+and general spherical formulation both for the radial dimension
+of 3D space and for the two camera-model-dependent orientation
+dimensions and (ii) advanced conditioning strategies. UniK3D outperforms
+traditional models without needing camera calibration or
+domain-specific tuning.
+-->
+</p><p>
+私たちの主要な貢献は、あらゆるカメラの射影幾何学に対応できる、単眼3D推定のための初のカメラユニバーサルモデルです。これは、すべての逆射影問題をサポートする統一された球面出力表現によって実現されます。完全な球面フレームワークを採用することで、私たちの手法は射影と3Dシーン幾何学の完全な分離を保証します。これは、画像上の物体投影の次元が、深度ではなく半径距離に関してのみ一義的な関数であるためです。この分離により、より一貫性のある3D再構成が可能になり、深度がゼロに近づくxy平面付近での3D出力の安定性が向上します。さらに、UniK3Dはカメラ光線を有限の球面調和関数基底にわたる分解としてモデル化します。この選択により、表現の一般性と汎用性が確保されると同時に、結果として得られる光線束の正確かつコンパクトな表現が維持され、連続性や微分可能性といった帰納的バイアスも導入されます。さらに、我々は、四分位回帰に基づく非対称角度損失、静的エンコーディング、カリキュラム学習など、ラジアルモジュールの堅牢なカメラコンディショニングを確保するための複数の新しい戦略を提案します。
+<!--
+Our key contribution is the first camera-universal model
+for monocular 3D estimation that can accommodate any camera
+projective geometry. We achieve this through our unified
+spherical output representation that supports all inverse
+projection problems. By employing a fully spherical framework,
+our method ensures a complete disentanglement of
+projective vs. 3D scene geometry, as the dimension of an object
+projection on the image is a univocal function only w.r.t.
+radial distance and not w.r.t. depth. This disentanglement allows
+more consistent 3D reconstructions and enhances the
+stability of 3D outputs near the xy-plane, where depth approaches
+zero. Moreover, UniK3D models the camera rays
+as a decomposition across a finite spherical harmonics basis.
+This choice ensures representation generality and versatility, and at the same time maintains an accurate and compact representation
+for the resulting pencils of rays, also introducing
+inductive biases such as continuity and differentiability. In
+addition, we propose multiple novel strategies to ensure robust
+camera conditioning of our radial module such as an
+asymmetric angular loss based on quantile regression, static
+encoding, and curriculum learning.
+-->
+</p><p>
+我々は、広く使用されている13のメトリック深度データセットを用いた広範なゼロショット実験を通じて、このアプローチを検証しました。UniK3Dは、単眼メトリック深度と3D推定において最先端の性能を達成するだけでなく、トレーニング中に前処理や特定のカメラドメインを使用することなく、さまざまなカメラモデルにわたって非常に優れた一般化を実現します。
+<!--
+We validate our approach through extensive zero-shot experiments
+on 13 widely used metric depth datasets, where
+UniK3D not only achieves state-of-the-art performance in
+monocular metric depth and 3D estimation, but also generalizes
+very well across various camera models, without either
+preprocessing or specific camera domains during training.
+-->
+</p>
+<h2>2. 関連研究</h2>
+<!--
+<h2>2. Related Work</h2>
+-->
+<p>
+単眼深度推定。[16] によって初めて実証されたMDEのためのエンドツーエンドニューラルネットワークの導入は、スケール不変対数損失 (SIlog) を用いた直接最適化による深度予測を可能にし、この分野に革命をもたらしました。それ以来、この分野は、畳み込みアーキテクチャ [19, 36, 45, 58] から、トランスフォーマーを使用した最近の進歩 [6, 59, 80, 86] に至るまで、ますます洗練されたモデルによって進化してきました。これらのアプローチは、制御されたベンチマークにおけるMDE性能の限界を押し広げてきましたが、ゼロショットシナリオに直面したときにしばしば失敗し、さまざまなカメラやシーン領域、そして多様な幾何学的条件や視覚条件にわたって堅牢な一般化を保証するという永続的な課題を浮き彫りにしています。一般化可能な単眼深度推定。ドメイン固有モデルの限界に対処するため、最近の研究では、一般化可能なゼロショットMDE手法の開発に焦点が当てられています。これらの手法は、スケールの曖昧さを軽減し、知覚的な奥行き品質を重視することを目的とするスケール非依存アプローチ [32, 63, 73, 81, 82] と、正確な幾何学的再構成を優先するメトリック奥行きモデル [7, 9, 24, 28, 60, 61, 85] に分類できます。しかし、既存のMDE手法のほとんどは、真のゼロショット単眼メトリック3Dシーン推定を実現できていません。特に、スケール非依存アプローチでは、スケールの曖昧さを解決するために追加の情報が必要になることが多く、メトリックベースのモデルのほとんどは、既知のカメラに依存するか、単純なピンホールカメラ構成を前提としています。ゼロショット3Dシーン推定用に設計された少数のモデルでさえも制約を受けます。これらのモデルは、ピンホールカメラモデルを明示的に仮定するか[9, 60]、画像の平行化を必要とするかのいずれかであり[85]、実質的にはテスト時のカメラ情報が必要となり、ゼロショットの一般化はピンホールカメラに限定されます。
+<!--
+Monocular Depth Estimation. The introduction of end-toend
+neural networks for MDE, first demonstrated by [16],
+revolutionized the field by enabling depth prediction through
+direct optimization, utilizing the Scale-Invariant log loss
+(SIlog). Since then, the field has evolved with increasingly
+sophisticated models, ranging from convolutional architectures
+[19, 36, 45, 58] to recent advancements using transformers
+[6, 59, 80, 86]. While these approaches have pushed
+the boundaries of MDE performance in controlled benchmarks,
+they often fail when faced with zero-shot scenarios,
+highlighting a persistent challenge: ensuring robust generalization
+across varying camera and scene domains and diverse
+geometric and visual conditions.
+Generalizable Monocular Depth Estimation. To address
+the limitations of domain-specific models, recent research
+has focused on developing generalizable and zero-shot MDE
+techniques. These methods can be categorized into scaleagnostic
+approaches [32, 63, 73, 81, 82], which aim to mitigate
+scale ambiguity and emphasize perceptual depth quality,
+and metric depth models [7, 9, 24, 28, 60, 61, 85], which
+prioritize accurate geometric reconstruction. However, most
+existing MDE methods fall short of achieving truly zero-shot
+monocular metric 3D scene estimation. In particular, scaleagnostic
+approaches often require additional information to
+resolve scale ambiguities, while most of the metric-based
+models depend on a known camera or assume a simplistic
+pinhole camera configuration. Even the few models which
+are designed for zero-shot 3D scene estimation [9, 60, 85]
+remain constrained: they either explicitly assume a pinhole
+camera model [9, 60] or necessitate image rectification [85],
+effectively requiring test-time camera information and limiting
+their zero-shot generalizability to pinhole cameras.
+-->
+</p><p>
+一方、UniK3Dは、あらゆる逆投影問題に対応できる統合ソリューションを提供することで、これらの制限に対処します。このモデルは、カメラの固有パラメータに関わらず、テスト時に補正やカメラ情報を入力する必要なく、任意の単一画像からコヒーレントな3D点群を復元できます。この汎用性こそがUniK3Dの特徴であり、多様で困難な実世界アプリケーションで必要とされる、堅牢で汎用的な単眼メトリック3D推定を可能にします。
+カメラキャリブレーション。カメラキャリブレーションは、焦点距離、主点、歪み係数などの固有パラメータを推定し、3Dワールドポイントから2D画像座標へのマッピングをモデル化するために不可欠です。ピンホールモデル、Kannala-Brandtモデル[30]、Meiモデル[49]、Omnidirectionモデル[64]、Unified Camera Model (UCM) [22]、Enhanced UCM [33]、Double Sphereモデル[69]などの従来のパラメトリックモデルは、狭角レンズと広角レンズの両方に有効ですが、正確なキャリブレーションには制御された環境が必要です。モデルが複雑になるにつれて、特に照明やセンサーノイズが変化する状況では、誤差や発散のリスクが増大します。さらに、各モデルには固有の限界があり、例えばUCMは接線方向の歪みを表現できず、Kannala-Brandtモデルは210◦を超える視野角では困難です。
+<!--
+On the contrary, UniK3D addresses these limitations by
+offering a unified solution that can handle any inverse projection
+problem. Our model can recover a coherent 3D point
+cloud from any single image, regardless of camera intrinsics,
+without any rectification or camera information at test time.
+This generality sets UniK3D apart, enabling robust and uni-versal monocular metric 3D estimation that is required in diverse
+and challenging real-world applications.
+Camera Calibration. Camera calibration is essential for
+estimating intrinsic parameters like focal length, principal
+point, and distortion coefficients to model the mapping
+from 3D world points to 2D image coordinates. Traditional
+parametric models, such as the pinhole model, Kannala-
+Brandt [30], Mei [49], Omnidirection [64], Unified Camera
+Model (UCM) [22], Enhanced UCM [33], and Double
+Sphere [69] models are effective for narrow- and wide-angle
+lenses but require controlled environments for accurate calibration.
+As models grow more complex, the risk of errors
+or divergence increases, especially under varying lighting or
+sensor noise. Additionally, each model has inherent limitations,
+e.g. UCM cannot represent tangential distortion, and
+Kannala-Brandt struggles beyond a 210◦ FoV.
+-->
+</p><p>
+対照的に、我々は異なるアプローチを採用し、カメラ逆投影を球面基底関数の線形結合として、つまり逆球面調和関数変換を介してモデル化します。このモデルでは、スカラー展開係数と球面領域境界を単純に推定します。
+<!--
+By contrast, we take a different approach and model the
+camera backprojection as a linear combination of spherical
+basis functions, i.e. via an inverse spherical harmonics transformation,
+where the model simply infers the scalar expansion
+coefficients and the spherical domain boundaries.
+-->
+</p>
+<h2>3. UniK3D</h2>
+<p>
+一般化可能な深度推定モデルや3Dシーン推定モデルは、多様なカメラ構成への適応においてしばしば大きな課題に直面します。既存の手法は、通常、ピンホールモデルや正距円筒モデルといったカメラ固有の厳格な仮定に依存しているか、平行化などの膨大な前処理手順を必要とします。これらの制約により、非標準的なカメラ投影形状を持つ現実世界のシナリオへの適用が制限されます。対照的に、私たちのモデルUniK3Dは、あらゆるシーンとあらゆるカメラ構成において単眼3D形状推定を可能にする新たなフレームワークを導入します。
+<!--
+Generalizable depth or 3D scene estimation models often
+face significant challenges when adapting to diverse camera
+configurations. Existing methods typically rely on rigid and
+camera-specific assumptions, such as the pinhole model or
+equirectangular models, or require extensive preprocessing steps like rectification. These constraints limit their applicability
+to real-world scenarios with non-standard camera projective
+geometries. By contrast, our model, UniK3D, introduces
+a novel framework that enables monocular 3D geometry
+estimation for any scene and any camera setup.
+-->
+</p><p>
+まず、3.1節で3D出力空間の設計とカメラの内部表現について紹介します。この表現は、あらゆる逆投影問題に対応できるよう、意図的に可能な限り汎用的に定式化されています。予備研究を通して、一貫した問題が観察されました。それは、広い視野角を含む多様なカメラタイプで学習させた場合でも、ネットワークの予測値が狭い視野角に収縮してしまうことです。単純なデータ再調整戦略では、この現象に対処するには不十分であることが判明しました。この問題を解決するために、逆投影収縮を防ぐことを目的とした、一連のアーキテクチャと設計の介入策を開発しました。詳細は3.2節で説明します。3.3節では、モデルのアーキテクチャ、最適化戦略、そしてアプローチを支える具体的な設計関数と損失関数について説明します。図2に、この手法の概要を示します。
+<!--
+We begin by introducing the design of our 3D output
+space and the internal representation of the camera in
+Sec. 3.1. Our representation is intentionally formulated to
+be as general as possible, allowing to handle all inverse projection
+problems. Through our preliminary studies, we observed
+a consistent issue: the network predictions contracted
+to a reduced FoV, even when trained on a diverse set of camera
+types including large FoVs. Simple data re-balancing
+strategies proved insufficient to address this phenomenon.
+To overcome this, we have developed a series of architectural
+and design interventions, detailed in Sec. 3.2, aimed at preventing
+the backprojection contraction. In Sec. 3.3, we describe
+the architecture of our model, our optimization strategy,
+and the specific design and loss functions underpinning
+our approach. Fig. 2 displays an overview of our method.
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p class="margin-large">
+図2. モデルアーキテクチャ。UniK3Dは、単一の入力画像のみを利用して、任意のカメラの3D出力ポイントクラウド(\(\mathbf O\))を生成します。カメラの射影形状は角度モジュールによって予測されます。カメラ表現は、単位球面S3に逆投影された光線束の方位角と極角(\(\mathbf C\))に対応します。エンコーダーからのクラストークンは、2つのTransformer Encoder (TEnc)層によって処理され、定数成分のない3次までの球面調和関数の有限基底(\(\mathcal B\))によって定義される逆球面変換\(\mathcal F_{\mathcal B}^{−1}\{\mathbf H\}\)の15個の係数(\(\mathbf H\))を取得します。ラジアルモジュールの角度情報にはストップグラディエントが適用され、外部情報の流れをシミュレートします。「静的エンコーディング」とは、内部特徴の次元数と一致する正弦波エンコーディングを指します。ラジアルモジュールは、入力解像度ごとに1つずつ、Transformer Decoder (T-Dec) ブロックで構成され、ブートストラップされたカメラ表現に基づいてエンコーダーの特徴量を調整するために利用されます。この調整により、シーンスケールと射影幾何学に関する事前知識が注入されます。ラジアル出力 (\(\mathbf R_{log}\)) は、学習可能なアップサンプリングモジュールを介してカメラ認識特徴量を処理することで得られます。最終出力は、カメラテンソルとラジアルテンソルの連結 (\(\mathbf C||\mathbf R_{log}\)) です。直交座標3D出力を得るために閉形式座標変換が適用されますが、非対称角度損失\(\mathcal L_{AA}\)とラジアル座標を使用して、角度座標に直接監督が適用されます。
+<!--
+Figure 2. Model architecture. UniK3D utilizes solely the single input image to generate the 3D output point cloud (\(\mathbf O\)) for any camera. The
+projective geometry of the camera is predicted by the Angular Module. The camera representation corresponds to azimuth and polar angles
+(\(\mathbf C\)) of the backprojected pencil of rays on the unit sphere S3. The class tokens from the Encoder are processed by 2 Transformer Encoder (TEnc)
+layers to obtain the 15 coefficients (\(\mathbf H\)) of the inverse Spherical transform \(\mathcal F_{\mathcal B}-{−1}\{\mathbf H\}\) defined by a finite basis (\(\mathcal B\)) of spherical harmonics
+up to degree 3 with no constant component. Stop-gradient is applied to the angular information which conditions the Radial Module,
+simulating external information flow. The “static encoding” refers to sinusoidal encoding which matches the internal feature dimensionality.
+The Radial Module is composed of Transformer Decoder (T-Dec) blocks, one for each input resolution, which is utilized to condition
+the Encoder features on the bootstrapped camera representation. This conditioning injects prior knowledge on scene scale and projective
+geometry. The radial output (\(\mathbf R_{log}\)) is obtained by processing the camera-aware features via a learnable upsampling module. The final output
+is the concatenation of the camera and radial tensors (\(\mathbf C||\mathbf R_{log}\)). A closed-form coordinate transform is applied to obtain the Cartesian 3D
+output, but supervision is applied directly on angular coordinates, with our asymmetric angular loss \(\mathcal L_{AA}\), and radial coordinates.
+-->
+</p>
+<h3>3.1. 表現</h3>
+<!--
+<h3>3.1. Representations</h3>
+-->
+<p>
+<strong>出力空間</strong>　UniK3Dの出力表現は、あらゆるシーンおよびカメラ構成と普遍的に互換性を持つように設計されており、各入力画像に対して直接的なメトリック3Dシーン推定を提供します。[60]で提示された分離戦略を参考に、我々のアプローチはカメラパラメータをシーンの形状から分離します。具体的には、カメラを稠密テンソル \(\mathbf C = θ||\phi\) を使用して表現します。ここで、\(θ\) は極角、\(\phi\) は方位角であり、標準的な球面座標と一致しています。ただし、従来の垂直深度ベースの表現に頼るのではなく、完全な球面フレームワーク内のシーン範囲成分としてユークリッド半径（カメラ中心からの距離）を使用します。この設計選択により、画像に投影された物体の寸法は半径に応じて一義的に変化することが保証されます。これは深度表現の特徴ではなく、深度表現の学習をはるかに困難にします。さらに、球面フレームワークは、XY平面付近の点を扱う際の数値的安定性を向上させます。この領域は、従来の手法では大きな勾配のために課題に直面することが一般的でした。本研究では、球面表現を全単射変換を用いて直交座標に変換し、シーンの3Dジオメトリを出力3D点群Oとして正確に捉えます。
+<!--
+<strong>Output Space.</strong> The output representation of UniK3D is designed
+to be universally compatible with any scene and camera
+configuration, providing a direct metric 3D scene estimate
+for each input image. Drawing from the disentanglement
+strategy presented in [60], our approach separates camera
+parameters from scene geometry. Specifically, we represent
+the camera using a dense tensor \(\mathbf C = θ||\phi\), where \(θ\)
+is the polar angle and \(\phi\) is the azimuthal angle, consistent
+with standard spherical coordinates. However, we use the
+Euclidean radius (distance from the camera center) as the
+scene range component within a fully spherical framework,
+instead of relying on traditional perpendicular-depth-based
+representations. This design choice ensures that dimensions
+of projected objects in the image vary univocally with radius,
+a property that does not characterize the depth representation
+and renders the latter much harder to learn. Furthermore,
+the spherical framework enhances numerical stability when
+handling points near the xy-plane, a region where previous
+methods typically face challenges due to large gradients. We
+convert the spherical representation to Cartesian coordinates
+using a bijective transformation, accurately capturing the 3D
+geometry of the scene as the output 3D point cloud O.
+-->
+</p><p>
+<strong>カメラ内部空間</strong>　UniK3Dでは、様々なピクセルの視線方向を表す密な光線束は基底分解によって表現され、柔軟で包括的な角度表現を提供します。図2に示すように、角度モジュールは、エンコーダのクラストークン（\(\mathbf T\)と表記）から導出される係数テンソル\(\mathbf H\)を予測します。これらの係数は、定義済みの基底である球面調和関数（SH）基底に対応しています。\(\mathbf H\)から光線束を次のように再構成します。
+<!--
+<strong>Camera Internal Space.</strong> In UniK3D, the dense pencil of
+rays which represents the viewing directions for the various
+pixels is expressed through a basis decomposition, providing
+a flexible and comprehensive angular representation. As
+shown in Fig. 2, our Angular Module predicts a tensor of
+coefficients \(\mathbf H\), which is derived from the encoder’s class
+tokens, denoted as \(\mathbf T\). These coefficients correspond to a
+predefined basis: the Spherical Harmonics (SH) basis. We
+reconstruct the pencil of rays from \(\mathbf H\) as follows:
+-->
+\[
+\mathbf C=\mathcal F_{\mathcal B}^{-1}\{\mathbf H\}=\sum_{l=0}^L\sum_{m=-l}^l \mathbf H_{lm}\mathcal B_{lm}(\theta,\phi) \tag{1}
+\]
+ここで、\(\mathbf C\) は再構成された角度場を表し、\(\mathcal F_{\mathcal B}^{−1}\) は SH 基底 \(\mathcal B\) を用いた係数空間から角度空間への逆変換を表します。\(\mathcal B_{lm}(θ, ϕ)\) は SH 基底関数、すなわちルジャンドル多項式であり、\(\mathbf H_{lm}\) は予測係数です。ここで、\(l\) と \(m\) はそれぞれ高調波の次数と次数を表します。この逆変換は、\(\mathbb R^n× \mathbb S^3\) から \(\mathbb S^3\) への内積として実装されます。SH 基底領域は、4 つのパラメーターによって定義されます。
+参照フレームの一般化された「主点」、すなわち極、および水平および垂直 FoV です。この定式化により、出力の連続性や微分可能性といった重要な特性を確保しながら、複雑な光線分布を簡潔かつ暗黙的に記述することが可能になります。
+<!--
+where \(\mathbf C\) represents the reconstructed angular field and \(\mathcal F_{\mathcal B}^{−1}\) denotes the inverse transform from the coefficient space to the angular space, using the SH basis \(\mathcal B\). \(\mathcal B_{lm}(θ, ϕ)\) are the SH basis functions, i.e. Legendre polynomials, and Hlm are
+the predicted coefficients. Here, \(l\) and \(m\)  index the degree
+and order of the harmonics, respectively. This inverse transform
+is implemented as an inner product that maps from
+ \(\mathbb R^n× \mathbb S^3\) to \(\mathbb S^3\). The SH basis domain is defined by 4 parameters:
+the generalized “principal point” of the reference frame,
+i.e. the pole, and the horizontal and vertical FoVs. This formulation
+allows us to describe complex ray distributions
+compactly and implicitly, while ensuring important properties
+of the output, such as continuity and differentiability.
+-->
+</p><p>
+さらに、SH基底は高いスパース性を備えており、定数成分のない3次基底で15個の高調波と同数の係数のみで、ほとんどのカメラタイプの内部特性を正確に表現できます。このSHベースの表現を活用し、極とFoVパラメータによって領域を定義することで、UniK3Dはわずか19個のパラメータで、ほぼあらゆるカメラ形状に対応できる堅牢で柔軟なフレームワークを実現します。
+<!--
+Additionally, the SH basis offers high sparsity, requiring
+only 15 harmonics for a 3rd degree basis without constant
+component and an equal number of coefficients to accurately
+represent intrinsics for most camera types. By leveraging this
+SH-based representation and defining the domain through
+the pole and FoV parameters, UniK3D achieves a robust
+and flexible framework that can handle virtually any camera
+geometry with only 19 parameters.
+-->
+</p>
+<h3>3.2. 分布縮小の防止</h3>
+<!--
+<h3>3.2. Preventing Distribution Contraction</h3>
+-->
+<p>
+<strong>非対称角度損失</strong>　ニューラルネットワークは、トレーニングデータ中で最も頻出するモードに回帰する傾向があり、分布の裾野を無視することがよくあります。私たちのケースでは、このバイアスにより、UniK3Dは出力において広視野角を過小評価することになります。これは、ほとんどの視覚データセットが狭視野角のピンホールカメラに大きく偏っているためです。これは、正確な広視野角予測を必要とするシナリオではパフォーマンスの低下につながります。この問題を克服するために、私たちは、ロバストな統計的推定量と決定理論の原則、すなわちタイプIエラーとタイプIIエラー[51]に着想を得た、分位回帰に基づく非対称角度損失を導入します。損失関数は次のように定義されます。
+<!--
+<strong>Asymmetric Angular Loss.</strong> Neural networks tend to regress
+towards the most frequent modes in the training data, often neglecting the distribution tails. In our case, this bias would
+cause UniK3D to underrepresent wide-FoV angles in its outputs,
+since most visual datasets are heavily skewed towards
+small-FoV pinhole cameras. This leads to poor performance
+in scenarios requiring accurate wide-angle predictions. To
+overcome this issue, we introduce an asymmetric angular
+loss based on quantile regression, inspired by robust statistical
+estimators and decision theory principles, i.e. type-I and
+type-II errors [51]. Our loss function is defined as:
+-->
+\[
+\mathcal L_{AA}^\alpha (\hat{\theta},\theta^*)=\alpha\sum_{\hat{\theta}\gt \theta^*} \left|\hat{\theta}-\theta^*\right|+(1-\alpha)\sum_{\hat{\theta}\leq\theta^*}\left|\hat{\theta}-\theta^*\right| \tag{2}
+\]
+ここで、\(0 ≤ α ≤ 1\) は目標分位点、\(\hat{\theta}\) は予測角度、\(\theta^*\) は真の角度です。この定式化は、極角 \(θ\) の過大評価と過小評価の重み付けを調整します。\(α = 0.5\) の場合、損失は標準の平均絶対誤差 (MAE) に近づきますが、α を調整することで、過小評価された角度を強調し、回帰をより効果的にバランスさせることができます。単純なデータセットの再バランス調整 (3D シーンの多様性を変更し、特に複数のデータセット間で大幅な複雑さをもたらす可能性があります) とは異なり、私たちの損失は角度の不均衡に直接的かつ効率的に対処します。分位点回帰を用いることで、\(α\) の区間 [0, 1] における単純な探索へと複雑さを最小限に抑え、大規模かつ多様な学習シナリオに適した手法を実現します。この分位点に基づく戦略により、単純さと多様性を犠牲にすることなく角度分布のバイアスに対処することができ、堅牢でスケーラブルなソリューションを実現します。
+<!--
+where \(0 ≤ α ≤ 1\) is the target quantile, \(\hat{\theta}\) is the predicted
+angle, and \(\theta^*\) is the ground-truth angle. This formulation
+adjusts the weighting of over- and underestimations of the
+polar angle \(θ\). When \(α = 0.5\), the loss degenerates to the
+standard Mean Absolute Error (MAE), but by tuning α, we
+can emphasize underrepresented angles and balance the regression
+more effectively. Unlike naive dataset rebalancing–
+which would alter the underlying 3D scene diversity and introduce
+significant complexity, especially across multiple
+datasets–our loss addresses the angular imbalance directly
+and efficiently. By using quantile regression, we minimize
+the complexity to a simple search over the interval [0, 1] for
+\(α\), making our method well-suited for large-scale and diverse
+training scenarios. This quantile-based strategy allows us to
+address the angular distribution bias without sacrificing simplicity
+and diversity, making it a robust and scalable solution.
+-->
+</p><p>
+<strong>カメラコンディショニングの強化</strong>　初期実験では、学習時とテスト時の両方で正解カメラレイを明示的に提供した場合でも、先行研究 [60] に倣ってモデルがカメラコンディショニングを効果的に利用するのに苦労していることがわかりました。この問題は、視野角の狭いピンホールカメラでは微妙でしたが、視野角の広い構成では顕著になりました。問題の根本は弱いコンディショニングにあります。つまり、モデルはカメラパラメータを幾何学的特徴から切り離すことができず、重要な視野角情報を統合することなく、局所的な異常をエンコーダ特徴空間に戻してしまうのです。その結果、テスト時に正確なカメラパラメータを与えられたとしても、モデルはこの情報を無視したり、誤った方向に進んだりする可能性があります。
+<!--
+<strong>Enhancing Camera Conditioning.</strong> In our initial experiments,
+we observed that our model struggled to effectively
+utilize camera conditioning following previous works [60],
+even when explicitly supplied with ground-truth camera rays
+during both training and testing. This issue was subtle for
+small-FoV pinhole cameras, but it became significant for
+large-FoV configurations. The root of the problem lies in
+weak conditioning: the model fails to disentangle camera parameters
+from geometric features, causing it to route local
+aberrations back to the encoder features’ space, without integrating
+essential FoV information. As a result, even when
+prompted with accurate camera parameters at test time, the
+model might ignore, or be misled by, this information.
+-->
+</p><p>
+これに対処するため、我々はカメラデータが訓練開始時から明確かつ明示的に構造化されている必要があると仮定する。
+この目的のため、UniK3Dではカメラレイの静的（学習不可能な）エンコーディングを実装し、カリキュラム学習戦略を採用して、正解カメラパラメータをラジアルモジュールに入力することから予測パラメータへと徐々に移行する。
+特に、正解カメラは確率\(1 − tanh(\frac{s}{10^5})\)でラジアルモジュールに入力される。ここで、\(s\)は現在の最適化ステップである。外部条件付けを強化するために、ラジアルモジュールに入力されるカメラ出力から勾配を切り離し、モデルがカメラの条件付けを損なう可能性のあるフィードバック機構に依存するのを防ぐ。さらに、条件付けのショートカットを回避するため、ラジアルモジュールのトランスフォーマーデコーダーのクロスアテンション層において、LayerScale [68]などの学習可能なゲインを無効化する。これらの戦略により、モデルはカメラ情報を効果的に活用してエンコーダー機能を調整し、3D予測の堅牢性を高めることができます。
+<!--
+To address this, we hypothesize that camera data must be
+clear and explicitly structured from the beginning of training.
+To this end, we implement in UniK3D a static (nonlearnable)
+encoding of camera rays and adopt a curriculum
+learning strategy, transitioning gradually from feeding GT
+camera parameters to predicted ones to the Radial Module.
+In particular, the GT camera is fed to the Radial Module
+with probability \(1 − tanh(\frac{s}{10^5})\), where \(s\) is the current optimization
+step. To reinforce external conditioning, we detach
+gradients from the camera output that is fed to the Radial
+Module, hence preventing the model from relying on feedback
+mechanisms that could undermine the conditioning on the camera. Additionally, we disable learnable gains, such
+as LayerScale [68], in the cross-attention layers of the Radial
+Module’s transformer decoder, to avoid shortcuts of the
+conditioning. These strategies ensure that the model effectively
+leverages camera information to adjust its encoder features,
+enhancing the robustness of 3D predictions.
+-->
+</p>
+<h3>3.3. ネットワーク設計</h3>
+<!--
+<h3>3.3. Network Design</h3>
+-->
+<p>
+<strong>アーキテクチャ</strong>　図2に示すように、私たちのネットワークはエンコーダバックボーン、角度付きモジュール、および放射状モジュールで構成されています。エンコーダはViTベース[15]であり、密な特徴\(\mathbf F ∈ \mathbb R^{h×w×C×4}\)（ここで\((h,w) = ( \frac{H}{14} ,\frac{W}{14} )\)）とクラストークンTを抽出します。角度付きモジュールはこれらのクラストークンを処理し、3つのドメインパラメータと15の球面係数プロトタイプに分割された512チャネル表現に投影します。これらのトークンは、8つのヘッドを持つTransformer Encoder（T-Enc）の2つの層を通過し、スカラー値に投影されます。 3つのドメインパラメータの値は、主点（2）と水平視野（1）を定義し、高調波の間隔を決定します。
+我々は正方形ピクセルを仮定しているため、垂直視野用の追加の4番目のパラメータを学習するのではなく、この4番目のパラメータを水平視野から直接計算します。15個の球面係数は、3次SH基底を用いて、（1）に従って逆SH変換されます。角度モジュールからクラストークンに流れる勾配は0.1倍されます。これは、エンコーダの重みに対するカメラ誘起勾配の大きさが、放射状誘起勾配の約10倍であることが経験的に判明したためです。
+<!--
+<strong>Architecture.</strong> Our network consists of an Encoder Backbone,
+an Angular Module, and a Radial Module, as illustrated
+in Fig. 2. Our encoder is ViT-based [15] and we extract
+dense features \(\mathbf F ∈ \mathbb R^{h×w×C×4}\)–where \((h,w) = ( \frac{H}{14} ,\frac{ W}{14} )\)–
+along with class tokens T. The Angular Module processes
+these class tokens, projecting them onto 512-channel representations
+that are split into 3 domain parameters and 15 spherical coefficient prototypes. These tokens pass through
+two layers of a Transformer Encoder (T-Enc) with 8 heads
+and are then projected onto scalar values. The values for the
+3 domain parameters define the principal point (2) and the
+horizontal FoV (1), determining the intervals for the harmonics.
+We assume square pixels and thus do not learn an extra,
+fourth parameter for the vertical FoV, but rather compute
+this fourth parameter directly from the horizontal FoV. The
+15 spherical coefficients undergo an inverse SH transformation
+according to (1), using a 3-degree SH basis. The gradient
+flowing from the Angular Module to the class tokens is
+multiplied by 0.1, as the magnitude of the camera-induced
+gradient for the encoder weights was empirically found to
+be ca. 10x higher than the radial-induced gradient. 
+-->
+</p>
+<p>
+ラジアルモジュールはまず、高密度エンコーダ特徴量Fを、解像度ごとに1つずつ、4つの並列層と1つのヘッドを持つTransformer Decoder (T-Dec)で処理します。これらの層は、正弦波符号化された角度表現に基づいてFを条件付けます。\(\mathbf C\) (付録A参照)。条件付けされた特徴量は512チャンネルテンソルに投影され、ラジアル特徴量\(\mathbf D ∈ \mathbb R^{h×w×512}\) を形成します。これらのラジアル特徴量はその後、残差畳み込みブロックと学習可能なアップサンプリング手法（双線形アップサンプリングに続いて1×1畳み込み）を用いて入力解像度にアップサンプリングされます。アップサンプリングされた特徴量からラジアル対数スケール出力 \(\mathbf R_{log} ∈ \mathbb R^{H×W}\) が計算され、要素ごとの累乗により \(\mathbf R\) に変換されます。最終的な3D球面出力 \(\mathbf O = \mathbf C||\mathbf R\) は、球面座標から直交座標への変換を用いて、直交座標点群 \(\mathbf O ∈ \mathbb R^{H×W×3}\) に変換されます。また、\(\mathbf R_{log}\) を計算するラジアルモジュールの最初のヘッドに加えて、アップサンプリングされたD特徴量を入力する第2の投影ヘッドを組み込むことで、ラジアル出力の信頼度マップ (Σ) を予測します。
+<!--
+The Radial Module first processes the dense encoder features
+F through a Transformer Decoder (T-Dec) with 4 parallel
+layers, one for each resolution, and 1 head. These layers
+condition F on the sine-encoded angular representation
+\(\mathbf C\) (cf. Appendix A). The conditioned features are then projected
+onto a 512-channel tensor, forming radial features
+\(\mathbf D ∈ \mathbb R^{h×w×512}\). These radial features are afterwards upsampled
+to the input resolution using residual convolutional
+blocks and learnable upsampling techniques, i.e. bilinear upsampling
+followed by a single 1 × 1 convolution. The radial
+log-scale output \(\mathbf R_{log} ∈ \mathbb R^{H×W}\) is computed from the
+upsampled features and transformed to \(\mathbf R\) via element-wise
+exponentiation. The final 3D spherical output \(\mathbf O = \mathbf C||\mathbf R\) is converted to a Cartesian point cloud \(\mathbf O ∈ \mathbb R^{H×W×3}\) using
+a spherical-to-Cartesian coordinate transformation. Also,
+we predict a confidence map (Σ) for the radial outputs by
+including a second projection head fed with upsampled D
+features, besides the first head of the Radial Module which
+computes \(\mathbf R_{log}\).
+-->
+</p><p>
+<strong>最適化</strong>　最適化プロセスは3つの異なる損失によって定義されます。角度損失 \(\mathcal L_{AA}\) は \(θ\) と \(ϕ\) にそれぞれ \(\mathcal L_{AA}^{0.7}\) と \(\mathcal L_{AA}^0.5\) を適用します。最終的な角度損失は次のように表されます。
+<!--
+<strong>Optimization.</strong> The optimization process is defined by three
+different losses. The angular loss \(\mathcal L_{AA}\) is applied on \(θ\) and \(ϕ\) separately, with \(\mathcal L_{AA}^{0.7}\) and \(\mathcal L_{AA}^0.5\) for \(θ\) and \(ϕ\), respectively. The
+final angular loss can be expressed as
+-->
+\[
+\mathcal L_A(\hat{\mathbf C},\mathbf C^*)=\beta\mathcal L_{AA}^{0.7}(\hat{\theta},\theta^*)+(1-\beta)\mathcal L_{AA}^{0.5} (\hat{\phi},\phi^*) \tag{3}
+\]
+ここで、\((\hat{\cdot})\) と \((·)^∗\) はそれぞれ予測と正解の識別子として機能し、\(β = 0.75\) です。\(\mathcal L_{AA}^{0.5}\) は、主点に対する方位角次元 \(\phi\) が予測の縮小の影響を受けないため、標準の対称 L1 損失に対応することに注意してください。ここでのラジアル損失は、GT カメラによって取得された予測半径と GT 対数半径、および深度間の L1 損失です: \(\mathcal L_{rad} = \left|\left|\hat{\mathbf R}_{log}-\mathbf R_{log}^*\right|\right|_1\)。信頼度損失は、分離ラジアル損失と逆予測信頼度との間のL1損失、\(\Sigma: \mathcal L_{conf} = \left|\left| |\hat{\mathbf R}_{log}-\mathbf R_{log}^*|-\Sigma\right|\right|_1\)です。
+損失は3つの損失の線形結合です: \(\mathcal L_A +
+η\mathcal L_{rad} + γ\mathcal L_{conf}\)、ただし\(η = 2\)および\(γ = 0.1\)。
+<!--
+with \((\hat{\cdot})\) and \((·)^∗\) serving as prediction and GT identifiers, respectively,
+and \(β = 0.75\). It is worth noting that \(\mathcal L_{AA}^{0.5}\) corresponds
+to the standard, symmetric L1-loss, as the azimuthal
+dimension \(\phi\) w.r.t. the principal point is not affected by prediction
+contraction. Our radial loss is the L1-loss between
+the predicted and GT log-radius obtained by the GT camera
+and depth: \(\mathcal L_{rad} = \left|\left|\hat{\mathbf R}_{log}-\mathbf R_{log}^*\right|\right|_1\). The confidence loss is
+the L1-loss between the detached radial loss and the inverse
+predicted confidence, \(\Sigma: \mathcal L_{conf} = \left|\left| |\hat{\mathbf R}_{log}-\mathbf R_{log}^*|-\Sigma\right|\right|_1\).
+The loss is a linear combination of the three losses: \(\mathcal L_A +
+η\mathcal L_{rad} + γ\mathcal L_{conf}\), with \(η = 2\) and \(γ = 0.1\).
+-->
+</p>
+<h2>4. 実験</h2>
+<!--
+<h2>4. Experiments</h2>
+-->
+<p>
+<strong>トレーニングデータセット</strong>　トレーニングデータセットは26種類のソースから構成されています。A2D2 [23]、aiMotive [48]、Argoverse2 [77]、
+ARKit-Scenes [5]、ASE [17]、BEDLAM [8]、Blended-MVS [83]、DL3DV [44]、DrivingStereo [79]、DynamicReplica
+[31]、EDEN [37]、FutureHouse [42]、HOI4D [46]、
+HM3D [62]、Matterport3D [11]、Mapillary-PSD [1]、
+MatrixCity [40]、MegaDepth [41]、NianticMapFree [3]、
+PointOdyssey [88]、ScanNet [12]、ScanNet++ (iPhone) [84]、
+TartanAir [75] Taskonomy [87]、Waymo [67]、WildRGBD
+[78]。詳細は補足資料に記載されています。
+<!--
+<strong>Training Datasets.</strong> The training dataset accounts for 26 different
+sources: A2D2 [23], aiMotive [48], Argoverse2 [77],
+ARKit-Scenes [5], ASE [17], BEDLAM [8], Blended-
+MVS [83], DL3DV [44], DrivingStereo [79], DynamicReplica
+[31], EDEN [37], FutureHouse [42], HOI4D [46],
+HM3D [62], Matterport3D [11], Mapillary-PSD [1],
+MatrixCity [40], MegaDepth [41], NianticMapFree [3],
+PointOdyssey [88], ScanNet [12], ScanNet++ (iPhone) [84],
+TartanAir [75], Taskonomy [87], Waymo [67], and WildRGBD
+[78]. More details are given in the supplement.
+-->
+</p><p>
+<strong>ゼロショットテストデータセット</strong>　モデルの一般化可能性を評価するために、トレーニング中には使用されていない13のデータセットでモデルをテストしました。これらのデータセットは、カメラの種類に基づいて4つの異なるドメインに分類されています。1) 狭いFoV（S.FoV）、つまりFoV < 90◦、2) 放射状および接線方向の歪みがある狭いFoV（S.FoVDist）、3) 広いFoV（L.FoV）、つまりFoV > 120◦、4) 視野角が360◦のパノラマ（Pano）です。具体的には、S.FoVグループは、NYU-Depth V2 [50]、KITTI Eigen-split [21]、nuScenes [10]の検証分割、およびIBims-1 [34]、ETH-3D [65]、Diode Indoor [70]のフルデータセットに対応しています。S.FoVDistは、IBims-1、ETH-3D、Diode Indoorから人工的に歪ませた画像で構成されています（詳細は補足資料を参照）。L.FoVは、ADT [55]、ScanNet++ (DSLR) [84]、KITTI360 [43]をミックスしたものです。Panoramic (Pano)は、Stanford-2D3D [2]のフルデータセットに対応しています。
+<!--
+<strong>Zero-shot Testing Datasets.</strong> We evaluate the generalizability
+of models by testing them on 13 datasets not seen during
+training, grouped in 4 different domains which are defined
+based on their camera type: 1) small FoV (S.FoV), i.e.
+FoV < 90◦, 2) small FoV with radial and tangential distortions
+(S.FoVDist), 3) large FoV (L.FoV), i.e. FoV > 120◦,
+and 4) Panoramic (Pano) with 360◦ viewing angle. More
+specifically, the S.FoV group corresponds to the validation
+splits of NYU-Depth V2 [50], KITTI Eigen-split [21] and
+nuScenes [10], and the full IBims-1 [34], ETH-3D [65], and Diode Indoor [70]; the S.FoVDist is composed by images
+artificially distorted from IBims-1, ETH-3D, and Diode Indoor
+(more details in the supplement); L.FoV is the mix of
+ADT [55], ScanNet++ (DSLR) [84], and KITTI360 [43]; and
+Panoramic (Pano) is to the full Stanford-2D3D [2] dataset.
+-->
+</p><p>
+<strong>評価の詳細</strong>　すべての手法は、公平かつ一貫性のあるパイプラインを用いて再評価されました。特に、テスト時の拡張は利用せず、すべてのゼロショット評価に同じ重みセットを使用します。各手法のゼロショットモデルに対応するチェックポイントを使用します。つまり、KITTIまたはNYUで微調整されていません。主な実験で使用された指標は、\(δ_1^{SSI}, F_A\)、および\(ρ_A\)です。その他の指標は付録Cに報告されています。\(δ_1^{SSI}\)は、スケールおよびシフト不変の深度推定性能を測定します。\(F_A\)は、データセットの最大深度の1/20までのF1スコア[54]の曲線下面積(AUC)であり、単眼3D推定を評価します。 \(ρ_A\)
+はカメラの性能を評価し、S.FoV、L.Fov、Panoそれぞれについて、15◦、20◦、30◦までのカメラ光線の平均角度誤差のAUCです。焦点距離やFoVに基づくようなパラメトリック評価は、多様なカメラモデル間での一般性に欠けるため、使用を避けています。代わりに、選択した指標はあらゆるタイプのカメラへの適用性を確保し、評価の公平性と一貫性を維持します。表16と17は、標準的な方法に従って、最終チェックポイントをKITTIとNYU-Depth V2で学習し、ドメイン内評価を行うことで、UniK3Dの微調整能力を示しています。
+<!--
+<strong>Evaluation Details.</strong>  All methods have been re-evaluated
+with a fair and consistent pipeline. In particular, we do not
+exploit any test-time augmentations and utilize the same set
+of weights for all zero-shot evaluations. We use the checkpoint
+corresponding to the zero-shot model for each method,
+i.e. not fine-tuned on KITTI or NYU. The metrics utilized in
+the main experiments are \(δ_1^{SSI}, F_A\), and \(ρ_A\). Further metrics
+are reported in Appendix C. \(δ_1^{SSI}\) measures scale- and shiftinvariant
+depth estimation performance. \(F_A\) is the area under
+the curve (AUC) of F1-score [54] up to 1/20 of the datasets’
+maximum depth and evaluates monocular 3D estimation. \(ρ_A\)
+evaluates the camera performance and is the AUC of the average
+angular error of camera rays up to 15◦, 20◦, 30◦ for
+S.FoV, L.Fov, and Pano, respectively. We avoid parametric
+evaluations, such as those based on focal length or FoV, because
+they lack generality across diverse camera models. Instead,
+our chosen metrics ensure applicability to any camera
+type, preserving fairness and consistency in evaluation. Tables
+16 and 17 show the fine-tuning ability of UniK3D by
+training the final checkpoint on KITTI and NYU-Depth V2
+and evaluating in-domain, as per standard practice.
+-->
+</p><p>
+<strong>実装の詳細</strong>　UniK3DはPyTorch [57]とCUDA [52]で実装されています。学習には、初期学習率5×10^{−5}でAdamW [47]最適化器（β_1 = 0.9、β_2 = 0.999）を使用します。学習率は、各実験のバックボーンの重みに対して10の係数で分割され、重みの減衰は0.1に設定されます。学習率スケジューラとしてコサインアニーリングを利用し、学習全体の30%から10分の1にします。最適化の反復回数は25万回で、バッチサイズは128です。学習時間は16台のNVIDIA 4090で6日間です。データセットのサンプリング手順は重み付きサンプラーに従います。各データセットの重みはシーン数です。我々の拡張は幾何学的および測光的であり、前者ではランダムなサイズ変更と切り取り、後者では明度、ガンマ、彩度、色相のシフトを行う。画像比率はバッチごとに2:1から9:16の間でランダムにサンプリングする。ViT [15] バックボーンは、DINO事前学習済み [53] モデルの重みで初期化される。アブレーションについては、ViT-S バックボーンを用いて10万ステップの学習を実行し、学習パイプラインはメインの実験と同じである。
+<!--
+<strong>Implementation Details.</strong> UniK3D is implemented in Py-
+Torch [57] and CUDA [52]. For training, we use the
+AdamW [47] optimizer (\(β_1 = 0.9, β_2 = 0.999\)) with an initial
+learning rate of \(5×10^{−5}\). The learning rate is divided by
+a factor of 10 for the backbone weights for every experiment
+and weight decay is set to 0.1. We exploit Cosine Annealing
+as learning rate scheduler to one-tenth starting from 30% of
+the whole training. We run 250k optimization iterations with
+a batch size of 128. The training time amounts to 6 days
+on 16 NVIDIA 4090. The dataset sampling procedure follows
+a weighted sampler, where the weight of each dataset
+is its number of scenes. Our augmentations are both geometric
+and photometric, i.e. random resizing and cropping for
+the former type, and brightness, gamma, saturation, and hue
+shift for the latter. We randomly sample the image ratio per
+batch between 2:1 and 9:16. Our ViT [15] backbone is initialized
+with weights from DINO-pre-trained [53] models. For
+the ablations, we run 100k training steps with a ViT-S backbone,
+with training pipeline as for the main experiments. 
+-->
+</p>
+<h3>4.1. 最先端技術との比較</h3>
+<!--
+<h3>4.1. Comparison with The State of The Art</h3>
+-->
+<p>
+表1は、様々なFoVと画像タイプにおけるUniK3Dと既存のSotA手法の包括的な比較を示しています。本モデルは、特に困難な広FoVおよびパノラマシナリオにおいて、一貫して従来モデルを上回る性能を発揮します。例えば、L.FoV領域では、UniK3Dは\(δ_1^{SSI}\)で91.2%、\(F_A\)で71.6%という驚異的な性能を達成し、次点の手法をそれぞれ20%以上、40%以上上回ります。この大幅な改善は、広いFoVを扱う際の統合球面フレームワークの堅牢性を強調しています。パノカテゴリーでは、モデルの\(δ_1^{SSI}\)スコアと\(F_A\)スコアがそれぞれ71.2%と66.1%となり、新たなSotAを樹立しました。これは、極端なカメラ設定下でも3Dジオメトリを効果的に再構築できることを示しています。これらの結果は、SHベースのカメラモデルやラジアル出力表現といった設計上の選択が、複雑で多様なカメラ設定において高い性能を維持するために不可欠であることを実証しています。
+<!--
+Table 1 presents a comprehensive comparison of UniK3D
+against existing SotA methods across various FoV and image
+types. Our model consistently outperforms prior models,
+especially in challenging large-FoV and panoramic scenarios.
+For instance, in the L.FoV domain, UniK3D achieves a
+remarkable \(δ_1^{SSI}\) of 91.2% and \(F_A\) of 71.6%, outperforming
+the second-best method by more than 20% and 40%, respectively.
+This substantial improvement underscores the robustness
+of our unified spherical framework in handling wide
+FoVs. In the Pano category, our model’s \(δ_1^{SSI}\) and \(F_A\) scores
+of 71.2% and 66.1% also set the new SotA, demonstrating
+its ability to effectively reconstruct 3D geometry even under
+extreme camera setups. These results validate that our
+design choices, including the SH-based camera model and
+radial output representation, are crucial for maintaining high
+performance in complex and diverse camera settings.
+-->
+</p>
+<center><img src="images/table1.png"></center>
+<p class="margin-large">
+表1. 多様なカメラドメインにおけるゼロショット評価の比較。検証セット：S.FoVにはNYU、KITTI、IBims-1、ETH-3D、nuScenes、Diode Indoorが含まれます。S.FoVDistにはIBims-1、ETH-3D、合成歪みを適用したDiode Indoorが含まれます。L.FoVにはADT、ScanNet++ (DSLR)、KITTI360が含まれます。PanoにはStanford-2D3Dが含まれます。すべてのモデルはViT-Lバックボーンを使用しています。欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。Metric3DおよびMetric3Dv2は焦点距離が未定義であるため、パノラマ画像では評価できません。†：3D再構成には正解（GT）カメラが必要です。‡：2D深度マップ推論にはGTカメラが必要です。
+<!--
+Table 1. Comparison on zero-shot evaluation for diverse camera domains. Validation sets: S.FoV includes NYU, KITTI, IBims-1,
+ETH-3D, nuScenes, and Diode Indoor; S.FoVDist includes IBims-1, ETH-3D, and Diode Indoor with synthetic distortion; L.FoV includes
+ADT, ScanNet++ (DSLR), and KITTI360; Pano uses Stanford-2D3D. All models use a ViT-L backbone. Missing values (-) indicate the
+model’s inability to produce the respective output. Metric3D and Metric3Dv2 cannot be evaluated on panoramic images as focal lengths are
+undefined. †: Requires ground-truth (GT) camera for 3D reconstruction. ‡: Requires GT camera for 2D depth map inference.
+-->
+</p>
+<p>
+さらに、図3は、UniK3Dが様々な歪んだカメラから得られたシーンの3D形状を推定できることを明確に示しています。これは、2列目、3列目、4列目に示されているように、非従来型またはピンホールカメラ以外のカメラ画像では失敗する他の手法とは対照的です。Metric3D、Metric3Dv2、ZoeDepthは \(F_A\) スコアに正解カメラパラメータを使用して評価されるのに対し、UniK3D、UniDepth、MASt3R、DepthProは予測されたカメラに依存していることを強調しておくことが重要です。この追加の難しさにもかかわらず、UniK3Dは優れた3D再構築性能を示し、正確なカメラ情報が得られない現実世界の状況に対応できる強みを示しています。興味深いことに、私たちの手法は、より従来型の小さなFoVシナリオでも性能を犠牲にしません。 UniK3Dは、S.FoV設定において\(δ_1^{SSI}\)が94.​​3となり、トップランクを維持し、これまでの主要手法を上回りました。このバランスは、L.FoV表現における我々の進歩が、S.FoVタスクにおけるモデルの有効性を損なわないことを示しています。\(F_A\) スコアはS.FoVにおいて高い水準を維持しており、\(ρ_A\) 指標は、我々のモデルが一貫して正確なカメラパラメータ推定を提供していることを示しています。
+<!--
+In addition, Fig. 3 clearly shows how UniK3D can estimate
+the 3D geometry of scenes from various and distorted
+cameras. This is in contrast to other methods that fail when
+facing unconventional or non-pinhole camera images, as depicted
+by the 2nd, 3rd, and 4th columns. It is important to highlight
+that Metric3D, Metric3Dv2, and ZoeDepth are evaluated
+using GT camera parameters for the FA score, while
+UniK3D, UniDepth, MASt3R, and DepthPro rely on their
+predicted cameras. Despite this added difficulty, UniK3D
+still demonstrates superior 3D reconstruction performance,
+showcasing its strength in handling real-world conditions
+where precise camera information is unavailable. Interestingly,
+our method does not sacrifice performance in more
+conventional, small-FoV scenarios. UniK3D keeps its top
+rank, with a \(δ_1^{SSI}\) of 94.3 in the S.FoV setting, outperforming
+previously leading methods. This balance highlights that
+our advancements in L.FoV representation do not undermine the model’s effectiveness for S.FoV tasks. FA scores remain
+high in S.FoV and the ρA metric shows that our model consistently
+provides accurate camera parameter estimation.
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p class="margin-large">
+図 3. 定性的な比較。連続する行の各ペアは 1 つのテストサンプルを表します。奇数行には入力 RGB 画像と 2D エラーマップが表示され、絶対相対誤差に基づいてクールウォームカラーマップで色分けされています (パノラマ画像の場合、誤差は深度ではなく距離に基づいて計算されます)。公平な比較を確実にするために、すべてのモデルについて、GT ベースのシフトおよびスケーリングされた出力で誤差が計算されます。偶数行には 3D ポイントクラウドの正解と予測が表示されます。最後の列には、絶対相対誤差の特定のカラーマップ範囲が表示されます。各行ペアの主な観察結果: (1) 競合手法は正の深度のみに制限されており、視野が大きい場合、シーンが大きく歪みます。(2) 表現可能だが大きい視野 (180 ◦) の場合、UniK3D 出力だけが顕著な視野収縮の影響を受けません。(3) 中程度の視野 (FoV) を持つ画像ですが、境界の歪みが強い場合 (例:魚眼レンズとは異なり、UniK3Dは平面性とシーン全体の構造を維持できます。(4) 私たちのアプローチは、標準的なピンホール画像に対しても正確な3D推定値を提供します。
+<!--
+Figure 3. Qualitative comparisons. Each pair of consecutive rows represents one test sample. Each odd row displays the input RGB
+image and the 2D error map, color-coded with the coolwarm colormap based on absolute relative error (for panoramic images, the error is
+computed on distance rather than depth). To ensure a fair comparison, errors are calculated on GT-based shifted and scaled outputs for all
+models. Each even row shows the ground truth and predictions of the 3D point cloud. The last column displays the specific colormap ranges
+for absolute relative error. Key observations for each rows pair: (1) competing methods are limited to only positive depth and heavily distort
+the scenes for larger FoV; (2) in the case of representable but large FoV (180◦), UniK3D output is the only one that does not suffer from
+pronounced FoV contraction; (3) for moderate-FoV images but with strong boundary distortion, e.g. fisheye, UniK3D can maintain planarity
+and overall scene structure; (4) our approach also delivers accurate 3D estimates for standard pinhole images.
+-->
+</p><p>
+さらに、表2に示すように、UniK3Dは正距円筒画像に特化した手法と競合します。これは、当社のモデルが、特定の領域のパフォーマンスを損なうことなく、トレーニング時にさまざまなシーンやカメラ領域を組み込むことができることを示しています。
+<!--
+Moreover, UniK3D is competitive with specialized methods
+for equirectangular images, as demonstrated in Table 2.
+This shows how our model can incorporate different scene
+and camera domains at training time without compromising
+any domain-specific performance.
+-->
+</p>
+<center><img src="images/table2.png"></center>
+<p class="margin-large">
+表2. ゼロショット法と正距円筒画像に特化した手法の比較。全ての手法はStanford-2D3D [2] を用いてゼロショットテストされている。
+競合手法は全て正距円筒画像を用いて学習されている。我々の学習セットには、2%サンプリングのMatterport3D [11] が含まれている。
+<!--
+Table 2. Zero-shot comparison with equirectangular-specialized
+methods. All methods are zero-shot tested on Stanford-2D3D [2].
+Competing methods are all trained on equirectangular images. Our
+training set includes Matterport3D [11] with 2% sampling.
+-->
+</p>
+<h3>4.2. アブレーション研究</h3>
+<!--
+<h3>4.2. Ablation Studies</h3>
+-->
+<p>
+<strong>データ</strong>　表3は、大きなFoVとカメラの歪みがあるデータセットとないデータセットにおける学習の効果を示しています。強いカメラの歪みのある画像を組み込むと、一般的にすべての領域でパフォーマンスが向上しますが、特に歪みのあるS.FoVやL.FoVなどの難しいケースでは顕著です。これは、より優れた汎化を実現するために、学習セットに多様なカメラジオメトリを含めることが重要であることを強調しています。ただし、対数深度表現を使用してパノラマ画像を表現することが難しいため、Panoの改善には限界があります。
+<!--
+Data. Table 3 demonstrates the effect of training on datasets
+with and without large FoV and camera distortions. Incorporating
+images with strong camera distortions generally enhances
+performance across all domains, particularly in challenging
+cases such as S.FoV with distortion and L.FoV. This
+underscores the importance of diverse camera geometries in
+the training set to achieve better generalization. However, the
+improvement on Pano is limited due to the difficulty of representing
+panoramic images using a log-depth representation.
+-->
+</p>
+<center><img src="images/table3.png"></center>
+<p class="margin-large">
+表3. データのアブレーション。データは、トレーニング画像に、実データまたはピンホールカメラから合成された、強く歪んだカメラ画像が含まれているかどうかを示します。出力表現：深度。
+<!--
+Table 3. Ablation on data. Data indicates whether training images
+include strongly distorted cameras, either from real data or synthesized
+from pinhole cameras. Output representation: depth.
+-->
+</p>
+<p>
+<strong>カメラモデル</strong>　表4に示すように、カメラ光線の基底としてSHを用いると、特にL.FoVとPanoにおいて、全体的に最も優れた性能が得られる。これは、多様なカメラモデルを捉える上で、我々の基底関数選択の有効性を強調している。対照的に、ノンパラメトリックモデルは \(F_A\) と \(ρ_A\) において性能が劣る。後者の定式化は純粋にデータ駆動型であるため、適切に一般化するにはかなり多くのデータが必要であると推測される。データ分布の裾野、すなわちL.FoVとPanoを過小評価する傾向がある一方で、より一般的な領域、すなわち歪みの有無にかかわらずS.FoVでは適切な性能を示す。レンズ収差のモデル化に典型的に用いられるゼルニケ多項式基底[18]は、その固有の平面構造のために、球面または正距円筒カメラ形状を表現するのが困難である。
+<!--
+<strong>Camera Model.</strong> As shown in Table 4, employing SH as the
+basis for camera rays yields the best overall performance,
+particularly on L.FoV and Pano. This highlights the effectiveness
+of our basis function selection in capturing diverse camera
+models. By contrast, the non-parametric model underperforms
+in FA and ρA. Since the latter formulation is purely
+data-driven, we presume that it requires significantly more
+data to generalize well. It tends to underrepresent the tails of
+the data distribution, i.e. L.FoV and Pano, while performing
+adequately on more common domains, i.e. S.FoV with or
+without distortion. The Zernike-polynomial basis [18], typically
+used for modeling lens aberrations, struggles to represent
+spherical or equirectangular camera geometries due to
+its inherent planar structure.
+-->
+</p>
+<center><img src="images/table4.png"></center>
+<p class="margin-large">
+表4. カメラモデルにおけるアブレーション。モデルは、出力光線と内部調整に関するカメラモデルの種類に対応しています。ピンホール、ゼルニケ多項式係数、SH係数、またはノンパラメトリック（ピクセルあたり1光線を予測）です。すべての実験は、フルデータ、拡張、モデルコンポーネント、および放射状出力を用いて実施されています。
+<!--
+Table 4. Ablation on camera model. Model corresponds to the
+type of camera model for output rays and internal conditioning:
+pinhole, Zernike-polynomial coefficients, SH coefficients, or nonparametric,
+i.e. predicting one ray per pixel. All experiments are
+with full data, augmentation, model components, and radial output.
+-->
+</p>
+<p>
+<strong>出力空間</strong>　表5は、予測空間の3次元目の異なる出力表現（直交座標Z軸（1行目と3行目）または球面半径（2行目と4行目））を比較したものです。結果から、半径表現を使用すると、パノおよびL.FoV設定での再構成メトリクスが向上することがわかります。これは、180度付近または180度を超えるFoVを扱う場合、深度はあまり効果的ではないためです。この改善は、放射状コンポーネントを、広範囲の形状を表現できるカメラモデル（例えば、SHベースのモデル（4行目と2行目））と組み合わせた場合にのみ実現されます。しかし、半径ベースの出力空間では、歪みのあるS.FoVの再構成精度が低下します（3行目と4行目）。この劣化は、半径表現が小さな角度の変化に敏感であり、小さくても歪みの大きいビューの精度に不釣り合いな影響を与えるために発生します。
+<!--
+<strong>Output Space.</strong> Table 5 compares different output representations
+for the third dimension of the predicted space: either
+the Cartesian z-axis (rows 1 and 3) or the spherical radius
+(rows 2 and 4). The results show that using the radius
+representation improves reconstruction metrics in Pano and
+L.FoV settings, as depth is less effective when dealing with
+FoVs near or exceeding 180 degrees. This improvement is
+realized only when the radial component is paired with a
+camera model capable of representing a wide range of geometries,
+e.g. our SH-based model (row 4 vs. row 2). However,
+the radius-based output space leads to poorer reconstruction
+for S.FoV with distortion (row 3 vs. row 4). This degradation occurs because the radius representation is more
+sensitive to minor angular variations, which disproportionately
+impacts accuracy in small but highly distorted views.
+-->
+</p>
+<center><img src="images/table5.png"></center>
+<p class="margin-large">
+表5. 出力表現におけるアブレーション。出力とは、予測出力空間の3次元の種類を指します。直交座標Z軸の深度または球面半径（つまり距離）のいずれかです。すべての実験は、フルデータと拡張を用いて実施されています。
+<!--
+Table 5. Ablation on output representation. Output refers to
+the type of the 3rd dimension of the predicted output space: either
+Cartesian z-axis depth or spherical radius, i.e. distance. All experiments
+are with full data and augmentation.
+-->
+</p>
+<p>
+<strong>コンポーネント</strong>　表6は、非対称角度損失（\(\mathcal L_{AA}\)）と、カメラコンディショニングを強化するために設計された戦略の影響を検証しています。非対称損失と改善されたコンディショニングの両方を活用した完全なモデル（行3）は、特に歪んだ領域とL.FoV領域において、それらを活用しないモデルよりも大幅に優れた性能を発揮します。これは、逆投影における収縮を防ぎ、角度予測精度を向上させるという、組み合わせた戦略の有効性を示しています。全体的な向上は、むしろこれらの貢献を組み合わせることによる相乗効果によるものです。さらに、これらの戦略は、集約的な定量的結果では容易に表現できない可能性のある極端なケースを軽減することを目的としており、図4のように定性的なサンプルでは明確に確認できます。
+<!--
+<strong>Components.</strong> Table 6 examines the impact of our asymmetric
+angular loss (\(\mathcal L_{AA}\)) and our strategies designed to enhance
+camera conditioning. Our full model, which leverages
+both the asymmetric loss and the improved conditioning
+(row 3), significantly outperforms those that do not, especially
+in distorted and L.FoV domains. This demonstrates
+the efficacy of our combined strategies in preventing contraction
+in backprojection and improving angular prediction
+accuracy. The overall gains are rather due to the synergy of
+combining these contributions. Moreover, these strategies
+aim at mitigating extreme cases, which may not be easily
+represented in aggregate quantitative results, but are clearly
+visible in qualitative samples as in Fig. 4.
+-->
+</p>
+<center><img src="images/table6.png"></center>
+<p class="margin-large">
+表6. ネットワーク構成要素のアブレーション。\(\mathcal L_{AA}\) は、非対称角度損失が使用されているかどうかを示し、そうでない場合はL1損失を示します。Cond は、セクション3.2で示した強化されたカメラコンディショニングの設計が使用されているかどうかを示します。すべての実験は、完全なデータと拡張、ラジアル出力表現、およびSHベースのカメラモデルを使用して実施されています。
+<!--
+Table 6. Ablation on network components. \(\mathcal L_{AA}\) indicates if our
+asymmetric angular loss is used, L1-loss otherwise. Cond indicates
+if our design for enhanced camera conditioning from Sec. 3.2 is
+utilized. All experiments are with full data and augmentations,
+radial output representation, and an SH-based camera model.
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p class="margin-large">
+図4. FoVの影響。左の画像は、GT点群と並んで180◦のFoV全体を表現するという課題を示しています。FoVの縮小効果は、a)に示すように、「ガード」、すなわち非対称損失（\(\mathcal L_{AA}\)）とカメラコンディショニングが全く適用されていない場合に発生します。b)に示すように、事前分布が全く存在しない場合、逆投影が不可能で一貫性のない結果になる可能性があります。c)は最終的なUniK3Dを示しており、適切なカメラ逆投影モデルを用いることで広いFoVを復元できることを明確に示しています。
+<!--
+Figure 4. FoV effects. The image on the left showcases the challenge
+of representing the full 180◦ FoV, alongside the GT point
+cloud. The effect of FoV contraction occurs when no “guarding”,
+i.e. asymmetric loss (LAA) and camera conditioning, is put in force,
+as shown in a). The total absence of any prior may lead to impossible
+and inconsistent backprojection, as shown in b). The final
+UniK3D is depicted in c), clearly showing the ability to recover
+large FoVs with a sensible camera backprojection model.
+-->
+</p>
+<h2>5. 結論</h2>
+<!--
+<h2>5. Conclusion</h2>
+-->
+<p>
+我々は、ピンホールから魚眼レンズ、パノラマまで、多様なカメラモデルにシームレスに汎用化する、単眼3D推定のための初のユニバーサルフレームワークであるUniK3Dを発表しました。我々のアプローチは、視野角の縮小を防ぐ戦略を導入し、あらゆる汎用カメラモデルへのバックプロジェクションのための柔軟で堅牢な設計を通じて、正確なメトリック3D推定をサポートします。トレーニングデータの多様性とカバレッジを拡大することで、UniK3Dの堅牢性と適用性はさらに向上する可能性がありますが、UniK3Dは既に、わずかな量のデータで、従来の最先端技術の能力をはるかに超える、未知のカメラや3Dシーン領域への強力な汎用化を実現しています。
+<!--
+We have presented UniK3D, the first universal framework
+for monocular 3D estimation that generalizes seamlessly
+across diverse camera models, from pinhole to fisheye and
+panoramic. Our approach introduces strategies to prevent
+FOV contraction and supports accurate metric 3D estimation
+through a flexible and robust design for backprojection with
+any generic camera model. While expanding the diversity
+and coverage of training data could even further enhance the
+robustness and applicability of UniK3D, the latter already
+achieves compelling generalization to unseen cameras and
+3D scene domains far beyond the capabilities of the previous
+state of the art, with only a fair quantity of data.
+-->
+</p>
+<h2>謝辞</h2>
+<!--
+<h2>Acknowledgment</h2>
+-->
+<p>
+この研究は、トヨタ自動車ヨーロッパの研究プロジェクトTRACE-Z¨urichを通じて資金提供を受けています。
+<!--
+ This work is funded by Toyota Motor
+Europe via the research project TRACE-Z¨urich. 
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>References</h2>
+-->
+<p>
+<div class="styleRef">
+<ul>
+<li>[1] Manuel Lopez Antequera, Pau Gargallo, Markus Hofinger,
+Samuel Rota Bul`o, Yubin Kuang, and Peter Kontschieder.
+Mapillary planet-scale depth dataset. In The European Conference
+on Computer Vision (ECCV), pages 589–604. Springer
+International Publishing, 2020. 6, 15
+</li><br><li>[2] Iro Armeni, Sasha Sax, Amir R Zamir, and Silvio Savarese.
+Joint 2d-3d-semantic data for indoor scene understanding.
+arXiv preprint arXiv:1702.01105, 2017. 6, 7, 15
+</li><br><li>[3] Eduardo Arnold, Jamie Wynn, Sara Vicente, Guillermo
+Garcia-Hernando, A´ ron Monszpart, Victor Adrian Prisacariu,
+Daniyar Turmukhambetov, and Eric Brachmann. Map-free
+visual relocalization: Metric pose relative to a single image.
+In European Conference on Computer Vision (ECCV), 2022.
+6, 15
+</li><br><li>[4] Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E Hinton.
+Layer normalization. arXiv preprint arXiv:1607.06450, 2016.
+13
+</li><br><li>[5] Gilad Baruch, Zhuoyuan Chen, Afshin Dehghan, Tal Dimry,
+Yuri Feigin, Peter Fu, Thomas Gebauer, Brandon Joffe, Daniel
+Kurz, Arik Schwartz, and Elad Shulman. ARKitscenes - a
+diverse real-world dataset for 3d indoor scene understanding
+using mobile RGB-d data. In Advances in Neural Information
+Processing Systems (NIPS), 2021. 6, 15
+</li><br><li>[6] Shariq Farooq Bhat, Ibraheem Alhashim, and Peter Wonka.
+Adabins: Depth estimation using adaptive bins. Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 4008–4017, 2020. 2, 16
+</li><br><li>[7] Shariq Farooq Bhat, Reiner Birkl, Diana Wofk, Peter
+Wonka, and Matthias M¨uller. Zoedepth: Zero-shot transfer
+by combining relative and metric depth. arXiv preprint
+arXiv:2302.12288, 2023. 2, 6, 14, 16, 17, 18, 19
+</li><br><li>[8] Michael J. Black, Priyanka Patel, Joachim Tesch, and Jinlong
+Yang. BEDLAM: A synthetic dataset of bodies exhibiting
+detailed lifelike animated motion. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 8726–8737, 2023. 6, 15
+</li><br><li>[9] Aleksei Bochkovskii, Ama¨el Delaunoy, Hugo Germain, Marcel
+Santos, Yichao Zhou, Stephan R Richter, and Vladlen
+Koltun. Depth pro: Sharp monocular metric depth in less than
+a second. arXiv preprint arXiv:2410.02073, 2024. 1, 2, 6, 14,
+17, 18, 19
+</li><br><li>[10] Holger Caesar, Varun Bankiti, Alex H. Lang, Sourabh Vora,
+Venice Erin Liong, Qiang Xu, Anush Krishnan, Yu Pan, Giancarlo
+Baldan, and Oscar Beijbom. nuscenes: A multimodal
+dataset for autonomous driving. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), 2020. 6, 15
+</li><br><li>[11] Angel Chang, Angela Dai, Thomas Funkhouser, Maciej Halber,
+Matthias Niessner, Manolis Savva, Shuran Song, Andy
+Zeng, and Yinda Zhang. Matterport3d: Learning from rgb-d
+data in indoor environments. In Proceedings of the International
+Conference on 3D Vision (3DV), 2017. 6, 15
+</li><br><li>[12] Angela Dai, Angel X. Chang, Manolis Savva, Maciej Halber,
+Thomas Funkhouser, and Matthias Nießner. Scannet: Richlyannotated
+3d reconstructions of indoor scenes. In Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), 2017. 6, 15
+</li><br><li>[13] Kangle Deng, Andrew Liu, Jun-Yan Zhu, and Deva Ramanan.
+Depth-supervised nerf: Fewer views and faster training for
+free. In Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition, pages 12882–12891,
+2022. 1
+</li><br><li>[14] Xingshuai Dong, Matthew A Garratt, Sreenatha G Anavatti,
+and Hussein A Abbass. Towards real-time monocular depth
+estimation for robotics: A survey. IEEE Transactions on Intelligent
+Transportation Systems, 23(10):16940–16961, 2022. 1
+</li><br><li>[15] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
+Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain
+Gelly, Jakob Uszkoreit, and Neil Houlsby. An image is
+worth 16x16 words: Transformers for image recognition at
+scale. In International Conference on Learning Representations
+(ICLR). OpenReview.net, 2021. 5, 7, 13
+</li><br><li>[16] David Eigen, Christian Puhrsch, and Rob Fergus. Depth
+map prediction from a single image using a multi-scale deep
+network. In Advances in Neural Information Processing
+Systems (NeurIPS), pages 2366–2374. Neural information
+processing systems foundation, 2014. 2
+</li><br><li>[17] Jakob Engel, Kiran Somasundaram, Michael Goesele, Albert
+Sun, Alexander Gamino, Andrew Turner, Arjang Talattof,
+Arnie Yuan, Bilal Souti, Brighid Meredith, et al. Project aria:
+A new tool for egocentric multi-modal ai research. arXiv
+preprint arXiv:2308.13561, 2023. 6, 15
+</li><br><li>[18] Zernike Frits. Beugungstheorie des schneidenver-fahrens
+und seiner verbesserten form, der phasenkontrastmethode.
+Physica: Nonlinear Phenomena, 1:689–704, 1934. 8
+</li><br><li>[19] Huan Fu, Mingming Gong, Chaohui Wang, Kayhan Batmanghelich,
+and Dacheng Tao. Deep ordinal regression
+network for monocular depth estimation. Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 2002–2011, 2018. 2
+</li><br><li>[20] Ravi Garg, B. G. Vijay Kumar, Gustavo Carneiro, and Ian
+Reid. Unsupervised cnn for single view depth estimation:
+Geometry to the rescue. Lecture Notes in Computer Science,
+9912 LNCS:740–756, 2016. 17
+</li><br><li>[21] Andreas Geiger, Philip Lenz, and Raquel Urtasun. Are we
+ready for autonomous driving? The KITTI vision benchmark
+suite. In Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 2012. 6, 15
+</li><br><li>[22] Christopher Geyer and Kostas Daniilidis. A unifying theory
+for central panoramic systems and practical applications. In
+The European Conference on Computer Vision (ECCV), 2000.
+3
+</li><br><li>[23] Jakob Geyer, Yohannes Kassahun, Mentar Mahmudi,
+Xavier Ricou, Rupesh Durgesh, Andrew S. Chung, Lorenz
+Hauswald, Viet Hoang Pham, Maximilian M¨uhlegg, Sebastian
+Dorn, Tiffany Fernandez, Martin J¨anicke, Sudesh Mirashi,
+Chiragkumar Savani, Martin Sturm, Oleksandr Vorobiov,
+Martin Oelker, Sebastian Garreis, and Peter Schuberth.
+A2D2: Audi Autonomous Driving Dataset. arXiv preprint
+arXiv:2004.06320, 2020. 6, 15
+</li><br><li>[24] Vitor Guizilini, Igor Vasiljevic, Dian Chen, Rares,
+Ambrus,
+,
+and Adrien Gaidon. Towards zero-shot scale-aware monocular
+depth estimation. In Proceedings of the IEEE/CVF In-ternational Conference on Computer Vision (ICCV), pages
+9233–9243, 2023. 1, 2
+</li><br><li>[25] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+Deep residual learning for image recognition. Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), 2016-December:770–778, 2015. 13
+</li><br><li>[26] Dan Hendrycks and Kevin Gimpel. Bridging nonlinearities
+and stochastic regularizers with gaussian error linear units.
+CoRR, abs/1606.08415, 2016. 13
+</li><br><li>[27] Noriaki Hirose and Kosuke Tahara. Depth360: Selfsupervised
+learning for monocular depth estimation using
+learnable camera distortion model. 2022 IEEE/RSJ International
+Conference on Intelligent Robots and Systems (IROS),
+pages 317–324, 2021. 20
+</li><br><li>[28] Mu Hu, Wei Yin, Chi Zhang, Zhipeng Cai, Xiaoxiao Long,
+Hao Chen, Kaixuan Wang, Gang Yu, Chunhua Shen, and
+Shaojie Shen. Metric3d v2: A versatile monocular geometric
+foundation model for zero-shot metric depth and surface normal
+estimation. arXiv preprint arXiv:2404.15506, 2024. 2, 6,
+14, 16, 17, 18, 19, 21
+</li><br><li>[29] Hualie Jiang, Zhe Sheng, Siyu Zhu, Zilong Dong, and Rui
+Huang. Unifuse: Unidirectional fusion for 360 panorama
+depth estimation. IEEE Robotics and Automation Letters (RAL),
+6(2):1519–1526, 2021. 6
+</li><br><li>[30] Juho Kannala and Sami Sebastian Brandt. A generic camera
+model and calibration method for conventional, wide-angle,
+and fish-eye lenses. IEEE Transactions on Pattern Analysis
+and Machine Intelligence (T-PAMI, 28:1335–1340, 2006. 3,
+15
+</li><br><li>[31] Nikita Karaev, Ignacio Rocco, Benjamin Graham, Natalia
+Neverova, Andrea Vedaldi, and Christian Rupprecht. Dynamicstereo:
+Consistent dynamic depth from stereo videos. In
+Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition (CVPR), 2023. 6, 15
+</li><br><li>[32] Bingxin Ke, Anton Obukhov, Shengyu Huang, Nando Metzger,
+Rodrigo Caye Daudt, and Konrad Schindler. Repurposing
+diffusion-based image generators for monocular depth
+estimation. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), pages
+9492–9502, 2024. 1, 2
+</li><br><li>[33] Bogdan Khomutenko, Ga¨etan Garcia, and Philippe Martinet.
+An enhanced unified camera model. IEEE Robotics and
+Automation Letters (RA-L), 1:137–144, 2016. 3, 19
+</li><br><li>[34] Tobias Koch, Lukas Liebel, Marco K¨orner, and Friedrich
+Fraundorfer. Comparison of monocular depth estimation
+methods using geometrically relevant metrics on the IBims-1
+dataset. Computer Vision and Image Understanding (CVIU),
+191:102877, 2020. 6, 15, 16
+</li><br><li>[35] Varun Ravi Kumar, Senthil Kumar Yogamani, Markus Bach,
+Christian Witt, Stefan Milz, and Patrick M¨ader. Unrectdepthnet:
+Self-supervised monocular depth estimation using
+a generic framework for handling common camera distortion
+models. 2020 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS), pages 8177–8183, 2020. 20
+</li><br><li>[36] Iro Laina, Christian Rupprecht, Vasileios Belagiannis, Federico
+Tombari, and Nassir Navab. Deeper depth prediction
+with fully convolutional residual networks. Proceedings of the International Conference on 3D Vision (3DV), pages 239–
+248, 2016. 2
+</li><br><li>[37] Hoang-An Le, Thomas Mensink, Partha Das, Sezer Karaoglu,
+and Theo Gevers. Eden: Multimodal synthetic dataset of enclosed
+garden scenes. In Proceedings of the IEEE/CVF Winter
+Conference on Applications of Computer Vision (WACV),
+pages 1579–1589, 2021. 6, 15
+</li><br><li>[38] Jin Han Lee, Myung-Kyu Han, Dong Wook Ko, and Il Hong
+Suh. From big to small: Multi-scale local planar guidance for
+monocular depth estimation. CoRR, abs/1907.10326, 2019.
+16
+</li><br><li>[39] Vincent Leroy, Yohann Cabon, and J´erˆome Revaud. Grounding
+image matching in 3d with mast3r. arXiv preprint
+arXiv:2406.09756, 2024. 5, 6, 17, 18, 19, 21
+</li><br><li>[40] Yixuan Li, Lihan Jiang, Linning Xu, Yuanbo Xiangli, Zhenzhi
+Wang, Dahua Lin, and Bo Dai. Matrixcity: A large-scale
+city dataset for city-scale neural rendering and beyond. In
+Proceedings of the IEEE/CVF International Conference on
+Computer Vision (ICCV), pages 3205–3215, 2023. 6, 15
+</li><br><li>[41] Zhengqi Li and Noah Snavely. Megadepth: Learning singleview
+depth prediction from internet photos. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 2041–2050, 2018. 6, 15
+</li><br><li>[42] Zhen Li, Lingli Wang, Xiang Huang, Cihui Pan, and Jiaqi.
+Yang. Phyir: Physics-based inverse rendering for panoramic
+indoor images. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), 2022.
+6, 15
+</li><br><li>[43] Yiyi Liao, Jun Xie, and Andreas Geiger. KITTI-360: A novel
+dataset and benchmarks for urban scene understanding in 2d
+and 3d. IEEE Transactions on Pattern Analysis and Machine
+Intelligence (T-PAMI), 2022. 7, 15
+</li><br><li>[44] Lu Ling, Yichen Sheng, Zhi Tu, Wentian Zhao, Cheng Xin,
+KunWan, Lantao Yu, Qianyu Guo, Zixun Yu, Yawen Lu, et al.
+DL3DV-10k: A large-scale scene dataset for deep learningbased
+3d vision. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), pages
+22160–22169, 2024. 6, 15
+</li><br><li>[45] Fayao Liu, Chunhua Shen, Guosheng Lin, and Ian Reid.
+Learning depth from single monocular images using deep
+convolutional neural fields. IEEE Transactions on Pattern
+Analysis and Machine Intelligence (T-PAMI), 38:2024–2039,
+2015. 2
+</li><br><li>[46] Yunze Liu, Yun Liu, Che Jiang, Kangbo Lyu, Weikang Wan,
+Hao Shen, Boqiang Liang, Zhoujie Fu, He Wang, and Li Yi.
+Hoi4d: A 4d egocentric dataset for category-level humanobject
+interaction. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR),
+pages 21013–21022, 2022. 6, 15
+</li><br><li>[47] Ilya Loshchilov and Frank Hutter. Decoupled weight decay
+regularization. 7th International Conference on Learning
+Representations, ICLR 2019, 2017. 7, 15
+</li><br><li>[48] Tamas Matuszka, Ivan Barton, A´ da´m Butykai, Pe´ter Hajas,
+D´avid Kiss, Domonkos Kov´acs, S´andor Kuns´agi-M´at´e, P´eter
+Lengyel, G´abor N´emeth, Levente Pet˝o, Dezs˝o Ribli, D´avid
+Szeghy, Szabolcs Vajna, and Balint Viktor Varga. aimotive
+dataset: A multimodal dataset for robust autonomous driving
+with long-range perception. In International Conference on Learning Representations (ICLR) Workshop on Scene Representations
+for Autonomous Driving, 2023. 6, 15
+</li><br><li>[49] Christopher Mei and Patrick Rives. Single view point omnidirectional
+camera calibration from planar grids. Proceedings
+of the IEEE International Conference on Robotics and
+Automation (ICRA), pages 3945–3950, 2007. 3, 15
+</li><br><li>[50] Pushmeet Kohli Nathan Silberman, Derek Hoiem and Rob
+Fergus. Indoor segmentation and support inference from rgbd
+images. In The European Conference on Computer Vision
+(ECCV), 2012. 6, 15
+</li><br><li>[51] Jerzy Neyman and Egon Sharpe Pearson. On the problem of
+the most efficient tests of statistical hypotheses. Philosophical
+Transactions of the Royal Society of London. Series A,
+Containing Papers of a Mathematical or Physical Character,
+231(694-706):289–337, 1933. 4
+</li><br><li>[52] John Nickolls, Ian Buck, Michael Garland, and Kevin
+Skadron. Scalable parallel programming with cuda: Is cuda
+the parallel programming model that application developers
+have been waiting for? Queue, 6(2):40–53, 2008. 7
+</li><br><li>[53] Maxime Oquab, Timoth´ee Darcet, Th´eo Moutakanni, Huy Vo,
+Marc Szafraniec, Vasil Khalidov, Pierre Fernandez, Daniel
+Haziza, Francisco Massa, Alaaeldin El-Nouby, et al. Dinov2:
+Learning robust visual features without supervision. arXiv
+preprint arXiv:2304.07193, 2023. 7
+</li><br><li>[54] Evin Pınar O¨ rnek, Shristi Mudgal, Johanna Wald, Yida Wang,
+Nassir Navab, and Federico Tombari. From 2d to 3d: Rethinking
+benchmarking of monocular depth prediction. arXiv
+preprint arXiv:2203.08122, 2022. 7
+</li><br><li>[55] Xiaqing Pan, Nicholas Charron, Yongqian Yang, Scott Peters,
+Thomas Whelan, Chen Kong, Omkar Parkhi, Richard
+Newcombe, and Yuheng Carl Ren. Aria digital twin: A new
+benchmark dataset for egocentric 3d machine perception. In
+Proceedings of the IEEE/CVF International Conference on
+Computer Vision (ICCV), pages 20133–20143, 2023. 7, 15
+</li><br><li>[56] Dennis Park, Rares Ambrus, Vitor Guizilini, Jie Li, and
+Adrien Gaidon. Is pseudo-lidar needed for monocular 3d object
+detection? In IEEE/CVF International Conference on
+Computer Vision (ICCV), 2021. 1
+</li><br><li>[57] Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer,
+James Bradbury, Gregory Chanan, Trevor Killeen, Zeming
+Lin, Natalia Gimelshein, Luca Antiga, Alban Desmaison, Andreas
+Kopf, Edward Yang, Zachary DeVito, Martin Raison,
+Alykhan Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu
+Fang, Junjie Bai, and Soumith Chintala. Pytorch: An imperative
+style, high-performance deep learning library. In Advances
+in Neural Information Processing Systems (NeurIPS),
+pages 8024–8035. Curran Associates, Inc., 2019. 7
+</li><br><li>[58] Vaishakh Patil, Christos Sakaridis, Alexander Liniger, and
+Luc Van Gool. P3Depth: Monocular depth estimation with a
+piecewise planarity prior. In Proceedings of the IEEE/CVF
+Conference on Computer Vision and Pattern Recognition
+(CVPR), 2022. 2
+</li><br><li>[59] Luigi Piccinelli, Christos Sakaridis, and Fisher Yu. iDisc: Internal
+discretization for monocular depth estimation. In Proceedings
+of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition (CVPR), 2023. 2, 16
+</li><br><li>[60] Luigi Piccinelli, Yung-Hsu Yang, Christos Sakaridis, Mattia
+Segu, Siyuan Li, Luc Van Gool, and Fisher Yu. Unidepth Universal monocular metric depth estimation. In Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 10106–10116, 2024. 1, 2, 3, 4, 5,
+6, 14, 17, 18, 19, 20, 21
+</li><br><li>[61] Luigi Piccinelli, Christos Sakaridis, Yung-Hsu Yang, Mattia
+Segu, Siyuan Li, Wim Abbeloos, and Luc Van Gool.
+UniDepthV2: Universal monocular metric depth estimation
+made simpler. arXiv:2502.20110, 2025. 1, 2
+</li><br><li>[62] Santhosh Kumar Ramakrishnan, Aaron Gokaslan, Erik Wijmans,
+Oleksandr Maksymets, Alexander Clegg, John M
+Turner, Eric Undersander, Wojciech Galuba, Andrew Westbury,
+Angel X Chang, Manolis Savva, Yili Zhao, and Dhruv
+Batra. Habitat-matterport 3d dataset (HM3d): 1000 largescale
+3d environments for embodied AI. In Advances in Neural
+Information Processing Systems (NIPS), 2021. 6, 15
+</li><br><li>[63] Ren´e Ranftl, Katrin Lasinger, David Hafner, Konrad
+Schindler, and Vladlen Koltun. Towards robust monocular
+depth estimation: Mixing datasets for zero-shot cross-dataset
+transfer. IEEE Transactions on Pattern Analysis and Machine
+Intelligence (T-PAMI), 44(3):1623–1637, 2020. 1, 2
+</li><br><li>[64] Davide Scaramuzza. Omnidirectional camera. In Computer
+Vision, A Reference Guide, 2014. 3
+</li><br><li>[65] Thomas Sch¨ops, Johannes L. Sch¨onberger, Silvano Galliani,
+Torsten Sattler, Konrad Schindler, Marc Pollefeys, and Andreas
+Geiger. A multi-view stereo benchmark with highresolution
+images and multi-camera videos. In Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), 2017. 6, 15, 16
+</li><br><li>[66] Niklaus Simon and Feng Liu. Softmax splatting for video
+frame interpolation. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR),
+2020. 16
+</li><br><li>[67] Pei Sun, Henrik Kretzschmar, Xerxes Dotiwalla, Aurelien
+Chouard, Vijaysai Patnaik, Paul Tsui, James Guo, Yin Zhou,
+Yuning Chai, Benjamin Caine, et al. Scalability in perception
+for autonomous driving: Waymo open dataset. In Proceedings
+of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 2446–2454, 2020. 6, 15
+</li><br><li>[68] Hugo Touvron, Matthieu Cord, Alexandre Sablayrolles,
+Gabriel Synnaeve, and Herv´e J´egou. Going deeper with image
+transformers. In Proceedings of the IEEE/CVF International
+Conference on Computer Vision (ICCV), pages 32–42, 2021. 5
+</li><br><li>[69] Vladyslav C. Usenko, Nikolaus Demmel, and Daniel Cremers.
+The double sphere camera model. International Conference
+on 3D Vision (3DV), pages 552–560, 2018. 3, 19
+</li><br><li>[70] Igor Vasiljevic, Nicholas I. Kolkin, Shanyi Zhang, Ruotian
+Luo, Haochen Wang, Falcon Z. Dai, Andrea F. Daniele, Mohammadreza
+Mostajabi, Steven Basart, Matthew R. Walter,
+and Gregory Shakhnarovich. DIODE: A dense indoor and outdoor
+depth dataset. CoRR, abs/1908.00463, 2019. 7, 15, 16
+</li><br><li>[71] Fu-En Wang, Yu-Hsuan Yeh, Min Sun, Wei-Chen Chiu, and
+Yi-Hsuan Tsai. Bifuse: Monocular 360 depth estimation
+via bi-projection fusion. In The IEEE/CVF Conference on
+Computer Vision and Pattern Recognition (CVPR), 2020. 6
+</li><br><li>[72] Fu-En Wang, Yu-Hsuan Yeh, Yi-Hsuan Tsai, Wei-Chen Chiu,
+and Min Sun. Bifuse++: Self-supervised and efficient biprojection
+fusion for 360 depth estimation. IEEE Transactions on Pattern Analysis and Machine Intelligence (T-PAMI), 45
+(5):5448–5460, 2022. 6
+</li><br><li>[73] Ruicheng Wang, Sicheng Xu, Cassie Dai, Jianfeng Xiang,
+Yu Deng, Xin Tong, and Jiaolong Yang. Moge: Unlocking
+accurate monocular geometry estimation for open-domain
+images with optimal training supervision. arXiv preprint
+arXiv:2410.19115, 2024. 2
+</li><br><li>[74] Shuzhe Wang, Vincent Leroy, Yohann Cabon, Boris
+Chidlovskii, and J´erˆome Revaud. Dust3r: Geometric 3d vision
+made easy. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), pages
+20697–20709, 2024. 19
+</li><br><li>[75] Wenshan Wang, Delong Zhu, Xiangwei Wang, Yaoyu Hu,
+Yuheng Qiu, Chen Wang, Yafei Hu, Ashish Kapoor, and
+Sebastian Scherer. Tartanair: A dataset to push the limits
+of visual slam. In 2020 IEEE/RSJ International Conference
+on Intelligent Robots and Systems (IROS), pages 4909–4916.
+IEEE, 2020. 6, 15
+</li><br><li>[76] Yan Wang, Wei-Lun Chao, Divyansh Garg, Bharath Hariharan,
+Mark Campbell, and Kilian Q Weinberger. Pseudolidar
+from visual depth estimation: Bridging the gap in 3d
+object detection for autonomous driving. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, pages 8445–8453, 2019. 1
+</li><br><li>[77] Benjamin Wilson, William Qi, Tanmay Agarwal, John Lambert,
+Jagjeet Singh, Siddhesh Khandelwal, Bowen Pan, Ratnesh
+Kumar, Andrew Hartnett, Jhony Kaesemodel Pontes,
+Deva Ramanan, Peter Carr, and James Hays. Argoverse 2:
+Next generation datasets for self-driving perception and forecasting.
+In Advances in Neural Information Processing Systems,
+2021. 6, 15
+</li><br><li>[78] Hongchi Xia, Yang Fu, Sifei Liu, and Xiaolong Wang. Rgbd
+objects in the wild: Scaling real-world 3d object learning from
+rgb-d videos. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR), pages
+22378–22389, 2024. 6, 15
+</li><br><li>[79] Guorun Yang, Xiao Song, Chaoqin Huang, Zhidong Deng,
+Jianping Shi, and Bolei Zhou. Drivingstereo: A large-scale
+dataset for stereo matching in autonomous driving scenarios.
+In Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 2019. 6, 15
+</li><br><li>[80] Guanglei Yang, Hao Tang, Mingli Ding, Nicu Sebe, and Elisa
+Ricci. Transformer-based attention networks for continuous
+pixel-wise prediction. Proceedings of the IEEE/CVF International
+Conference on Computer Vision (ICCV), pages 16249–
+16259, 2021. 2
+</li><br><li>[81] Lihe Yang, Bingyi Kang, Zilong Huang, Xiaogang Xu, Jiashi
+Feng, and Hengshuang Zhao. Depth anything: Unleashing
+the power of large-scale unlabeled data. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR), pages 10371–10381, 2024. 1, 2, 5, 6,
+17, 18, 19
+</li><br><li>[82] Lihe Yang, Bingyi Kang, Zilong Huang, Zhen Zhao, Xiaogang
+Xu, Jiashi Feng, and Hengshuang Zhao. Depth anything
+v2. arXiv preprint arXiv:2406.09414, 2024. 2, 6, 14, 16, 17,
+18, 19
+</li><br><li>[83] Yao Yao, Zixin Luo, Shiwei Li, Jingyang Zhang, Yufan Ren,
+Lei Zhou, Tian Fang, and Long Quan. Blendedmvs: A large largescale
+dataset for generalized multi-view stereo networks. In
+Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition (CVPR), pages 1790–1799,
+2020. 6, 15
+</li><br><li>[84] Chandan Yeshwanth, Yueh-Cheng Liu, Matthias Nießner,
+and Angela Dai. Scannet++: A high-fidelity dataset of 3d
+indoor scenes. In Proceedings of the IEEE/CVF International
+Conference on Computer Vision (ICCV), 2023. 6, 7, 15
+</li><br><li>[85] Wei Yin, Chi Zhang, Hao Chen, Zhipeng Cai, Gang Yu, Kaixuan
+Wang, Xiaozhi Chen, and Chunhua Shen. Metric3d: Towards
+zero-shot metric 3d prediction from a single image. In
+Proceedings of the IEEE/CVF International Conference on
+Computer Vision (ICCV), pages 9043–9053, 2023. 1, 2, 6, 16,
+17, 18, 19
+</li><br><li>[86] Weihao Yuan, Xiaodong Gu, Zuozhuo Dai, Siyu Zhu, and
+Ping Tan. Neural window fully-connected crfs for monocular
+depth estimation. In Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR),
+pages 3906–3915. IEEE, 2022. 2, 16
+</li><br><li>[87] Amir R Zamir, Alexander Sax, William B Shen, Leonidas
+Guibas, Jitendra Malik, and Silvio Savarese. Taskonomy:
+Disentangling task transfer learning. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition (CVPR). IEEE, 2018. 6, 15
+</li><br><li>[88] Yang Zheng, Adam W Harley, Bokui Shen, Gordon Wetzstein,
+and Leonidas J Guibas. Pointodyssey: A large-scale
+synthetic dataset for long-term point tracking. In Proceedings
+of the IEEE/CVF International Conference on Computer Vision
+(ICCV), pages 19855–19865, 2023. 6, 15
+</li><br><li>[89] Brady Zhou, Philipp Kr¨ahenb¨uhl, and Vladlen Koltun. Does
+computer vision matter for action? Science Robotics, 4, 2019.
+</li>
+</ul>
+</div>
+</p>
+<h2>補足資料</h2>
+<!--
+<h2>Supplementary Material</h2>
+-->
+<p>
+この補足資料は、我々の研究へのさらなる洞察を提供します。付録Aでは、ネットワークアーキテクチャについてより詳細に説明します（付録Aは必然的にセクション3と重複します）。さらに、付録A.1では、UniK3Dの複雑さを分析し、他の手法と比較します。また、付録A.2では、設計上の選択肢に加えて、それらについてさらに詳しく説明します。付録Bでは、付録B.1で選択されたトレーニングパイプラインとハイパーパラメータの概要を示します。付録B.2では、トレーニングデータと検証データ、付録B.3では、完全性と再現性を確保するためのカメラ拡張について説明します。さらに、付録Cでは、付録C.2で、データセットごとの評価によるより詳細な定量的評価を提供します。KITTIとNYUv2で微調整されたUniK3Dに対応する結果は、付録C.1で報告されています。付録Dでは、発生する可能性のある質問への回答を示します。最終的には、追加の視覚化が付録Eに提供されます。
+<!--
+This supplementary material offers further insights into
+our work. In Appendix A we describe the network architecture
+in more detail, necessarily Appendix A overlaps with
+Sec. 3. Moreover, we analyze the complexity of UniK3D
+and compare it with other methods in Appendix A.1. Also,
+we provide further alternatives to our design choices and ablate
+them in Appendix A.2. Appendix B outlines the training
+pipeline and hyperparameters chosen in Appendix B.1,
+altogether with training and validation data in Appendix B.2,
+and the camera augmentations in Appendix B.3 for completeness
+and reproducibility. Furthermore, Appendix C provides
+a more detailed quantitative evaluation with per-dataset
+evaluation in Appendix C.2 The results corresponding to
+UniK3D finetuned on KITTI and NYUv2 are reported in Appendix
+C.1. In Appendix D, we provide answers to possible
+questions that may arise. Eventually, additional visualizations
+are provided in Appendix E.
+-->
+</p>
+<h3>A. アーキテクチャー</h3>
+<!--
+<h3>A. Architecture</h3>
+-->
+<p>
+<strong>エンコーダー</strong>　本モデルアーキテクチャでは、Vision Transformer (ViT) [15] をエンコーダーとして採用し、SmallからLargeまでの様々なスケールでその有効性を実証しています。ViTバックボーンは元々分類タスク用に開発されたため、最終の3層（プーリング層、全結合層、ソフトマックス層）を削除して修正しました。修正されたViTバックボーンの最後の4層から特徴マップとクラストークンを抽出します。これらの出力はLayerNorm [4] を用いて平坦化され、処理された後、線形投影層で処理されます。線形層は、特徴とクラストークンを共通のチャネル次元にマッピングします。このチャネル次元は、Large、Base、SmallのViTバリアントに対してそれぞれ512、384、256に設定されています。重要なのは、正規化層と線形層の重みはそれぞれ独立しており、異なる特徴解像度とクラストークン間で共有されないことです。その後、高密度特徴マップはRadialモジュールに渡され、クラストークンはAngularモジュールに送られます。
+<!--
+<strong>Encoder.</strong> Our model architecture employs a Vision Transformer
+(ViT) [15] as the encoder, demonstrating its effectiveness
+across different scales, from Small to Large. The
+ViT backbones were originally developed for classification
+tasks, and as such, we modify them by removing the final
+three layers: the pooling layer, the fully connected layer,
+and the softmax layer. We extract feature maps and class
+tokens from the last four layers of the modified ViT backbone.
+These outputs are flattened and processed using LayerNorm
+[4] followed by a linear projection layer. The linear
+layer maps the features and class tokens to a common
+channel dimension, which is set to 512, 384, and 256 for
+Large, Base, and Small ViT variants, respectively. Importantly,
+the normalization and linear layer weights are distinct
+and are not shared between the different feature resolutions
+and the class tokens. The dense feature maps are subsequently
+passed to the Radial Module, while the class tokens
+are directed to the Angular Module.
+-->
+</p><p>
+<strong>角度モジュール</strong>　エンコーダーから抽出された4つのクラストークンは、まずそれぞれ3次元、3次元、5次元、7次元に投影されます。次に、チャネル次元dに基づいてチャンクに分割され、サイズ3、3、5、7のトークングループが生成されます。これらのトークングループは、それぞれ1次、2次、3次の球面調和関数（SH）係数を表すドメイントークンの初期化として機能します。合計18個のトークン（T）があり、Transformer Encoderの2層で処理されます。各Transformer Encoder層は、8つのヘッドを持つ自己注意と、4C次元の単一の隠れ層を持ち、ガウス誤差線形ユニット（GELU）活性化関数を使用する多層パーセプトロン（MLP）で構成されています[26]。自己注意層とMLP層はどちらも、学習の安定性を向上させるために残差接続を含んでいます。18個のトークンはそれぞれスカラー次元に投影されます。最初の3つのトークンは、球面調和関数のドメインを具体的に定義します。最初のトークンは水平視野角(HFov)を決定し、\(2π · σ(\mathbf T_0)\)として計算されます。ここで、σはシグモイド関数を表します。2番目と3番目のトークンは、球面調和関数の極、つまり画像形状に対する投影の中心を表し、それぞれ\(c_x = \frac{σ(\mathbf T_1)W}{2}\)と\(c_y = \frac{σ(\mathbf T_2)H}{2}\)として計算されます。ここで、\(H\)と\(W\)は画像の高さと幅です。垂直FoVは、正方形ピクセルの仮定の下で導出されます：\(HFov × \frac{H}{W}\)。この領域定義を用いて、定数成分を除いた3次までの球面調和関数を計算し、サイズ\(\mathbb R^{H×W×3}\)の15個の調和テンソルを生成します。光線束\(\mathbf C\)は、これらの調和関数と対応する15個の処理済みトークン(T3:18)の線形結合として構築されます。
+<!--
+<strong>Angular Module.</strong> The four class tokens extracted from the
+encoder are first projected to dimensions of 3D, 3D, 5D,
+and 7D, respectively. These are then divided into chunks
+based on the channel dimension d, yielding token groups of
+size 3, 3, 5, and 7. These token groups serve as the initialization
+for domain tokens, representing the spherical harmonics
+(SH) coefficients: 1st-degree, 2nd-degree, and 3rd-degree,
+respectively. In total, there are 18 tokens (T), which are processed
+through two layers of a Transformer Encoder. Each
+Transformer Encoder layer consists of self-attention with
+eight heads and a Multi-Layer Perceptron (MLP) that has a
+single hidden layer of dimension 4C and uses the Gaussian
+Error Linear Unit (GELU) activation function [26]. Both self-attention and MLP layers include residual connections
+to improve learning stability. Each of the 18 tokens is then
+projected to a scalar dimension. The first three tokens specifically
+define the domain for the spherical harmonics. The first
+token determines the horizontal field of view (HFov), calculated
+as \(2π · σ(\mathbf T_0)\), where σ denotes the sigmoid function.
+The second and third tokens represent the poles of the spherical
+harmonics, i.e. the center of projection relative to the image
+shape, computed as \(c_x = \frac{σ(\mathbf T_1)W}{2}\) and \(c_y = \frac{σ(\mathbf T_2)H}{2}\) , respectively,
+where \(H\) and \(W\) are the image height and width.
+The vertical FoV is derived under the assumption of square
+pixels: \(HFov × \frac{H}{W}\) . Using this domain definition, we compute
+the spherical harmonics up to the 3rd degree, excluding
+the constant component, yielding 15 harmonic tensors of
+size \(\mathbb R^{H×W×3}\). The pencil of rays \(\mathbf C\) is then constructed as
+a linear combination of these harmonics and the corresponding
+15 processed tokens (T3:18).
+-->
+</p><p>
+<strong>ラジアルモジュール</strong>　正弦波エンコードされたカメラレイ \(\mathbf C\) は、Transformer Decoder 層を介して、高密度特徴マップの各解像度レベル \(\mathbf F\) を調整するために使用されます。この設定では、高密度特徴 \(\mathbf F\) がクエリとして機能し、正弦波エンコードされたカメラレイがキーと値を提供します。クロスアテンションメカニズムには、LayerScale などの学習可能なゲイン係数のない残差接続が含まれます。調整された特徴は、特徴ピラミッドネットワーク (FPN) 方式で洗練されます。最も深い特徴は、2 つの残差畳み込みブロック [25] を経て処理され、その後、双線形アップサンプリングと、チャネル次元を半分にする投影ステップが続きます。これらのアップサンプリングされた特徴は、次の層の特徴と結合されます。これらの特徴も同様にチャネル次元に一致するように投影され、単一の2x2転置畳み込みを使用してアップサンプリングされます。このプロセスは、残りの3つの特徴マップがすべて消費されるまで続きます。最終的な出力特徴は入力画像の解像度にアップサンプリングされ、単一チャネル次元に投影され、対数半径\(\mathbf R_{log}\)が生成されます。アーキテクチャ的には同じ投影ですが、重みは別々に使用され、対数信頼度\(Σ_{log}\)が生成されます。最終的な半径と信頼度の値は、これらのテンソルを要素ごとに累乗し、対数空間から元の空間に変換することで得られます。
+<!--
+<strong>Radial Module.</strong> The sine-encoded camera rays \(\mathbf C\) are used
+to condition each resolution level of the dense feature maps
+\(\mathbf F\) via a Transformer Decoder layer. In this setup, the dense
+features \(\mathbf F\) serve as the query, while the sine-encoded camera
+rays provide the keys and values. The cross-attention mechanism
+includes a residual connection without any learnable
+gain factors, such as LayerScale. The conditioned features
+are then refined in a Feature Pyramid Network (FPN) manner:
+the deepest features are processed through two Residual
+Convolution blocks [25], followed by bilinear upsampling
+and a projection step that halves the channel dimension.
+These upsampled features are then combined with the
+features from the next layer, which are similarly projected to
+match channel dimension and upsampled using a single 2x2
+transposed convolution. This process continues until all remaining
+three feature maps are consumed. The final output
+features are upsampled to the input image resolution and projected
+to a single-channel dimension, yielding the log-radius
+\(\mathbf R_{log}\). The same projection, architectural-wise but with separate
+weights, is used to generate the log-confidence \(Σ_{log}\).
+The final radius and confidence values are obtained by exponentiating
+these tensors element-wise, transforming them
+from log-space to the original space.
+-->
+</p>
+<h4>A.1. 複雑度</h4>
+<!--
+<h4>A.1. Complexity</h4>
+-->
+<p>
+UniK3Dの計算コストを詳細に分析し、表7に示す他の最先端手法と比較します。公平で一貫性のある比較を行うため、すべてのモデルで可能な限り同じ入力サイズを使用します。しかし、このアプローチにはいくつかの課題があります。例えば、DepthProはエンタングルド構造とマルチ解像度アーキテクチャを採用しているため、手法間で入力サイズを一貫して調整することが複雑です。そのアーキテクチャ設計では調整が容易ではなく、標準化された入力サイズに合わせることが困難です。さらに、第4章の主な実験で評価したDepthProやMetric3Dなどのモデルのパフォーマンスは、トレーニング中に使用した画像形状とは異なる画像形状でテストした場合、大幅に低下します。この感度は根本的な限界を浮き彫りにしています。これらの手法は特定の画像解像度に最適化されており、これらの解像度から逸脱すると、パフォーマンスが大幅に低下する可能性があります。したがって、最も公平な条件下で計算を測定するよう努める一方で、これらのモデルはトレーニング設定とは異なる解像度には適していないことを認識することが重要です。対照的に、UniK3Dは画像の形状に対して柔軟に対応できるように設計されており、さまざまな解像度で堅牢なパフォーマンスを維持します。実験では、計算効率とパフォーマンスのバランスの取れたトレードオフを提供するため、DepthAnything v2と同じ入力形状を選択しました。さらに、CUDAカーネルスレッドの非同期性を考慮するため、適切な同期を有効にし、CUDAイベント記録を利用することで、正確な推論時間測定を保証します。このアプローチにより、計算コストを正確に反映し、非同期操作による誤った表現を回避できます。表7に示すように、UniK3Dは最も効率的なモデルの1つです。特にDepthAnything v2と比較した場合の計算コストの主な違いは、AngularモジュールとScaleコンポーネントが含まれていることに起因しています。これらのコンポーネントは、絶対的なメトリック深度とカメラ固有の調整をモデルが処理するために不可欠です。これらの機能は、相対的な深度推定ネットワークでは必要とされません。この追加の複雑さにもかかわらず、モデルの効率は競争力を維持しており、高性能を維持しながら多様なカメラ形状に対応する設計の有効性を強調しています。
+<!--
+We perform a detailed analysis of the computational cost of
+UniK3D, presented in Table 7, and compare it to other stateof-
+the-art methods. To ensure a fair and consistent comparison,
+we use input sizes that are as similar as possible across
+all models. However, this approach introduces certain challenges.
+DepthPro, for instance, has an entangled and multiresolution
+architecture, which complicates tuning the input
+size consistently across methods. Its architectural design
+does not easily allow for adjustments, making it difficult to align with a standardized input size. Additionally, the performance
+of models like DepthPro and Metric3D, as evaluated
+in our main experiments in Sec. 4, shows a significant drop
+when tested with image shapes that differ from those used
+during training. This sensitivity highlights a fundamental
+limitation: these methods are heavily optimized for specific
+image resolutions, and deviations from these resolutions can
+lead to substantial performance degradation. Consequently,
+while we strive to measure computation under the most equitable
+conditions, it is essential to acknowledge that these
+models are not well-suited for resolutions that differ from
+their training setup. In contrast, UniK3D is designed to be
+flexible w.r.t. image shape, maintaining robust performance
+across different resolutions. For our experiments, we chose
+the same input shape as DepthAnything v2, as it provides
+a balanced trade-off between computational efficiency and
+performance. Furthermore, to account for the asynchronous
+nature of CUDA kernel threading, we ensure precise inference
+time measurements by enabling proper synchronization
+and utilizing CUDA event recording. This approach guarantees
+an accurate reflection of computational cost, avoiding
+any misrepresentation caused by asynchronous operations.
+As shown in Table 7, UniK3D is among the most efficient
+models. The primary differences in computational cost, especially
+when compared to DepthAnything v2, stem from
+the inclusion of our Angular Module and Scale components.
+These components are essential for our model to handle absolute
+metric depth and camera-specific adjustments, features
+that relative depth estimation networks do not require.
+Despite this additional complexity, our model’s efficiency remains
+competitive, underscoring its design’s effectiveness
+in addressing diverse camera geometries while maintaining
+high performance.
+-->
+</p>
+<center><img src="images/table7.png"></center>
+<p class="margin-large">
+表7. パラメータと効率の比較。入力サイズ、レイテンシ、学習可能なパラメータ数に基づく手法のパフォーマンス比較。RTX3090 GPU、16ビット精度浮動小数点数、同期タイマーでテスト。最後の2行は、個別に評価されたAngularモジュールとRadialモジュールに対応しています。すべてのモデルはViT-Lバックボーンに基づいています。
+<!--
+Table 7. Parameters and efficiency comparison. Comparison of
+performance of methods based on input size, latency, and number
+of trainable parameters. Tested on RTX3090 GPU, 16-bit precision
+float, and synchronized timers. The last two rows correspond to the
+Angular and Radial Modules evaluated independently. All models
+are based on ViT-L backbone.
+-->
+</p>
+<h4>A.2. アーキテクチャの代替案</h4>
+<!--
+<h4>A.2. Architectural Alternatives</h4>
+-->
+<p>
+UniDepth [60] ではカメラコンディショニングが優れていることが証明されているにもかかわらず、Transformer EncoderとDecoderの両方のコンポーネントについて、代替アーキテクチャの選択肢を除外する。
+特に、コンディショニングには最も一般的な代替手法、すなわち単純な加算または連結を選択した。
+カメラトークン処理の「代替」には、カメラトークンを最終的な投影層にショートカットするアイデンティティが含まれる。表9は、エンコーダ層を介したカメラトークン処理が大きな変化を示さないことを示しており、異なる層のクラストークンが既に有益であることがわかる。しかし、表8は、加算や連結などのより単純なコンディショニングの代替手法が、注意に基づくコンディショニングよりもパフォーマンスが低いことを明確に示している。
+これは、コンディショニングが最終的なパフォーマンスに重要な役割を果たし、適切に設計されたコンディショニングが適切な一般化を達成する上でいかに重要であるかを強調している。
+<!--
+Despite the camera conditioning has been proven superior
+in UniDepth [60], we ablate alternative architectural choices
+for both the Transformer Encoder and Decoder components.
+In particular, we have chosen the most typical alternatives for conditioning: a simple addition or concatenation in place.
+While the camera tokens processing “alternative” involves
+an identity that shortcuts the camera tokens to the final projection
+layers. Table 9 shows how the camera tokens processing,
+via the encoder layer, does not present large changes,
+showing how the class tokens from different layers are already
+informative. However, Table 8 clearly shows how the
+simpler conditioning alternatives, such as addition or concatenation,
+underperform our attention-based conditioning.
+This highlights how conditioning plays an important role in
+final performance and how strongly designed conditioning
+is paramount to achieving proper generalization.
+-->
+</p>
+<center><img src="images/table8.png"></center>
+<p class="margin-large">
+表8. カメラコンディショニング設計におけるアブレーション。カメラコンディショニングは、カメラの特徴を用いて深度特徴をコンディショニングするために用いられるカメラコンディショニングの種類に対応する。Addは特徴空間における単純な加算を指す。Catは2Cチャネル次元からCチャネル次元への単純な連結と射影を表す。Promptは注意に基づくコンディショニングである。
+<!--
+Table 8. Ablation on camera conditioning design. Camera Cond.
+corresponds to the type of camera conditioning employed to condition
+the depth features with camera ones. Add refers to a simple
+addition in the feature space. Cat represents a simple concatenation
+and projection from 2C to C channel dimension. Prompt is
+our attention-based conditioning.
+-->
+</p>
+<center><img src="images/table9.png"></center>
+<p class="margin-large">
+表9. カメラトークン処理に関するアブレーション。T-Enc. は、カメラトークンがAngularモジュールでトランスフォーマーエンコーダーレイヤーを介して処理されるかどうかを示します。後者の場合、トークンは最終投影に直接送られます。
+<!--
+Table 9. Ablation on camera tokens processing. T-Enc. indicates
+if the camera tokens are processed in the Angular Module either via
+the transformer encoder layer or not, in the latter case the tokens
+are fed directly to the final projections.
+-->
+</p>
+<h3>B. トレーニングの詳細</h3>
+<h4>B.1. ハイパーパラメータ</h4>
+<!--
+<h3>B. Training Details</h3>
+<h4>B.1. Hyperparameters.</h4>
+-->
+<p>
+学習パラメータ（最適化、スケジューリング、拡張）については表10にまとめています。利用された損失、入力値、および対応する重みについては表11にまとめています。
+<!--
+The training parameters, i.e. those for optimization, scheduling,
+and augmentations, are described in Table 10. The
+losses utilized, with the input and corresponding weights,
+are outlined in Table 11.
+-->
+</p>
+<center><img src="images/table10.png"></center>
+<p class="margin-large">
+表10. トレーニングハイパーパラメータ。対応する値を持つすべてのトレーニングハイパーパラメータが示されています。
+<!--
+Table 10. Training Hyperparamters. All training hyperparameters
+with corresponding values are presented
+-->
+</p>
+<center><img src="images/table11.png"></center>
+<p class="margin-large">
+表11. トレーニング損失。対応する重みと入力値を伴うトレーニング損失。
+<!--
+Table 11. Training Losses. Training losses with corresponding
+weight and input.
+-->
+</p>
+<h4>B.2. データ</h4>
+<!--
+<h4>B.2. Data</h4>
+-->
+<p>
+トレーニングデータセットと検証データセットの詳細は、表12と表13に示されています。
+<!--
+Details of training and validation datasets are presented in
+Table 12 and Table 13.
+-->
+</p>
+<center><img src="images/table12.png"></center>
+<p class="margin-large">
+表12. 学習データセット。検証データセットのリスト：画像数、シーンタイプ、取得方法、サンプリング周波数が報告されています。SfM：Structure-from-Motion、MVS：Multi-View Stereo、Syn：Synthetic、Rec：Mesh Reconstruction、KB：Kannala-Brandt [30]、Equi：Equirectangular
+<!--
+Table 12. Training Datasets. List of the validation datasets: number
+of images, scene type, acquisition method, and sampling frequency
+are reported. SfM: Structure-from-Motion. MVS: Multi-
+View Stereo. Syn: Synthetic. Rec: Mesh reconstruction. KB:
+Kannala-Brandt [30]. Equi: Equirectangular
+-->
+</p>
+<center><img src="images/table13.png"></center>
+<p class="margin-large">
+表13. 検証データセット。検証データセットのリスト：画像数、シーンタイプ、取得方法、最大評価距離が報告されています。第1グループ：小視野角、第2グループ：大視野角、第3グループ：パノラマ。Rec：メッシュ再構築。
+<!--
+Table 13. Validation Datasets. List of the validation datasets: number
+of images, scene type, acquisition method, and max evaluation
+distance are reported. 1st group: small FoV, 2nd group: large FoV,
+3rd: Panoramic. Rec: Mesh reconstruction.
+-->
+<p>
+<strong>トレーニングデータセット</strong>　トレーニングに使用されるデータセットは、表12に示すように、異なるカメラとドメインが混在しています。シーケンスベースのデータセットは、収集中に、連続する2つのフレーム間の間隔が0.5秒以上になるようにサブサンプリングされます。後処理は適用されません。トレーニングサンプルの総量は800万サンプルを超えます。データセットは、表12のサンプリング列の値に対応する確率で各バッチでサンプリングされます。この確率は、各データセットに含まれるシーンの数に関連しています。ただし、確率は単純な定性データ検査に基づいて変更されるため、最も多様なデータセットがより多くサンプリングされます。データセットのほとんどは、ピンホール画像または偏向カメラ（例： MegaDepth [41] や NianticMapFree [3] などのデータセットでは、明らかに歪んでいるにもかかわらず、ピンホールキャリブレーションのみを提供しています。例えば Mapillary [1] では、カメラ損失の計算においてサンプル全体がマスクされています。
+<!--
+<strong>Training Datasets.</strong> The datasets utilized for training are a
+mixture of different cameras and domains as shown in Table
+12. The sequence-based datasets are sub-sampled during
+collection in a way that the interval between two consecutive
+frames is not smaller than half a second. No post-processing
+is applied. The total amount of training samples accounts
+for more than 8M samples. The datasets are sampled in each
+batch with a probability corresponding to the values in Sampling
+column in Table 12. This probability is related to the
+number of scenes present in each dataset. However, probabilities
+are changed based on a simple qualitative data in-spection, such that the most diverse datasets are sampled
+more. Most of the datasets involve pinhole images or rectified
+cameras, e.g. MegaDepth [41] or NianticMapFree [3],
+other datasets provide only the pinhole calibration despite
+being clearly distorted, i.e. Mapillary [1], there the entire
+samples are masked out in the camera loss computation.
+-->
+</p><p>
+<strong>検証データセット</strong>　表13は、すべての検証データセットを示し、それらを3つのグループ（小視野角、大視野角、パノラマ）に分割しています。標準的な方法に従い、KITTI Eigensplitは、元の697枚の画像から不正確なGTを除外した45枚の画像で補正および累積されたGT深度マップに対応しています。評価に使用した、セクション3で示した歪みのある小視野角は、ETH3D、Diode（屋内）、IBims-1の合成カメラに基づいて取得されています。すべての歪み画像とカメラは、付録B.3に示すパイプラインで生成された後、手動でリアリティがチェックされています。
+<!--
+<strong>Validation Datasets.</strong> Table 13 presents all the validation
+datasets and splits them into 3 groups: small FoV, large
+FoV, and Panoramic. As per standard practice, KITTI Eigensplit
+corresponds to the corrected and accumulated GT depth
+maps with 45 images with inaccurate GT discarded from
+the original 697 images. The small FoV with distortion presented in Sec. 3 and used for evaluation is obtained
+based on synthesized cameras from ETH3D, Diode (Indoor),
+and IBims-1, all distorted images and cameras are manually
+checked for realism, after being generated with the pipeline
+presented in Appendix B.3.
+-->
+</p>
+<h4>B.3. カメラの拡張</h4>
+<!--
+<h4>B.3. Camera Augmentations</h4>
+-->
+<p>
+歪んだカメラデータの多様性が限られていることに対処するため、ピンホールカメラで撮影した画像を人工的に変形することで拡張し、Fisheye624やラジアルKannala-Brandt [30]などの歪んだカメラモデルの画像をシミュレートします。拡張プロセスには主に2つのステップがあります。まず、変形フィールドを計算します。これは、ピンホールカメラから取得した2D深度マップを3D点群に逆投影することから始まります。次に、これらの3D点をランダムにサンプリングした歪んだカメラモデルの画像平面に投影し、新しい2D座標を取得します。変形フィールドは、元の2D画像座標と新しく投影された2D座標間の距離として定義されます。このフローは、歪んだカメラビューの外観を模倣するために元の画像をどのように変形する必要があるかを示しています。次に、ソフトマックスベースのスプラッティング[66]を用いて画像をワーピングします。これは、画像の詳細を維持しながら、計算された変形フィールドに基づいてピクセルを投影する手法です。ワーピング処理によって穴などのアーティファクトが生成されないようにするために、各ピクセルの深度値の逆数である「重要度」メトリックを使用します。このメトリックは近い点を優先し、ワーピング中に詳細と正しい視差が維持されるようにします。正解深度マップが利用できない非合成画像の場合は、推論のみのモードで深度予測を生成し、変形を計算します。これらの予測がリアルな変形を作成するのに十分な精度であることを保証するために、モデルが10,000ステップ学習された後にのみ、この拡張を適用します。この時点で、モデルは十分に信頼できる（スケール不変の）深度表現を学習しています。新しいランダムカメラをサンプリングするために使用された特定のカメラパラメータは、表15に示されています。
+<!--
+To address the limited diversity of distorted camera data,
+we augment images captured with pinhole cameras by artificially
+deforming them, thereby simulating images from
+distorted camera models, e.g. Fisheye624 or radial Kannala-
+Brandt [30]. The augmentation process involves two main
+steps. First, we compute a deformation field. This starts
+with unprojecting the 2D depth map obtained from a pinhole
+camera into a 3D point cloud. We then project these 3D
+points onto the image plane of a randomly sampled distorted camera model to obtain the new 2D coordinates. The deformation
+field is defined as the distance between the original
+2D image coordinates and the newly projected 2D coordinates.
+This flow indicates how the original image should be
+warped to mimic the appearance of a distorted camera view.
+Next, we warp the image using softmax-based splatting [66],
+a technique that projects pixels based on the computed deformation
+field while preserving image details. To ensure the
+warping process does not create artifacts like holes, we use
+an “importance” metric, which is the inverse of the depth
+value for each pixel. This metric prioritizes closer points, ensuring
+that details and correct parallax are maintained during
+the warping. For non-synthetic images, where ground-truth
+depth maps are unavailable, we generate depth predictions in an inference-only mode to compute the deformation. To
+ensure these predictions are accurate enough to create realistic
+deformations, we apply this augmentation only after the
+model has been trained for 10,000 steps. By this point, the
+model has learned a decently reliable (scale-invariant) depth
+representation. The specific camera parameters used to sample
+the new random camera are listed in Table 15.
+-->
+</p>
+<center><img src="images/table14.png"></center>
+<p class="margin-large">
+表14. S.FoVDist生成のためのカメラサンプリング。S.FoVDist画像を生成するためのパラメータを列挙する。パラメータ範囲の異なる複数のカメラモデルを使用した。サンプリングは、範囲内で均一サンプリングで行われる。シード値は13である。
+<!--
+Table 14. Camera Sampling for S.FoVDist generation. The parameters
+to generate S.FoVDist images are listed. We employed different
+camera models with different parameter ranges. The sampling
+is uniform sampling within the ranges. The seed is 13.
+-->
+</p>
+<center><img src="images/table15.png"></center>
+<p class="margin-large">
+表15. カメラ拡張のためのカメラサンプリング。学習画像中に拡張カメラを生成するためのパラメータを記載しています。パラメータ範囲の異なる複数のカメラモデルを使用しました。サンプリングは、範囲内で均一に行われます。記載されていないパラメータ（例：Kannala-Brandtモデルの場合、{ki}6i
+=4）は0に設定されます。
+<!--
+Table 15. Camera Sampling for Camera Augmentation. The
+parameters to generate an augmented camera during training images
+are listed. We employed different camera models with different
+parameter ranges. The sampling is uniform sampling within the
+ranges. When some parameters are not listed, e.g. {ki}6i
+=4 for
+Kannala-Brandt model, they are set to 0.
+-->
+</p>
+<p>
+<strong>検証データセットの生成</strong>　視野が狭くなった歪んだ画像でモデルをテストするための検証データセットを生成することは、多くの歪みが通常広い視野に関連しているため、さらなる課題を伴います。これをシミュレートするために、ETH3D [65]、IBims-1 [34]、Diode (Indoor) [70] などのデータセットから合成カメラパラメータを使用してRGB画像を変形します。これらのデータセットを選択した理由は、ほぼ完全な正解深度マップを提供するため、変形プロセスが適切かつ現実的になるためです。深度マップの小さなギャップや穴は、インペインティングを使用して埋められます。重要なのは、3D正解データは、使用するカメラモデルに対して不変であるため、変更されないことです。現実感を保証するために、各変形画像を手動で検証し、データ生成コードと結果の検証データの両方を公開します。
+<!--
+<strong>Validation datasets generation.</strong> Generating validation
+datasets for testing models on distorted images with reduced
+fields of view presents an additional challenge, as most distortions
+are typically associated with large fields of view. To
+simulate this, we use synthetic camera parameters to deform
+RGB images from datasets such as ETH3D [65], IBims-
+1 [34], and Diode (Indoor) [70]. These datasets are chosen
+because they provide nearly complete ground-truth depth
+maps, making the deformation process well-posed and realistic.
+Any small gaps or holes in the depth maps are filled
+using inpainting. Importantly, the 3D ground-truth data remains
+unchanged, as it is invariant to the camera model used.
+To ensure realism, we manually validate each deformed image
+and will release both the code for data generation and
+the resulting validation data.
+-->
+</p>
+<h3>C. 追加の定量的結果</h3>
+<h4>C.1. 微調整</h4>
+<!--
+<h3>C. Additional Quantitative Results</h3>
+<h4>C.1. Fine-tuning</h4>
+-->
+<p>
+UniK3Dの微調整能力を評価するため、KITTIまたはNYUのいずれかを唯一の学習データセットとして学習を再開する。微調整プロセスは、大規模な事前学習フェーズ後に得られた重みと最適化状態から開始され、公平かつ一貫性のある初期化を保証する。学習目標には標準的なSILog損失を使用し、バッチサイズは16とし、モデルはさらに40,000ステップ学習する。評価をドメイン内データの影響に焦点を絞るため、水平反転以外のすべての拡張を無効にし、微調整中は角度損失の非対称成分を省略する。評価では、先行研究との比較可能性を確保するために、両方のデータセットの標準的な手法に従う。 KITTIの結果はGarg [20]の評価クロップを用いて報告されており、KITTIとNYUの最大評価深度はそれぞれ80メートルと10メートルに設定されています。重要な点として、一貫性を維持し、追加の交絡因子の導入を回避するために、入力サイズの変更などのテスト時の拡張やチューニングは適用していません。結果は、UniK3Dがドメイン内微調整から大幅に恩恵を受けることを示しています。表17は、UniK3Dが本質的に柔軟性とドメイン間の一般化を目的として設計されているにもかかわらず、KITTIのような高度に構造化され較正されたデータセットで非常に優れたパフォーマンスを発揮するモデルの能力を示しています。これは、微調整を行うことで、モデルが適切に構造化されたデータに効果的に適応できることを示唆しています。この微調整分析は、柔軟性を重視した設計を維持しながら、UniK3Dがさまざまな設定に適応できることを強調しています。同様に、表16は、典型的な屋内環境を表すNYUのような構造化されていないドメインで微調整した場合でも、UniK3Dが競争力を維持することを示しています。これらの結果は、特に異なる特性を持つデータセットやドメイン固有の課題を持つデータセットにおいて、最適なパフォーマンスを達成するためにドメイン内データの重要性を裏付けています。さらに、この結果は、大きく異なるデータセット特性にわたって優れたパフォーマンスを達成しており、モデルの堅牢性を強調しています。
+<!--
+We evaluate the fine-tuning capability of UniK3D by resuming
+training with either KITTI or NYU as the sole training
+dataset. The fine-tuning process starts from the weights and
+optimizer states obtained after the large-scale pretraining
+phase, ensuring a fair and consistent initialization. The standard
+SILog loss is used as the training objective, with a batch
+size of 16, and the model is trained for an additional 40,000
+steps. To focus the evaluation on the impact of in-domain
+data, we disable all augmentations except for horizontal flipping
+and omit the asymmetric component of the angular loss
+during fine-tuning. For evaluation, we adhere to the standard
+practices for both datasets to ensure comparability with prior
+work. KITTI results are reported using the Garg [20] evaluation
+crop, and the maximum evaluation depths for KITTI
+and NYU are set to 80 and 10 meters, respectively mportantly,
+we do not apply any test-time augmentations or tuning,
+such as varying the input size, to maintain consistency
+and avoid introducing additional confounding factors. Our
+results demonstrate that UniK3D benefits significantly from
+in-domain fine-tuning. Table 17 highlights the model’s ability
+to perform exceptionally well on highly structured and
+calibrated datasets like KITTI, even though UniK3D is inherently
+designed for flexibility and cross-domain generalization.
+This suggests that the model can effectively adapt to
+well-structured data when fine-tuned. This fine-tuning analysis
+highlights the adaptability of UniK3D to diverse settings
+while maintaining its primary design focus on flexibility.
+Similarly, Table 16 shows that UniK3D remains competitive
+when fine-tuned on less structured domains like NYU, which
+represent typical indoor environments. These results reinforce
+the importance of in-domain data for achieving optimal
+performance, particularly on datasets with distinct properties
+or domain-specific challenges. In addition, the results underline
+the robustness of our model, as it achieves strong performance
+across significantly different dataset characteristics. 
+-->
+</p>
+<center><img src="images/table16.png"></center>
+<p class="margin-large">
+表16. NYU検証セットでの比較。すべてのモデルはNYUで学習されています。最初の4つのモデルはNYUでのみ学習されています。最後の4つのモデルはNYUで微調整されています。
+<!--
+Table 16. Comparison on NYU validation set. All models are
+trained on NYU. The first four are trained only on NYU. The last
+four are fine-tuned on NYU.
+-->
+</p>
+<center><img src="images/table17.png"></center>
+<p class="margin-large">
+表17. KITTI Eigen-split検証セットにおける比較。すべてのモデルはKITTI Eigen-splitトレーニングで学習され、対応する検証セットでテストされています。最初のモデルはKITTIのみで学習されています。最後の4つはKITTIで微調整されています。
+<!--
+Table 17. Comparison on KITTI Eigen-split validation set. All
+models are trained on KITTI E-ign-split training and tested on the
+corresponding validator split. The first are trained only on KITTI.
+The last 4 are fine-tuned on KITTI.
+-->
+</p>
+<h4>C.2. データセットごとの評価</h4>
+<!--
+<h4>C.2. Per-dataset Evaluation</h4>
+-->
+<p>
+各検証データセットの結果を、表18 (NYUv2)、表19 (KITTI)、表20 (IBims-1)、表21 (ETH3D)、表22 (Diode Indoor)、表23 (nuScenes)、表24 (IBims-1Dist)、表25 (ETH3DDist)、表26 (Diode IndoorDist)、表27 (ScanNet++ DSLR)、表28 (ADT)、および表29 (KITTI360) に個別に示します。「Pano」グループはStanford-2D3Dという単一のデータセットのみで構成されているため、このグループの結果は報告していません。この結果から、ピンホールカメラモデルのパフォーマンスは飽和点に達しているものの、UniK3Dはすべてのデータセットで常に1位にランクされているわけではないものの、全体的に最も高い平均指標を達成していることがわかります。これは、UniK3Dの強力な汎化能力を示すものです。これは、柔軟な設計と大規模な学習によって実現され、特定の領域に過剰適合することなく、多様な領域にわたって堅牢なパフォーマンスを実現します。さらに、A.Rel（パーセンテージ）で表される絶対相対誤差や、メートルを単位とする二乗平均平方根誤差（RSME）など、より一般的な指標も報告します。
+<!--
+We present results for each of the validation datasets independently
+in Table 18 (NYUv2), Table 19 (KITTI), Table
+20 (IBims-1), Table 21 (ETH3D), Table 22 (Diode Indoor),
+Table 23 (nuScenes), Table 24 (IBims-1Dist), Table 25 (ETH3DDist), Table 26 (Diode IndoorDist), Table 27 (Scan-
+Net++ DSLR), Table 28 (ADT), and Table 29 (KITTI360).
+Note that we do not report results for the “Pano” group, as
+it only consists of a single dataset, Stanford-2D3D. Our results
+show that performance on pinhole camera models has
+reached a saturation point, yet UniK3D achieves the highest
+average metric overall, even though it does not always
+rank first on every individual dataset. This demonstrates the
+strong generalization ability of UniK3D, attributed to its flex-ible design and large-scale training, which enables robust
+performance across diverse domains without overfitting to
+any specific one. We report additional and more typical metrics
+such as absolute relative error as A.Rel as a percentage
+and root-means-squared error RSME using meter as unit. 
+-->
+</p>
+<center><img src="images/table18.png"></center>
+<p class="margin-large">
+表18. NYUv2のゼロショット評価の比較。欠損値(-)は、モデルがそれぞれの出力を生成できないことを示します。†: 3D再構成用の正解カメラ。‡: 2D深度マップ推論用の正解カメラ。
+<!--
+Table 18. Comparison on zero-shot evaluation for NYUv2. Missing
+values (-) indicate the model’s inability to produce the respective
+output. †: ground-truth camera for 3D reconstruction. ‡: groundtruth
+camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table19.png"></center>
+<p class="margin-large">
+表19. KITTIのゼロショット評価の比較。欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 19. Comparison on zero-shot evaluation for KITTI. Missing
+values (-) indicate the model’s inability to produce the respective
+output. †: ground-truth camera for 3D reconstruction. ‡: groundtruth
+camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table20.png"></center>
+<p class="margin-large">
+表20. IBims-1のゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 20. Comparison on zero-shot evaluation for IBims-1.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table21.png"></center>
+<p class="margin-large">
+表21. ETH3Dのゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 21. Comparison on zero-shot evaluation for ETH3D.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table22.png"></center>
+<p class="margin-large">
+表22. ダイオード（屋内）のゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。
+‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 22. Comparison on zero-shot evaluation for Diode (Indoor).
+Missing values (-) indicate the model’s inability to produce
+the respective output. †: ground-truth camera for 3D reconstruction.
+‡: ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table23.png"></center>
+<p class="margin-large">
+表23. nuScenesのゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 23. Comparison on zero-shot evaluation for nuScenes.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table24.png"></center>
+<p class="margin-large">
+表24. IBims-1Distのゼロショット評価の比較
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 24. Comparison on zero-shot evaluation for IBims-1Dist.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table25.png"></center>
+<p class="margin-large">
+表25. ETH3DDistのゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 25. Comparison on zero-shot evaluation for ETH3DDist.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table26.png"></center>
+<p class="margin-large">
+表26. DiodeDist（屋内）のゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。
+‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 26. Comparison on zero-shot evaluation for DiodeDist (Indoor).
+Missing values (-) indicate the model’s inability to produce
+the respective output. †: ground-truth camera for 3D reconstruction.
+‡: ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table27.png"></center>
+<p class="margin-large">
+表27. ScanNet++(DSLR)のゼロショット評価の比較。欠損値(-)は、モデルがそれぞれの出力を生成できないことを示します。†: 3D再構成用の正解カメラ。
+‡: 2D深度マップ推論用の正解カメラ。
+<!--
+Table 27. Comparison on zero-shot evaluation for ScanNet++
+(DSLR). Missing values (-) indicate the model’s inability to produce
+the respective output. †: ground-truth camera for 3D reconstruction.
+‡: ground-truth camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table28.png"></center>
+<p class="margin-large">
+表28. ADTのゼロショット評価の比較。欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 28. Comparison on zero-shot evaluation for ADT. Missing
+values (-) indicate the model’s inability to produce the respective
+output. †: ground-truth camera for 3D reconstruction. ‡: groundtruth
+camera for 2D depth map inference.
+-->
+</p>
+<center><img src="images/table29.png"></center>
+<p class="margin-large">
+表29. KITTI360のゼロショット評価の比較。
+欠損値（-）は、モデルがそれぞれの出力を生成できないことを示します。†：3D再構成用の正解カメラ。‡：2D深度マップ推論用の正解カメラ。
+<!--
+Table 29. Comparison on zero-shot evaluation for KITTI360.
+Missing values (-) indicate the model’s inability to produce the
+respective output. †: ground-truth camera for 3D reconstruction. ‡:
+ground-truth camera for 2D depth map inference.
+-->
+</p>
+<h3>D. Q&A</h4>
+<p>
+ここでは、論文を読んだ後に生じる可能性のある疑問を列挙します。このセクションは、討論的な質疑応答形式で構成されています。
+<!--
+Here we list possible questions that might arise after reading
+the paper. We structure the section in a discursive questionand-
+answer fashion.
+-->
+<div class="styleBullet">
+<ul>
+<li><strong>• シーンスケールに関する一般化において、データの重要性はどの程度ですか？</strong>
+</li><li>　データの多様性は、深度推定の一般化において極めて重要です。特に、意味的手がかりに大きく依存し、ドメインギャップの影響を受けやすい単眼手法においては重要です。単眼メトリック深度推定におけるスケール予測は本質的に不適正であり、学習ドメインとその分布カバレッジに大きく依存します。KITTIのような狭く特殊なドメインでは、過度の多様性はパフォーマンスを低下させる可能性があります。大規模で多様なデータセットで学習されたモデルは、ドメイン固有のデータで学習されたモデルと比較して、パフォーマンスが低下することがよくあります。逆に、これらのモデルはNYUのようなより広範なドメインでは優れたパフォーマンスを発揮します。スケール予測は通常、ノイズが多く、ドメインシフトの影響を受けやすいですが、この問題はドメイン内微調整によって軽減できます。例えば、KITTI で微調整を行う際、数百ステップの最適化で「スケールギャップ」をほぼ解消できます。
+</li>Mbr><li><strong>• カメラ表現はピンホールカメラモデルや完全にノンパラメトリックなカメラモデルよりも優れていますが、一般的なカメラモデルと比較していません。なぜでしょうか？</strong>
+</li><li>　当初は明示的なパラメトリックカメラモデルを試しましたが、重大な欠点に遭遇しました。ほとんどの標準的なカメラモデルは、微分不可能なバックプロジェクション演算に依存しているため、標準的なディープラーニングパイプラインでは使用できません。この制限に対処するには、(i) EUCM [33] や DoubleSphere [69] などの微分可能なパラメトリックモデルを使用するか、(ii) 微分可能な関数で多項式逆変換を近似するか、(iii) カメラを直接監視せずにモデルパラメータのみを監視するかのいずれかが必要です。これらのアプローチはすべて、パラメトリックモデルに固有の不安定性という問題を抱えています。パラメトリックモデルでは、パラメータの変化は実際の出力、つまり光線束と合わせて考慮する必要があります。この小さな変化の積み重ねが大きな出力変化につながるという相乗効果は、しばしば不安定な最適化につながります。さらに、パラメトリックモデルは逆投影演算の表現力を制限し、モデルが表現できるカメラのみに適用範囲を限定します。これに対し、私たちの表現はこれらの制限を回避し、より高い柔軟性と安定性を提供します。
+</li><br><li><strong>• DUSt3R / MASt3Rアーキテクチャはポイントマップを直接予測しますが、一般的なカメラでは機能しないのでしょうか？</strong>
+</li><li> DUSt3RおよびMASt3Rネットワークは理論的にはあらゆるカメラモデルを表現できますが、私たちの研究では、完全にノンパラメトリックなアプローチは、多様なデータセットで学習させ、エッジケースや分布の裾野でテストした場合に困難をきたすことが明らかになりました。さらに、DUSt3R [74] および MASt3R [39] で使用されるテスト時の点群グローバルアライメント手法は、ピンホールカメラを明示的に必要とするため、汎用カメラへの適用がさらに制限されます。
+</li><br><li><strong>• 信頼性予測の役割は何ですか？</strong>
+</li><li>　信頼性予測は、主に下流タスクでの有用性とレガシーシステムの都合上、組み込まれています。ほとんどの回帰タスクと同様に、信頼性予測はドメインギャップの影響を受けやすく、ドメイン外の強いシナリオでは信頼性が低下する可能性があることに注意する必要があります。
+</li><br><li><strong>• カメラ拡張の根拠は何ですか？</strong>
+</li><li>　カメラ拡張は、多様な実カメラデータの不足に対処するために採用されました。シンプルな拡張パイプラインはわずかな改善をもたらしましたが、生成されたカメラの多くは非現実的であり、現実世界のカメラの分布から外れていることがわかりました。しかし、ソフトマックスベースのワーピングは現実的な画像の作成に効果的であることが証明されました。特定のパラメータではなく出力光線の現実性を考慮した、より洗練されたカメラサンプリング手順は、現実の実用的なカメラモデル全体に​​わたる堅牢性と一般化を大幅に向上させる可能性があると仮説を立てています。
+</li><br><li><strong>• UniDepth との違いは何ですか？</strong>
+</li><li> UniDepth [60] と UniK3D はカメラモデリングと 3D 表現において異なり、これらは表 3、4、5 で詳しく説明されています。
+UniDepth はキャリブレーション行列を予測することでピンホールモデルに依存しているため（[60、3.2 節] を参照）、カメラを予測することはできません。さらに、[60] は 3 次元目を深度 (z) として表現しています [60、3.1 節]。これらの 2 つの特徴により、[60] はピンホールのみをモデル化し、FoV が 180◦ 未満となるように出力します。一方、UniK3D は球面調和関数 (SH) を使用してあらゆるカメラモデルを近似し、半径距離 (r) を 3 次元目として利用します。UniDepth は予測されたピンホール光線マップを投影します [60、3.2 節]。 3.1] を高次元空間 E にSHを用いて投影するのに対し、UniK3D は逆変換 (L230-262) を用いてレイマップ C を生成する際に使用するSH係数を直接予測します。この重要な方法論的違いは、あらゆるカメラのモデリングにつながります。表30
+(行1と行3) はその影響を示しています。UniK3D は、同一データで学習させた場合でも、一貫して [60] よりも優れた性能を示しています。
+</li><br><li><strong>• これまでに同様の研究を行った人はいますか？</strong>
+</li><li>　はい、深度推定におけるピンホール仮定を排除しようとした研究がいくつかあります [27, 35]。しかし、それらは2つの重要な理由で異なります。(i) これらの研究は単一領域のシナリオに焦点を当てているため、設定が単純化されていること、(ii) タスクが自己教師あり深度推定であること、そしてカメラはワーピングベースの測光損失を定義するために必要であり、教師ありの大規模な単眼3D推定ではないことです。
+</li><br><li>• 表5の3行目と4行目の\(δ_1^{SSI}\)スコアはそれぞれ92.1と92.2です。このスコアの類似性は、\(F_A\)と\(ρ_A\)の低下（表5）とともに、角度モジュールの役割を浮き彫りにしています。実際、ラジアルベースおよびSHベースのモデル（4行目）は、レンズ歪みのある画像のFoVを過大評価します。狭いFoVに対してより強い歪み増強を施した再学習を行うと、(\(F_A, ρ_A\)) = (43.1, 62.3)となり、仮定が検証されます。
+</li>
+</ul>
+</div>
+<!--
+<div class="styleBullet">
+<ul>
+<li><strong>• What is the importance of data for generalization w.r.t.
+scene scale?</strong>
+</li><li>　Data diversity is crucial for generalizing depth estimation,
+especially for monocular methods that heavily rely on semantic
+cues and are sensitive to domain gaps. Scale predic- tion in monocular metric depth estimation is inherently illposed,
+making it highly dependent on the training domain
+and its distribution coverage. Excessive diversity can hurt
+performance in narrow, specialized domains like KITTI,
+where models trained on large, diverse datasets often underperform
+compared to those trained on domain-specific
+data. Conversely, these models perform better in broader
+domains like NYU. Scale prediction is typically noisy and
+sensitive to domain shifts, but this issue can be mitigated
+through in-domain fine-tuning. For example, a few hundred
+optimization steps can largely resolve the “scale gap”
+when fine-tuning on KITTI.
+</li>Mbr><li><strong>• The camera representation is superior to pinhole or
+fully non-parametric camera model, but you did not
+compare it to some common camera models, why so?</strong>
+</li><li>　We initially experimented with explicit parametric camera
+models but encountered significant drawbacks. Most
+standard camera models rely on backprojection operations which are not differentiable and, thus cannot be used in
+a standard deep learning pipeline. Addressing this limitation
+requires either (i) using differentiable parametric
+models, such as EUCM [33] or DoubleSphere [69], (ii)
+approximating polynomial inversions with differentiable
+functions, or (iii) supervising only the model parameters
+without direct camera supervision. All these approaches
+suffer from the inherent instability of parametric models,
+where parameter variations need to be considered jointly
+on their actual output, namely the pencil of rays. This compounding
+effect, where small compounded changes lead
+to large output variations, often leads to unstable optimization.
+Furthermore, parametric models limit the expressiveness
+of the backprojection operation and constrain applicability
+to only those cameras the model can represent. In
+contrast, our representation avoids these limitations and
+provides greater flexibility and stability.
+</li><br><li><strong>• DUSt3R / MASt3R architecture directly predicts point
+maps, are they unable to work with generic cameras?</strong>
+</li><li>　While DUSt3R and MASt3R networks can theoretically
+represent any camera model, our studies revealed that fully
+non-parametric approaches struggle when trained on diverse
+datasets and tested on edge cases or distribution tails.
+Additionally, the test-time point cloud global alignment
+technique used in DUSt3R [74] and MASt3R [39] explicitly
+requires a pinhole camera, further limiting their applicability
+to generic cameras.
+</li><br><li><strong>• What is the role of the confidence prediction?</strong>
+</li><li>　Confidence prediction is included primarily for its utility
+in downstream tasks and also for legacy reasons. It is
+worth noting that, like most regression tasks, confidence
+prediction is vulnerable to domain gaps, which can render
+it unreliable in strong out-of-domain scenarios.
+</li><br><li><strong>• What is the rationale of camera augmentations?</strong>
+</li><li>　Camera augmentations were employed to address the lack
+of diverse real-camera data. While our simple augmentation
+pipeline resulted in minor improvements, we observed
+that many generated cameras are unrealistic and
+fall outside the distribution of real-world cameras. However,
+softmax-based warping proved effective in creating
+realistic images. We hypothesize that a more sophisticated
+camera sampling procedure, considering the realism of the
+output rays instead of the singled-out parameters, could
+significantly enhance the robustness and generalization
+across real and practical camera models.
+</li><br><li><strong>• What are the differences with UniDepth?</strong>
+</li><li>　UniDepth [60] and UniK3D differ in camera modeling
+and 3D representation, both ablated in Tabs. 3, 4, and 5.
+UniDepth relies on the pinhole model by predicting the
+calibration matrix (cf. [60, Sec. 3.2]), thus not being able
+to predict any camera. In addition, [60] represents the
+3rd dimension as depth (z) [60, Sec. 3.1]. These two aspects
+force [60] to model only pinhole and to output FoV < 180◦. In contrast, UniK3D uses spherical harmonics
+(SH) to approximate any camera model and it exploits
+radial distance (r) as 3rd dimension. UniDepth projects
+the predicted pinhole ray map [60, Sec. 3.1] onto a highdimensional
+space E using SH, whereas UniK3D directly
+predicts the SH coefficient used to generate the ray map C
+via inverse transform (L230-262). This key methodological
+difference leads to modeling any camera. Table 30
+(row 1 vs. row 3) shows its impact, as UniK3D consistently
+outperforms [60] also when trained on identical data.
+</li><br><li><strong>• Has someone done something similar before?</strong>
+</li><li>　Yes, there are a few works [27, 35] which tried to remove
+the pinhole assumption for depth estimation. However,
+they are different for two important reasons: (i) those
+works focused on single-domain scenarios, leading to a
+simpler setting and (ii) the task is self-supervised depth estimation,
+where the camera is needed to define the warpingbased
+photometric loss, inherently needing the camera,
+rather than supervised large-scale monocular 3D estimation.
+</li><br><li>• We provide here the \(δ_1^{SSI}\) scores of row 3 and 4 of Tab. 5:
+92.1 and 92.2, respectively. This score similarity, along
+with \(F_A\) and \(ρ_A\) drops (Tab. 5), spotlights angular module’s
+role. In fact, radial- and SH-based model (row 4) overestimates
+FoV of images with lens distortions. Retraining
+with stronger distortion augmentation for small FoV leads
+to (\(F_A, ρ_A\)) = (43.1, 62.3), validating our assumption.
+</li>
+</ul>
+</div>
+-->
+</p>
+<center><img src="images/table30.png"></center>
+<p class="margin-large">
+表30. UniDepthとの比較。すべてのモデルはViT-Sバックボーンと同じ学習データを使用しています。テストセットのグループ化は本論文と同じです。画面上で拡大表示すると最適です。
+<!--
+Table 30. Comparison with UniDepth. All models use ViT-S
+backbone and the same training data. Test set grouping as in the
+main paper. Best viewed on a screen and zoomed in.
+-->
+</p>
+<h3>E. 追加の定性的な結果</h3>
+<!--
+<h3>E. Additional Qualitative Results</h3>
+-->
+<p>
+ここでは、特に本論文では示されていない検証ドメインと、歪んだカメラを用いた、より定性的な比較を図5に示します。具体的には、ScanNet++（DSLR）、IBims-1Dist、DiodeDist（屋内）です（図5）。さらに、映画、テレビシリーズ、YouTube、アニメなどのフレームなど、実際の状況で実際に存在するシナリオでモデルをテストします。図6と図7に示されているすべての画像は、歪んだカメラや通常とは異なる視点を示しています。ここで示す可視化は、検証セットと実際のセットの両方からランダムに選択されたものであり、厳選されたものではありません。
+<!--
+We provide here more qualitative comparisons, in particular
+from validation domains not presented in the main paper and
+with distorted cameras, namely ScanNet++ (DSLR), IBims-
+1Dist, and DiodeDist (Indoor), in Fig. 5. In addition, we test
+our model on complete in-the-wild scenarios, for instance,
+frames from movies, TV series, YouTube, or animes. All images
+depicted in Fig. 6 and Fig. 7 present deformed cameras
+or unusual points of view. The visualization here presented,
+both from the validation sets and the in-the-wild ones are casually
+selected and not cherry-picked.
+-->
+</p>
+<center><img src="images/fig5.png"></center>
+<p class="margin-large">
+図5. 定性的な比較。連続する2つの行はそれぞれ1つのテストサンプルを表します。奇数行には入力RGB画像と2Dエラーマップが表示され、絶対相対誤差に基づいてクールウォームカラーマップで色分けされています。青は0%の誤差、赤は25%の誤差に対応しています。公平な比較を行うため、すべてのモデルについて、GTベースのシフトおよびスケーリングされた出力に基づいて誤差が計算されています。偶数行には3D点群の正解と予測値が表示されます。すべてのサンプルはランダムに選択されており、抜き出しは行われていません。†：GTカメラの逆投影。
+<!--
+Figure 5. Qualitative comparisons. Each pair of consecutive rows represents one test sample. Each odd row displays the input RGB image
+and the 2D error map, color-coded with the coolwarm colormap based on absolute relative error with blue corresponding to 0% error and red
+to 25%. To ensure a fair comparison, errors are calculated on GT-based shifted and scaled outputs for all models. Each even row shows the
+ground truth and predictions of the 3D point cloud. All samples are randomly selected and not picked. †: GT-camera unprojection.
+-->
+</p>
+<center><img src="images/fig6.png"></center>
+<p class="margin-large">
+図6. 定性的な3D実世界結果。UniK3Dは左列の各画像を単独で入力し、対応する点群を右列に出力します。3Dをより分かりやすくするために、視点は少し傾けられています。画像はそれぞれ、Poor Things（映画）、The Revenant（映画）、Eminem（ミュージックビデオ）、YouTube（自己中心的なGoPro）のビデオフレームです。フレームには、様々なカメラタイプと珍しい視点が映し出されています。
+<!--
+Figure 6. Qualitative in-the-wild 3D results.UniK3D is fed solely each single image in the left column and it outputs the corresponding
+point cloud in the right column, the point of view is slightly tilted to better appreciate the 3D. The images are video frames respectively from
+Poor Things (movie), The Revenant (movie), Eminem (music video), and YouTube (egocentric GoPro). The frames present a variety of
+camera types and unusual viewpoints.
+-->
+</p>
+<center><img src="images/fig7.png"></center>
+<p class="margin-large">
+図7. 定性的な実環境3D結果。UniK3Dは左列の各画像を単独で入力し、対応する点群を右列に出力します。3Dをより分かりやすくするために、視点は少し傾けられています。画像はそれぞれ、トレインスポッティング（映画）、YouTube（ドアベルカメラ）、NARUTO（アニメ）、ブレイキング・バッド（テレビシリーズ）のビデオフレームです。フレームには、様々なカメラタイプと珍しい視点が映し出されています。
+<!--
+Figure 7. Qualitative in-the-wild 3D results. UniK3D is fed solely each single image in the left column and it outputs the corresponding
+point cloud in the right column, the point of view is slightly tilted to better appreciate the 3D. The images are video frames respectively from
+Trainspotting (movie), YouTube (doorbell camera), Naruto (anime), and Breaking Bad (TV series). The frames present a variety of camera
+types and unusual viewpoints.
+-->
+</p>
+    </body>
+</html>
