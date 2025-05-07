@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>The Unreasonable Effectiveness of DL in AI</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1>The unreasonable effectiveness of deep learning in artificial intelligence</h1>
+人工知能におけるディープラーニングの不合理な有効性<br>
+<br>
+Terrence J. Sejnowskia,b,* <br>
+
+a Computational Neurobiology Laboratory, Salk Institute, La Jolla, CA, 92037 USA <br>
+
+b Division of Biological Sciences, University of California San Diego, La Jolla, California <br>
+92093 USA <br>
+<h2><center>要旨</center></h2>
+<p class="margin-abstract">
+ディープラーニングネットワークは、音声認識、写真キャプション、言語間のテキスト翻訳において高いパフォーマンスを発揮するように訓練されてきました。ディープラーニングネットワークの実世界問題への応用は広く普及していますが、なぜそれほど効果的なのかという理解は未だに不足しています。統計学におけるサンプルの複雑性や非凸最適化理論に鑑みると、これらの実証的結果はあり得ないはずです。しかしながら、ディープラーニングネットワークの訓練と有効性におけるパラドックスは調査中で、高次元空間の幾何学における知見も得られつつあります。ディープラーニングの数学的理論は、ディープラーニングの機能を明らかにし、様々なネットワークアーキテクチャの長所と短所を評価し、大きな改善につながる可能性があります。ディープラーニングは、人間がデジタルデバイスとコミュニケーションをとる自然な方法を提供し、汎用人工知能（AI）の構築の基盤となっています。ディープラーニングは大脳皮質の構造に着想を得ており、自律性と汎用知能に関する知見は、計画や生存に不可欠な他の脳領域にも見出される可能性がありますが、これらの目標を達成するには大きなブレークスルーが必要となるでしょう。
+<!--
+Deep learning networks have been trained to recognize speech, caption photographs and translate 
+text between languages at high levels of performance. Although applications of deep learning 
+networks to real world problems have become ubiquitous, our understanding of why they are so 
+effective is lacking. These empirical results should not be possible according to sample 
+complexity in statistics and non-convex optimization theory. However, paradoxes in the training 
+and effectiveness of deep learning networks are being investigated and insights are being found 
+in the geometry of high-dimensional spaces. A mathematical theory of deep learning would 
+illuminate how they function, allow us to assess the strengths and weaknesses of different 
+network architectures and lead to major improvements. Deep learning has provided natural ways 
+for humans to communicate with digital devices and is foundational for building artificial 
+general intelligence. Deep learning was inspired by the architecture of the cerebral cortex and 
+insights into autonomy and general intelligence may be found in other brain regions that are 
+essential for planning and survival, but major breakthroughs will be needed to achieve these 
+goals. 
+-->
+</p><p>
+1884年、エドウィン・アボットは『フラットランド：多次元ロマンス』（1）（図1）を執筆しました。この本はヴィクトリア朝社会への風刺として書かれたものですが、次元が空間に関する私たちの直感をどのように変えるかを探求しているため、今もなお読み継がれています。フラットランドは幾何学的な生き物たちが住む二次元の世界でした。これらの生き物たちは二次元数学を完全に理解しており、円は三角形よりも完璧だと考えていました。この物語の中で、四角い紳士が球体の夢を見て、自分の宇宙が彼やフラットランドの誰もが想像できないほど広大であるかもしれないという可能性に目覚めます。彼は誰にもそれが可能であることを納得させることができず、最終的に投獄されました。
+<!--
+In 1884, Edwin Abbott wrote “Flatland: A Romance of Many Dimensions” (1) (Fig. 1). This 
+book was written as a satire on Victorian society, but it has endured because of its exploration of 
+how dimensionality can change our intuitions about space. Flatland was a two-dimensional 
+world inhabited by geometrical creatures. The mathematics of two dimensions was fully 
+understood by these creatures, with circles being more perfect than triangles. In it a gentleman 
+square has a dream about a sphere and wakes up to the possibility that his universe might be 
+much larger than he or anyone in flatland could imagine. He was not able to convince anyone 
+that this was possible and in the end he was imprisoned. 
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p class="margin-large">
+図1　エドウィン・A・アボット著『フラットランド：多次元ロマンス』1884年版の表紙(1)。住民は2次元的な形で表現され、社会における地位は辺の数によって決定されていた。
+<!--
+Figure 1. Cover of the 1884 edition of Flatland: A Romance in Many Dimensions by Edwin 
+
+A. Abbott (1). Inhabitants were two-dimensional shapes, with their rank in society determined 
+by the number of sides. 
+-->
+</p><p>
+1次元から2次元へ、そして2次元から3次元へと移行する際に、空間に新たな次元が加わることは容易に想像できます。2次元では線が交差し、3次元では紙が折り重なることさえあります。しかし、3次元の物体が4次元空間で折り重なることは、19世紀にチャールズ・ハワード・ヒントンが成し遂げた概念に匹敵するほどの高度な発想です(2)。さらに高次元の空間にはどのような特性があるのでしょうか？100次元の空間、あるいは100万次元の空間に住むとは、どのような感じでしょうか？あるいは、私たちの脳のように、ニューロン間のシナプスの数である10億×100万次元の空間は、どのような感じでしょうか？
+<!--
+We can easily imagine adding another spatial dimension when going from a one- to a two-
+dimensional world and from a two- to a three-dimensional world. Lines can intersect 
+themselves in two dimensions and sheets can fold back onto themselves in three dimensions. 
+But imagining how a three-dimensional object can fold back on itself in a four-dimensional 
+space is a stretch that was achieved by Charles Howard Hinton in the 19th century (2). What are 
+the properties of spaces having even higher dimensions? What is it like to live in a space with 
+one hundred dimensions? Or a million dimensions? Or a space like our brain that has a million 
+billion dimensions (the number of synapses between neurons)? 
+-->
+</p><p>
+1987年、デンバー・テック・センターで第1回ニューラル情報処理システム（NeurIPS）カンファレンスとワークショップが開催されました（図2）。参加者は600名に上り、物理学、神経科学、心理学、統計学、電気工学、コンピュータサイエンス、コンピュータビジョン、音声認識、ロボティクスなど、幅広い分野から集まりました。しかし、彼らには共通点がありました。彼らは皆、従来の手法では容易に解決できない難解な問題に取り組んでおり、それぞれの専門分野では異端児である傾向がありました。振り返ってみると、33年後、これらのはみ出し者たちは、ビッグデータセットが集積する高次元空間、つまり私たちが現在生きている世界へと、それぞれの分野の最先端を切り開いていました。私は、毎年開催されるNeurIPSカンファレンスを主催する財団の会長として、現代の機械学習を生み出したコミュニティの目覚ましい進化を目の当たりにしてきました。このカンファレンスは着実に成長し、2019年には14,000名を超える参加者を集めました。多くの難解な問題が最終的に解決可能となり、今日では機械学習は現代の人工知能（AI）の基盤となっています。機械学習の初期の目標は、人工知能の目標よりも控えめなものでした。機械学習は、汎用知能を直接目指すのではなく、データからの学習を主要なツールとして、知覚、言語、運動制御、予測、推論といった実用的な問題に取り組むことから始まりました。対照的に、AIにおける初期の試みは、手作業で構築された低次元アルゴリズムを特徴としていました。しかし、このアプローチは、よく制御された環境でのみ機能しました。例えば、Blocks Worldでは、すべてのオブジェクトは直方体で、同じ色で塗装され、照明が固定された環境に置かれていました。これらのアルゴリズムは、オブジェクトが複雑な形状を持ち、反射率が広範囲に変化し、照明条件が制御されていない現実世界の視覚には対応していませんでした。現実世界は高次元であり、それに適合できる低次元モデルは存在しない可能性があります(3)。同様の問題は、意味の複雑さを無視した記号と構文に基づく初期の自然言語モデルでも発生しました(4)。深層学習言語モデルの複雑さが現実世界の複雑さに近づくと、実用的な自然言語アプリケーションが可能になりました。数百万のパラメータを持ち、数百万のラベル付き例で学習​​された自然言語モデルは、今や日常的に使用されています。さらに大規模なディープラーニング言語ネットワークは、導入からわずか10年足らずで運用が開始され、数百万人のオンラインユーザーにサービスを提供しています。
+<!--
+The first Neural Information Processing Systems (NeurIPS) Conference and Workshop took 
+place at the Denver Tech Center in 1987 (Fig. 2). The 600 attendees were from a wide range of 
+disciplines, including physics, neuroscience, psychology, statistics, electrical engineering, 
+computer science, computer vision, speech recognition and robotics. But they all had something 
+in common: they all worked on intractably difficult problems that were not easily solved with 
+traditional methods and they tended to be outliers in their home disciplines. In retrospect, 33 
+years later, these misfits were pushing the frontiers of their fields into high-dimensional spaces 
+populated by big data sets, the world we are living in today. As the president of the Foundation 
+that organizes the annual NeurIPS conferences, I oversaw the remarkable evolution of a 
+community that created modern machine learning. This conference has grown steadily and in 
+2019 attracted over 14,000 participants. Many intractable problems eventually became tractable, 
+and today machine learning serves as a foundation for contemporary artificial intelligence (AI). 
+The early goals of machine learning were more modest than those of artificial intelligence. 
+Rather than aim directly at general intelligence, machine learning started by attacking practical 
+problems in perception, language, motor control, prediction and inference using learning from 
+data as the primary tool. In contrast, early attempts in AI were characterized by low-dimensional 
+algorithms that were handcrafted. However, this approach only worked for well controlled 
+environments. For example, in Blocks World, all objects were rectangular solids, identically 
+painted and in an environment with fixed lighting. These algorithms did not scale up to vision in 
+the real world, where objects have complex shapes, a wide range of reflectances and lighting 
+conditions are uncontrolled. The real world is high-dimensional and there may not be any low-
+dimensional model that can be fit to it (3). Similar problems were encountered with early 
+models of natural languages based on symbols and syntax, which ignored the complexities of 
+semantics (4). Practical natural language applications became possible once the complexity of 
+deep learning language models approached the complexity of the real world. Models of natural 
+language with millions of parameters and trained with millions of labeled examples are now used 
+routinely. Even larger deep learning language networks are in production today, providing 
+services to millions of users online, less than a decade since they were introduced. 
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p class="margin-large">
+図2. ニューラル情報処理システム会議には、科学と工学の様々な分野の研究者が集まりました。第1回会議は1987年にデンバー・テックセンターで開催され、それ以来毎年開催されています。最初の数回の会議は、IEEE情報理論学会の主催でした。
+<!--
+Figure 2. The Neural Information Processing Systems conference brought together 
+researchers from many fields of science and engineering. The first Conference was held at the 
+Denver Tech Center in 1987 and has been held annually since then. The first few meetings were 
+sponsored by the IEEE Information Theory Society. 
+-->
+</p><p>
+<strong>ディープラーニングの起源</strong>　私は『ディープラーニング革命：人工知能と人間の知能の出会い』（5）という本を執筆しました。この本では、ディープラーニングがどのように誕生したかを説明しています。ディープラーニングは、脳に見られる超並列アーキテクチャにヒントを得たもので、その起源は1950年代のフランク・ローゼンブラットによるパーセプトロン（6）に遡ります。パーセプトロンは、マカロックとピッツ（7）が導入した単一ニューロンの簡略化モデルをベースとしていました。パーセプトロンはパターン認識を行い、ラベル付きの例を分類することを学習しました（図3）。ローゼンブラットは、新しい入力を正しく分類できるパラメータのセットがあり、十分な例がある場合、彼の学習アルゴリズムは必ずそれを見つけるという定理を証明しました。この学習アルゴリズムは、ラベル付きデータを使用して、バイナリしきい値ユニットへの入力の重みであるパラメータに小さな変更を加え、勾配降下法を実装しました。このシンプルなパラダイムは、今日のより大規模で洗練されたニューラルネットワークアーキテクチャの中核を成していますが、パーセプトロンからディープラーニングへの移行はスムーズなものではありませんでした。その経緯から学ぶべき教訓があります。
+<!--
+<strong>Origins of Deep Learning.</strong>　I have written a book, The Deep Learning Revolution: Artificial 
+Intelligence Meets Human Intelligence (5), which tells the story of how deep learning came 
+about. Deep learning was inspired by the massively parallel architecture found in brains and its 
+origins can be traced to Frank Rosenblatt’s perceptron (6) in the 1950s that was based on a 
+simplified model of a single neuron introduced by McCulloch and Pitts (7). The perceptron 
+performed pattern recognition and learned to classify labeled examples (Fig. 3). Rosenblatt 
+proved a theorem that if there was a set of parameters that could classify new inputs correctly, 
+and there were enough examples, his learning algorithm was guaranteed to find it. The learning 
+algorithm used labeled data to make small changes to parameters, which were the weights on the 
+inputs to a binary threshold unit, implementing gradient descent. This simple paradigm is at the 
+core of much larger and more sophisticated neural network architectures today, but the jump 
+from perceptrons to deep learning was not a smooth one. There are lessons to be learned from 
+how this happened. 
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p class="margin-large">
+図3　初期のパーセプトロンは大規模なアナログシステムでした (4)。(上) 視覚入力を受け取るアナログ パーセプトロン コンピュータ。ラックにはポテンショメータがあり、モーターで駆動され、その抵抗はパーセプトロン学習アルゴリズムによって制御されます。(出典: 文献 6)。(右) 1958 年 7 月 8 日付の New York Times の記事、UPI 通信社の報道より。パーセプトロン マシンは 1959 年の完成時に 10 万ドル、現在の価値で約 100 万ドルの費用がかかると予想されていました。1958 年に 200 万ドル、現在の価値で 2,000 万ドルの費用がかかった IBM 704 コンピュータは 1 秒あたり 12,000 回の乗算を実行でき、当時としては驚異的な速度でした。はるかに安価な Samsung Galaxy S6は 1 秒あたり 340 億回の演算を実行でき、その 100 万倍以上も高速です。
+<!--
+Figure 3. Early perceptrons were large-scale analog systems (4). 
+(Above) An analog perceptron computer receiving a visual input. 
+The racks contained potentiometers driven by motors whose 
+resistance was controlled by the perceptron learning algorithm. (from 
+Ref 6) . (Right) Article in the New York Times, July 8, 1958, from a 
+UPI wire report. The perceptron machine was expected to cost 
+$100,000 on completion in 1959, or around $1 million in today’s 
+dollars; the IBM 704 computer that cost $2 million in 1958, or $20 
+million in today’s dollars, could perform 12,000 multiplies per 
+second, which was blazingly fast at the time. The much less 
+expensive Samsung Galaxy S6 phone, which can perform 34 billion 
+operations per second, is more than a million times faste. 
+-->
+</p><p>
+パーセプトロン学習アルゴリズムは実数を使った計算を必要としましたが、1950年代のデジタルコンピュータでは効率的に実行できませんでした。
+ローゼンブラットは海軍研究局から現在の 100 万ドルに相当する助成金を受け、可変の重みを表す一連のモーター駆動式ポテンショメータを使用して重みの更新を並列に実行できる大型アナログ コンピュータを構築しました (図 3)。マスコミの大きな期待 (図 3) は、マービン ミンスキー氏とシーモア パパート氏によって打ち砕かれました。彼らは、著書「パーセプトロン」(8) で、パーセプトロンは重み空間で線形に分離可能なカテゴリのみを表現できることを示しました。著書の最後で、ミンスキー氏とパパート氏は単層パーセプトロンを多層パーセプトロンに一般化し、1 つの層が次の層に情報を入力する可能性を検討しましたが、これらのより強力な多層パーセプトロンをトレーニングする方法があるかどうかは疑問でした。残念ながら、多くの人がこの疑問を決定的なものと受け止め、1980 年代に新世代のニューラル ネットワーク研究者がこの問題を新たに検討するまで、この分野は放棄されていました。
+<!--
+The perceptron learning algorithm required computing with real numbers, which digital 
+computers performed inefficiently in the 1950s. Rosenblatt received a grant for the equivalent 
+today of one million dollars from the Office of Naval Research to build a large analog computer 
+that could perform the weight updates in parallel using banks of motor-driven potentiometers 
+representing variable weights (Fig. 3). The great expectations in the press (Fig. 3) were dashed 
+by Marvin Minsky and Seymour Papert, who showed in their book Perceptrons (8) that a 
+perceptron can only represent categories that are linearly separable in weight space. Although, at 
+the end of their book, Minsky and Papert considered the prospect of generalizing single- to 
+multiple-layer perceptrons, one layer feeding into the next, they doubted there would ever be a 
+way to train these more powerful multilayer perceptrons. Unfortunately, many took this doubt to 
+be definitive, and the field was abandoned until a new generation of neural network researchers 
+took a fresh look at the problem in the 1980s. 
+-->
+</p><p>
+1960 年代に研究に利用できた計算能力は、今日と比較すると微々たるもので、学習よりもプログラミングが重視され、おもちゃの問題を解くプログラムを書くという初期の進歩は有望に見えました。1970 年代までには学習は人気を失いましたが、1980 年代までにはデジタル コンピュータの速度が向上し、中規模のニューラル ネットワークをシミュレートできるようになりました。その後の 1980 年代のニューラル ネットワーク復活の時期に、ジェフリー ヒントンと私はボルツマン マシンの学習アルゴリズムを導入し、一般の認識に反して多層ネットワークをトレーニングできることを証明しました (9)。ボルツマン マシンの学習アルゴリズムは局所的で、単一ニューロンの入力と出力の相関、つまり皮質に見られるヘブ可塑性の一形態 (10) のみに依存します。興味深いことに、トレーニング中に計算された相関は、自己参照学習を防ぐために、入力がない場合に発生する相関、つまりスリープ状態と呼んでいるものによって正規化される必要があります。ラベルなしの入力の結合確率分布を教師なし学習モードで学習することも可能です。しかし、ほぼ同時期に導入された、誤差のバックプロパゲーションに基づく別の学習アルゴリズムは、局所性を犠牲にするものの、はるかに効率的でした(11)。これらの学習アルゴリズムはどちらも、損失関数を最小化するためにパラメータ値を段階的に変更する最適化手法である確率的勾配降下法を用いています。通常、これは少数の訓練例の勾配を平均化した後に行われます。
+<!--
+The computational power available for research in the 1960s was puny compared to what we 
+have today; this favored programming rather than learning, and early progress with writing 
+programs to solve toy problems looked encouraging. By the 1970s, learning had fallen out of 
+favor, but by the 1980s digital computers had increased in speed making it possible to simulate 
+modestly-sized neural networks. During the ensuing neural network revival in the 1980s, 
+Geoffrey Hinton and I introduced a learning algorithm for Boltzmann machines proving that 
+contrary to general belief, it was possible to train multilayer networks (9). The Boltzmann 
+machine learning algorithm is local and only depends on correlations between the inputs and 
+outputs of single neurons, a form of Hebbian plasticity that is found in the cortex (10). 
+Intriguingly, the correlations computed during training must be normalized by correlations that 
+occur without inputs, which we called the sleep state, to prevent self-referential learning. It is 
+also possible to learn the joint probability distributions of inputs without labels in an 
+unsupervised learning mode. However, another learning algorithm introduced at around the 
+same time based on the backpropagation of errors was much more efficient, though at the 
+expense of locality (11). Both of these learning algorithm use stochastic gradient descent, an 
+optimization technique that incrementally changes the parameter values to minimize a loss 
+function. Typically this is done after averaging the gradients for a small batch of training 
+examples. 
+-->
+</p><p>
+<strong>パラメータ空間の迷宮</strong>　1980年代のネットワークモデルは、入力と出力の間に2層以上の隠れユニットを持つことは稀でしたが、統計学習の基準からすると既に過剰パラメータ化されていました。実証研究により、当時は説明できなかった多くのパラドックスが明らかになりました。当時のネットワークは今日の基準からすると非常に小さいものでしたが、従来の統計モデルよりも桁違いに多くのパラメータを持っていました。統計学の定理の限界によれば、当時利用可能な比較的小規模な訓練データでは一般化は不可能であるはずです。しかし、重み減衰などの単純な正則化手法でさえ、驚くほど優れた一般化を示すモデルを生み出しました。
+<!--
+<strong>Lost in Parameter Space.</strong>　The network models in the 1980s rarely had more than one layer of 
+hidden units between the inputs and outputs, but they were already highly over-parameterized by 
+the standards of statistical learning. Empirical studies uncovered a number of paradoxes that 
+could not be explained at the time. Even though the networks were tiny by today’s standards, 
+they had orders of magnitude more parameters than traditional statistical models. According to 
+bounds from theorems in statistics, generalization should not be possible with the relatively small 
+training sets that were available. But even simple methods for regularization, such as weight 
+decay, led to models with surprisingly good generalization. 
+-->
+</p><p>
+さらに驚くべきことに、非凸損失関数の確率的勾配降下法は、局所最小値に陥ることはほとんどありませんでした。下降途中には、誤差がほとんど変化しない長いプラトーがあり、その後急激に低下しました。これらのネットワーク モデルとその高次元パラメータ空間の幾何学的形状により、従来の直感によって予測された失敗とは対照的に、効率的にソリューションに到達し、優れた一般化を達成することができました。
+<!--
+Even more surprising, stochastic gradient descent of non-convex loss functions were rarely 
+trapped in local minima. There were long plateaus on the way down when the error hardly 
+changed, followed by sharp drops. Something about these network models and the geometry of 
+their high-dimensional parameter spaces allowed them to navigate efficiently to solutions and 
+achieve good generalization, contrary to the failures predicted by conventional intuition. 
+-->
+</p><p>
+ネットワークモデルは、入力空間を出力空間にマッピングする方法を学習する高次元動的システムです。これらの関数は、私たちがようやく理解し始めた特別な数学的特性を持っています。高次元パラメータ空間では、ほとんどの臨界点が鞍点(12)であるため、学習中に局所的最小値が生じることは稀です。確率的勾配降下法によって優れた解が容易に見つかるもう一つの理由は、唯一の解を求める低次元モデルとは異なり、優れた性能を持つ様々なネットワークがパラメータ空間内のランダムな開始点から収束していくことです。過剰パラメータ化(13)により、解の退化により、問題の本質は干し草の山から針を探す問題から、針の山の干し草の山へと変化します。
+<!--
+Network models are high-dimensional dynamical systems that learn how to map input spaces 
+into output spaces. These functions have special mathematical properties that we are just 
+beginning to understand. Local minima during learning are rare because in the high-dimensional 
+parameter space, most critical points are saddle points (12). Another reason why good solutions 
+can be found so easily by stochastic gradient descent is that, unlike low-dimensional models 
+where a unique solution is sought, different networks with good performance converge from 
+random starting points in parameter space. Because of over-parameterization (13), the 
+degeneracy of solutions changes the nature of the problem from finding a needle in a haystack to 
+a haystack of needles. 
+-->
+</p><p>
+多くの疑問が未解決のまま残されています。なぜこれほど少ない例数とこれほど多くのパラメータから一般化が可能なのでしょうか？なぜ確率的勾配降下法は他の最適化手法と比較して、有用な関数を見つけるのに非常に効果的なのでしょうか？問題に対するすべての良い解の集合はどれくらいの大きさなのでしょうか？良い解は互いに何らかの形で関連しているのでしょうか？一般化を向上させることができるアーキテクチャ特性と帰納的バイアスとの間にはどのような関係があるのでしょうか？これらの疑問への答えは、より優れたネットワークアーキテクチャとより効率的な学習アルゴリズムを設計する上で役立つでしょう。
+<!--
+Many questions are left unanswered. Why is it possible to generalize from so few examples and 
+so many parameters? Why is stochastic gradient descent so effective at finding useful functions 
+compared to other optimization methods? How large is the set of all good solutions to a 
+problem? Are good solutions related to each other in some way? What are the relationships 
+between architectural features and inductive bias that can improve generalization? The answers 
+to these questions will help us design better network architectures and more efficient learning 
+algorithms. 
+-->
+</p><p>
+ 1980年代には、ニューラルネットワークの学習アルゴリズムがネットワーク内のユニット数と重みの数に応じてどれほどスケールするかは誰も知りませんでした。多くのAIアルゴリズムが組み合わせ的にスケールするのとは異なり、ディープラーニングネットワークは、ネットワークの規模が拡大しても、学習はパラメータ数に比例してスケールし、層が追加されるにつれて性能が向上し続けました(14)。さらに、ディープラーニングネットワークの超並列アーキテクチャは、マルチコアチップによって効率的に実装できます。完全並列ハードウェアを用いた学習と推論の計算量はO(1)です。これは、好ましい計算特性が同時に実現される稀有な例です。
+<!--
+What no one knew back in the 1980s was how well neural network learning algorithms would 
+scale with the number of units and weights in the network. Unlike many AI algorithms that scale 
+combinatorically, as deep learning networks expanded in size, training scaled linearly with the 
+number of parameters and performance continued to improve as more layers were added (14). 
+Furthermore, the massively parallel architectures of deep learning networks can be efficiently 
+implemented by multicore chips. The complexity of learning and inference with fully parallel 
+hardware is O(1). This is a rare conjunction of favorable computational properties. 
+-->
+</p><p>
+新しい種類の関数が導入されると、それを完全に探求するには何世代もかかります。例えば、ジョゼフ・フーリエが1807年にフーリエ級数を導入した際、彼は収束を証明できず、関数としての地位が疑問視されました。しかし、技術者たちはフーリエ級数を用いて熱方程式を解き、他の実用的な問題にも応用しました。この種類の関数の研究は、最終的に数学の至宝とも言える関数解析への深い洞察へとつながりました。
+<!--
+When a new class of functions is introduced, it takes generations to fully explore them. For 
+example, when Joseph Fourier introduced Fourier series in 1807, he could not prove 
+convergence and their status as functions was questioned. This did not stop engineers from using 
+Fourier series to solve the heat equation and apply them to other practical problems. The study of 
+this class of functions eventually led to deep insights into functional analysis, a jewel in the 
+crown of mathematics. 
+-->
+</p><p>
+<strong>ディープラーニングの本質</strong>　今日展開されているニューラルネットワークアーキテクチャ探究の第三波は、1950年代のパーセプトロン、そして1980年代の多層ニューラルネットワークに端を発した最初の二つの波に続き、学術的な起源を大きく超えて発展してきました。マスコミはディープラーニングをAIと呼び直しています。ディープラーニングがAIにもたらしたのは、それを現実世界に根付かせたことです。現実世界はアナログで、ノイズが多く、不確実で、高次元であり、従来のAIにおける記号とルールの白黒の世界とは決して調和しませんでした。ディープラーニングは、これら二つの世界をつなぐインターフェースを提供します。例えば、自然言語処理は従来、記号処理の問題として捉えられてきました。しかし、リカレントニューラルネットワークにおける言語翻訳のエンドツーエンド学習は、文から統語情報と意味情報の両方を抽出します。自然言語アプリケーションは、多くの場合、記号ではなく、文中の次の単語を予測するように訓練された深層学習ネットワークにおける単語埋め込みから始まります(15)。これは意味的に深く、単語間の関係性だけでなく連想も表します。かつては「単なる統計」と考えられていた深層再帰型ネットワークは、脳内の電気活動のように情報が流れる高次元の動的システムです。
+<!--
+<strong>The Nature of Deep Learning.</strong>　The third wave of exploration into neural network architectures, 
+unfolding today, has greatly expanded beyond its academic origins, following the first two waves 
+spurred by perceptrons in the 1950s and multilayer neural networks in the 1980s. The press has 
+rebranded deep learning as AI. What deep learning has done for AI is to ground it in the real 
+world. The real world is analog, noisy, uncertain and high dimensional, which never jived with 
+the black and white world of symbols and rules in traditional AI. Deep learning provides an 
+interface between these two worlds. For example, natural language processing has traditionally 
+been cast as a problem in symbol processing. However, end-to-end learning of language 
+translation in recurrent neural networks extracts both syntactic and semantic information from 
+sentences. Natural language applications often start not with symbols, but with word 
+embeddings in deep learning networks trained to predict the next word in a sentence (15), which 
+are semantically deep and represent relationships between words as well as associations. Once 
+regarded as “just statistics,” deep recurrent networks are high-dimensional dynamical systems 
+through which information flows much as electrical activity flows through brains. 
+-->
+</p><p>
+1960年代の人工知能研究における初期の緊張関係の一つは、人間の知能との関係でした。人工知能の工学的目標は、直感に基づいたプログラムを作成することで人間の知能の機能的能力を再現することでした。私はかつて、カーネギーメロン大学のコンピュータ科学者であり、1956年の画期的なダートマス夏季会議に出席した人工知能の先駆者の一人であるアレン・ニューウェルに、なぜAIの先駆者たちは人間の知能の基盤である脳を無視してきたのかと尋ねました。脳の性能は、AIにおけるあらゆる難問が解決可能であることを示す唯一の存在証明でした。彼は私に、個人的には脳研究からの洞察に前向きだったが、当時は脳について十分な知識がなかったため、あまり役に立たなかったと語りました。
+<!--
+One of the early tensions in artificial intelligence research in the 1960s was its relationship to 
+human intelligence. The engineering goal of artificial intelligence was to reproduce the functional capabilities of human intelligence by writing programs based on intuition. I once 
+asked Allen Newell, a computer scientist from Carnegie Mellon University and one of the 
+pioneers of artificial intelligence who attend the seminal Dartmouth summer conference in 1956, 
+why AI pioneers had ignored brains, the substrate of human intelligence. The performance of 
+brains was the only existence proof that any of the hard problems in AI could be solved. He told 
+me that he personally had been open to insights from brain research, but there simply hadn’t 
+been enough known about brains at the time to be of much help. 
+-->
+</p><p>
+時が経つにつれ、AI 業界における考え方は「十分にわかっていない」から「脳は関係ない」へと変化しました。この考え方は、航空との類推によって一般的に正当化されました。「飛行機を作りたいのなら、羽ばたく鳥やその羽毛の特性を研究するのは時間の無駄だ」というものです。しかし、それとはまったく逆に、ライト兄弟は、飛行効率の高い滑空鳥を熱心に観察していました (16)。彼らが鳥から学んだのは、実用的な翼の設計アイデアと空気力学の基本原理でした。現代のジェット機は翼の先端にウィングレットを取り付けて、燃料を 5% 節約するとともに、ワシの翼端によく似ています (図 4)。脳が感覚情報を処理し、証拠を蓄積し、意思決定を行い、将来の行動を計画する方法については、現在でははるかに多くのことが分かっています。ディープラーニングも同様に自然界からヒントを得ています。コンピュータサイエンスにおいて、アルゴリズム生物学と呼ばれる新たな分野が急成長を遂げています。これは、生物システムが用いる幅広い問題解決戦略を記述しようとするものです(17)。ここでの教訓は、進化によって磨かれ、生命の連鎖を通じて人類に受け継がれてきた、複雑な問題に対する一般原理と具体的な解決策を、自然から学ぶことができるということです。
+<!--
+Over time, the attitude in AI had changed from “not enough is known” to “brains are not 
+relevant.” This view was commonly justified by an analogy with aviation: “If you want to build 
+a flying machine, you would be wasting your time studying birds that flap their wings or the 
+properties of their feathers.” Quite to the contrary, the Wright Brothers were keen observers of 
+gliding birds, which are highly efficient flyers (16). What they learned from birds was ideas for 
+designing practical airfoils and basic principles of aerodynamics. Modern jets have even 
+sprouted winglets at the tips of wings, which saves 5% on fuel and look suspiciously like 
+wingtips on eagles (Fig. 4). Much more is now known about how brains process sensory 
+information, accumulate evidence, make decisions and plan future actions. Deep learning was 
+similarly inspired by nature. There is a burgeoning new field in computer science, called 
+algorithmic biology, which seeks to describe the wide range of problem-solving strategies used 
+by biological systems (17). The lesson here is we can learn from nature general principles and 
+specific solutions to complex problems, honed by evolution and passed down the chain of life to 
+humans. 
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p class="margin-large">
+図4. 自然はエネルギー効率を高めるために鳥類を最適化しました。(A) ワシの翼端の湾曲した羽毛は滑空時のエネルギー効率を高めます。(B) 民間ジェット機のウィングレットは渦の抗力を低減することで燃料を節約します。
+<!--
+Figure 4. Nature has optimized birds for energy efficiency. (A) The curved feathers at the 
+wingtips of an eagle boosts energy efficiency during gliding. (B) Winglets on a commercial jets 
+save fuel by reducing drag from vortices. 
+-->
+</p><p>
+現実のニューロンの複雑さと、ニューラルネットワークモデルにおけるモデルニューロンの単純さの間には、際立った対照があります。ニューロン自体は、内部時間スケールが広範囲にわたる複雑な動的システムです。現実のニューロンの複雑さの多くは細胞生物学、すなわち各細胞が自らエネルギーを生成し、様々な困難な条件下で恒常性を維持する必要性から受け継がれています。しかし、ニューロンの他の特徴も計算機能にとって重要である可能性が高く、その一部はモデルネットワークではまだ活用されていません。これらの特徴には、特定の機能に最適化された多様な細胞タイプ、数秒単位の時間スケールで促進または抑制する可能性のある短期シナプス可塑性、数秒から数時間に及ぶ入力履歴によって制御されるシナプス内部可塑性を支える生化学反応のカスケード、脳がオフラインになり自己再構築を行う睡眠状態、そして脳領域間のトラフィックを制御する通信ネットワーク（18）が含まれます。脳とAIの相乗効果は、生物学と工学の両方に利益をもたらす可能性があります。
+<!--
+There is a stark contrast between the complexity of real neurons and the simplicity of the model 
+neurons in neural network models. Neurons are themselves complex dynamical systems with a 
+wide range of internal time scales. Much of the complexity of real neurons is inherited from 
+cell biology – the need for each cell to generate its own energy and maintain homeostasis under a 
+wide range of challenging conditions. But other features of neurons are likely to be important 
+for their computational function, some of which have not yet been exploited in model networks. 
+These features include a diversity of cell types, optimized for specific functions; short-term 
+synaptic plasticity, which can be either facilitating or depressing on a time scales of seconds; a 
+cascade of biochemical reactions underlying plasticity inside synapses controlled by the history of inputs that extends from seconds to hours; sleep states during which a brain goes offline to 
+restructure itself; and communication networks that control traffic between brain areas (18). 
+Synergies between brains and AI may now be possible that could benefit both biology and 
+engineering. 
+-->
+</p><p>
+大脳新皮質は2億年前に哺乳類に出現しました。大脳新皮質は脳の外側にある折り畳まれたニューロンのシートで、灰白質と呼ばれます。ヒトでは、平らにすると直径約30cm、厚さ約5mmです。約300億個の皮質ニューロンが6層に層状に存在し、局所的な定型パターンで互いに高度に相互接続されています。大脳新皮質は進化の過程で脳の中心核に比べて大きく拡大し、特にヒトでは脳容積の80%を占めています。この拡大は、体の大きさに比べて拡大していないほとんどの脳領域とは異なり、大脳皮質の構造がスケーラブル（多ければ多いほど良い）であることを示唆しています。興味深いことに、大脳皮質の白質を形成する局所的な接続に比べて長距離接続ははるかに少ないですが、その体積は灰白質の体積の5/4乗に比例して拡大し、大きな脳では灰白質の体積よりも大きくなります（19）。脳構造のスケーリング則は、重要な計算原理に関する洞察をもたらす可能性があります（20）。細胞の種類やそれらの接続性を含む皮質構造は皮質全体で共通しており、異なる認知システムに特化した領域が存在します。例えば、視覚皮質は視覚に特化した回路を進化させており、これは最も成功した深層学習アーキテクチャである畳み込みニューラルネットワーク（CNN）で活用されています。大脳新皮質は汎用的な学習アーキテクチャを進化させ、多くの特殊用途の皮質下構造の性能を大幅に向上させています。
+<!--
+The neocortex appeared in mammals 200 million years ago. It is a folded sheet of neurons on 
+the outer surface of the brain, called the gray matter, which in humans is about 30 cm in diameter 
+and 5 mm thick when flattened. There are about 30 billion cortical neurons forming 6 layers that 
+are highly interconnected with each other in a local stereotyped pattern. The cortex greatly 
+expanded in size relative the central core of the brain during evolution, especially in humans 
+where it constitutes 80% of the brain volume. This expansion suggests that the cortical 
+architecture is scalable-- more is better--unlike most brain areas, which have not expanded 
+relative to body size. Interestingly, there are many fewer long-range connections than local 
+connections, which form the white matter of the cortex, but its volume scales as the 5/4 power of 
+the gray matter volume and becomes larger than the volume of the gray matter in large brains 
+(19). Scaling laws for brain structures can provide insights into important computational 
+principles (20). Cortical architecture including cell types and their connectivity is similar 
+throughout the cortex, with specialized regions for different cognitive systems. For example, the 
+visual cortex has evolved specialized circuits for vision, which have been exploited in 
+convolutional neural networks (CNN), the most successful deep learning architecture. Having 
+evolved a general purpose learning architecture, the neocortex greatly enhances the performance 
+of many special purpose subcortical structures. 
+-->
+</p><p>
+脳は、空間的に構造化された計算コンポーネントを11桁も備えています（図5）。シナプスレベルでは、大脳皮質の1立方ミリメートル（米粒ほどの大きさ）あたりに10億個のシナプスが存在します。現在、最大規模の深層学習ネットワークは、10億個の重みに達しています。皮質は、それぞれが特定の問題の解決に特化した数十万個の深層学習ネットワークに匹敵する処理能力を備えています。これらのエキスパートネットワークはどのように構成されているのでしょうか？ネットワークレベルより上位の調査レベルでは、異なる皮質領域間の情報の流れを体系化します。これはシステムレベルの通信問題です。皮質における全体的な情報の流れがどのように管理されているかを研究することで、数千もの特殊化されたネットワークをどのように体系化するかについて多くの知見が得られます。皮質内の長距離接続は、長距離情報送信に必要なエネルギー需要と、大きな空間を占めるという両方の理由から、コストが高いため、まばらです。スイッチングネットワークは、感覚領域と運動領域の間で情報をルーティングし、進行中の認知要求に応じて迅速に再構成することができます（18）。
+<!--
+Brains have eleven orders of magnitude of spatially structured computing components (Fig. 5). 
+At the level of synapses, each cubic millimeter of the cerebral cortex, about the size of a rice 
+grain, contains a billion synapses. The largest deep learning networks today are reaching a 
+billion weights. The cortex has the equivalent power of hundreds of thousands of deep learning 
+networks, each specialized for solving specific problems. How are all these expert networks 
+organized? The levels of investigation above the network level organize the flow of information 
+between different cortical areas, a system-level communications problem. There is much to be 
+learned about how to organize thousands of specialized networks by studying how the global 
+flow of information in the cortex is managed. Long-range connections within the cortex are sparse because they are expensive, both because of the energy demand needed to send 
+information over a long distance and also because they occupy a large volume of space. A 
+switching network routes information between sensory and motor areas that can be rapidly 
+reconfigured to meet ongoing cognitive demands (18). 
+-->
+</p>
+<center><img src="images/fig5.png"></center>
+<p class="margin-large">
+図5. 脳の探究レベル。エネルギー効率は、シナプスにおける少数の分子によるシグナル伝達によって達成される。脳内のニューロン間の相互接続は3次元的である。接続性は局所的には高いが、離れた皮質領域間では比較的疎である。皮質の組織化原理は、階層構造をなす複数の感覚表面および運動表面マップに基づいている。皮質は多くの皮質下領域と連携して、行動を生み出す中枢神経系（CNS）を形成する（『計算脳』（Churchland, P. and Sejnowski, T., MIT Press, 1992）より引用）。
+<!--
+Figure 5. Levels of investigation of brains. Energy efficiency is achieved by signaling with 
+small numbers of molecules at synapses. Interconnects between neurons in the brain are three 
+dimensional. Connectivity is high locally, but relatively sparse between distant cortical areas. 
+The organizing principle in the cortex is based on multiple maps of sensory and motor surfaces 
+in a hierarchy. The cortex coordinates with many subcortical areas to form the central nervous 
+system (CNS) that generates behavior (Adapted from The Computational Brain, Churchland, P. 
+and Sejnowski, T., MIT Press, 1992). 
+-->
+</p><p>
+次世代 AI システムの構築におけるもう 1 つの大きな課題は、ディープラーニング専門家ネットワークの高度に異種混合なシステムのメモリ管理です。学習済みの記憶を劣化させることなく、これらのネットワークを柔軟に更新する必要があります。これが、安定した生涯学習を維持する問題です (21)。 サブシステム間のメモリ損失と干渉を最小限に抑える方法はいくつかあります。 1 つの方法は、新しい経験を保存する場所を選択することです。これは、皮質が全体的に一貫した電気活動パターンに入る睡眠中に発生します。睡眠紡錘波と呼ばれる短い振動イベントは、夜間に何千回も繰り返され、記憶の統合に関連しています。紡錘波は、日中に経験した最近のエピソードの再生によって引き起こされ、長期的な皮質意味記憶に慎重に統合されます (22, 23)。
+<!--
+Another major challenge for building the next generation of AI systems will be memory 
+management for highly heterogeneous systems of deep learning specialist networks. There is 
+need to flexibly update these networks without degrading already learned memories; this is the 
+problem of maintaining stable, lifelong learning (21). There are ways to minimize memory loss 
+and interference between subsystems. One way is to be selective about where to store a new 
+experiences. This occurs during sleep, when the cortex enters globally coherent patterns of 
+electrical activity. Brief oscillatory events, known as sleep spindles, recur thousands of times 
+during the night and are associated with the consolidation of memories. Spindles are triggered 
+by the replay of recent episodes experienced during the day and are parsimoniously integrated 
+into long-term cortical semantic memory (22, 23). 
+-->
+</p><p>
+<strong>ディープラーニングの未来</strong>　今日のディープラーニングへの焦点は大脳皮質に着想を得たものですが、運動や生命維持機能を制御するには、はるかに幅広いアーキテクチャが必要です。哺乳類の脳の生存に不可欠な皮質下領域は、強化学習を担う基底核や、脳に運動指令の順モデルを提供する小脳など、すべての脊椎動物に存在します。ヒトは超社会的であり、複雑な社会的相互作用を支えるために、広範な皮質および皮質下神経回路を有しています(24)。これらの脳領域は、自律型AIシステムの構築を目指す人々にインスピレーションを与えるでしょう。
+<!--
+<strong>The Future of Deep Learning.</strong>　Although the focus today on deep learning was inspired by the 
+cerebral cortex, a much wider range of architectures is needed to control movements and vital 
+functions. Subcortical parts of mammalian brains essential for survival can be found in all 
+vertebrates, including the basal ganglia that is responsible for reinforcement learning and the 
+cerebellum, which provides the brain with forward models of motor commands. Humans are 
+hypersocial, with extensive cortical and subcortical neural circuits to support complex social 
+interactions (24). These brain areas will provide inspiration to those who aim to build 
+autonomous AI systems. 
+-->
+</p><p>
+例えば、脳幹のドーパミンニューロンは報酬予測誤差を計算しますが、これは強化学習における時間的差分学習アルゴリズムの重要な計算であり、ディープラーニングと組み合わせることで、2017年にAlphaGoが囲碁の世界チャンピオンである柯潔を破ることを可能にしました(25)。皮質と基底核全体に拡散投射する中脳のドーパミンニューロンからの記録は、シナプス可塑性を調節し、長期報酬を得るための動機付けを提供します(26)。その後、ヒトにおけるドーパミンニューロンの役割が確認され、神経経済学という新しい分野が生まれ、その目的は、ヒトがどのように経済的決定を下すのかについてより深く理解することです(27)。他のいくつかの神経調節システムも、負の報酬、驚き、自信、時間的割引を表す行動を導くために脳全体の状態を制御します(28)。
+<!--
+For example, the dopamine neurons in the brainstem compute reward prediction error, which is a 
+key computation in the temporal difference learning algorithm in reinforcement learning and, in 
+conjunction with deep learning, powered AlphaGo to beat Ke Jie, the world champion Go player 
+in 2017 (25). Recordings from dopamine neurons in the midbrain, which project diffusely 
+throughout the cortex and basal ganglia, modulate synaptic plasticity and provide motivation for 
+obtaining long-term rewards (26). Subsequent confirmation of the role of dopamine neurons in 
+humans has led to a new field, neuroeconomics, whose goal is better understand how humans make economic decisions (27). Several other neuromodulatory systems also control global brain 
+states to guide behavior, representing negative rewards, surprise, confidence and temporal 
+discounting (28). 
+-->
+</p><p>
+運動システムは、生物学に着想を得たソリューションが役立つ可能性がある AI のもう 1 つの領域です。動物の滑らかな動きと、ほとんどのロボットの剛体動作を比較してください。重要な違いは、すべての動物の高次元筋肉組織の制御に見られる並外れた柔軟性です。高次元運動計画空間における協調行動は、ディープラーニング ネットワーク (29) で活発に研究されている領域です。脊髄、脳幹、前脳の複数の制御層がどのように協調しているかを説明するために、分散制御の理論も必要とされています。脳と制御システムはどちらも、不安定になる可能性があるフィードバック ループの時間遅延に対処する必要があります。小脳にある体の順方向モデルは、運動コマンドの感覚結果を予測する方法を提供し、感覚予測誤差を使用してオープン ループ制御が最適化されます。たとえば、前庭眼反射 (VOR) は、オープン ループで頭部加速度信号を迅速に使用することで、頭部の動きに関係なく網膜上の画像を安定させます。 VORのゲインは網膜からのスリップ信号によって調整され、小脳はこれを用いてスリップを低減します（30）。脳は感覚神経と運動神経の帯域幅が限られているため、更なる制約を受けますが、速度と精度のトレードオフが多様なコンポーネントで構成される階層型制御システムによって、これらの制約を克服することができます（31）。同様の多様性は工学システムにも存在し、不完全なコンポーネントを持ちながらも高速かつ正確な制御を可能にします（32）。
+<!--
+Motor systems are another area of AI where biologically-inspired solutions may be helpful. 
+Compare the fluid flow of animal movements to the rigid motions of most robots. The key 
+difference is the exceptional flexibility exhibited in the control of high-dimensional musculature 
+in all animals. Coordinated behavior in high-dimensional motor planning spaces is an active 
+area of investigation in deep learning networks (29). There is also a need for a theory of 
+distributed control to explain how the multiple layers of control in the spinal cord, brainstem and 
+forebrain are coordinated. Both brains and control systems have to deal with time delays in 
+feedback loops, which can become unstable. The forward model of the body in the cerebellum 
+provides a way to predict the sensory outcome of a motor command, and the sensory prediction 
+errors are used to optimize open loop control. For example, the vestibulo-ocular reflex (VOR) 
+stabilizes image on the retina despite head movements by rapidly using head acceleration signals 
+in an open loop; the gain of the VOR is adapted by slip signals from the retina, which the 
+cerebellum uses to reduce the slip (30). Brains have additional constraints due to the limited 
+bandwidth of sensory and motor nerves, but these can be overcome in layered control systems 
+with components having a diversity of speed-accuracy tradeoffs (31). A similar diversity is also 
+present in engineered systems, allowing fast and accurate control despite having imperfect 
+components (32). 
+-->
+</p><p>
+<strong>汎用人工知能に向けて</strong>　ディープラーニングの最新技術から汎用人工知能への道筋はあるのだろうか？進化の観点から見ると、ほとんどの動物はそれぞれのニッチで生き残るために必要な問題を解決できるが、一般的な抽象推論は比較的最近になって人類の系統に出現した。しかし、人間は抽象推論が得意ではなく、論理的に推論する能力を身につけるには長い訓練が必要である。これは、論理的に最適化されていない論理的ステップをシミュレートするために脳システムを使用しているためである。小学生は単純な算数を習得するために何年もかけて学習し、1秒クロックのデジタルコンピュータを事実上エミュレートしている。とはいえ、人間の推論能力は、合理的な計画と意思決定のためのディープラーニングネットワークの大規模システムを進化させることが可能であるという原理的な証明である。しかし、DeepMindがコピー、ソート、ナビゲーションを学習するために開発したニューラルチューリングマシン(33)のような、ハイブリッドなソリューションも実現可能かもしれない。オルゲルの第二法則によれば、自然は人間よりも賢いが、それでも改善の余地がある。
+<!--
+<strong>Towards artificial general intelligence.</strong>　Is there a path from the current state-of-the-art in deep 
+learning to artificial general intelligence? From the perspective of evolution, most animals can 
+solve problems needed to survive in their niches, but general abstract reasoning emerged more 
+recently in the human lineage. However, we are not very good at it and need long training to 
+achieve the ability to reason logically. This is because we are using brain systems to simulate 
+logical steps that have not been optimized for logic. Students in grade school work for years to 
+master simple arithmetic, effectively emulating a digital computer with a one second clock. 
+Nonetheless, reasoning in humans is proof of principle that it should be possible to evolve large-
+scale systems of deep learning networks for rational planning and decision making. However, a 
+hybrid solution might also be possible, similar to neural Turing machines developed by DeepMind for learning how to copy, sort, and navigate (33). According to Orgel’s Second Rule, 
+nature is cleverer than we are, but improvements may still be possible. 
+-->
+</p><p>
+近年、ディープネットワークにおける教師あり学習の成功により、大規模データセットを利用できるアプリケーションが急増しています。言語翻訳は、大規模な翻訳テキストコーパスを用いたトレーニングによって大幅に改善されました。しかし、大規模なラベル付きデータセットが利用できないアプリケーションも数多く存在します。人間は一般的に、現実世界における結果について無意識のうちに予測を行い、予期せぬ出来事に驚かされます。他のデータストリームから将来の出力を予測することを学習目標とする自己教師学習は、有望な方向性です (34)。模倣学習もまた、重要な行動を学習し、世界に関する知識を獲得するための強力な方法です (35)。人間には学習方法が数多くあり、成人レベルのパフォーマンスを達成するには長い発達期間が必要です。
+<!--
+Recent successes with supervised learning in deep networks have led to a proliferation of 
+applications where large data sets are available. Language translation was greatly improved by 
+training on large corpora of translated texts. However, there are many applications for which 
+large sets of labeled data are not available. Humans commonly make subconscious predictions 
+about outcomes in the physical world, and are surprised by the unexpected. Self-supervised 
+learning, in which the goal of learning is to predict the future output from other data streams is a 
+promising direction (34). Imitation learning is also a powerful way learn important behaviors 
+and gain knowledge about the world (35). Humans have many ways to learn and require a long 
+period of development to achieve adult levels of performance. 
+-->
+</p><p>
+脳は、問題に対するアイデアや解決策を知的かつ自発的に生み出します。被験者が脳スキャナー内で静かに横たわるように指示されると、活動は感覚運動領域から、無意識の活動を含む内面の思考をサポートする領域のデフォルトモードネットワークに切り替わります。生成ニューラルネットワークモデルは、豊富な生の感覚データから結合確率分布を学習することを目的として、教師なしで学習できます。ボルツマンマシンは生成モデルの例です (9)。ボルツマンマシンが入力を分類するようにトレーニングされた後、出力ユニットをオンにすると、入力層でそのカテゴリからの一連の例が生成されます (36)。生成敵対ネットワーク（GAN）は、自己教師学習によって学習した確率分布から新しいサンプルを生成することもできます (37)。脳はまた、夢を見ている睡眠中に鮮明な視覚イメージを生成しますが、それはしばしば奇妙です。
+<!--
+Brains intelligently and spontaneously generate ideas and solutions to problems. When a subject 
+is asked to lie quietly at rest in a brain scanner, activity switches from sensorimotor areas to a 
+default mode network of areas that support inner thoughts, including unconscious activity. 
+Generative neural network models can learn without supervision, with the goal of learning joint 
+probability distributions from raw sensory data, which is abundant. The Boltzmann machine is 
+an example of generative model (9). After a Boltzmann machine has been trained to classify 
+inputs, clamping an output unit on generates a sequence of examples from that category on the 
+input layer (36). Generative adversarial networks (GANs) can also generate new samples from a 
+probability distribution learned by self-supervised learning (37). Brains also generate vivid 
+visual images during dream sleep that are often bizarre. 
+-->
+</p><p>
+<strong>未来を見据えて</strong>　私たちは今、情報の時代とも言える新たな時代の幕開けを迎えています。センサーからデータが噴出しており、データはパイプラインの源泉となっています。パイプラインはデータを情報へ、情報を知識へ、知識を理解へ、そして運が良ければ知識を知恵へと変えていきます。私たちは現実世界における複雑で高次元の問題への取り組みに向けて、最初の一歩を踏み出しました。赤ちゃんのように、歩みを進めるというよりはよろめきながらの歩みですが、重要なのは、私たちが正しい方向に向かっているということです。ディープラーニング・ネットワークは、デジタルコンピュータと現実世界をつなぐ架け橋であり、これにより私たちは自分のペースでコンピュータとコミュニケーションをとることができます。私たちは既にスマートスピーカーと会話をしていますが、スマートスピーカーはさらに賢くなるでしょう。キーボードは時代遅れとなり、タイプライターと共に博物館に展示されるでしょう。こうしてディープラーニングの恩恵は誰もが享受できるようになります。
+<!--
+<strong>Looking ahead.</strong>　We are at the beginning of a new era that could be called the age of 
+information. Data are gushing from sensors, the sources for pipelines that turn data into 
+information, information into knowledge, knowledge into understanding, and, if we are 
+fortunate, knowledge into wisdom. We have taken our first steps toward dealing with complex 
+high-dimensional problems in the real world; like a baby’s, they are more stumble than stride, 
+but what is important is that we are heading in the right direction. Deep learning networks are 
+bridges between digital computers and the real world; this allows us to communicate with 
+computers on our own terms. We already talk to smart speakers, which will become much smarter. Keyboards will become obsolete, taking their place in museums alongside typewriters. 
+This makes the benefits of deep learning available to everyone. 
+-->
+</p><p>
+ユージン・ウィグナーは「自然科学における数学の不合理な有効性」というエッセイの中で、物理理論の数学的構造がしばしばその理論への深い洞察を明らかにし、それが経験的予測につながることに驚嘆しました(38)。また注目すべきは、方程式に含まれる物理定数と呼ばれるパラメータが非常に少ないことです。本稿のタイトルはウィグナーの考えを反映しています。しかし、物理法則とは異なり、ディープラーニングネットワークには豊富なパラメータが存在し、それらは可変です。私たちは、非常に高次元な空間における表現と最適化の探究を始めたばかりです。おそらくいつの日か、ディープラーニングネットワークの構造解析が理論的な予測につながり、知性の本質に関する深い洞察が明らかになるでしょう。私たちは次元性の恩恵を受けることができるのです。
+<!--
+In his essay on “The unreasonable effectiveness of mathematics in the natural sciences,” Eugene 
+Wigner marveled that the mathematical structure of a physical theory often reveals deep insights 
+into that theory that lead to empirical predictions (38). Also remarkable is that there are so few 
+parameters in the equations, called physical constants. The title of this article mirrors Wigner’s. 
+But unlike the laws of physics, there is an abundance of parameters in deep learning networks 
+and they are variable. We are just beginning to explore representation and optimization in very 
+high-dimensional spaces. Perhaps someday an analysis of the structure of deep learning 
+networks will lead to theoretical predictions and reveal deep insights into the nature of 
+intelligence. We can benefit from the blessings of dimensionality. 
+-->
+</p><p>
+世界における信号の複雑さを記述する関数のクラスが一つ見つかった今、他にもあるかもしれない。もしかしたら、高次元空間には、私たちがまだ探求していない超並列アルゴリズムの宇宙が存在するのかもしれない。それは、私たちが住む三次元世界やデジタルコンピュータにおける一次元的な命令列からの直感を超越する。フラットランドの紳士の四角形（図1）やフラマリオンの彫刻に登場する探検家（図6）のように、私たちは古い地平線をはるかに超えた新たな世界を垣間見たのかもしれない。
+<!--
+Having found one class of functions to describe the complexity of signals in the world, perhaps 
+there are others. Perhaps there is a universe of massively-parallel algorithms in high-
+dimensional spaces that we have not yet explored, which go beyond intuitions from the three-
+dimensional world we inhabit and the one-dimensional sequences of instructions in digital 
+computers. Like the gentleman square in flatland (Fig. 1) and the explorer in the Flammarion 
+engraving (Fig. 6), we have glimpsed a new world stretching far beyond old horizons. 
+-->
+</p>
+<center><img src="images/fig6.png"></center>
+<p class="margin-large">
+図6. カミーユ・フラマリオンの1888年の著書『大気：民衆気象学』(L'atmosphère: météorologie populaire、パリ、アシェット社、163ページ)の版画。フラマリオンの本の版画に添えられたキャプションは次の通り。「中世のある宣教師は、天と地が接する点を発見したと語っている…」
+<!--
+Figure 6. Engraving from Camille Flammarion's 1888 book L'atmosphère: météorologie 
+populaire ("The Atmosphere: Popular Meteorology,") Paris: Hachette. p. 163. The caption that 
+accompanies the engraving in Flammarion's book reads: “A missionary of the Middle Ages tells 
+that he had found the point where the sky and the Earth touch …” 
+-->
+</p>
+<h2>References </h2>
+<p>
+<div class="styleRef">
+<ul>
+<li>1. Abbott, E. A. (1884) Flatland: A Romance in Many Dimensions. Seeley & Co.: London 
+</li><br><li>2. Charles Howard Hinton, https://en.wikipedia.org/wiki/Charles_Howard_Hinton 
+</li><br><li>3. Breiman, L., (2001) Statistical Modeling: The Two Cultures, Statistical Science, 16, No. 3, 
+199–231. 
+</li><br><li>4. Chomsky, N. (1986) Knowledge of Language: Its Nature, Origins, and Use (Convergence). 
+Praeger: Westport, CT. 
+</li><br><li>5. Sejnowski, T. J., The Deep Learning Revolution, Cambridge, MA: MIT Press (2018). 
+</li><br><li>6. Rosenblatt, F. (1961) “Principles of Neurodynamics: Perceptrons and the Theory of Brain 
+Mechanics”, Cornell Aeronautical Lab Inc Buffalo, NY, vol. VG-1196-G, pp. 621. 
+</li><br><li>7. McCulloch, W. S., and Pitts, W. H. (1943) “A Logical Calculus of the Ideas Immanent in 
+Nervous Activity,” Bulletin of Mathematical Biophysics 5: 115–133. 
+</li><br><li>8. Minsky, M., and Papert, S. (1969) Perceptrons (Cambridge, MA: MIT Press) 
+</li><br><li>9. Ackley, D. H., Hinton, G. E., and Sejnowski, T. J., (1985) A learning algorithm for 
+Boltzmann Machines, Cognitive Science 9: 147-169. 
+</li><br><li>10. Sejnowski, T. J. (1999) The Book of Hebb, Neuron, 24, 773-776. 
+</li><br><li>11. Rumelhart, D. E., Hinton, G. E. and Williams, R. J. (1986) Learning representations by 
+back-propagating errors Nature 323: 533–536 
+</li><br><li>12. Pascanu, R., Dauphin, Y. N., Ganguli, S., Bengio, Y. (2014) On the saddle point problem for 
+non-convex optimization, arXiv:1405.4604 
+</li><br><li>13. Bartlett, P. L., Long, P. M. Lugosi, G. Tsigler, A. (2019) Benign Overfitting in Linear 
+Regression, 
+arXiv:1906.11300 
+</li><br><li>14. Poggio, T., Banburski, A., Liao, Q. (2109) Theoretical Issues in Deep Networks: 
+Approximation, Optimization and Generalization, arXiv:1908.09375 
+</li><br><li>15. Mikolov, T. , Sutskever, I., Chen, K., Corrado, G., and Dean, J. (2013) “Distributed 
+Representations of Words and Phrases and Their Compositionality,” Advance in Neural 
+Information Processing Systems. 
+</li><br><li>16. McCullough, D. (2015) The Wright Brothers (New York, NY: Simon & Schuster.) 
+</li><br><li>17. NavlakhaS. and Bar-Joseph, Z. (2011) “Algorithms in Nature: The Convergence of Systems 
+Biology and Computational Thinking,” Molecular Systems Biology 7: 546. 
+</li><br><li>18. Laughlin, S. B., and Sejnowski, T. J., (2003) Communication in neuronal networks, Science 
+301, 1870-1874. 
+</li><br><li>19. Zhang, K., and Sejnowski, T. J., (2000) A universal scaling law between gray matter and 
+white matter of cerebral cortex, Proceedings of the National Academy of Sciences U.S.A. 
+97(10), 5621-5626. 
+</li><br><li>20. Srinivasan S, Stevens C. (2019) Scaling Principles of Distributed Circuits. Current Biology 
+29: 2533-2540. 
+</li><br><li>21. Gary Anthes, G. (2019) Lifelong Learning in Artificial Neural Networks, Communications 
+of the ACM, 62: 13-15. 
+</li><br><li>22. Muller, L., Piantoni, S., Koller, D., Cash, S. S., Halgren, E., Sejnowski, T. J. (2016). 
+Rotating waves during human sleep spindles organize global patterns of activity during the 
+night, eLife, e17267. 
+</li><br><li>23. Todorova, R., Zugaro, M. (2019) Isolated cortical computations during delta waves support 
+memory consolidation, Science 366: 377-381 
+</li><br><li>24. Churchland, P. S., Conscience: The Origins of Moral Intuition (2019) W. W. Norton: New 
+York 
+</li><br><li>25. AlphaGo versus Ke Jie, Wikipedia, https://en.wikipedia.org/wiki/AlphaGo_versus_Ke_Jie 
+Silver, D., Hubert, T., Schrittwieser, J., Antonoglou, I., Lai, M., Guez, A., Lanctot, M., Sifre, 
+L., Kumaran, D., Graepel, T., Lillicrap, T., Simonyan, K., Hassabis, D. (2018). A general 
+reinforcement learning algorithm that masters chess, shogi, and go through self-play. Science. 
+362: 1140–1144 
+</li><br><li>26. Montague, P. R., Dayan, P. and Sejnowski, T. J., (1996) A framework for mesencephalic 
+dopamine systems based on predictive Hebbian learning, Journal of Neuroscience 16, 19361947. 
+</li><br><li>27. Glimcher; P. W., Camerer, C., Poldrack, R. A., Fehr, E., (2008) Neuroeconomics: Decision 
+Making and the Brain, Academic Press: New York,. 
+</li><br><li>28. Marder, E. (2012). Neuromodulation of Neuronal Circuits: Back to the Future. Neuron. 7: 
+1–11. 
+</li><br><li>29. Akkaya, I., Andrychowicz, M., Chociej, M., Litwin, M., McGrew, B., Petron, A., Paino, A., 
+Plappert, M., Powell, G., Ribas, R., Schneider, J., Tezak, N., Tworek, J., Welinder, P., Weng, 
+L., Yuan, Q., Zaremba, W., Zhang, L. (2019) Solving Rubik's Cube with a Robot Hand, 
+arXiv:1910.07113 
+</li><br><li>30. du Lac, S., Raymond, J.L., Sejnowski, T.J., Lisberger, S.G. (1995) Learning and memory in 
+the vestibulo-ocular reflex., Annual Reviews Neuroscience 18: 409-41. 
+</li><br><li>31. Nakahira, Y., Liu, Q., Sejnowski, T. J., Doyle, J. C. (2019) Fitts' Law for speed-accuracy 
+trade-off describes a diversity-enabled sweet spot in sensorimotor control. arXiv:1906.00905 
+</li><br><li>32. Nakahira, Y., Liu, Q., Sejnowski, T. J., Doyle, J. C. (2019) Diversity-enabled sweet spots in 
+layered architectures and speed-accuracy trade-offs in sensorimotor control arXiv:1909.08601 
+</li><br><li>33. Graves, A. Wayne, G., Danihelka, I. (2015) Neural Turing Machines, arXiv:1410.540 
+</li><br><li>34. Rouditchenko, A., Zhao, H., Gan, C., McDermott, J., Torralba, A. (2109) Self-Supervised 
+Audio-Visual Co-Segmentation, arXiv:1904.09013 
+</li><br><li>35. Schaal, S., (1999) Is imitation learning the route to humanoid robots? Trends in Cognitive 
+Sciences 3 (6), 233-242 
+</li><br><li>36. Hinton, G. E., Osindero, S. and Teh, Y. (2006) A fast learning algorithm for deep belief nets. 
+Neural Computation 18: 1527-1554 
+</li><br><li>37. Goodfellow, I. J. , Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., 
+Courville, A., Bengio, Y. “Generative Adversarial Nets,” Advances in Neural Information 
+Processing Systems , 2014. https://arxiv.org/pdf/1406.2661.pdf 
+</li><br><li>38. Wigner, E. P. (1960). "The unreasonable effectiveness of mathematics in the natural 
+sciences. Richard Courant lecture in mathematical sciences delivered at New York University, 
+May 11, 1959". Communications on Pure and Applied Mathematics. 13: 1–14. 
+</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>

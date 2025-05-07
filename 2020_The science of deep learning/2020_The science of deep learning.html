@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>DLの科学The science of deep learning</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1>The science of deep learning</h1>
+ディープラーニングの科学<br>
+<br>
+Richard Baraniuka, David Donohob,1, and Matan Gavishc
+<p>
+今日の科学者は、機械が何を学習できるかに関して、わずか 10 年前とはまったく異なる考えを持っています。
+<!--
+Scientists today have completely different ideas of what
+machines can learn to do than we had only 10 y ago.
+-->
+</p><p>
+特に、画像処理、音声・動画処理、マシンビジョン、自然言語処理、そして古典的な2人用ゲームにおいては、過去10年間で最先端技術が急速に進歩し、公開されたチャレンジ問題において機械学習の性能記録が次々と達成されました。これらのチャレンジの多くにおいて、記録は人間のパフォーマンスレベルに匹敵、あるいは上回っています。
+<!--
+In image processing, speech and video processing,
+machine vision, natural language processing, and classic
+two-player games, in particular, the state-of-the-art
+has been rapidly pushed forward over the last decade,
+as a series of machine-learning performance records
+were achieved for publicly organized challenge problems.
+In many of these challenges, the records now
+meet or exceed human performance level.
+-->
+</p><p>
+2010年の対局で、当時のコンピュータ囲碁ソフトウェアは強い人間の囲碁棋士に勝てないことが証明されました。2020年の今日、人間の囲碁棋士（世界チャンピオンのイ・セドル氏を含む）が、過去10年かけて構築されたシステムであるAlphaGoに勝てると信じている人は誰もいません。これらの新たな成績記録とその達成方法は、10年前の予想を覆すものです。当時、人間レベルの成績はまだまだ遠い未来のように見え、多くの人々にとって、当時利用可能ないかなる技術もそのような成績を達成できるとは考えられませんでした。
+<!--
+A contest in 2010 proved that the Go-playing computer
+software of the day could not beat a strong human
+Go player. Today, in 2020, no one believes that
+human Go players—including human world champion
+Lee Sedol—can beat AlphaGo, a system constructed
+over the last decade. These new performance records,
+and the way they were achieved, obliterate the expectations
+of 10 y ago. At that time, human-level performance
+seemed a long way off and, for many, it
+seemed that no technologies then available would
+be able to deliver such performance.
+-->
+</p><p>
+AlphaGoのようなシステムは、この10年間、全く予想外の同時進行による複数の面での発展の恩恵を受けました。一方では、クラウドコンピューティングという形で、前例のないオンデマンドでスケーラブルなコンピューティングパワーが利用可能になり、他方では、世界最大級のテクノロジー企業が、グローバルな人材プールから人材エンジニアリングチームを編成するために巨額の投資を行いました。これらのリソースは、この10年間で着実に活用され、課題に対するパフォーマンスの急速な向上を可能にしました。
+<!--
+Systems like AlphaGo benefited in this last decade
+from a completely unanticipated simultaneous expansion
+on several fronts. On the one hand, we saw the
+unprecedented availability of on-demand scalable
+computing power in the form of cloud computing,
+and on the other hand, a massive industrial investment
+in assembling human engineering teams from a globalized
+talent pool by some of the largest global technology
+players. These resources were steadily deployed
+over that decade to allow rapid expansions in challenge
+problem performance.
+-->
+</p><p>
+2010年代は、真の技​​術爆発、つまり一度きりの転換期を迎えました。膨大な画像とテキストデータが突如として一般公開されたのです。数十億人がソーシャルメディアに数​​兆枚もの画像や文書を投稿し、「ビッグデータ」という言葉がメディアで広く知られるようになりました。画像処理と自然言語処理は、この新たなデータリソースによって永遠に変化しました。コンピューティング能力の革命的な向上と、新たにグローバル化した人材プールを活用し、新たな画像とテキストリソースが活用されたのです。
+<!--
+The 2010s produced a true technology explosion,
+a one-time–only transition: The sudden public availability
+of massive image and text data. Billions of people posted trillions of images and documents on
+social media, as the phrase “Big Data” entered media
+awareness. Image processing and natural language
+processing were forever changed by this new data
+resource as they tapped the new image and text resources
+using the revolutionary increases in computing
+power and newly globalized human talent pool.
+-->
+</p><p>
+画像処理分野は、この新しいデータの影響を最初に受けました。フェイフェイ・リー氏とその共同研究者がウェブから収集したImageNetデータセットは、毎年開催されるImageNet Large-Scale Visual Recognition Challenge (ILSVRC) 予測チャレンジコンペティションの基盤となりました。これらのコンペティションは、今日の機械学習におけるディープラーニングパラダイムの出現と継続的な改良の基盤となりました。
+<!--
+The field of image processing felt the impact of the
+new data first, as the ImageNet dataset scraped from
+the web by Fei-Fei Li and her collaborators powered a
+series of annual ImageNet Large-Scale Visual Recognition
+Challenge (ILSVRC) prediction challenge competitions.
+These competitions gave a platform for the
+emergence and successive refinement of today’s
+deep-learning paradigm in machine learning.
+-->
+</p><p>
+ディープニューラルネットワークは少なくとも1980年代から着実に発展してきましたが、試行錯誤によるヒューリスティックな構築は分析を困難にしていました。1990年代から2000年代にかけて、人工ニューラルネットワークは、形式的な理論的根拠を重視する科学者から長い間疑念の目で見られていました。この10年間で、ニューラルネットワークはImageNetのような予測課題において圧倒的な地位を占めるようになりました。インターネット上の画像データとクラウドの計算リソースの爆発的な増加により、新しく非常に野心的なディープネットワークモデルは、カーネル法などのより「形式的に分析可能な」手法に大幅な差をつけて予測課題を制覇するようになりました。
+<!--
+Deep neural networks had been developing
+steadily since at least the 1980s; however, their heuristic
+construction by trial-and-error resisted attempts
+at analysis. For quite some time in the 1990s and
+2000s, artificial neural networks were regarded with
+suspicion by scientists insisting on formal theoretical
+justification. In this decade they began to dominate
+prediction challenges like ImageNet. The explosion of
+image data on the internet and computing resources
+from the cloud enabled new, highly ambitious deep
+network models to win prediction challenges by substantial
+margins over more “formally analyzable”
+methods, such as kernel methods.
+-->
+</p><p>
+実際、深層ネットワークは、より「理論的に理解しやすい」手法に対して、10年が経つにつれてパフォーマンス面で優位性を示しました。初期の成功例は、猫と犬の写真を区別することで有名ですが、その後すぐに、顔認識や動画内の歩行者追跡といった本格的なコンピュータービジョンの問題でも成功を収めました。
+<!--
+In fact, the performance advantage of deep networks
+over more “theoretically understandable” methods
+accelerated as the decade continued. The initial successes
+famously involved separating pictures of cats
+from dogs, but soon enough successes came in fullblown
+computer vision problems, like face recognition
+and tracking pedestrians in moving images. 
+-->
+</p><p>
+画像処理における最初の成功から数年後、ディープ ネットワークは自然言語処理に進出し始め、最終的には最大規模の産業研究チームの手によって、105 言語のいずれかを他の任意の言語に翻訳できるシステム、さらには以前に翻訳例がほとんどなかった言語ペアにも翻訳できるシステムが生み出されました。
+<!--
+A few years following their initial successes in image processing,
+deep networks began to penetrate natural language processing,
+eventually producing in the hands of the largest industrial
+research teams systems able to translate any of 105 languages to
+any other, even language pairs for which almost no prior translation
+examples were available.
+-->
+</p><p>
+今日では、数百億のパラメータを持つ深層ネットワークが、数百億のサンプルを含むデータベースを用いて学習されているという話は、もはや衝撃的なものではありません。一方で、経験的に導き出されたシステムが人間のパフォーマンスを支配し、そのシステムの特性として最もよく理解されていたのは、ゲームプレイやImageNetのような予測課題で優位に立つ能力だけだったという状況を目の当たりにすることは、科学者にとってますます不安を募らせたかもしれません。
+<!--
+Today, it is no longer shocking to hear of deep networks with
+tens of billions of parameters trained using databases with tens of
+billions of examples. On the other hand, it may have been
+increasingly unsettling for scientists to witness human performance
+being dominated by empirically derived systems whose
+best-understood properties were simply their ability to prevail in
+gameplay and in prediction challenges like ImageNet.
+-->
+</p><p>
+2019年3月、米国科学アカデミーはワシントンD.C.のアカデミービルで「ディープラーニングの科学」と題したサックラー・コロキウムを開催しました。主催者の目標は、今日の経験的に導き出されたディープラーニングシステムに関する科学的理解を深めるとともに、従来の科学研究におけるディープラーニングシステムの活用を促進することでした。
+<!--
+In March of 2019, the National Academy of Sciences convened
+a Sackler Colloquium on “The Science of Deep Learning” in the
+Academy building in Washington, DC. The goal of the organizers
+was to advance scientific understanding of today’s empirically derived
+deep-learning systems, and at the same time to advance the
+use of such systems for traditional scientific research.
+-->
+</p><p>
+そのために、学界と産業界の重要人物が2日間にわたってプレゼンテーションを行いました。聴衆には、全国の研究機関から集まった多くの大学院生やポスドク、NSF、NIH、国防総省（DoD）の研究スポンサー、そしてワシントンD.C.地域の研究所に所属する米国政府の科学者などが含まれていました。彼らはプレゼンテーションの合間に、多くの議論の種を見つけました。聴衆の間で特に好評だったのは、アムノン・シャシュア氏とロドニー・ブルックス氏の2人のプレゼンテーションでした。
+<!--
+To those ends, important figures from academia and industry
+made presentations over 2 d; audience members—who included
+many graduate students and postdocs from institutions nationwide,
+as well as research sponsors from the NSF, NIH, and Department
+of Defense (DoD), and US government scientists from
+Washington, DC-area laboratories—found much to discuss in the
+hallways between presentations. Two presentations that were
+strikingly successful with the audience included Amnon Shashua
+and Rodney Brooks.
+-->
+</p><p>
+ヘブライ大学およびインテル・モビリティ・システムズのアムノン・シャシュア氏は、自動運転車の実現に向けたコンピュータビジョン研究戦略について講演しました。シャシュア氏は、移動車両のビジョンシステムのエラー率は、視覚経験1兆単位あたり1回未満に抑える必要があると述べ、将来的にはそのような低いエラー率を持つ検証済みシステムを実現できるモデリングおよびテスト戦略について議論しました。
+<!--
+Amnon Shashua, from Hebrew University and Intel Mobility
+systems, discussed computer vision research strategies to enable
+self-driving cars. He told the audience that error rates of vision
+systems for moving vehicles need to stay below one missed detection
+per trillion units of visual experience, and discussed modeling
+and test strategies that can someday produce verified
+systems with such low error rates.
+-->
+</p><p>
+マサチューセッツ工科大学（MIT）のロドニー・ブルックス氏は、機械学習システムが完全に汎用的な知能を発揮するには数百年かかるとの見解を示した。ブルックス氏は、現在成功を収めているディープラーニングシステムが膨大な量の良質なデータに対して並外れた需要を持っていることを指摘し、これを人間がごくわずかなデータから理解し一般化できる能力と対比させた。
+<!--
+Rodney Brooks of Massachusetts Institute of Technology (MIT)
+explained how, in his view, it would be hundreds of years before
+machine-learning systems exhibit fully general intelligence. In
+support, he pointed to the currently prodigious appetite of today’s
+successful deep-learning systems for massive volumes of
+good data, and contrasted this with humans’ ability to understand
+and generalize from very little data.
+-->
+</p><p>
+コロキウム開催の数週間前、ホワイトハウスは「アメリカ国民のための人工知能」（1）と題する国家戦略文書を発表し、人工知能（AI）への新たな米国投資を呼びかけました。コロキウムはワシントンモールにあるアカデミーの建物で開催され、一夜にしてこの新たな取り組みについて議論する絶好の場となりました。戦略策定に深く関わった者を含む、資金提供機関（NSF、NIH、国防総省）の代表者が、直近および今後の研究ポートフォリオについて説明し、ディープラーニング研究が今後の国家研究イニシアチブにどのように位置付けられるかを聴衆に説明しました。
+<!--
+In the weeks prior to the colloquium, the White House released
+a national strategy document titled “Artificial Intelligence for the
+American People” (1), which called for new United States investment
+in artificial intelligence (AI). Because the colloquium took
+place in the Academy’s building on the Washington Mall, the
+colloquium overnight became a perfect venue to discuss the
+new initiative. Representatives of funding agencies (NSF, NIH,
+and DoD), including some who were deeply involved in formulating
+the strategy, described their recent and coming research portfolios,
+and told the audience how deep-learning research fit into
+coming national research initiatives.
+-->
+</p><p>
+サックラー・コロキウム・シリーズの一環として、このイベントにはPNASの特別号が付随しています。現在ご覧いただいている号は、コロキウムの講演者と参加者の一部が執筆したものです。この号に収録された多くの興味深い論文は、この新しく急速に発展している分野における科学研究の活力と深さを反映しています。
+<!--
+As part of the Sackler colloquia series, the event is accompanied
+by a special issue of PNAS, the one you are now reading,
+authored by some of the speakers and participants of the
+colloquium. The many interesting papers gathered together in
+this volume reflect the vitality and depth of the scientific work
+being carried out in this new and rapidly developing field.
+-->
+</p><p>
+この特集号は、2本の概説論文で幕を開けます。ソーク研究所のテレンス・J・セイノフスキー氏は、「人工知能における深層学習の不合理な有効性」(2) について論じています。セイノフスキー氏の論文タイトルは、ユージン・ウィグナー氏の有名なエッセイ「物理科学における数学の不合理な有効性」(3) に始まり、この10年間でアロン・ハレヴィ氏、ピーター・ノーヴィグ氏、そしてグーグルのフェルナンド・ペレイラ氏による「データの不合理な有効性」(4) へと続く、類似の論文タイトルの伝統を受け継いでいます。この伝統において、著者は一般的に、特定の分野では疑いようのない成功を収めているものの、私たちが完全に理解しておらず、より高次の視点から見ると驚くべきものかもしれない技術（例えば、数学、ビッグデータ、深層学習）を指摘します。セイノフスキー氏(2)は、様々な重要な機械学習問題において、深層学習が従来の統計学習理論の予測をはるかに上回る性能を発揮するというパラドックスを検証しています。セイノフスキー氏は、今日のディープラーニング システムは脳の大脳皮質からヒントを得ているが、汎用人工知能を実現するには、計画や生存を司る脳の他の重要な領域からヒントを得る必要があると示唆している。
+<!--
+The special issue begins with two general overview papers.
+Terrence J. Sejnowski of the Salk Institute discusses “The unreasonable
+effectiveness of deep learning in artificial intelligence”(2). Sejnowski’s title stands in a tradition of similar titles that starts
+from Eugene Wigner’s famous essay on “The unreasonable effectiveness
+of mathematics in the physical sciences” (3) and continued
+in this decade with “The unreasonable effectiveness of data”
+(4) by Alon Halevy, Peter Norvig, and Fernando Pereira of Google.
+In this tradition, authors generally point to a technology (e.g.,
+Mathematics, Big Data, Deep Learning) that enjoys undoubted
+success in certain endeavors, but which we don’t completely understand,
+and which, from a higher-level perspective, might seem
+surprising. Sejnowski (2) examines the paradox that, for a range of
+important machine-learning problems, deep learning works far
+better than conventional statistical learning theories would predict.
+Sejnowski suggests that, while today’s deep-learning systems
+have been inspired by the cerebral cortex of the brain,
+reaching artificial general intelligence will require inspiration from
+other important brain regions, such as those responsible for planning
+and survival.
+-->
+</p><p>
+MITのTomaso Poggio、Andrzej Banburski、Qianli Liaoは、「ディープネットワークの理論的課題」（5）で優れたフォローアップを行い、ディープニューラルネットワークの近似能力、複雑性制御、および一般化特性に関する最近の理論的成果を考察しています。経験的に、ディープニューラルネットワークは、これら3つの側面において、他の機械学習モデルとは大きく異なる動作をします。近似については、著者らは、特定の畳み込みネットが特定の滑らかな関数を近似する際に「次元の呪い」を回避できることを証明する正式な結果を述べています。複雑性制御と正則化については、著者らは、適切に正規化されたネットワークの指数損失下での勾配フローを動的システムと見なしています。著者らは、制約なし勾配降下法の暗黙的な正則化特性を指摘し、過剰パラメータ化されたディープネットで観察される複雑性制御を説明できる可能性があるとしています。
+<!--
+Tomaso Poggio, Andrzej Banburski, and Qianli Liao of MIT
+follow up nicely with “Theoretical issues in deep networks” (5),
+which considers recent theoretical results on approximation power,
+complexity control, and generalization properties of deep neural
+networks. Empirically, deep neural networks behave very differently
+under these three aspects fromothermachine-learningmodels. For
+approximation, the authors state formal results proving that certain
+convolutional nets can avoid the “curse of dimensionality” when
+approximating certain smooth functions. For complexity control
+and regularization, the authors consider the gradient flow of appropriately
+normalized networks under the exponential loss as a dynamical
+system. The authors point to implicit regularization
+properties of unconstrained gradient descent, to possibly explain
+the complexity control observed in overparameterized deep nets.
+-->
+</p><p>
+「ディープラーニングは私たちを驚かせ続ける」という考えは、スタンフォード大学のクリストファー・D・マニング、ケビン・クラーク、ジョン・ヒューイット、ウルヴァシ・カンデルワル、そしてオマー・レヴィによってさらに発展させられました(6)。彼らは、ラベル付けされた学習データなしに、与えられた文脈におけるマスクされた単語を予測する、自己教師学習によるディープラーニングネットワークを考察しています。著者らは、統計的機械学習による予測言語モデルは、言語構造に関する興味深い創発的知識を獲得しないという、言語学における支配的な見解に異議を唱えています。自己教師学習中にディープラーニングネットワークに出現する統語的、形態論的、そして意味的な言語構造について、驚くべき実証的証拠が提示されています。自己教師学習によってこのような豊富な情報が出現するという事実は、人間の言語習得にとって興味深い示唆を与えています。
+<!--
+The idea that “deep learning keeps surprising us” was further
+developed by Christopher D. Manning, Kevin Clark, John Hewitt,
+Urvashi Khandelwal, and Omer Levy of Stanford University (6).
+They consider deep neural nets, trained via self-supervision, which
+predict a masked word in a given context without labeled training
+data. The authors challenge the dominant perspective in linguistics,
+which posits that statistical machine-learning predictive language
+models do not develop interesting emergent knowledge
+of linguistic structures. Striking empirical evidence is presented for
+syntactic, morphological, and semantic linguistic structures that
+emerge in deep neural networks during their self-supervised training.
+That such rich information emerges through self-supervision
+has tantalizing implications for human language acquisition.
+-->
+</p><p>
+ニューヨーク大学のカイル・クランマーは、共著者のヨハン・ブレマーおよびジル・ルッペと共に、論文「シミュレーションに基づく推論の最前線」（7）において、新たな驚くべき成果について論じています。この論文では、これまで解決困難と考えられてきた素粒子物理学における重要な科学的推論問題について論じています。今日の「機械学習革命」を指摘し、著者らは、大規模な科学的シミュレーション、能動学習などの機械学習の考え方、そして確率モデルを融合することで、こうした推論問題に取り組む新たな可能性を見出しています。実際、機械学習は科学的シミュレーションからの測定値を用いて学習することで、往々にして入手困難な従来の分析的確率モデルに代わる経験的モデルを提供することで、我々の助けとなります。著者らは様々な科学的推論問題を指摘し、次のような結論を述べています。「…科学のいくつかの領域において…推論の質の大幅な向上が期待される…この移行は科学に計り知れない影響を与える可能性がある」（7）。
+<!--
+Kyle Cranmer of New York University, with coauthors Johann
+Brehmer and Gilles Louppe, discuss another emergent surprise in
+their article “The frontier of simulation-based inference” (7). The
+article describes important scientific inference problems in particle
+physics that were until now viewed as intractable. Pointing to
+today’s “Machine Learning Revolution,” the author’s identify new
+possibilities for attacking such inference problems, by fusing massive
+scientific simulations, machine-learning ideas such as active
+learning, and probabilistic modeling. In effect, machine learning
+can help us by training on measurements from scientific simulations
+to give us empirical models in place of classic analytical
+probabilistic models, which often are unavailable. They point to
+a range of scientific inference problems and conclude with these
+words: “. . . several domains of science should expect . . . a significant
+improvement in inference quality . . . this transition may have
+a profound impact on science” (7).
+-->
+</p><p>
+当特集号では、具体的な研究課題に関する興味深い記事も掲載しています。カリフォルニア大学バークレー校のピーター・L・バートレット氏と共著者のフィリップ・M・ロング氏、ガボール・ルゴシ氏、アレクサンダー・ツィグラー氏は、「線形回帰における良性過剰適合」（8）について論じています。近年の多くのディープラーニングモデルでは、適合させるデータポイントの数よりも、決定すべきパラメータの数の方が多いのが現状です。このようなモデルは過剰適合していると言えます。従来、これは優れた実証科学の妨げになると考えられてきました。著者らは、「良性過剰適合という現象は、ディープラーニング手法によって解明された重要な謎の一つです。ディープニューラルネットワークは、ノイズの多いトレーニングデータに完璧に適合していても、優れた予測を行うように見えます」（8）と述べています。著者らは、線形回帰という簡略化された設定において、この状況を鋭く形式的に分析しています。
+<!--
+Our special issue also provides engaging articles on specific
+research questions. Peter L. Bartlett of University of California, Berkeley and coauthors Philip M. Long, Ga´bor Lugosi, and Alexander
+Tsigler discuss “Benign overfitting in linear regression” (8).
+Many recent deep-learning models contain more parameters to
+be determined than there are data points to fit them. We say such
+models are overfit. Traditionally, this would have been considered
+inimical to good empirical science. As the authors say: “The phenomenon
+of benign overfitting is one of the key mysteries uncovered
+by deep learning methodology: Deep neural networks seem
+to predict well, even with a perfect fit to noisy training data” (8).
+The authors conduct a penetrating formal analysis of the situation
+in the simplified setting of linear regression.
+-->
+</p><p>
+MITのアントニオ・トラルバは、共著者のデイビッド・バウ、ジュンヤン・チュー、ヘンドリック・ストロベルト、アガタ・ラペドリザ、ボレイ・ゾウと共に、重要な懸念事項に取り組んでいる。深層ニューラルネットワークには数十億もの人工ニューロンが含まれているが、それらは一体何をしているのだろうか？ 彼らの論文「深層ニューラルネットワークにおける個々のユニットの役割を理解する」（9）は、次のように始まる。「深層ネットワークの個々の隠れユニットは、ネットワークが複雑なタスクを解く方法を教えてくれるのだろうか？ 興味深いことに、最先端の深層ネットワークでは、多くの単一ユニットが、ネットワークに明示的に教えられていない、人間が解釈できる概念と一致することが観察されている。ユニットは、物体、部品、質感、時制、性別、文脈、感情などを検出できることが分かっている。」著者らは、こうした識別を行うための定量的なツールについて説明している。第二の「アノテーションネットワーク」を構築し、ネットワークのニューロンを反応させる概念を識別する「解剖」フレームワークを開発した。この技術は画像分類および画像生成ネットワークに適用され、敵対的攻撃や意味的画像編集に関する新たな洞察を提供します。
+<!--
+Antonio Torralba of MIT, with coauthors David Bau, Jun-Yan
+Zhu, Hendrik Strobelt, Agata Lapedriza, and Bolei Zhou address
+an important concern: Deep neural networks contain billions of
+artificial neurons, but what are they doing? Their article “Understanding
+the role of individual units in a deep neural network” (9)
+starts as follows: “Can the individual hidden units of a deep network
+teach us how the network solves a complex task? Intriguingly,
+within state-of-the-art deep networks, it has been observed
+that many single units match human-interpretable concepts that
+were not explicitly taught to the network: Units have been found
+to detect objects, parts, textures, tense, gender, context, and
+sentiment.” The authors describe quantitative tools to make such
+identifications. Building a second “annotation network,” they develop
+a “dissection” framework identifying the concepts that
+drive the networks’ neurons to respond. The technique applies
+to image-classification and image-generation networks and
+provides new insights into adversarial attacks and semantic
+image editing.
+-->
+</p><p>
+マギル大学および DeepMind の Doina Precup 氏と共著者の Andre´ Barreto 氏、Shaobo Hou 氏、Diana Borsa 氏、および David Silver 氏は、AlphaGo の世界最強のゲームプレイシステムを生んだ機械学習の一種である強化学習について論じています。強化学習は大量のデータを必要とすることで知られています。Precup 氏らは解決策を提案しています。論文「一般化されたポリシー更新による高速強化学習」(10) は、「強化学習とディープラーニングの組み合わせは、現在解決困難な重要な逐次的意思決定問題に取り組むための有望なアプローチです」という一文で始まります。ディープラーニングとのこのような組み合わせの障害を克服するために、著者 (10) は、「強化学習における 2 つの基本的な操作、ポリシー改善とポリシー評価の一般化。これらの操作の一般化バージョンにより、一部のタスクの解決を利用して、他のタスクの解決を高速化することができます」と提案しています。 （10）「どちらの戦略も、強化学習問題を解くために必要なデータの量を大幅に削減する」ことがわかります。
+<!--
+Doina Precup, of McGill University and DeepMind, and her
+coauthors Andre´ Barreto, Shaobo Hou, Diana Borsa, and David
+Silver discuss reinforcement learning, the variety of machine learning
+that gave us AlphaGo’s world-beating gameplay systems. Reinforcement
+learning is famously data-hungry. Precup and
+colleagues suggest a way out. Their article “Fast reinforcement
+learning with generalized policy updates” (10) begins with: “The
+combination of reinforcement learning with deep learning is a
+promising approach to tackle important sequential decisionmaking
+problems that are currently intractable.” To surmount
+the obstacles to such a combination with deep learning, the authors
+(10) propose “. . . generalization of two fundamental operations
+in reinforcement learning: Policy improvement and policy
+evaluation. The generalized version of these operations allow
+one to leverage the solution of some tasks to speed up the solution
+of others.” Barreto et al. (10) find that “Both strategies considerably
+reduce the amount of data needed to solve a
+reinforcement-learning problem.”
+-->
+</p><p>
+特集号の最後は、機械学習が日常生活に与える影響に関する新たな懸念を取り上げている2つの論文で締めくくられています。ケンブリッジ大学のアンダース・C・ハンセン氏と共著者のベガード・アントゥン氏、フランチェスコ・レナ氏、クラリス・プーン氏、ベン・アドコック氏は、差し迫った技術的脅威を指摘しています。彼らの論文「画像再構成におけるディープラーニングの不安定性とAIの潜在的コストについて」(11) は、コンピュータービジョンにおけるディープニューラルネットワークの不安定性という重要な現象に注目を促しています。画像分類における不安定性、そしてそれがミッションクリティカルなシステムにおけるディープラーニングビジョンシステムの使用に関してもたらす潜在的な安全性とセキュリティの問題は、文献で広く議論されてきました。著者らは、ディープラーニングベースの画像再構成において、ディープニューラルネットワークが画像逆問題を解くように学習される際に、同様の不安定性現象が発生することを明らかにしています。彼らは、医療用画像処理などのアプリケーションにおける潜在的な安全性の問題を懸念しています。アントゥン氏らは、安定性の問題を診断するための安定性テストを提案し、そのようなシステムを検査するためのソフトウェア実装について説明しています。
+<!--
+The special issue ends with two articles addressing emergent
+concerns about effects of machine learning on daily life. Anders C.
+Hansen of Cambridge University and coauthors Vegard Antun,
+Francesco Renna, Clarice Poon, and Ben Adcock identify a
+looming technical threat. Their article “On instabilities of deep
+learning in image reconstruction and the potential costs of AI”(11) calls attention to the important phenomenon of instability
+of deep neural network in computer vision. Instabilities in image
+classification, along with the potential safety and security issues
+they raise regarding the use of deep-learning vision systems in
+mission-critical systems, have been discussed extensively in the
+literature. The authors expose an analogous instability phenomenon
+in deep-learning–based image reconstruction, where a deep
+neural network is trained to solve an imaging inverse problem.
+They are concerned about potential safety issues in applications,
+such as medical imaging. Antun et al. propose a stability test to
+diagnose stability problems and describe software implementation
+of the test for inspecting such systems.
+-->
+</p><p>
+コーネル大学のジョン・クラインバーグと共著者のジェンス・ルートヴィヒ、センディル・ムライナサン、キャス・R・サンスティーン (12) は、日常生活に機械学習を導入することで起こり得る副作用に関する根本的に新しい懸念を取り上げることで特集号を締めくくっています。それは、機械学習が人間の判断をコード化したデータに頼ることで、差別や偏見を体系化してしまうのではないか、というものです。彼らは主張を次のように要約しています。「…差別を検出するための既存の法律、規制、および関連システムは、もともとアルゴリズムに頼らない人間の意思決定者の世界のために構築されました。これらのシステムに変更を加えない限り、アルゴリズムを導入しても差別を検出するという課題の解決には役立たず、問題全体を悪化させる可能性があります。」著者は楽観的な見方で締めくくっています。「アルゴリズムはその性質上、人間の意思決定に通常含まれるよりもはるかに高いレベルの特異性を必要とし、ある意味で究極の『ブラックボックス』です。適切な法規制システムが整備されていれば、アルゴリズムはガイガーカウンターのような役割を果たし、差別の検出を容易にし、ひいては差別の防止にも役立つ可能性がある（12）。
+<!--
+Jon Kleinberg of Cornell University and coauthors Jens
+Ludwig, Sendhil Mullainathan, and Cass R. Sunstein (12) close
+the special issue by addressing a fundamental new concern with
+the possible side-effects of deploying machine learning in daily
+life: Might they, by relying on data encoding human judgements,
+systematize discrimination and bias? They summarize their argument
+as follows: “. . . existing legal, regulatory, and related systems
+for detecting discrimination were originally built for a world
+of human decision makers, unaided by algorithms. Without
+changes to these systems, the introduction of algorithms will not
+help with the challenge of detecting discrimination and could
+potentially make the whole problem worse.” The authors finish
+on an optimistic note: “Algorithms by their nature require a far
+greater level of specificity than is usually involved with human
+decision making, which in some sense is the ultimate ‘black
+box.’ With the right legal and regulatory systems in place, algorithms
+can serve as something akin to a Geiger counter that makes
+it easier to detect—and hence prevent—discrimination” (12).
+-->
+</p><p>
+これらの論文は、多くの驚き、パラドックス、そして課題を明らかにしています。急速に発展するこの分野から、多くの学術研究の機会が生まれていることを改めて認識させてくれます。ほんの一部ですが、ディープラーニングは科学そのものに広く活用され、既存分野の進歩を加速させる可能性があります。理論家は、この10年間のディープラーニング革命がもたらす難問やパラドックスへの理解を深めるかもしれません。科学者は、機械学習における産業界主導のイノベーションが社会レベルのシステムにどのような影響を与えているかをより深く理解するかもしれません。こうした機会を追求することは、新たなリソースと人材を必要とするため、容易ではありません。この特集号が、こうした機会を追求する活発な科学的取り組みを刺激し、将来のPNAS誌でディープラーニングに関する議論がさらに深まることを期待しています。
+<!--
+These articles expose many surprises, paradoxes, and challenges.
+They remind us that there are many academic research
+opportunities emerging from this rapidly developing field. Mentioning
+only a few: Deep learning might be deployed more
+broadly in science itself, thereby accelerating the progress of
+existing fields; theorists might develop better understanding of
+the conundrums and paradoxes posed by this decade’s deeplearning
+revolution; and scientists might understand better how
+industry-driven innovations in machine learning are affecting
+societal-level systems. Such opportunities will be challenging to
+pursue, not least because they demand new resources and talent.
+We hope that this special issue stimulates vigorous new scientific
+efforts pursuing such opportunities, leading perhaps to further
+discussions on deep learning in the pages of future editions
+of PNAS.
+-->
+</P>
+<h2>謝辞</h2>
+<!--
+<h2>Acknowledgments</h2>
+-->
+<p>
+著者らは、長年にわたり米国科学アカデミー・サックラー・コロキアを後援してくださったジリアン・サックラー女史に感謝の意を表します。また、国防総省、国立衛生研究所（NIH）、国立科学財団（NSF）の代表者を含む、ワシントンD.C.地域の多くの住民の皆様にもご参加いただき、感謝申し上げます。多くの大学院生が全米各地からワシントンD.C.を訪れ、活発な議論に参加しました。米国科学アカデミーとPNASのスタッフの皆様にも、毎回の会合で大変お世話になりました。
+<!--
+The authors thank Dame Jillian Sackler for her many years of sponsorship of
+National Academy of Sciences Sackler Colloquia. They also thank many
+Washington, DC-area residents, including representatives of the DoD, NIH,
+and NSF for participating. Many graduate students came to Washington, DC
+from around the United States to participate actively. The National Academy of
+Sciences and PNAS staff have also been very helpful at every stag 
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>Reference</h2>
+-->
+<p>
+<div class="styleRef">
+<ul>
+<li>1 The White House, Artificial intelligence for the American people.(ホワイトハウス、「アメリカ国民のための人工知能」) https://www.whitehouse.gov/briefings-statements/artificial-intelligence-american-people/.
+Accessed 3 November 2020.
+</li><br><li>2 T. J. Sejnowski, The unreasonable effectiveness of deep learning in artificial intelligence.(人工知能におけるディープラーニングの不合理な有効性) Proc. Natl. Acad. Sci. U.S.A. 117, 30033–30038 (2020).
+</li><br><li>3 E. P. Wigner, The unreasonable effectiveness of mathematics in the physical sciences.(物理科学における数学の不合理な有効性) Commun. Pur. Appl. Anal. 13, 1–14 (1960).
+</li><br><li>4 A. Halevy, P. Norvig, F. Pereira, The unreasonable effectiveness of data.(データの不合理な有効性) IEEE Intell. Syst. 24, 8–12 (2009).
+</li><br><li>5 T. Poggio, A. Banburski, Q. Liao, Theoretical issues in deep networks.(ディープネットワークにおける理論的課題) Proc. Natl. Acad. Sci. U.S.A. 117, 30039–30045 (2020).
+</li><br><li>6 C. D. Manning, K. Clark, J. Hewitt, U. Khandelwal, O. Levy, Emergent linguistic structure in artificial neural networks trained by self-supervision.(自己教師学習による人工ニューラルネットワークにおける言語構造の発現) Proc. Natl. Acad.
+Sci. U.S.A. 117, 30046–30054 (2020).
+</li><br><li>7 K. Cranmer, J. Brehmer, G. Louppe, The frontier of simulation-based inference.(シミュレーションベース推論の最前線) Proc. Natl. Acad. Sci. U.S.A. 117, 30055–30062 (2020).
+</li><br><li>8 P. L. Bartlett, P. M. Long, G. Lugosi, A. Tsigler, Benign overfitting in linear regression.(線形回帰における良性過剰適合) Proc. Natl. Acad. Sci. U.S.A. 117, 30063–30070 (2020).
+</li><br><li>9 D. Bau et al., Understanding the role of individual units in a deep neural network.(ディープニューラルネットワークにおける個々のユニットの役割の理解) Proc. Natl. Acad. Sci. U.S.A. 117, 30071–30078 (2020).
+</li><br><li>10 A. Barreto, S. Hou, D. Borsa, D. Silver, D. Precup, Fast reinforcement learning with generalized policy updates.(一般化ポリシー更新による高速強化学習) Proc. Natl. Acad. Sci. U.S.A. 117, 30079–30087
+(2020).
+</li><br><li>11 V. Antun, F. Renna, C. Poon, B. Adcock, A. C. Hansen, On instabilities of deep learning in image reconstruction and the potential costs of AI.(画像再構成におけるディープラーニングの不安定性とAIの潜在的コストについて) Proc. Natl. Acad. Sci.
+U.S.A. 117, 30088–30095 (2020).
+</li><br><li>12 J. Kleinberg, J. Ludwig, S. Mullainathan, C. R. Sunstein, Algorithms as discrimination detectors.(識別検出器としてのアルゴリズム) Proc. Natl. Acad. Sci. U.S.A. 117, 30096–30100 (2020).
+30032
+</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>
