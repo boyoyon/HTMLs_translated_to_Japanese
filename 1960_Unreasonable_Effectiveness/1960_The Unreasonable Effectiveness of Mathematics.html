@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Unreasonable Effectiveness of Math</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>The Unreasonable Effectiveness of Mathematics
+in the Natural Sciences</center></h1>
+<center>自然科学における数学の不合理な有効性</center>
+<br>
+<center>ニューヨーク大学で行われたリチャード・クーラント数学科学講演</center>
+<center>1959/5/11</center>
+<!--
+<center>Richard Courant Lecture in Mathematical Sciences delivered at New York University, </center>
+<center>May 11, 1959 </center>
+-->
+<br>
+<center>EUGENE P. WIGNER </center>
+<center>Princeton University </center>
+<br>
+
+<center>「ここには何か秘密があるかもしれない</center>
+<center>それはまだ発見されていない。」（CSピアース）</center>
+<!--
+<center>“and it is probable that there is some secret here </center>
+<center>which remains to be discovered.” (C. S. Peirce) </center>
+-->
+
+<p>
+高校の同級生だった二人の友人が、お互いの仕事について話していたという話があります。そのうちの一人は統計学者になり、人口の動向を研究していました。彼はその論文のコピーを元同級生に見せました。その論文はいつものようにガウス分布から始まり、統計学者は元同級生に、実人口、平均人口などの記号の意味を説明しました。同級生は少々疑わしくなり、統計学者が冗談を言っているのかどうかよく分かりませんでした。「どうしてそれがわかるの？」と彼は尋ねました。「で、この記号は何？」「ああ」と統計学者は言いました。「これは \(\pi\) 」「それは何？」「円の円周と直径の比だよ」「それは冗談が行き過ぎたね」と同級生は言いました。「まさか人口と円周は関係ないでしょう」。
+<!--
+There is a story about two friends, who were classmates in high school, 
+talking about their jobs. One of them became a statistician and was working 
+on population trends. He showed a reprint to his former classmate, The 
+reprint started, as usual, with the Gaussian distribution and the statistician 
+explained to his former classmate the meaning of the symbols for the actual 
+population, for the average population, and so on. His classmate was a 
+bit incredulous and was not quite sure whether the statistician was pulling 
+his leg. “How can you know that?” was his query. “And what is this 
+symbol iere?” “Oh,” said the statistician, “this is n.” “What is that?” 
+“The ratio of the circumference of the circle to its diameter.” “Well, now 
+you are pushing your joke too far,” said the classmate, “surely the pop- 
+ulation has nothing to do with the circumference of the circle.” 
+-->
+</p><p>
+当然のことながら、私たちはクラスメートのアプローチの単純さに微笑みたくなる。しかしながら、この話を聞いたとき、私は不気味な気持ちになったことを認めざるを得なかった。というのも、クラスメートの反応は明らかに純粋な常識を示しただけだったからだ。それから数日後、ある人が私のところにやって来て、私たちが理論を検証するためのデータを選ぶ際に、むしろ狭い範囲の選択をしているという事実に当惑していると述べたとき<sup>1</sup>、私はさらに混乱した。「もし私たちが現在無視している現象に注目し、逆に現在注目している現象の一部を無視するような理論を構築した場合、その理論が現在の理論とはほとんど共通点を持たないにもかかわらず、現在の理論と同じくらい多くの現象を説明できる可能性がないとは、どのようにして分かるのだろうか。我々は、そのような理論が存在しないという明確な証拠を持っていないことを認めざるを得ない。」
+<!--
+Naturally, we are inclined to smile about the simplicity of the classmate’s 
+approach. Nevertheless, when I heard this story, I had to admit to an 
+eerie feeling because, surely, the reaction of the classmate betrayed only 
+plain common sense. I was even more confused when, not many days later, 
+someone came to me and expressed his bewilderment<sup>1</sup> with the fact that 
+we make a rather narrow selection when choosing the data on which we 
+test our theories. “How do we know that, if we made a theory which focusses 
+its attention on phenomena we disregard and disregards some of the phe- 
+nomena now commanding our attention, that we could not build another 
+theory which has little in common with the present one but which, never-
+theless, explains just as many phenomena as the present theory.” It has 
+to be admitted that we have not definite evidence that there is no such theory. 
+-->
+</p>
+<p class="margin-large">
+<sup>1</sup> 
+引用する発言は、F. ヴェルナーがプリンストン大学の学生時代に述べたものである。
+<!--
+The remark to be quoted was made by F. Werner when he was a student in Princeton. 
+-->
+</p>
+<p>
+前述の二つの物語は、本講演の主題である二つの主要な点を例証している。第一に、数学的概念は全く予期せぬ関係に現れるということである。しかも、それらの関係において、数学的概念はしばしば、現象を予想外に緻密かつ正確に記述することを可能にする。第二に、まさにこの状況ゆえに、そしてその有用性の理由を理解していないゆえに、数学的概念を用いて定式化された理論が唯一適切なものかどうかを知ることはできない。私たちは、鍵の束を渡され、立て続けにいくつかのドアを開けなければならないときに、常に一回目か二回目の試みで正しい鍵を当てた男の立場に似ている。彼は、鍵とドアの対応関係の唯一性について懐疑的になったのである。
+<!--
+The preceding two stories illustrate the two main points which are the 
+subjects of the present discourse. The first point is that mathematical con-
+concepts turn up in entirely unexpected connections. Moreover, they often 
+permit an unexpectedly close and accurate description of the phenomena in 
+these connections. Secondly, just because of this circumstance, and because 
+we do not understand the reasons of their usefulness, we cannot know 
+whether a theory formulated in terms of mathematical concepts is uniquely 
+appropriate. We are in a position similar to that of a man who was provided 
+with a bunch of keys and who, having to open several doors in succession, 
+always hit on the right key on the first or second trial. He became skeptical 
+concerning the uniqueness of the coordination between keys and doors. 
+-->
+</p><p>
+これらの疑問について述べられることのほとんどは目新しいものではないだろう。おそらくほとんどの科学者が何らかの形で考えたことがあるだろう。私の主な目的は、それをいくつかの側面から明らかにすることである。第一に、自然科学における数学の莫大な有用性は神秘に近いものであり、それには合理的な説明がないということである。第二に、数学的概念のこの不思議な有用性こそが、我々の物理理論の独自性という疑問を提起するのである。数学が物理学において不当に重要な役割を果たしているという第一の点を明らかにするためには、「数学とは何か？」、次に「物理学とは何か？」、どのように数学が物理理論に入り込むのか、そして最後に、物理学における数学の役割の成功がなぜそれほど不可解に見えるのかについて、簡単に述べることが有益であろう。第二の点、すなわち物理学の理論の独自性については、ほとんど言及しない。この疑問に適切に答えるには、今日まで着手されていない精巧な実験的および理論的研究が必要となるであろう。
+<!--
+Most of what will be said on these questions will not be new; it has 
+probably occurred to most scientists in one form or another. My principal 
+aim is to illuminate it from several sides. The first point is that the enormous 
+usefulness of mathematics in the natural sciences is something bordering on 
+the mysterious and that there is no rational explanation for it. Second, it is 
+just this uncanny usefulness of mathematical concepts that raises the ques- 
+tion of the uniqueness of our physical theories In order to establish the first 
+point, that mathematics plays an unreasonably important role in physics, 
+it will be useful to say a few words on the question “What is mathematics?”, 
+then, “What is physics?”, then, how mathematics enters physical theories, 
+and last, why the success of mathematics in its role in physics appears so 
+baffling. Much less will be said on the second point: the uniqueness of the 
+theories of physics. A proper answer to this question would require elaborate 
+experimental and theoretical work which has not been undertaken to date. 
+-->
+</p><p>
+数学とは何か？かつて誰かが、哲学とはまさにこの目的のために発明された用語の誤用であると言った。<sup>2</sup> 同様に、数学とは、まさにこの目的のために発明された概念と規則を用いた巧みな演算の科学であると言えるだろう。最も重要なのは概念の発明である。もし数学が、公理に既に現れている概念を用いて定式化されなければならないとしたら、興味深い定理はすぐに尽きてしまうだろう。さらに、初等数学、特に初等幾何学の概念が、現実世界から直接示唆される実体を記述するために定式化されたことは疑いようのない事実であるが、より高度な概念、特に物理学において重要な役割を果たす概念については、同じことが当てはまらないようだ。したがって、数のペアの演算規則は、明らかに「数のペア」を参照することなく最初に学んだ分数の演算と同じ結果をもたらすように設計されている。数列、すなわち無理数の演算規則は、依然として、すでに知られている量の演算規則を再現するように定められた規則の範疇に属する。複素数、代数、線型作用素、集合といった、より高度な数学概念のほとんどは（このリストはほぼ無限に続く可能性があるが）、数学者がその創意工夫と形式美の感覚を発揮するのに適した主題となるように考案された。実際、これらの概念を、興味深く独創的な考察を適用できるという認識をもって定義することこそ、それを定義した数学者の創意工夫の最初の証明である。数学的概念の形成に注ぎ込まれた思考の深さは、後にこれらの概念をいかに巧みに用いるかによって正当化される。偉大な数学者は、許容される推論の領域を徹底的に、ほとんど容赦なく利用し、許容されない領域を回避するのである。彼の無謀さが彼を矛盾の泥沼に陥らせなかったこと自体が奇跡である。確かに、ダーウィンの自然淘汰の過程によって、我々の推論能力が今のような完成度に達したとは信じ難い。しかし、これは我々の現在の主題ではない。後ほど改めて触れなければならない重要な点は、数学者は公理に含まれる概念以外の概念を定義せずには、ほんの一握りの興味深い定理しか定式化できなかったということ、そして公理に含まれる概念以外の概念は、操作としてだけでなく、その結果の汎用性と単純さにおいても我々の美的感覚に訴える独創的な論理操作を可能にするために定義されているということである。<sup>3</sup>
+<!--
+What is Mathematics? Somebody once said that philosophy is the 
+misuse of a terminology which was invented just for this purpose.<sup>2</sup> In the 
+same vein, I would say that mathematics is the science of skillful operations 
+with concepts and rules invented just for this purpose. The principal 
+emphasis is on the invention of concepts. Mathematics would soon run out 
+of interesting theorems if these had to be formulated in terms of the concepts 
+which already appear in the axioms. Furthermore, whereas it is unquestion- 
+ably true that the concepts of elementary mathematics and particularly 
+elementary geometry were formulated to describe entities which are directly 
+suggested by the actual world, the same does not seem to be true of the more 
+advanced concepts, in particular the concepts which play such an important 
+role in physics. Thus, the rules for operations with pairs of numbers are 
+obviously designed to give the same results as the operations with fractions 
+which we first learned without reference to “pairs of numbers”. The rules 
+for the operations with sequences, that is with irrational numbers, still 
+belong to the category of rules which were determined so as to reproduce 
+rules for the operations with quantities which were already known to us. 
+Most more advanced mathematical concepts, such as complex numbers, 
+algebras, linear operators, Bore1 sets- and this list could be continued almost 
+indefinitely-were so devised that they are apt subjects on which the 
+mathematician can demonstrate his ingenuity and sense of formal beauty. 
+In fact, the definition of these concepts, with a realization that interesting 
+and ingenious considerations could be applied to them, is the first demon- 
+stration of the ingeniousness of the mathematician who defines them. 
+The depth of thought which goes into the formation of the mathematical 
+concepts is later justified by the skill with which these concepts are used. 
+The great mathematician fully, almost ruthlessly, exploits the domain of 
+permissible reasoning and skirts the impermissible. That his recklessness 
+does not lead him into a morass of contradictions is a miracle in itself: 
+certainly it is hard to believe that our reasoning power was brought, by 
+Darwin’s process of natural selection, to the perfection which it seems to 
+possess. However, this is not our present subject. The principal point which 
+will have to be recalled later is that the mathematician could formulate only 
+a handful of interesting theorems without defining concepts beyond those 
+contained in the axioms and that the concepts outside those contained in 
+the axioms are defined with a view of permitting ingenious logical opera- 
+tions which appeal to our aesthetic sense both as operations and also in 
+their results of great generality and simplicity.<sup>3</sup> 
+-->
+</p>
+<p class="margin-large">
+<sup>2</sup> 
+この記述はW.ドゥビスラフ著『数学哲学』（Die Philosophie der Mathematik in dev Gegenwavi. Junker und Dunnhaupt Verlag, Berlin, 1932, p. 1）より引用
+<!--
+This statement is quoted here from W. Dubislav’s Die Philosophie der Mathematik in dev Gegenwavi. Junker und Dunnhaupt Verlag, Berlin, 1932, p. 1. 
+-->
+<br>
+<sup>3</sup>　
+M.ポラニーは著書『Personal Ktzowledge』（University of Chicago Press, 1958）の中で、「こうした困難はすべて、数学は、その最も明白な特徴、すなわち、数学が興味深いものであるということを認めずには定義できないという点を我々が理解しようとしないことから生じている」（188ページ）と述べている。
+<!--
+M.Polanyi, in his Personal Ktzowledge, University of Chicago Press, 1958 says: 
+“All these difficulties are but consequences of our refusal to see that mathematics cannot be 
+defined without acknowledging its most obvious feature: namely, that it is interesting,” 
+(page 188). 
+-->
+</p><p>
+複素数は、前述のことを特に顕著に示している。確かに、我々の経験上、これらの量の導入を示唆するものは何もない。実際、もし数学者が複素数への関心を正当化するよう求められれば、彼は憤慨した様子で、方程式、冪級数、そして解析関数一般の理論における多くの美しい定理を指摘するだろう。これらの定理は複素数の導入に由来する。数学者は、自らの天才が成し遂げたこれらの最も美しい成果への関心を放棄するつもりはないのだ。<sup>4</sup>
+<!--
+The complex numbers provide a particularly striking example for the 
+foregoing. Certainly, nothing in our experience suggests the introduction of 
+these quantities. Indeed, if a mathematician is asked to justify his interest 
+in complex numbers, he will point, with some indignation, to the many 
+beautiful theorems in the theory of equations, of power series and of analytic 
+functions in general, which owe their origin to the introduction of complex 
+numbers. The mathematician is not willing to give up his interest in these 
+most beautiful accomplishments of his genius.<sup>4</sup> 
+-->
+</p>
+<p class="margin-large">
+<sup>4</sup>　
+読者はこの点に関して、ヒルベルトが「数学を解体し、醜くしようとする」直観主義について述べたやや辛辣な意見（Abh. Math. Sem. Univ. Hamburg, Vol. 157, 1922年、またはGesammelte Werke, Springer, Berlin, 1935年、188ページ）に興味を持つかもしれない。
+<!--
+The reader may be interested, in this connection, in Hilbert’s rather testy remarks 
+about intuitionism which “seeks to break up and to disfigure mathematics”, Abh. Math. Sem. 
+Univ. Hamburg, Vol. 157, 1922, or Gesammelte Werke, Springer, Berlin, 1935, page 188. 
+-->
+</p><p>
+物理学とは何か？物理学者は、無生物の自然法則の発見に興味を持っています。このことを理解するには、「自然法則」という概念を分析する必要があります。
+<!--
+Whatis Physics? The physicist is interested in discovering the laws of 
+inanimate nature. In order to understand this statement, it is necessary 
+to analyze the concept “law of nature”. 
+-->
+</p><p>
+私たちの周りの世界は不可解なほど複雑で、その最も明白な事実は、私たちが未来を予測できないということです。このジョークは、未来が不確実であると考えるのは楽観主義者だけであると述べていますが、この場合、楽観主義者は正しいです。未来は予測できません。シュレーディンガーが指摘したように、世界の不可解なほど複雑であるにもかかわらず、出来事にある規則性が発見されたのは奇跡です[l]。ガリレオによって発見されたそのような規則性の一つは、同じ高さから同時に落とされた2つの岩が、同時に地面に着くというものです。自然法則はこのような規則性に関係しています。ガリレオの規則性は、多くの規則性の原型です。それが驚くべき規則性であるのには、次の3つの理由があります。
+<!--
+The world around us is of baffling complexity and the most obvious 
+fact about it is that we cannot predict the future. Although the joke 
+attributes only to the optimist the view that the future is uncertain, the 
+optimist is right in this case: the future is unpredictable. It is, as Schro-
+dinger has remarked, a miracle that in spite of the baffling complexity of 
+the world, certain regularities in the events could be discovered [l]. One 
+such regularity, discovered by Galileo, is that two rocks, dropped at the same 
+time from the same height, reach the ground at the same time. The laws 
+of nature are concerned with such regularities. Galileo’s regularity is a 
+prototype of a large class of regularities. It is a surprising regularity for 
+three reasons. 
+-->
+</p><p>
+驚くべき第一の理由は、それがピサやガリレオの時代だけでなく、地球上のあらゆる場所で真実であり、常に真実であり、これからも常に真実であり続けるということです。この規則性という性質は、広く認められた不変性であり、私が以前指摘したように [2]、ガリレオの観察の前述の一般化に示唆されているような不変性原理がなければ、物理学は不可能でしょう。第二の驚くべき特徴は、ここで論じている規則性が、それに影響を与え得る非常に多くの条件から独立しているということです。雨が降ろうが降らなかろうが、実験が室内で行われようが斜塔から行われようが、石を落とす人が男性であろうが女性であろうが、規則性は有効です。たとえ二つの石が二人の異なる人物によって同時に同じ高さから落とされたとしても、規則性は有効です。もちろん、ガリレオの規則性の有効性という観点からは、これら全てが重要ではない無数の条件が他にも存在します。観測される現象に影響を与え得る多くの状況の無関係性は、不変性とも呼ばれる [2]。しかし、この不変性は一般原理として定式化できないため、前述のものとは異なる性質を持つ。現象に影響を与える条件と影響を与えない条件の探究は、ある分野の初期の実験的探究の一部である。比較的容易に実現・再現可能な、比較的狭い条件の組み合わせに依存する現象を示すのは、実験者の技量と創意工夫である。<sup>5</sup> この場合、ガリレオが観測を比較的重い物体に限定したことが、この点で最も重要なステップであった。繰り返すが、扱いやすいほど小さな条件の組み合わせ以外すべてに依存しない現象が存在しないとしたら、物理学は不可能であろうというのは真実である。
+<!--
+The first reason that it is surprising is that it is true not only in Pisa, 
+and in Galileo’s time, it is true everywhere on the Earth, was always true, 
+and will always be true. This property of the regularity is a recognized 
+invariance property and, as I had occasion to point out some time ago [2], 
+without invariance principles similar to those implied in the preceding 
+generalization of Galileo’s observation, physics would not be possible. 
+The second surprising feature is that the regularity which we are discussing 
+is independent of so many conditions which could have an effect on it. 
+It is valid no matter whether it rains or not, whether the experiment is 
+carried out in a room or from the Leaning Tower, no matter whether the 
+person who drops the rocks is a man or a woman. It is valid even if the 
+two rocks are dropped, simultaneously and from the same height, by 
+two different people. There are, obviously, innumerable other conditions 
+which are all immaterial from the point of view of the validity of Galileo’s 
+regularity. The irrelevancy of so many circumstances which could play a 
+role in the phenomenon observed, has also been called an invariance [2]. 
+However, this invariance is of a different character than the preceding one 
+since it cannot be formulated as a general principle. The exploration of the 
+conditions which do, and which do not, influence a phenomenon is part of 
+the early experimental exploration of a field. It is the skill and ingenuity 
+of the experimenter which shows him phenomena which depend on a rel-
+atively narrow set of relatively easily realizable and reproducible con-
+dition.<sup>5</sup> In the present case, Galileo’s restriction of his observations to 
+relatively heavy bodies was the most important step in this regard. Again, 
+it is true that if there were no phenomena which are independent of all but 
+a manageably small set of conditions, physics would be impossible. 
+-->
+</p>
+<p class="margin-large">
+<sup>5</sup>　
+この点については、I.Deutsch のグラフィック エッセイ「Daedalus」(第 87 巻、1958 年、86 ページ) を参照。A. Shimony は、C.S. Peirce の Essays zn the Phzlosophy of Sczence (The Liberal Arts Press、ニューヨーク、1957 年、237 ページ) にある同様の一節に私の注意を向けさせてくれました。
+<!--
+See, in this connection, the graphic essay of &I.Deutsch, Daedalus, Vol. 87, 1958, 
+page 86 A. Shimony has called my attention to a similar passage in C S. Peirce’s Essays zn 
+the Phzlosophy of Sczence, The Liberal Arts Press, New York, 1957 (page 237). 
+-->
+</p><p>
+前述の2点は、哲学者の観点からは非常に重要な点ではあるものの、ガイレオを最も驚かせた点ではなく、また特定の自然法則を含んでいるわけでもありません。この自然法則は、重い物体が所定の高さから落下するのにかかる時間は、落下する物体の大きさ、材質、形状とは無関係であるという主張に内包されています。ニュートンの第二「法則」の枠組みに当てはめると、これは落下する物体に作用する重力はその質量に比例するが、落下する物体の大きさ、材質、形状とは無関係であるという主張に相当します。
+<!--
+The preceding two points, though highly significant from the point of 
+view of the philosopher, are not the ones which surprised GaIileo most, nor 
+do they contain a specific law of nature. The law of nature is contained in 
+the statement that the length of time which it takes for a heavy object to 
+fall from a given height is independent of the size, material and shape of 
+the body which drops. In the framework of Newton’s second “law”, this 
+amounts to the statement that the gravitational force which acts on the 
+falling body is proportional to its mass but independent of the size, material 
+and shape of the body which falls. 
+-->
+</p><p>
+以上の議論は、まず第一に、「自然法則」が存在すること自体が全く自然なことではなく、ましてや人間がそれを発見できるなどということはあり得ないことを想起させることを意図している。<sup>6</sup>　筆者は以前、「自然法則」が幾重にも重なり合うこと、すなわち各層が前の層よりもより一般的で包括的な法則を含み、その発見は、それ以前に認識されていた層よりも宇宙の構造へのより深い洞察を構成することに注目する機会があった [3]。しかしながら、本文脈において最も重要な点は、これらすべての自然法則は、その最も遠い帰結においてさえ、無生物界に関する我々の知識のほんの一部しか含まないという点である。すべての自然法則は、現在の知識に基づいて将来の出来事を予測することを可能にする条件文である。ただし、現在の世界の状態のいくつかの側面、実際には現在の世界の状態を決定づける要因の圧倒的多数は、予測の観点からは無関係である。この無関係性とは、ガリレオの定理の議論における2番目の点の意味で意味されます。<sup>7</sup>
+<!--
+The preceding discussion is intended to remind, first, that it is not 
+at all natural that “laws of nature” exist, much less that man is able to 
+discover them.<sup>6</sup> The present writer had occasion, some time ago, to call 
+attention to the succession of layers of “laws of nature”, each layer con-
+taining more general and more encompassing laws than the previous one 
+and its discovery constituting a deeper penetration into the structure of 
+the universe than the layers recognized before [3]. However, the point 
+which is most significant in the present context is that all these laws of 
+nature contain, in even their remotest consequences, only a small part of 
+our knowledge of the inanimate world. All the laws of nature are conditional 
+statements which permit a prediction of some future events on the basis 
+of the knowledge of the present, except that some aspects of the present 
+state of the world, in practice the overwhelming majority of the determinants 
+of the present state of the world, are irrelevant from the point of view of 
+the prediction. The irrelevancy is meant in the sense of the second point 
+in the discussion of Galileo’s theorem.<sup>7</sup> 
+-->
+</p>
+<p class="margin-large">
+<sup>6</sup>　
+シュレーディンガーは、著書『自由とは何か』（ケンブリッジ大学出版、1915年）の中で、この第二の奇跡は人間の理解を超えているかもしれないと述べています（31ページ）。
+<!--
+Schr&ouml;dinger, in his What is Lije, Cambridge University Press, 1915, says that this 
+second miracle may well be beyond human understanding, (page 31). 
+-->
+<br>
+<sup>7</sup>　
+筆者は、本文中に示されているガリレオの定理が、自由落下体の法則に関するガリレオの観察内容を網羅しているわけではないことを述べる必要はないと確信しています。
+<!--
+The writer feels sure that it is unnecessary to mention that Galileo’s theorem, as given 
+in the text, does not exhaust the content of Galileo’sobservations in connection with the 
+laws of freely falling bodies. 
+-->
+</p><p>
+我々が住み、ガリレオの実験が行われた地球の存在、太陽や我々を取り巻くすべてのものの存在といった、世界の現状に関しては、自然法則は全く沈黙している。これと一致して、まず第一に、自然法則を用いて将来の出来事を予測できるのは、例外的な状況下、すなわち世界の現状の関連する決定要因がすべてわかっている場合のみである。またこれと一致して、物理学者がその動作を予見できる機械の構築は、物理学者の最も華々しい業績を構成する。これらの機械において、物理学者は関連する座標がすべてわかっている状況を作り出し、機械の挙動を予測できるようにする。レーダーや原子炉はそのような機械の例である。
+<!--
+As regards the present state of the world, such as the existence of the 
+earth on which we live and on which Galileo’s experiments were performed, 
+the existence of the sun and of all our surroundings, the laws of nature are 
+entirely silent. It is in consonance with this, first, that the laws of nature 
+can be used to predict future events only under exceptional circumstances 
+-when all the relevant determinants of the present state of the world are 
+known. It is also in consonance with this that the construction of machines, 
+the functioning of which he can foresee, constitutes the most spectacular 
+accomplishment of the physicist. In these machines, the physicist creates 
+a situation in which all the relevant coordinates are known so that the be- 
+havior of the machine can be predicted. Radars and nuclear reactors are 
+examples of such machines. 
+-->
+</p><p>
+これまでの議論の主目的は、自然法則はすべて条件付きの命題であり、世界に関する我々の知識のごく一部にしか関係していないことを指摘することである。したがって、物理理論の最もよく知られた原型である古典力学は、あらゆる物体の位置などの知識に基づいて、それらの位置座標の2階微分を与える。古典力学は、これらの物体の存在、現在の位置、速度に関する情報は一切与えない。正確さのために付け加えておくと、約30年前に、条件付きの命題ですら完全に正確ではないことが分かっている。つまり、条件付きの命題は確率法則であり、それによって無生物世界の将来の特性について、現状の知識に基づいて賢明な賭けをすることしかできないということである。条件付きの命題は、世界の現状を条件とする定性的命題、ましてや定性的命題を述べることさえ許さない。 「自然法則」の確率的性質は機械の場合にも現れ、少なくとも原子炉の場合、非常に低い出力で運転すれば検証可能である。しかし、自然法則の確率的性質から生じる、その適用範囲の更なる制限<sup>8</sup>は、以降の議論においては何ら役割を果たさない。
+<!--
+The principal purpose of the preceding discussion is to point out that 
+the laws of nature are all conditional statements and they relate only to a 
+very small part of our knowledge of the world. Thus, classical mechanics, 
+which is the best known prototype of a physical theory, gives the second 
+derivatives of the positional coordinates of all bodies, on the basis of the 
+knowledge of the positions, etc., of these bodies. It gives no information on 
+the existence, the present positions, or velocities of these bodies. It should 
+be mentioned, for the sake of accuracy, that we have learned about thirty 
+years ago that even the conditional statements cannot be entirely precise: 
+that the conditional statements are probability laws which enable us only 
+to place intelligent bets on future properties of the inanimate world, based 
+on the knowledge of the present state. They do not allow us to make 
+categorical statements, not even categorical statements conditional on the 
+present state of the world. The probabilistic nature of the “laws of nature” 
+manifests itself in the case of machines also, and can be verified, at least in 
+the case of nuclear reactors, if one runs them at very low power. However, 
+the additional limitation of the scope of the laws of nature <sup>8</sup> which follows 
+from their probabilistic nature, will play no role in the rest of the discussion. 
+-->
+</p>
+<p class="margin-large">
+<sup>8</sup>　
+例えばE.シュレーディンガーの文献[l]を参照。
+<!--
+See, for instance, E. Schrodinger, reference [l]. 
+-->
+</p><p>
+物理理論における数学の役割。数学と物理学の本質について改めて認識することで、物理理論における数学の役割をより適切に再検討できるようになるはずです。
+<!--
+The Role of Mathematics in Physical Theories. Having refreshed our 
+minds as to the essence of mathematics and physics, we should be in a 
+better position to review the role of mathematics in physical theories. 
+-->
+</p><p>
+当然のことながら、私たちは日常の物理学において、自然法則の結果を評価したり、たまたま支配的であったり、たまたま私たちの関心の対象となったりする特定の条件に条件文を適用したりするために数学を用いています。これを可能にするためには、自然法則がすでに数学的な言語で定式化されていなければなりません。しかしながら、既に確立された理論の帰結を評価する役割は、物理学における数学の最も重要な役割ではありません。数学、あるいはむしろ応用数学は、この機能において状況を支配するほどのものではなく、単なる道具として機能しているに過ぎません。しかしながら、数学は物理学においてより主権的な役割も果たしています。これは、応用数学の役割について議論した際になされた、自然法則が応用数学の利用対象となるためには、すでに数学の言語で定式化されていなければならないという発言に既に暗示されています。自然法則が数学の言語で書かれているという発言は、300年前に適切になされました。<sup>9</sup>　そして今、それはかつてないほど真実となっています。物理法則の定式化において数学的概念が持つ重要性を示すために、例えば、偉大な数学者フォン・ノイマンによって明示的に、あるいは偉大な物理学者ディラックによって暗黙的に定式化された量子力学の公理を思い起こしてみよう[4, 51]。量子力学には、状態と観測量という2つの基本概念がある。状態はヒルベルト空間のベクトルであり、観測量はこれらのベクトル上の自己随伴作用素である。観測値の取り得る値は作用素の特性値であるが、線形作用素の理論で展開される数学的概念を列挙することになりかねないので、ここで止めておこう。
+<!--
+Naturally, we do use mathematics in everyday physics to evaluate the 
+results of the laws of nature, to apply the conditional statements to the 
+particular conditions which happen to prevail or happen to interest us. 
+In order that this be possible, the laws of nature must already be formulated 
+in mathematical language. However, the role of evaluating the conse-
+quences of already established theories is not the most important role of math- 
+ematics in physics. Mathematics, or, rather, applied mathematics, is not so 
+much the master of the situation in this function: it is merely serving as a tool. 
+
+Mathematics does play, however, also a more sovereign role in physics. 
+This was already implied in the statement, made when discussing the role of 
+applied mathematics, that the laws of nature must be already formulated 
+in the language of mathematics to be an object for the use of applied math- 
+ematics. The statement that the laws of nature are written in the language 
+of mathematics was properly made three hundred years ago <sup>9</sup>; it is now more 
+true than ever before. In order to show the importance which mathematical 
+concepts possess in the formulation of the laws of physics, let us recall, as 
+an example, the axioms of quantum mechanics as formulated, explicitly, 
+by the great mathematician, von Neumann, or, implicitly, by the great 
+physicist, Dirac [4, 51. There are two basic concepts in quantum mechanics: 
+states and observables. The states are vectors in Hilbert space, the observ- 
+ables self-adjoint operators on these vectors. The possible values of the 
+observations are the characteristic values of the operators-but we had 
+better stop here lest we engage in a listing of the mathematical concepts 
+developed in the theory of linear operators. 
+-->
+</p>
+<p class="margin-large">
+<sup>9</sup>
+この詩はグニリレオの作とされている。
+<!--
+　It is attributed to Gnlileo. 
+-->
+</p>
+<p>
+もちろん、物理学は自然法則を定式化するために特定の数学概念を選択し、物理学で用いられるのは全数学概念のほんの一部に過ぎないことは事実です。また、選択された概念は数学用語のリストから恣意的に選ばれたのではなく、多くの場合、あるいはほとんどの場合、物理学者によって独立して発展させられ、その時点で数学者によって以前に考案されていたことが認識されたことも事実です。しかしながら、よく言われるように、数学は可能な限り単純な概念を用いており、それらはいかなる形式主義においても必然的に出現するから、そうならざるを得なかったというのは真実ではありません。前述のように、数学の概念は概念の単純さゆえに選択されるのではなく（数列でさえ、最も単純な概念とは程遠い）、巧みな操作や印象的で明快な議論への容易さゆえに選択されるのです。量子力学のヒルベルト空間は、エルミートスカラー積を持つ複素ヒルベルト空間であることを忘れてはなりません。確かに、何の心配もしていない人にとって、複素数は自然でも単純でもないものであり、物理的な観察から示唆されることもありません。さらに、この場合の複素数の使用は、応用数学の計算上のトリックではなく、量子力学の法則を定式化する上でほぼ必須の要素となっています。そして今、量子論の定式化において、数だけでなく、いわゆる解析関数が決定的な役割を果たす運命にあることが明らかになりつつあります。ここで私が言及しているのは、急速に発展している分散関係の理論です。
+<!--
+It is true, of course, that physics chooses certain mathematical concepts 
+for the formulation of the laws of nature, and surely only a fraction of all 
+mathematical concepts is used in physics. It is true also that the concepts 
+which were chosen were not selected arbitrarily from a listing of mathematical 
+terms but were developed, in many if not most cases, independently by the 
+physicist and recognized then as having been conceived before by the 
+mathematician. It is not true, however, as is so often stated, that this had 
+to happen because mathematics uses the simplest possible concepts and 
+these were bound to occur in any formalism. As we saw before, the concepts 
+of mathematics are not chosen for their conceptual simplicity-even se-
+quences of pairs of numbers are far from being the simplest concepts-but 
+for their amenability to clever manipulations and to striking, brilliant 
+arguments. Let us not forget that the Hilbert space of quantum mechanics 
+is the complex Hilbert space, with a Hermitean scalar product. Surely 
+to the unpreoccupied mind, complex numbers are far from natural or simple 
+and they cannot be suggested by physical observations. Furthermore, the 
+use of complex numbers is in this case not a calculational trick of applied 
+mathematics but comes close to being a necessity in the formulation of 
+the laws of quantum mechanics. Finally, it now begins to appear that not 
+only numbers but so-called analytic functions are destined to play a decisive 
+role in the formulation of quantum theory. I am referring to the rapidly 
+developing theory of dispersion relations. 
+-->
+</p><p>
+ここで我々が直面しているのは奇跡であり、その驚くべき性質は、人間の心が矛盾に陥ることなく千もの議論を繋ぎ合わせることができるという奇跡、あるいは自然法則の存在とそれを予見する人間の心の能力という二つの奇跡によく似ているという印象を拭い去ることは難しい。物理学に数学的概念が出現する理由を最もよく説明できるのは、私が知る限り、我々が受け入れることのできる物理理論は美しい理論だけであるというアインシュタインの言である。非常に機知に富んだ思考を必要とする数学の概念は、美しさという特質を備えていると言えるだろう。しかしながら、アインシュタインのこの観察は、せいぜい我々が信じることができる理論の特性を説明するものであり、理論の本質的な正確さとは無関係である。したがって、我々は後者の問題に目を向けることにする。
+<!--
+It is difficult to avoid the impression that a miracle confronts us here, 
+quite comparable in its striking nature to the miracle that the human mind 
+can string a thousand arguments together without getting itself into contra- 
+dictions or to the two miracles of the existence of laws of nature and of the 
+human mind’s capacity to divine them. The observation which comes 
+closest to an explanation for the mathematical concepts’ cropping up in 
+physics which I know is Einstein’s statement that the only physical theories 
+which we are willing to accept are the beautiful ones. It stands to argue that 
+the concepts of mathematics, which invite the exercise of so muchwit, have the 
+quality of beauty. However, Einstein’s observation can at best explain prop- 
+erties of theories which we are willing to believe and has no reference to the in- 
+trinsic accuracy of the theory. We shall, therefore, turn to thislatter question. 
+-->
+</p><p>
+物理理論の成功は本当に驚くべきことなのだろうか？物理学者が自然法則を定式化するために数学を用いる理由の一つとして、物理学者がいくぶん無責任な人間であるという点が挙げられる。そのため、二つの量の間に数学でよく知られている関係に似た関係を見出すと、物理学者は他に同様の関係を知らないというだけの理由で、その関係は数学で議論されている関係であるとすぐに結論づけてしまう。本稿の目的は、物理学者がいくぶん無責任な人間だという非難を反駁することではない。もしかしたらそうかもしれない。しかし、物理学者のしばしば粗雑な経験を数学的に定式化することで、驚くほど多くのケースにおいて、多くの現象を驚くほど正確に記述できることを指摘しておくことは重要である。これは、数学言語が私たちが話せる唯一の言語であるだけでなく、それ以上の利点を持っていることを示している。数学言語は、まさに真の意味で正しい言語であるということを示している。いくつかの例を考えてみよう。
+<!--
+Is the Success of Physical Theories Truly Surprising? A possible ex-
+planation of the physicist’s use of mathematics to formulate his laws of 
+nature is that he is a somewhat irresponsible person. As a result, when he 
+finds a connection between two quantities which resembles a connection 
+well-known from mathematics, he will jump at the conclusion that the 
+connection is that discussed in mathematics simply because he does not know 
+of any other similar connection. It is not the intention of the present dis-
+cussion to refute the charge that the physicist is a somewhat irresponsible 
+person. Perhaps he is. However, it is important to point out that the math- 
+ematical formulation of the physicist’s often crude experience leads in 
+an uncanny number of cases to an amazingly accurate description of a 
+large class of phenomena. This shows that the mathematical language has 
+more to commend it than being the only language which we can speak; 
+it shows that it is, in a very real sense, the correct language. Let us consider 
+a few examples. 
+-->
+</p><p>
+最初の例は、よく引用される惑星の運動です。落下物体の法則は、主にイタリアで行われた実験の結果、かなり確立されました。これらの実験は、空気抵抗の影響や、当時は短い時間間隔の測定が不可能だったこともあり、今日私たちが理解している意味ではそれほど正確ではありませんでした。それでも、イタリアの自然科学者たちが研究の結果、物体が大気中を移動する仕組みに精通したことは驚くべきことではありません。その後、自由落下物体の法則を月の運動と関連付け、投げられた岩石が地球上で描く放物線と、月が空を飛ぶ円が、楕円という同じ数学的対象物の特殊な例であることに気づいたのはニュートンでした。そして、当時としては非常に近似的な、たった一つの数値的一致に基づいて、万有引力の法則を仮定しました。哲学的には、ニュートンが定式化した万有引力の法則は、当時も彼自身も受け入れがたいものでした。経験的には、それは非常に乏しい観察に基づいていました。それを定式化した数学的言語には二階微分の概念が含まれており、曲線に接触円を描こうとしたことがある人なら、二階微分がそれほど直接的な概念ではないことを知っているでしょう。ニュートンが渋々確立し、約4%の精度で検証できた万有引力の法則は、1万分の1%以下の精度であることが証明され、絶対的な精度という概念と密接に結びついたため、物理学者たちが再びその精度の限界を大胆に探究するようになったのはごく最近のことです。<sup>10</sup>　確かに、何度も引用されるニュートンの法則の例は、数学者には単純に見える言葉で定式化された法則が、あらゆる合理的な期待を超えて正確であることが証明された記念碑的な例として、まず挙げられなければなりません。この例に関する我々の主張をもう一度簡単にまとめよう。第一に、この法則は、特に二階微分が登場する点において、数学者にとってのみ単純であり、常識や数学に疎い初学者にとっては単純ではない。第二に、これは非常に限定された範囲の条件付き法則である。ガリレオの岩石を引き寄せる地球や、月の軌道が円形であること、太陽系の惑星について何も説明していない。これらの初期条件の説明は地質学者と天文学者に委ねられており、彼らは苦労している。
+<!--
+The first example is the oft quoted one of planetary motion. The laws of 
+falling bodies became rather well established as a result of experiments 
+carried out principally in Italy. These experiments could not be very 
+accurate in the sense in which we understand accuracy today partly because 
+of the effect of air resistance and partly because of the impossibility, at 
+that time, to measure short time intervals. Nevertheless, it is not surprising 
+that as a result of their studies, the Italian natural scientists acquired a 
+familiarity with the ways in which objects travel through the atmosphere. 
+It was Newton who then brought the law of freely falling objects into 
+relation with the motion of the moon, noted that the parabola of the 
+thrown rock’s path on the earth, and the circle of the moon’s path in the 
+sky, are particular cases of the same mathematical object of an ellipse 
+and postulated the universal law of gravitation, on the basis of a single, 
+and at that time very approximate, numerical coincidence. Philosophically, 
+the law of gravitation as formulated by Newton was repugnant to his time 
+and to himself. Empirically, it was based on very scanty observations. 
+The mathematical language in which it was formulated contained the con-
+cept of a second derivative and those of us who have tried to draw an 
+osculating circle to a curve know that the second derivative is not a very 
+immediate concept. The law of gravity which Newton reluctantly estab-
+lished and which he could verify with an accuracy of about 4 % has 
+proved to be accurate to less than a ten thousandth of a per cent and became 
+so closely associated with the idea of absolute accuracy that only recently 
+did physicists become again bold enough to inquire into the limitations of 
+its accuracy.<sup>10</sup> Certainly, the example of Newton’s law, quoted over 
+and over again, must be mentioned first as a monumental example of a 
+law, formulated in terms which appear simple to the mathematician, which 
+has proved accurate beyond all reasonable expectation. Let us just re-
+capitulate our thesis on this example: first, the law, particularly since a 
+second derivative appears in it, is simple only to the mathematician, not to 
+common sense or to non-mathematically-minded freshmen; second, it is 
+a conditional law of very limited scope. It explains nothing about the 
+earth which attracts Galileo’s rocks, or about the circular form of the moon’s 
+orbit, or about the planets of the sun. The explanation of these initial 
+conditions is left to the geologist and the astronomer, and they have a 
+hard time with them. 
+-->
+<p>
+<p class="margin-large">
+<sup>10</sup>
+例えば、RHディッケ著「アメリカン・サイエンティスト」第25巻、1959年を参照。
+<!--
+　See, for instance, R. H. Dicke, American Scientist, Vol. 25, 1959. 
+-->
+</p><p>
+2番目の例は、通常の基本的な量子力学です。これは、マックス・ボルンが、ハイゼンベルクによって与えられた計算規則のいくつかが、はるか昔に数学者によって確立された行列の計算規則と形式的に同一であることに気づいたことに端を発します。ボルン、ジョーダン、ハイゼンベルクは、古典力学の方程式の位置変数と運動量変数を行列に置き換えることを提案しました[6]。彼らは行列力学の規則をいくつかの非常に理想化された問題に適用し、非常に満足のいく結果を得ました。しかし、当時は、彼らの行列力学がより現実的な条件下で正しいと証明される合理的な証拠はありませんでした。実際、彼らは「ここで提案された力学が、その本質的な特徴においてすでに正しいとすれば」と述べています。実際には、彼らの力学を現実的な問題、つまり水素原子の問題に初めて適用したのは、数か月後、パウリでした。この適用は経験と一致する結果をもたらしました。これは満足のいく結果ではあったが、ハイゼンベルクの計算規則が水素原子の古い理論を含む問題から抽象化されたものであるため、まだ理解できる。奇跡は、ハイゼンベルクの計算規則が意味をなさない問題に、行列力学、あるいは数学的に同等の理論を適用した場合にのみ起こった。ハイゼンベルクの規則は、古典的な運動方程式が特定の周期特性を持つ解を持つことを前提としていた。しかし、ヘリウム原子の2つの電子、あるいはより重い原子のさらに多くの電子の運動方程式は、これらの特性を持たないため、ハイゼンベルクの規則をこれらのケースに適用することはできない。とはいえ、数ヶ月前にコーネル大学の木下と標準局のバズリーによって行われたヘリウムの最低エネルギー準位の計算は、観測精度の範囲内、すなわち1000万分の1の範囲内で実験データと一致している。確かに、この場合、我々は方程式から「何かを得た」と言えるだろう。
+<!--
+The second example is that of ordinary, elementary quantum mechanics. 
+This originated when Max Born noticed that some rules of computation, 
+given by Heisenberg, were formally identical with the rules of computation 
+with matrices, established a Iong time before by mathematicians. Born, 
+Jordan and Heisenberg then proposed to replace by matrices the position 
+and momentum variables of the equations of classical mechanics [6]. They 
+applied the rules of matrix mechanics to a few highly idealized problems and 
+the results were quite satisfactory. However, there was, at that time, no 
+rational evidence that their matrix mechanics would prove correct under 
+more realistic conditions. Indeed, they say “if the mechanics as here propos- 
+ed should already be correct in its essential traits”. As a matter of fact, the 
+first application of their mechanics to a realistic problem, that of the hydro- 
+gen atom, was given several months later, by Pauli. This application gave 
+results in agreement with experience. This was satisfactory but still under- 
+standable because Heisenberg’s rules of calculation were abstracted from 
+problems which included the old theory of the hydrogen atom. The miracle 
+occurred only when matrix mechanics, or a mathematically equivalent 
+theory, was applied to problems for which Heisenberg’s calculating rules 
+were meaningless. Heisenberg’s rules presupposed that the classical equa- 
+tions of motion had solutions with certain periodicity properties; and the 
+equations of motion of the two electrons of the helium atom, or of the even 
+greater number of electrons of heavier atoms, simply do not have these 
+properties, so that Heisenberg’s rules cannot be applied to these cases. 
+Nevertheless, the calculation of the lowest energy level of helium, as carried 
+out a few months ago by Kinoshita at Cornell and by Bazley at the Bureau 
+of Standards, agree with the experimental data within the accuracy of the 
+observations, which is one part in ten millions. Surely in this case we “got 
+something out” of the equations that we did not put in. 
+-->
+</p><p>
+「複素スペクトル」、すなわちより重い原子のスペクトルの質的特徴についても同様である。スペクトルの質的特徴が導かれた際、量子力学理論から導かれる規則と経験的研究によって確立された規則との不一致が、行列力学の枠組みを変える最後の機会となるだろうとジョーダンが私に語った会話を思い出したい。言い換えれば、ジョーダンは、ヘリウム原子の理論において予期せぬ不一致が生じた場合、少なくとも一時的には、我々は無力になるだろうと感じていた。これは当時、ケルナーとヒレラスによって発展させられていた。数学的形式主義はあまりにも明確で不変であったため、前述のヘリウムの奇跡が起こらなかったら、真の危機が生じたであろう。物理学は確かに、何らかの方法でその危機を克服したであろう。一方で、今日私たちが知っている物理学は、ヘリウム原子の奇跡のような奇跡が絶えず繰り返されなければ不可能であったことも事実です。ヘリウム原子の奇跡は、おそらく基礎量子力学の発展の過程で起こった最も驚くべき奇跡ですが、決して唯一の奇跡ではありません。実際、類似の奇跡の数は、私たちの見解では、より類似した奇跡を追い求める意欲によってのみ制限されます。それでもなお、量子力学は、ほぼ同等の驚くべき成功を数多く達成し、それが、いわゆる「正しい」という確固たる確信を与えてくれました。
+<!--
+The same is true of the qualitative characteristics of the “complex 
+spectra”, that is the spectra of heavier atoms. I wish to recall a conver-
+sation with Jordan who told me, when the qualitative features of the 
+spectra were derived, that a disagreement of the rules derived from quantum 
+mechanical theory, and the rules established by empirical research, would 
+have provided the last opportunity to make a change in the framework of 
+matrix mechanics. In other words, Jordan felt that we would have been, 
+at least temporarily, helpless had an unexpected disagreement occurred 
+in the theory of the helium atom. This was, at that time, developed by 
+Kellner and by Hilleraas. The mathematical formalism was too clear and 
+unchangeable so that, had the miracle of helium which was mentioned before 
+not occurred, a true crisis would have arisen. Surely, physics would have 
+overcome that crisis in one way or another. It is true, on the other hand, 
+that physics as we know it today would not be possible without a constant 
+recurrence of miracles similar to the one of the helium atom which is perhaps 
+the most striking miracle that has occurred in the course of the development 
+of elementary quantum mechanics, but by far not the only one. In fact, 
+the number of analogous miracles is limited, in our view, only by our 
+willingness to go after more similar ones. Quantum mechanics had, never-
+theless, many almost equally striking successes which gave us the firm con-
+viction that it is, what we call, correct. 
+-->
+</p><p>
+最後の例は量子電気力学、すなわちラムシフトの理論である。ニュートンの重力理論は依然として経験と明白なつながりを持っていたが、経験はハイゼンベルクの処方の洗練、あるいは昇華された形でのみ行列力学の定式化に取り込まれた。ベーテによって構想され、シュウィンガーによって確立されたラムシフトの量子理論は純粋に数学的な理論であり、実験の唯一の直接的な貢献は測定可能な効果の存在を示すことであった。計算との一致は1000分の1よりも優れている。
+<!--
+The last example is that of quantum electrodynamics, or the theory 
+of the Lamb shift. Whereas Newton’s theory of gravitation still had obvious 
+connections with experience, experience entered the formulation of matrix 
+mechanics only in the refined or sublimated form of Heisenberg’s prescrip- 
+tions. The quantum theory of the Lamb shift, as conceived by Bethe and 
+established by Schwinger, is a purely mathematical theory aiid the only 
+direct contribution of experiment was to show the existence of a measurable 
+effect. The agreement with calculation is better than one part in a thousand. 
+-->
+</p><p>
+前述の3つの例は、ほぼ無限に挙げることができるが、自然法則を、その操作性に基づいて選択された概念を用いて数学的に定式化することの適切さと正確さを示している。「自然法則」はほとんど驚異的な正確さを誇りながらも、その適用範囲は厳しく限定されている。これらの例が示す観察を、私は認識論の経験法則と呼ぶことにする。これは、物理理論の不変法則とともに、これらの理論にとって不可欠な基盤である。不変法則がなければ、物理理論は事実の根拠を与えられなかったであろう。もし認識論の経験法則が正しくなければ、私たちは「自然法則」をうまく探求するために不可欠な感情的な励ましと安心感を得られなかったであろう。私が認識論の経験法則について議論したRGSachs博士は、それを理論物理学者の信条と呼んだが、まさにその通りである。しかし、彼が私たちの信仰箇条と呼んだものは、実際の例によって十分に裏付けられており、言及した 3 つの例以外にも多くの例があります。
+<!--
+The preceding three examples, which could be multiplied almost in-
+definitely, should illustrate the appropriateness and accuracy of the math- 
+ematical formulation of the laws of nature in terms of concepts chosen for 
+their manipulability, the “laws of nature” being of almost fantastic accuracy 
+but of strictly limited scope. I propose to refer to the observation which 
+these examples illustrate as the empirical law of epistemology. Together 
+with the laws of invariance of physical theories, it is an indispensable foun- 
+dation of these theories. Without the laws of invariance the physical theories 
+could have been given no foundation of fact; if the empirical law of episte-
+mology were not correct, we would lack the encouragement and reassurance 
+which are emotional necessities without which the “laws of nature” could 
+not have been successfully explored. Dr. R. G.Sachs, with whom I discussed 
+the empirical law of epistemology, called it an article of faith of the theoretical 
+physicist, and it is surely that. However, what he called our article of faith 
+can be well supported by actual examples-many examples in addition to 
+the three which have been mentioned. 
+-->
+</p><p>
+物理学理論の独自性。前述の観察の経験的性質は、私には自明であるように思われる。それは確かに「思考の必然性」ではなく、それを証明するために、それが無生物界に関する我々の知識のごく一部にしか当てはまらないという事実を指摘する必要はないはずだ。位置の二階微分に関する数学的に単純な式の存在が自明であると信じるのは、位置そのものや速度に関する同様の式が存在しないという不合理な考えである。それゆえ、認識論の経験法則に含まれる素晴らしい賜物が、いかに容易に当然のこととされてきたかは驚くべきことである。前述のように、人間の心が1000通りの結論を導き出し、なおかつ「正しい」ままでいられる能力も、同様の賜物である。
+<!--
+The Uniqueness of the Theories of Physics. The empirical nature of the 
+preceding observation seems to me to be self-evident. It surely is not a 
+“necessity of thought” and it should not be necessary, in order to prove 
+this, to point to the fact that it applies only to a very small part of our 
+knowledge of the inanimate world. It is absurd to believe that the existence 
+of mathematically simple expressions for the second derivative of the 
+position is self-evident, when no similar expressions for the position itself 
+or for the velocity exist. It is therefore surprising how readily the wonderful 
+gift contained in the empirical law of epistemology was taken for granted. 
+The ability of the human mind to form a string of 1000 conclusions and still 
+remain “right”, which was mentioned before, is a similar gift. 
+-->
+</p><p>
+あらゆる経験法則には、その限界が分からないという不安を掻き立てる性質があります。私たちは、周囲の世界の出来事には、数学的概念を用いて驚くほど正確に定式化できる規則性があることを見てきました。一方で、正確な規則性の存在を信じられない世界の側面もあります。私たちはこれを初期条件と呼びます。ここで問題となるのは、様々な規則性、つまりこれから発見される様々な自然法則が、一つの一貫した単位へと融合するのか、あるいは少なくとも漸近的にそのような融合に近づくのかということです。あるいは、互いに全く共通点のない自然法則が常に存在する可能性もあります。現在、例えば遺伝法則や物理法則がこれに当てはまります。自然法則の中には、その含意において互いに矛盾するものもあるかもしれませんが、それぞれの法則がそれぞれの領域において十分に説得力を持つため、どれかを放棄する気にはなれない、という可能性さえあります。私たちはそのような状況に甘んじてしまうか、あるいは様々な理論間の対立を解明することへの関心が薄れてしまうかもしれません。自然の様々な側面に基づいて形成された小さな絵が、一つの単位へと一貫して融合した「究極の真実」への興味を失ってしまうかもしれません。
+<!--
+Every empirical law has the disquieting quality that one does not 
+know its limitations. We have seen that there are regularities in the events 
+in the world around us which can be formulated in terms of mathematical 
+concepts with an uncanny accuracy. There are, on the other hand, aspects 
+of the world concerning which we do not believe in the existence of any 
+accurate regularities. We call these initial conditions. The question which 
+presents itself is whether the different regularities, that is the various laws 
+of nature which will be discovered, will fuse into a single consistent unit, 
+or at least asymptotically approach such a fusion. Alternately, it is possible 
+that there always willbe some laws of nature which have nothing in common 
+with each other. At present, this is true, for instance, of the laws of heredity 
+and of physics. It is even possible that some of the laws of nature will be in 
+conflict with each other in their implications, but each convincing enough 
+in its own domain so that we may not be willing to abandon any of them. We 
+may resign ourselves to such a state of affairs or our interest in clearing up 
+the conflict between the various theories may fade out. We may lose 
+interest in the “ultimate truth”, that is in a picture which is a consistent 
+fusion into a single unit of the little pictures, formed on the various aspects 
+of nature. 
+-->
+</p><p>
+例を挙げて代替案を説明すると分かりやすいかもしれません。物理学には現在、非常に強力で興味深い2つの理論があります。量子現象の理論と相対性理論です。これら2つの理論は、互いに排他的な現象群に根ざしています。相対性理論は、星などのマクロな物体に適用されます。同時発生、つまり究極的には衝突の現象は、相対性理論における原始的な事象であり、時空における点を定義します。少なくとも、衝突する粒子が無限に小さい場合は、点を定義します。量子論はミクロな世界に根ざしており、その観点からすると、同時発生、つまり衝突は、たとえ空間的な広がりを持たない粒子間で起こったとしても、原始的なものではなく、時空において明確に孤立したものでもありません。2つの理論は、それぞれ4次元リーマン空間と無限次元ヒルベルト空間という異なる数学的概念に基づいています。これまでのところ、二つの理論は統合できていない。つまり、両方の理論を近似する数学的定式は存在しない。すべての物理学者は、二つの理論の統合は本質的に可能であり、いずれ実現するだろうと信じている。しかしながら、二つの理論の統合が見出せないと考えることも可能である。この例は、前述の統合と対立という二つの可能性を示している。どちらも考え得る。
+<!--
+It may be useful to illustrate the alternatives by an example. We now 
+have, in physics, two theories of great power and interest: the theory of 
+quantum phenomena and the theory of relativity. These two theories have 
+their roots in mutually exclusive groups of phenomena. Relativity theory 
+applies to macroscopic bodies, such as stars. The event of coincidence, that 
+is in ultimate analysis of collision, is the primitive event in the theory of 
+relativity and defines a point in space-time, or at least would define a point 
+if the colliding particles were infinitely small. Quantum theory has its roots 
+in the microscopic world and, from its point of view, the event of coincidence, 
+or of collision, even if it takes place between particles of no spatial extent, is 
+not primitive and not at all sharply isolated in space-time. The two theories 
+operate with different mathematical concepts-the four dimensional Rie- 
+mann space and the infinite dimensional Hilbert space, respectively. So 
+far, the two theories couldnot be united, that is, no mathematical formulation 
+exists to which both of these theories are approximations. All physicists 
+believe that a union of the two theories is inherently possible and that we 
+shall find it. Nevertheless, it is possible also to imagine that no union of the 
+two theories can be found. This example illustrates the two possibilities, 
+of union and of conflict, mentioned before, both of which are conceivable. 
+-->
+</p><p>
+最終的にどのような選択肢が期待できるかを知るために、私たちは実際よりも少しだけ無知なふりをし、実際に持っているよりも低い知識レベルに身を置くことができる。もし私たちがこの低い知性レベルで理論の融合を見出すことができれば、私たちの実際の知性レベルにおいても理論の融合を見出すことができると確信を持って期待できる。一方、もし私たちがいくらか低い知識レベルで互いに矛盾する理論に到達したとしても、対立する理論が永続する可能性も排除できない。知識と創意工夫のレベルは連続変数であり、この連続変数の比較的小さな変化が、到達可能な世界の像を矛盾から一貫性へと変化させることはまずない。<sup>11</sup>
+<!--
+In order to obtain an indication as to which alternative to expect ulti- 
+mately, we can pretend to be a little more ignorant than we are and place 
+ourselves at a lower level of knowledge than we actually possess. If we can 
+find a fusion of our theories on this lower level of intelligence, we can con-
+fidently expect that we will find a fusion of our theories also at our real 
+level of intelligence. On the other hand, if we would arrive at mutually 
+contradictory theories at a somewhat lower level of knowledge, the pos-
+sibility of the permanence of conflicting theories cannot be excluded for 
+ourselves either. The level of knowledge and ingenuity is a continuous 
+variable and it is unlikely that a relatively small variation of this continuous 
+variable changes the attainable picture of the world from inconsistent to 
+consistent .ll 
+-->
+</p>
+<p class="margin-large">
+<sup>11</sup>
+この一節は、多大な躊躇の末に執筆された。筆者は、認識論的な議論においては、人間の知能水準が絶対的な尺度において特異な位置を占めるという理想化を放棄することが有益であると確信している。場合によっては、他の種の知能水準で達成可能な到達点について検討することさえ有益かもしれない。しかしながら、筆者は、本文中で示唆されている思考の方向性があまりにも簡潔であり、十分な批判的評価を受けていないため、信頼できるものではないことも認識している。
+<!--
+　This passage was written after a great deal of hesitation. The writer is convinced that 
+it is useful, in epistemological discussions, to abandon the idealization that the level of human 
+intelligence has a singular position on an absolute scale. In some cases it may even be useful to 
+consider the attainment which is possible at the level of the intelligence of some other species. 
+However, the writer also realizes that his thinking along the lines indicated in the text was too 
+brief and not subject to sufficient critical appraisal to be reliable. 
+-->
+</p><p>
+この観点から考えると、私たちが誤りだと知っている理論の中に、驚くほど正確な結果を与えるものがあるという事実は、不利な要因です。もし私たちの知識がもう少し少なければ、これらの「誤った」理論が説明する現象の集合は、これらの理論を「証明」するのに十分な大きさであるように思われるでしょう。しかしながら、これらの理論が「誤り」であると私たちがみなすのは、究極的には、より包括的な概念と両立しないからであり、もしそのような誤った理論が十分に多く発見されれば、それらは互いに矛盾することが判明するに違いありません。同様に、私たちにとって十分に多いと思われる数の数値的一致によって「証明」されたと私たちが考えている理論が、私たちの発見手段を超えた、より包括的な可能性のある理論と矛盾するがゆえに誤りである可能性もあるのです。もしこれが真実なら、理論の数がある一定数を超え、十分な数の現象群をカバーするようになると、理論間の衝突が必然的に生じることになる。前述の理論物理学者の信条とは対照的に、これは理論家にとっての悪夢である。
+<!--
+Considered from this point of view, the fact that some of the theories 
+which we know to be false give such amazingly accurake results, is an adverse 
+factor. Had we somewhat less knowledge, the group of phenomena which 
+these “false” theories explain, would appear to us to be large enough to 
+"prove” these theories. However, these theories are considered to be 
+“false” by us just for the reason that they are, in ultimate analysis, incom
+patible with more encompassing pictures and, if sufficiently many such 
+false theories are discovered, they are bound to prove also to be in conflict 
+with each other. Similarly, it is possible that the theories, which we consider 
+to be “proved” by a number of numerical agreements which appears to 
+be large enough for us, are false because they are in conflict with a possible 
+more encompassing theory which is beyond our means of discovery. If 
+this were true, we would have to expect conflicts between our theories as 
+soon as their number grows beyond a certain point and as soon as they cover a sufficiently large number of groups of phenomena. In contrast to the 
+article of faith of the theoretical physicist mentioned before, this is the 
+nightmare of the theorist. 
+-->
+</p><p>
+いくつか「誤った」理論の例を考えてみましょう。これらの理論は、その誤りゆえに、一連の現象を驚くほど正確に記述しています。ある程度の善意があれば、これらの例が提供する証拠のいくつかは却下できます。ボーアの初期の先駆的な原子論の成功は常に限定的なものであり、プトレマイオスの周転円についても同様です。現在の私たちの視点は、これらのより原始的な理論が記述できるすべての現象を正確に記述します。金属、半導体、絶縁体の多くの、あるいはほとんどすべての特性について驚くほど正確な描写を与える、いわゆる自由電子理論については、もはや同じことは当てはまりません。特に、この理論は、「真の理論」に基づいては決して正しく理解されなかった事実、すなわち絶縁体の電気に対する比抵抗が金属の10の6倍にもなるという事実を説明します。実際、自由電子理論が無限大の抵抗を予測する条件下において、抵抗が無限大ではないことを示す実験的証拠は存在しない。しかしながら、我々は自由電子理論が粗雑な近似であり、固体に関するあらゆる現象の記述において、より正確な概念に置き換えるべきだと確信している。
+<!--
+Let us consider a few examples of “false” theories which give, in view 
+of their falseness, alarmingly accurate descriptions of groups of phenomena. 
+With some goodwill, one can dismiss some of the evidence which these 
+examples provide. The success of Bohr’s early and pioneering ideas on the 
+atom was always a rather narrow one and the same applies to Ptolemy’s 
+epicycles. Our present vantage point gives an accurate description of all 
+phenomena which these more primitive theories can describe. The same is 
+not true any more of the so-called free-electron theory which gives a marvel-
+lously accurate picture of many, if not most, properties of metals, semi-
+conductors and insulators, In particular, it explains the fact, never properly 
+understood on the basis of the “real theory”, that insulators show a specific 
+resistance to electricity which may be loz6times greater than that of metals. 
+In fact, there is no experimental evidence to show that the resistance is not 
+infinite under the conditions under which the free-electron theory would 
+lead us to expect an infinite resistance. Nevertheless, we are convinced that 
+the free-electron theory is a crude approximation which should be replaced, 
+in the description of all phenomena concerning solids, by a more accurate 
+picture. 
+-->
+</p><p>
+我々の実際の視点から見れば、自由電子理論が提示する状況は苛立たしいものではあるものの、我々にとって克服できないような矛盾を予感させるものではないだろう。自由電子理論は、理論と実験の数値的な一致を理論の正しさの証拠としてどれほど信頼すべきかという疑問を提起する。我々はこうした疑問には慣れている。
+<!--
+If viewed from our real vantage point, the situation presented by the 
+free-electron theory is irritating but is not likely to forebode any inconsist- 
+encies which are unsurmountable for us. The free-electron theory raises 
+doubts as to how much we should trust numerical agreement between 
+theory and experiment as evidence for the correctness of the theory. We are 
+used to such doubts. 
+-->
+</p><p>
+もしいつか、意識現象、あるいは生物学の理論が、無生物界に関する現在の理論と同じくらい首尾一貫していて説得力のあるものを確立できたとしたら、はるかに困難で混乱した状況が生じるでしょう。メンデルの遺伝の法則とその後の遺伝子に関する研究は、生物学に関する限り、そのような理論の始まりとなるかもしれません。さらに、そのような理論と物理学の一般的な原理との間に矛盾があることを示す抽象的な議論が見つかる可能性も十分にあります。その議論は非常に抽象的な性質のものとなり、どちらかの理論を支持するために実験によって矛盾を解決することが不可能になるかもしれません。そのような状況は、私たちの理論への信仰、そして私たちが形成する概念の現実性に対する信念に大きな負担をかけるでしょう。それは、私が「究極の真実」と呼ぶものを求める私たちの探求において、深い挫折感を与えるでしょう。そのような状況が考えられる理由は、根本的に、私たちの理論がなぜそれほどうまく機能するのかを私たちが知らないからです。したがって、理論の正確さが、その真実性と一貫性を証明するとは限らないのです。実際、現在の遺伝法則と物理法則に照らし合わせると、上で述べた状況に似たものが存在するというのが筆者の信念である。
+<!--
+A much more difficult and confusing situation would arise if we could, 
+some day, establish a theory of the phenomena of consciousness, or of biology, 
+which would be as coherent and convincing as our present theories of the in- 
+animate world. Mendel’s laws of inheritance and the subsequent work on 
+genes may well form the beginning of such a theory as far as biology is 
+concerned. Furthermore, it is quite possible that an abstract argument can 
+be found which shows that there is a conflict between such a theory and the 
+accepted principles of physics. The argument could be of such abstract 
+nature that it might not be possible to resolve the conflict, in favor of one 
+or of the other theory, by an experiment. Such a situation would put a 
+heavy strain on our faith in our theories and on our belief in the reality of 
+the concepts which we form. It would give us a deep sense of frustration 
+in our search for what I called the “ultimate truth”. The reason that such 
+a situation is conceivable is that, fundamentally, we do not know why our 
+theories work so well. Hence their accuracy may not prove their truth and 
+consistency. Indeed, it is this writer’s belief that something rather akin ta 
+the situation which was described above exists if the present laws of heredity 
+and of physics are confronted. 
+-->
+</p><p>
+最後に、より明るい話題で締めくくりたいと思います。物理法則を定式化するのに数学という言語が適切であるという奇跡は、私たちが理解することも、またそれに値することもない、素晴らしい賜物です。私たちはこの賜物に感謝し、それが将来の研究においても有効であり続けることを、そして、良くも悪くも、私たちを喜ばせ、そしておそらくは困惑させることさえも、幅広い学問の分野に広がっていくことを願うべきです。
+<!--
+Let me end on a more cheerful note. The miracle of the appropriate- 
+ness of the language of mathematics for the formulation of the laws of 
+physics is a wonderful gift which we neither understand nor deserve. We 
+should be grateful for it and hope that it will remain valid in future research 
+and that it will extend, for better or for worse, to our pleasure even though 
+perhaps also to our bafflement, to wide branches of learning. 
+-->
+</p><p>
+筆者はここに、長年にわたり認識論の諸問題に関する筆者の思考に深い影響を与えたM.ポラニー博士、そして筆者の明快さの達成に大きく貢献したV.バーグマン氏への感謝の意を表したい。また、本稿を査読し、C.S.パースの論文に筆者の注意を向けさせてくれたA.シモニー氏にも深く感謝する。
+<!--
+The writer wishes to record here his indebtedness to Dr. M. Polanyi 
+who, many years ago, deeply influenced his thinking on problems of episte- 
+mology, and to V. Bargmann whose friendly criticism was material in 
+achieving whatever clarity was achieved. He is also greatly indebted to 
+
+A. Shimony for reviewing the present article and calling his attention to 
+C. S. Peirce’s papers. 
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>Bibliography </h2>
+-->
+<p>
+<div class="styleRef">
+<ul>
+<li>[l] Schr&ouml;dinger, E., uber Indeterlninismus in der Physik, J. A.. Barth, Leipzig, 1932; also 
+Dubislav, W., Naturphilosophie. Junker und Diinnhaupt, Berlin, 1933, Chap. 4. 
+</li><br><li>[2] Wiper, E. P., Invariance in Physical theory, Proc. Amer. Philos. Soc., Vol. 93, 1949. 
+pp. 521-526. 
+</li><br><li>[3] Wigner, E. P., The limits of science, Proc. Amer. Philos. Soc., Vol. 94, 1950, pp. 422 also 
+Margenau, H., The Nature of Physical Realisty, McGraw-Hill, New York, 1950, 
+Chap. 8. 
+</li><br><li>[4] Dirac, P. A. M., Quantum Mechanics, 3rd Edit., Clarendon Press, Oxford, 1947. 
+</li><br><li>[5] von Neumann. J., Mathematische Grundlagen der Quantenmechanik, Springer, Berlin, 1932. 
+English translation, Princeton Univ. Press, 1955. 
+</li><br><li>[6] Born, M., and Jordan, P., On quantum mechanics, Zeits. f. Physik, No. 34, 1925, pp. 858-
+888. Born, M., Heisenberg, W., and Jordan, P., On quantum mechanics, Part II, 
+Zeits. f. Physik, No. 35, 1926, pp. 557-615. (The quoted sentence occurs in the 
+latter article, page 558.) 
+</li>
+</ul>
+</div>
+</p>
+    </body>
+</html>
