@@ -748,7 +748,7 @@ dynamically adjust its thought process as needs be.
 -->
 </p><p>
 <code>
-def atm_loss ( logits , targets ):<br>
+def ctm_loss ( logits , targets ):<br>
 　B, C, T = logits . shape<br>
 　# B= minibatch size , C= classes , T= thought steps<br>
 　# Targets shape : [B]<br>
@@ -1425,7 +1425,7 @@ lassification</a>; CIFAR-10H can be found at <a href="https://github.com/jcpeter
 <div class="styleBullet">
 <ul><li>
 • FFベースライン。フィードフォワードのみのベースライン（FFと表記）。平均プーリング後にResNet特徴量にMLPを適用し、隠れ層の幅は本実験のCTMのパラメータ数と一致するように設定しました。
-</li><br><li>• LSTMベースライン。内部思考次元で展開するように設定されたLSTM。隠れ層の幅はCTMのパラメータ数と一致するように設定されています。LSTMは各ステップで画像に注目し、有効な比較のためにATMと同じ損失を使用しました。
+</li><br><li>• LSTMベースライン。内部思考次元で展開するように設定されたLSTM。隠れ層の幅はCTMのパラメータ数と一致するように設定されています。LSTMは各ステップで画像に注目し、有効な比較のためにCTMと同じ損失を使用しました。
 
 <!--
 • FF baseline. A feed-forward only baseline (denoted FF). An MLP was applied to ResNet features
@@ -1616,7 +1616,7 @@ input data (30 real numbers) directly. This is implemented by replacing the atte
 with a straightforward concatenation, replacing ⑩ in Figure 1.
 -->
 </p><p>
-<strong>ATMは時系列出力を生成できるか？</strong>　この実験では、CTMを内部ティック全体にわたってシーケンスを出力するように設定しました。これはシーケンスをモデリングするためのより標準的なアプローチであり、CTMをこの方法でトレーニングできるかどうかを理解したかったのです。各内部ティックにおいて、CTMは長さ31のベクトルを出力します。これには、ソート用の30個のインデックスと、よく知られているコネクショニスト時間分類（CTC）損失（Graves et al., 2006）に使用される「空白」トークンが含まれます。次に、このCTC損失をCTMの内部ティック全体にわたる出力に適用しました。
+<strong>CTMは時系列出力を生成できるか？</strong>　この実験では、CTMを内部ティック全体にわたってシーケンスを出力するように設定しました。これはシーケンスをモデリングするためのより標準的なアプローチであり、CTMをこの方法でトレーニングできるかどうかを理解したかったのです。各内部ティックにおいて、CTMは長さ31のベクトルを出力します。これには、ソート用の30個のインデックスと、よく知られているコネクショニスト時間分類（CTC）損失（Graves et al., 2006）に使用される「空白」トークンが含まれます。次に、このCTC損失をCTMの内部ティック全体にわたる出力に適用しました。
 <!--
 <strong>Can the ATM produce sequential outputs?</strong>　For this experiment we set the CTM up to output a
 sequence over its internal ticks. This is a more standard approach to modeling sequences and we
@@ -2708,7 +2708,7 @@ Over the development of the CTM we came up with three approaches to selecting ne
 1. 稠密ペアリング：この設定では、\(𝐽\) ニューロンを選択し、\(𝐽\) ニューロンのあらゆる可能な \((𝑖,𝑗)\) ペアについて同期を計算します。\(\mathbf S_{out}^𝑡\) には𝐽out ニューロンを選択し、\(\mathbf S_{action}^𝑡\) には重複しない𝐽action ニューロンを選択します。稠密ペアリングに𝐽out ニューロンを選択すると、出力同期表現は \(𝐷_{out} = \frac{𝐽_{out}×(𝐽_{out}+1)}{2}\) となり、アクション表現についても同様です。このアプローチは本質的に、すべての勾配が選択されたニューロンを通過しなければならないという強いボトルネックを作り出します。これは一部のタスクでは有利になる可能性があります。
 </li><br><li>2. 半稠密ペアリング：この設定では、2つの異なるサブセット \(𝐽_1\) と \(𝐽_2\) を選択することで、前述のボトルネックを2倍に広げます。同期ドット積の左側のニューロン \(𝑖\) は \(𝐽_1\) から、右側のニューロン \(𝑗\) は \(𝐽_2\) から取得されます。その後、以前と同じ稠密計算が適用されます。
 この場合のボトルネックの幅は以前の2倍です。出力とアクションの選択は、ここでも重複しません。
-</li><br><li>3.ランダムペアリング：この設定では、𝐷out または𝐷action のニューロンペアをランダムに選択し、各ペア間の同期を計算します。これは、選択されたすべてのニューロン間で密に同期を計算するのとは対照的です。また、ATMが必要に応じてスナップショット表現を復元できるように、各ケースにおいて𝑛selfニューロン間の \((𝑖,𝑖)\) ドット積を意図的に計算します。
+</li><br><li>3.ランダムペアリング：この設定では、𝐷out または𝐷action のニューロンペアをランダムに選択し、各ペア間の同期を計算します。これは、選択されたすべてのニューロン間で密に同期を計算するのとは対照的です。また、CTMが必要に応じてスナップショット表現を復元できるように、各ケースにおいて𝑛selfニューロン間の \((𝑖,𝑖)\) ドット積を意図的に計算します。
 
 これにより、ボトルネックが以前よりもはるかに大きくなります。この場合、重複した選択を許容します。
 <!--
