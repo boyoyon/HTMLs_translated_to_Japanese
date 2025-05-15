@@ -1,0 +1,1612 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>AlphaEvolve</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 50px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+<h1>AlphaEvolve: A coding agent for scientifc and algorithmic discovery </h1>
+Alpha Evolve: 科学的およびアルゴリズム的発見のためのコーディングエージェント<br><br>
+Alexander Novikov*, Ngân Vu˜*, Marvin Eisenberger*, Emilien Dupont*, Po-Sen Huang*, Adam Zsolt Wagner*, Sergey Shirobokov*, Borislav Kozlovskii*, Francisco J. R. Ruiz, Abbas Mehrabian, M. Pawan Kumar, Abigail See, Swarat Chaudhuri, George Holland, Alex Davies, Sebastian Nowozin, Pushmeet Kohli and Matej Balog* Google DeepMind1 
+<p>
+このホワイトペーパーでは、未解決の科学的問題への取り組みや計算インフラストラクチャの重要な部分の最適化など、非常に困難なタスクにおける最先端の LLM の機能を大幅に強化する進化的コーディング エージェントである AlphaEvolve を紹介します。AlphaEvolve は、コードに直接変更を加えることでアルゴリズムを改善する LLM の自律パイプラインを調整します。進化的アプローチを使用して、1 人以上の評価者から継続的にフィードバックを受け取りながら、AlphaEvolve はアルゴリズムを反復的に改善し、科学的および実用的な新たな発見につながる可能性があります。私たちはこのアプローチをいくつかの重要な計算問題に適用することで、その幅広い適用可能性を実証しています。Google の大規模計算スタックの重要なコンポーネントの最適化に適用されたとき、AlphaEvolve はデータセンター向けのより効率的なスケジューリング アルゴリズムを開発し、ハードウェア アクセラレータの回路設計において機能的に同等の簡素化を見つけ、AlphaEvolve 自体を支える LLM のトレーニングを加速しました。さらに、AlphaEvolveは、数学とコンピュータサイエンスの幅広い問題において最先端の解法を凌駕する、新しく証明可能な正解アルゴリズムを発見し、従来の自動発見手法の範囲を大幅に拡大しました（Romera-Paredes et al., 2023）。特に、AlphaEvolveは、2つの4×4複素数値行列を48回のスカラー乗算で乗算する手順を見つける探索アルゴリズムを開発しました。これは、この設定において、56年ぶりにStrassenのアルゴリズムを大幅に改善したことになります。私たちは、AlphaEvolveやそれに似たコーディングエージェントが、科学と計算の多くの分野における問題解決の改善に大きな影響を与えることができると信じています。
+<!--
+In this white paper, we present AlphaEvolve, an evolutionary coding agent that substantially enhances capabilities of state-of-the-art LLMs on highly challenging tasks such as tackling open scientifc problems or optimizing critical pieces of computational infrastructure. AlphaEvolve orchestrates an autonomous pipeline of LLMs, whose task is to improve an algorithm by making direct changes to the code. Using an evolutionary approach, continuously receiving feedback from one or more evaluators, AlphaEvolve iteratively improves the algorithm, potentially leading to new scientifc and practical discoveries. We demonstrate the broad applicability of this approach by applying it to a number of important com- putational problems. When applied to optimizing critical components of large-scale computational stacks at Google, AlphaEvolve developed a more efcient scheduling algorithm for data centers, found a functionally equivalent simplifcation in the circuit design of hardware accelerators, and acceler- ated the training of the LLM underpinning AlphaEvolve itself. Furthermore, AlphaEvolve discovered novel, provably correct algorithms that surpass state-of-the-art solutions on a spectrum of problems in mathematics and computer science, signifcantly expanding the scope of prior automated discovery methods (Romera-Paredes et al.,  2023 ). Notably, AlphaEvolve developed a search algorithm that found a procedure to multiply two 4 × 4 complex-valued matrices using 48 scalar multiplications; ofering the frst improvement, after 56 years, over Strassen’s algorithm in this setting. We believe AlphaEvolve and coding agents like it can have a signifcant impact in improving solutions of problems across many areas of science and computation. 
+-->
+</p>
+
+<h2>1. はじめに</h2>
+<!--
+<h2>1.  Introduction </h2>
+-->
+<p>
+
+新たな科学的発見や商業的に価値のあるアルゴリズムの開発など、価値の高い新しい知識の発見には、通常、アイデア創出、探索、見込みのない仮説の遡及、実験、検証という長期にわたるプロセスが必要です。近年、大規模言語モデル（LLM）を用いてこのプロセスの重要な部分を自動化することに大きな関心が寄せられています。ここでの成功への期待は、テスト時の計算を用いて能力を強化できる最近のLLMの驚異的な能力[31, 73]と、言語生成とアクションを組み合わせたエージェントの台頭[85, 111]によって牽引されています。これらの進歩は、確立された様々なベンチマークにわたってパフォーマンスを向上させ、仮説生成[33]や実験設計[7, 42]などの発見指向のタスクを加速しました。しかし、LLMパイプラインを全く新しい科学的または実用的な発見にまで至らせることは、依然として困難です。
+<!--
+Discovering new high-value knowledge, such as making a novel scientifc discovery or devel- oping a commercially valuable algorithm, generally requires a prolonged process of ideation, exploration, backtracking on unpromising hypotheses, experimentation, and validation. There has been much recent interest in using large language models (LLMs) to automate signifcant parts of this process. Hopes of success here are driven by the breathtaking power of recent LLMs [31, 73], which can enhance their capabilities using test-time compute, and the rise of agents that combine language generation and action [85, 111]. These advances have improved performance across a range of established benchmarks and accelerated discovery- oriented tasks like hypothesis generation [33] and experiment design [7, 42]. However, getting LLM pipelines all the way to making entirely new scientifc or practical discoveries remains challenging. 
+-->
+
+</p><p>
+
+このホワイトペーパーでは、進化的計算とLLMベースのコード生成を組み合わせてこの課題に取り組む、LLMコード超最適化エージェント「AlphaEvolve」を紹介します。AlphaEvolveは、発見候補を自動的に評価できる幅広い科学的および工学的発見問題に焦点を当てています。AlphaEvolveは、発見候補（新しい数学的オブジェクトや実用的なヒューリスティックなど）をアルゴリズムとして表現し、一連のLLMを使用してそのようなアルゴリズムのプールを生成、評価、進化させます。LLM指向の進化プロセスは、コード実行と自動評価に基づいています。この評価メカニズムにより、AlphaEvolveはベースとなるLLM [43]からの誤った提案を回避することができます。
+<!--
+In this white paper, we present an LLM code superoptimization agent, called AlphaEvolve, that takes on this challenge using a combination of evolutionary computation and LLM-based code generation. AlphaEvolve focuses on the broad spectrum of scientifc and engineering discovery problems in which the candidates of discovery can be automatically evaluated. It represents the candidates (for example, new mathematical objects or practical heuristics) as algorithms and uses a set of LLMs to generate, critique, and evolve a pool of such algorithms. The LLM-directed evolution process is grounded using code execution and automatic evalua- tion. This evaluation mechanism allows AlphaEvolve to avoid any incorrect suggestions from 
+the base LLM [43]. 
+-->
+</p><p>
+
+AlphaEvolveにおける進化プロセスは、現代のLLMのフィードバック応答能力を活用し、構文と機能において初期の候補プールとは大きく異なる候補の発見を可能にする。これは、新しいアルゴリズムの発見が本質的な目標である問題だけでなく、関心のある解がアルゴリズムそのものではなく、その解がどのように構築または発見されるかをアルゴリズムが記述できる幅広い問題にも適用できる。後者の場合、アルゴリズムの発見は単なる手段的な目標に過ぎないが、解を直接探索するよりも驚くほど効果的な戦略であることが判明している[80]。
+<!--
+The evolutionary process in AlphaEvolve leverages modern LLMs’ ability to respond to feedback, enabling the discovery of candidates that are substantially diferent from the initial candidate pool in syntax and function. It is applicable both to problems where discovering new algorithms is the intrinsic goal, as well as to the broad range of problems where the solution of interest is not an algorithm itself but an algorithm can describe how that solution is to be constructed or found. In the latter case, discovering the algorithm is only an instrumental goal, but it turns out to be a surprisingly efective strategy compared to searching for the 
+solution directly [80]. 
+-->
+
+</p><p>
+
+進化的手法とコーディングLLMを組み合わせるというアイデアは、これまで様々な専門的な設定で検討されてきました。特に、AlphaEvolveはFunSearch [80]（表1を参照）の大幅な強化版です。FunSearchは、LLM誘導進化を用いてヒューリスティックを発見し、新しい数学的オブジェクトを構築したり、オンラインアルゴリズムの動作を駆動したりしていました。また、関連するアプローチは、シミュレーションロボットのポリシー発見[55]、シンボリック回帰[34, 86]、組み合わせ最適化のためのヒューリスティック関数の合成[61]などのタスクで使用されています。これらのシステムとは対照的に、AlphaEvolveは最先端の（SOTA）LLMを活用して、複数の関数とコンポーネントにまたがる複雑なアルゴリズムを実装する大規模なコードを進化させます。その結果、規模と一般性において先行システムを大幅に上回ることができます。
+<!--
+The idea of combining evolutionary methods with coding LLMs has been previously ex- plored in various specialized settings. In particular, AlphaEvolve is a substantial enhancement of FunSearch [80] (see  Table 1 ), which used LLM-guided evolution to discover heuristics in order to construct novel mathematical objects or to drive the operation of online algorithms. Also, related approaches have been used in tasks such as discovering policies for simulated robots [55], symbolic regression [34, 86], and the synthesis of heuristic functions for combi- natorial optimization [61]. In contrast to these systems, AlphaEvolve leverages state-of-the-art (SOTA) LLMs to evolve large pieces of code that implement complex algorithms spanning multiple functions and components. As a result, it is able to go signifcantly beyond its 
+predecessors in scale and generality. 
+-->
+
+</p>
+<center><img src="images/table1.png"></center>
+<p>
+表 1 | AlphaEvolve と以前のエージェントの機能と一般的な動作。
+<!--
+Table 1 | Capabilities and typical behaviours of AlphaEvolve and our previous agent. 
+-->
+</p><p>
+
+自動評価指標の使用はAlphaEvolveにとって大きな利点となる一方で、同時に制約も伴います。特に、手動による実験を必要とするタスクはAlphaEvolveの適用範囲外となります。数学、コンピュータサイエンス、システム最適化といった分野では、自動評価指標の使用が一般的に許容されるため、AlphaEvolveにおける私たちの取り組みはこれらの分野に重点を置いています。具体的には、アルゴリズム設計と構成数学におけるいくつかのよく知られた未解決問題、そしてGoogleの大規模計算スタックにおける重要なレイヤーの最適化の進展にAlphaEvolveを活用しています。
+<!--
+While the use of an automated evaluation metric ofers AlphaEvolve a key advantage, it is also a limitation—in particular, it puts tasks that require manual experimentation out of our scope. Because problems in mathematics, computer science, and system optimization typically permit automated evaluation metrics, our eforts on AlphaEvolve focus on these domains. Specifcally, we use AlphaEvolve to make progress on several well-known open problems in algorithm design and constructive mathematics, as well as the optimization of critical layers in the large-scale computation stacks at Google. 
+-->
+
+</p><p>
+
+アルゴリズム設計においては、行列乗算のための高速アルゴリズムを発見するという根本的な問題を考慮します。この問題には、以前より特化したAIアプローチが適用されてきました[25]。汎用性が高いにもかかわらず、AlphaEvolveは[25]を凌駕し、14種類の行列乗算アルゴリズムのSOTAを改善しました。特に、4×4行列の場合、AlphaEvolveはStrassen (1969)のアルゴリズムを改良し、4×4複素数値行列を48回の乗算で乗算するアルゴリズムを発見しました<sup>2</sup>
+<!--
+Within algorithm design, we consider the fundamental problem of discovering fast algorithms for multiplying matrices, a problem to which a more specialized AI approach had been applied previously [25]. Despite being general-purpose, AlphaEvolve goes beyond [25], improving the SOTA for 14 matrix multiplication algorithms; notably, for 4 × 4 matrices, AlphaEvolve improves  Strassen  ( 1969)’s algorithm by discovering an algorithm using 48 multiplications to multiply 4 × 4 complex-valued matrices.<sup>2</sup> 
+-->
+
+</p><p class="margin-large">
+<sup>2</sup>
+発見されたアルゴリズムとその他の新しい数学的結果は、https://colab.research.google.com/github/google-deepmind/alphaevolve_results/blob/master/mathematical_results.ipyn でご覧いただけます。
+<!--
+These discovered algorithms as well as our other new mathematical results can be found at 
+https: //colab.research.google.com/github/google-deepmind/alphaevolve_results/blob/mast er/mathematical_results.ipyn
+-->
+</p><p>
+
+数学では、与えられた数学的定義に従って、これまで知られているすべての構成よりも優れた特性を持つ構成（オブジェクト）を発見することで進歩できる、幅広い未解決問題を考察します。私たちは、そのような問題の多数（50以上）にAlphaEvolveを適用し、それらの約75％で既知の最良の構成と一致しました（多くの場合、これらの構成は既に最適である可能性があります）。約20％の問題では、AlphaEvolveはSOTAを上回り、新しい、証明可能に優れた構成を発見します。これには、エルデシュ[24]によって設定された最小オーバーラップ問題の改善と、11次元のキッシング数問題[8, 30]の改善された構成が含まれます。
+<!--
+In mathematics, we consider a broad range of open problems on which one can make progress by discovering constructions (objects) with better properties than all previously known constructions, according to given mathematical defnitions. We apply AlphaEvolve to a large number (over 50) of such problems and match the best known constructions on ∼75% of them (in many cases these constructions are likely to already be optimal). On ∼20% of the problems, AlphaEvolve surpasses the SOTA and discovers new, provably better constructions. This includes an improvement on the Minimum Overlap Problem set by Erdős [24] and an improved construction on the Kissing Numbers problem in 11 dimensions [8,  30 ]. 
+-->
+</p><p>
+最後に、Google のコンピューティングスタックの異なるレイヤーにまたがる 4 つのエンジニアリング問題に AlphaEvolve を適用しました。具体的には、Google のクラスタ管理システムのスケジューリングヒューリスティックの発見、LLM のトレーニングに使用される行列乗算カーネルの最適化、TPU 内で使用される演算回路の最適化、そして Transformer におけるアテンションの実行時間の最適化です。これらのコンポーネントは長期間にわたって繰り返し実行されるため、改善点は非常に貴重です。
+<!--
+Finally, we use AlphaEvolve in four engineering problems spanning diferent layers of Google’s compute stack: discovering scheduling heuristics for Google’s cluster management system, optimizing matrix-multiplication kernels used to train LLMs, optimizing arithmetic circuits used within TPUs, and optimizing the runtime of attention in Transformers. Because these components are run repeatedly over a long period of time, any improvements are highly valuable. 
+-->
+</p>
+<h2>2. AlphaEvolve </h2>
+<p>
+
+AlphaEvolveは、LLMへのクエリを含む計算の自律パイプラインをオーケストレーションし、ユーザーが指定したタスクに対応するアルゴリズムを生成するコーディングエージェントです。オーケストレーション手順は、タスクに関連付けられた自動評価指標のスコアを向上させるプログラムを段階的に開発する進化的アルゴリズムです。図1はAlphaEvolveの概要を示し、図2は拡大図を示しています。
+<!--
+AlphaEvolve is a coding agent that orchestrates an autonomous pipeline of computations including queries to LLMs, and produces algorithms that address a user-specifed task. At a high level, the orchestrating procedure is an evolutionary algorithm that gradually develops programs that improve the score on the automated evaluation metrics associated with the task. A high-level overview of AlphaEvolve is shown in  Figure 1, and  Figure 2  gives an expanded view. 
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<center>図 1 | AlphaEvolve の概要</center>
+<!--
+Figure 1 | AlphaEvolve high-level overview. 
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2 | AlphaEvolveの発見プロセスの拡大図。ユーザーは、初期プログラム（進化させるコンポーネントがマークされている）、評価コード、およびオプションの設定を提供します（セクション2.1）。AlphaEvolveは進化ループを開始します。プロンプトサンプラーは、プログラムデータベースのプログラムを使用して、豊富なプロンプトを構築します（セクション2.2）。これらのプロンプトに基づいて、LLMはコード変更（difs）を生成し、それに基づいて新しいプログラムを作成します（セクション2.3）。その後、評価者によってスコアが付けられ（セクション2.4）、有望な解がプログラムデータベースに登録されます（セクション2.5）。これにより、より優れたプログラムの反復的な発見が促進されます。
+<!--
+Figure 2 | Expanded view of the AlphaEvolve discovery process. The user provides an initial program (with components to evolve marked), evaluation code, and optional confgurations (Section 2.1). AlphaEvolve then initiates an evolutionary loop. The Prompt sampler uses programs from the Program database to construct rich prompts (Section 2.2). Given these prompts, the LLMs generate code modifcations (difs), which are applied to create new programs (Section 2.3). These are then scored by Evaluators (Section 2.4), and promising solutions are registered back into the Program database (Section 2.5), driving the iterative discovery of better and better programs. 
+-->
+</p>
+<h3>2.1. タスクの仕様</h3>
+<!--
+<h3>2.1.  Task specifcation </h3>
+-->
+<p>
+
+評価。AlphaEvolveは機械で評価可能な解を扱う問題を扱うため、ユーザーは生成された解を自動的に評価するメカニズムを提供する必要があります。このメカニズムは、解をスカラー評価指標の集合にマッピングする関数ℎの形をとります。慣例的に、これらの指標は最大化されます。現在の設定では、ℎは通常、evaluateと呼ばれるPython関数として実装され、固定された入出力シグネチャを持ち、スカラーの辞書を返します。
+<!--
+Evaluation. Since AlphaEvolve tackles problems with machine-gradeable solutions, the user must provide a mechanism for automatically assessing generated solutions. This mechanism takes the form of a function ℎ mapping a solution to a set of scalar evaluation metrics. By convention, these metrics are maximized. In our current setup, ℎ is typically implemented as a Python function, called evaluate, with a fxed input/output signature, returning a dictionary of scalars. 
+-->
+</p><p>
+アプリケーションによっては、この関数の実行に1台のデバイスで数秒しかかからない場合もあれば、膨大な計算が必要となる場合もあります。数学の問題の場合、関数ℎは通常非常に単純です。例えば、特定のプロパティを満たす可能な限り最大のグラフを見つけたい場合、関数ℎは進化型コードを呼び出してグラフを生成し、プロパティが成立するかどうかを確認し、グラフのサイズをスコアとして返します。より複雑なケースでは、関数ℎは進化型検索アルゴリズムの実行や、機械学習モデルのトレーニングと評価を伴う場合があります。
+<!--
+Depending on the application, executing this function may take only seconds on a single device or spawn extensive computations. For mathematical problems, the function ℎ is typically very simple. For example, when wishing to fnd largest possible graphs satisfying a given property, ℎ invokes the evolved code to generate a graph, checks whether the property holds, and then simply returns the size of the graph as the score. In more complicated cases, the function ℎ might involve performing an evolved search algorithm, or training and evaluating a machine learning model. 
+-->
+</p><p>
+<strong>API.</strong> 　コードベース全体にわたる複数のコンポーネントの進化をサポートするため、AlphaEvolve は入力 API を公開しています。この API では、コードブロックにシステムによって進化するコードブロックとして注釈を付けることができます。図 3a を参照してください。この設計により、特別なマーカー (# EVOLVE-BLOCK-START および # EVOLVE-BLOCK-END) をコードにコメントとして追加するだけで、最小限の変更で既存のコードベースとの統合が容易になります。
+<!--
+<strong>API.</strong>　To support evolving multiple components across a codebase, AlphaEvolve exposes an input API where blocks of code can be annotated as to-be-evolved-by-the-system; see Figure  3a for an illustration. This design facilitates integrating it with existing codebases while requiring only minimal changes, simply by adding special markers (# EVOLVE-BLOCK-START and # EVOLVE-BLOCK-END) as comments into the code. 
+-->
+</p><p>
+このような進化ブロック内のユーザー提供コードは、AlphaEvolveによって改良される初期ソリューションとして機能し、残りのコードは進化した部分を結び付けるスケルトンを形成し、evaluateから呼び出せるようにします。この初期実装は完全である必要がありますが、例えば適切な型の定数を返す1行の関数で構成されるなど、初歩的なものでも構いません。
+<!--
+Any user-provided code inside such evolution blocks serves as the initial solution to be improved by AlphaEvolve, and the rest of the code forms a skeleton that ties the evolved pieces together, so that they can be invoked from evaluate. While this initial implementation must be complete, it can be rudimentary—for instance, consisting of single-line functions that return constants of the appropriate types. 
+-->
+</p><p>
+<strong>　抽象化を選択する際の柔軟性。</strong> AlphaEvolveは、同じ問題に非常に異なる方法で適用できます。特に、進化したプログラムが最終出力ではなく、解決策を発見するための手段である場合に有効です。たとえば、AlphaEvolveは、生の文字列表現で解決策を進化させたり（古典的な進化アルゴリズムのように）、解決策をゼロから構築する方法を指定する定義済みの形式の関数を進化させたり（[80]で採用されているアプローチ）、固定された計算予算内で解決策を見つけるための特注の検索アルゴリズムを進化させたり、中間解決策と検索アルゴリズムを一緒に共進化させて、各検索アルゴリズムが特定の中間解決策をさらに改善するように特別に調整されるようにすることができます。
+<!--
+<strong>Flexibility in choosing the abstraction.</strong>　AlphaEvolve can be applied to the same problem in very diferent ways—especially when the evolved programs are not the fnal output but a means to discover solutions. For example, AlphaEvolve can evolve the solution in raw string representation (as in classical evolutionary algorithms); evolve a function of a defnite form that specifes how to construct the solution from scratch (the approach taken in [80]); evolve a bespoke search algorithm to fnd the solution within some fxed compute budget; or even co-evolve intermediate solutions and search algorithms together, such that each search algorithm is specifcally tailored to further improve upon a particular intermediate solution. 
+-->
+</p><p>
+問題によって抽象化のレベルが異なると、より効果的に機能することがわかりました。例えば、対称性の高い解を持つ問題では、コンストラクタ関数を進化させる方が有利です。これは、コンストラクタ関数の方が簡潔になる傾向があるためです[80]。一方、非対称な解を持つ問題では、カスタマイズされた探索アルゴリズムを進化させる方が効果的です。
+<!--
+We fnd that diferent levels of abstraction work better for diferent problems. For example, we hypothesize that for problems with highly symmetric solutions it is advantageous to evolve constructor functions as these tend to be more concise [80], whereas for problems with non-symmetric solutions it works better to evolve customized search algorithms. 
+-->
+</p>
+<h3>2.2. プロンプトサンプリング</h3>
+<!--
+<h3>2.2.  Prompt sampling </h3>
+-->
+<p>
+AlphaEvolveはSOTA LLMを活用しているため、様々なカスタマイズをサポートし、主要な進化プロンプトの一部として長いコンテキストを提供します。このプロンプトは、プログラムデータベースから抽出された複数の既知解と、特定の解への変更を提案する方法に関するシステム指示で構成されています。これらの主要な要素に加えて、ユーザーは以下のように様々な方法でプロンプトを自身のニーズに合わせてさらにカスタマイズできます。
+<!--
+As AlphaEvolve leverages SOTA LLMs, it supports various types of customization and providing long contexts as part of the primary evolution prompt. This prompt comprises multiple previously discovered solutions sampled from the program database, as well as system instructions on how to propose changes to a particular solution. Beyond these key ingredients, users can further tailor prompts to their specifc needs in diferent ways, such as the following. 
+-->
+<div class="styleBullet">
+<ul><li>
+• 明示的なコンテキスト：解決する問題に関する詳細。例えば、人間が記述した固定の指示、方程式、コードスニペット、関連文献（例：PDFファイル）など。
+</li><br><li>• 確率的フォーマット：多様性を高めるために人間が提供した代替案を含むテンプレートプレースホルダー。別の設定ファイルで提供される確率分布を使用してインスタンス化されます。
+</li><br><li>• レンダリングされた評価結果：通常、これにはプログラム、そのプログラムの実行結果、およびevaluate関数によって割り当てられたスコアが含まれます。
+</li><br><li>• メタプロンプト進化：LLM自体が追加のプロンプト生成ステップで提案する指示とコンテキスト。ソリューションプログラムに類似した別のデータベースで共進化します。
+<!--
+• Explicit context: details about the problem being solved, such as fxed human-written 
+instructions, equations, code snippets, or relevant literature (e.g., pdf fles). 
+</li><br><li>• Stochastic formatting: template placeholders with human-provided alternatives for 
+increased diversity, instantiated using probability distributions provided in a separate 
+confg fle. 
+</li><br><li>• Rendered evaluation results: usually this will include a program, the result of executing 
+that program, and the scores assigned by the evaluate function. 
+</li><br><li>• Meta prompt evolution: instructions and context suggested by the LLM itself in an 
+additional prompt-generation step, co-evolved in a separate database analogous to the 
+solution programs. 
+-->
+</li></ul></div>
+</p>
+<h3>2.3. 創造的な生成</h3>
+<!--
+<h3>2.3.  Creative generation </h3>
+-->
+<p>
+AlphaEvolveは進化的プロセスを推進するために、SOTA LLMの機能を活用します。SOTA LLMの主な役割は、以前に開発されたソリューションに関する情報を消化し、ソリューションを改善するための新しい多様な方法を提案することです。AlphaEvolveはモデルに依存しませんが、アブレーションにおいては、基盤となるLLMの性能が向上するにつれてAlphaEvolveのパフォーマンスが向上することが観察されています（セクション4を参照）。
+<!--
+To drive the evolutionary procedure, AlphaEvolve leverages the capabilities of SOTA LLMs, whose principal role is to digest information about previously developed solutions and propose new, diverse ways to improve the solutions. Although AlphaEvolve is model-agnostic, in ablations we observe that AlphaEvolve performs increasingly better as the underlying LLM improves (see  Section 4 ). 
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+図3 | AlphaEvolveを教師あり学習パイプラインの進化に適用する例。すべてのスニペットは省略形で示されており、省略記号(...)はスキップされた行を示しています。(a) 進化対象としてマークされたブロックを含むユーザー提供ファイルと、現在のバージョンのコードにスコアを付けるために呼び出すことができる特別なevaluate関数。(b) LLMに提供されるアセンブルされたプロンプトの例。(c) LLMによって生成される出力例。(c)で提案された差分は、プロンプト(b)に表示されている「現在のプログラム」に適用され、結果として得られた修正済みプログラムは評価者に送信されます。評価者は、(a)の評価関数を呼び出して、新しく提案されたプログラムのスコアを取得します。
+<!--
+Figure 3 | Illustrative example of applying AlphaEvolve to evolving a supervised learning pipeline. All snippets are abbreviated, with ellipsis (...) indicating skipped lines. (a) The user-provided fle with blocks marked for evolution, and the special evaluate function that can be invoked to score the current version of the code. (b) Example of an assembled prompt to be provided to the LLMs. (c) Example output generated by the LLM. The proposed difs in (c) will be applied to the "current program" shown in the prompt (b), and the resulting modifed program will then be sent to the evaluators. The evaluators will invoke the evaluate function from (a) in order to obtain the scores of the newly proposed program. 
+-->
+</p><p>
+<strong>出力形式</strong> 　AlphaEvolve が LLM に既存のコード (特に大規模なコードベース内) の変更を要求する場合、変更内容を特定の形式で一連の dif ブロックとして提供するよう要求します。
+<!--
+<strong>Output format.</strong>　When AlphaEvolve asks an LLM to modify existing code, especially within larger codebases, it requests the changes to be provided as a sequence of dif blocks in a specifc format: 
+-->
+</p><p>
+
+<<<<<<< SEARCH 
+# Original code block to be found and replaced ======= 
+# New code block to replace the original >>>>>>> REPLACE 
+
+</p><p>
+ここで、<<<<<<< SEARCH と ======= の間にあるコードは、現在のプログラムバージョンで一致する正確なセグメントです。======= と >>>>>>> REPLACE の間にあるコードは、元のセグメントを置き換える新しいセグメントです。これにより、コードの特定の部分のみを対象的に更新できます。
+<!--
+Here, the code between <<<<<<< SEARCH and ======= is the exact segment to match in the current program version. The code between ======= and >>>>>>> REPLACE is the new segment that will replace the original one. This allows for targeted updates to specifc parts of the code. 
+-->
+</p><p>
+進化するコードが非常に短い場合、または小さな変更よりも完全な書き換えの方が適切な場合は、dif 形式を使用するのではなく、LLM にコード ブロック全体を直接出力するように指示するように AlphaEvolve を構成できます。
+<!--
+In cases where the code being evolved is very short, or when a complete rewrite is more appropriate than a small modifcation, AlphaEvolve can be confgured to instruct the LLM to output the entire code block directly, rather than using the dif format. 
+-->
+</p><p>
+<strong>使用モデル</strong> AlphaEvolveは、大規模な言語モデルのアンサンブルを採用しています。具体的には、Gemini 2.0 FlashとGemini 2.0 Proを組み合わせて使用​​しています。このアンサンブルアプローチにより、計算スループットと生成されるソリューションの品質のバランスをとることができます。レイテンシが低いGemini 2.0 Flashは候補生成速度を向上させ、単位時間あたりに探索されるアイデアの数を増加させます。同時に、より優れた機能を持つGemini 2.0 Proは、進化的探索を大幅に前進させ、ブレークスルーにつながる可能性のある、高品質の提案を随時提供します。この戦略的な組み合わせにより、評価されるアイデアの量を最大化すると同時に、より強力なモデルによってもたらされる大幅な改善の可能性を維持しながら、全体的な発見プロセスを最適化します。
+<!--
+<strong>Models used.</strong>　AlphaEvolve employs an ensemble of large language models. Specifcally, we utilize a combination of Gemini 2.0 Flash and Gemini 2.0 Pro. This ensemble approach allows us to balance computational throughput with the quality of generated solutions. Gemini 2.0 Flash, with its lower latency, enables a higher rate of candidate generation, increasing the number of ideas explored per unit of time. Concurrently, Gemini 2.0 Pro, possessing greater capabilities, provides occasional, higher-quality suggestions that can signifcantly advance the evolutionary search and potentially lead to breakthroughs. This strategic mix optimizes the overall discovery process by maximizing the volume of evaluated ideas while retaining the potential for substantial improvements driven by the more powerful model. 
+-->
+</p>
+<h3>2.4. 評価</h3>
+<!--
+<h3>2.4.  Evaluation </h3>
+-->
+<p>
+AlphaEvolveの進捗状況を追跡し、将来の世代に伝播させるアイデアを選択するために、LLMによって提案された新しいソリューションはそれぞれ自動的に評価されます。原理的には、このプロセスは、生成されたソリューションに対してユーザーが指定した評価関数ℎを実行するだけです。実際には、AlphaEvolveは、この評価をより柔軟かつ効率的にするためのオプションのメカニズムをサポートしています。
+<!--
+To track AlphaEvolve’s progress and to select which ideas to propagate in future generations, each new solution proposed by the LLMs is automatically evaluated. In principle, this process amounts to simply executing the user-provided evaluation function ℎ on the generated solution. In practice, AlphaEvolve supports optional mechanisms to make this evaluation more fexible and more efcient: 
+-->
+<div class="styleBullet">
+<ul><li>
+• 評価カスケード（仮説検定）：ユーザーは難易度が徐々に上昇するテストケースのアンサンブルを指定できます。これにより、新しいソリューションは、それ以前のすべての段階で十分に有望な結果を達成した場合にのみ、次の段階で評価されます。これにより、有望性の低いソリューションをより迅速に排除できます。さらに、新しいソリューションは、メインのテストケースにかけられる前に、まず小規模で評価されるため、欠陥のあるプログラムを早期に排除できます。
+</li><br><li>• LLM生成フィードバック：一部のアプリケーションでは、望ましいソリューションには、ユーザーが指定した評価関数では正確に捉えるのが難しい特定の特性があります。例えば、発見されたプログラムの単純さなどです。これらの特性は、個別のLLM呼び出しを使用して評価し、スコア辞書に追加して進化を制御できます。また、基準が満たされない場合にソリューションを破棄するために使用することもできます。
+</li><br><li>• 並列評価：AlphaEvolveのサンプル効率により、新しい解を評価するのに約100時間の計算時間で済みます。しかし、個々の評価を並列化して実時間処理時間を短縮しない限り、新しい世代の出現速度が低下し、進化アルゴリズムが複数の連続した突然変異を適用する能力が制限される可能性があります。多くのアプリケーションでは、評価は驚くほど並列化されており（例えば、複数のランダム化された初期化から探索アルゴリズムを実行する場合など）、AlphaEvolveは評価クラスターへの非同期呼び出しを通じてこの作業を分散させることができます。
+<!--
+• Evaluation cascade (hypothesis testing): the user can specify ensembles of test cases of 
+increasing difculty, such that new solutions are evaluated on the next stage only if they 
+achieve sufciently promising results in all earlier stages. This helps to prune out less 
+promising solutions more quickly. Moreover, new solutions are initially evaluated on a 
+small scale before being subjected to the main test cases, to flter out faulty programs 
+early. 
+</li><br><li>• LLM-generated feedback: in some applications, desirable solutions have certain charac- 
+teristics that are difcult to capture precisely in the user-provided evaluation function 
+ℎ; for example, simplicity of the discovered program. These properties can be graded 
+using separate LLM calls and added to the dictionary of scores to steer evolution, or 
+they can be used to discard solutions when a criterion is not fulflled. 
+</li><br><li>• Parallelized evaluation: the sample efciency of AlphaEvolve makes it feasible to spend 
+on the order of 100 compute-hours to evaluate any new solution. However, unless 
+individual evaluations are parallelized to reduce their wall-clock duration, this can slow 
+down the rate at which new generations appear, limiting the ability of the evolutionary 
+algorithm to apply several consecutive mutations. In many applications, evaluation is 
+embarrassingly parallel (for example, running a search algorithm from multiple random- 
+ized initializations), allowing AlphaEvolve to distribute this work through asynchronous 
+calls to an evaluation cluster. 
+-->
+</li></ul></div>
+</p><p>
+<strong>複数のスコア。</strong> AlphaEvolve は、ユーザーが指定した複数のスコアの最適化、つまり 1 つまたは複数の評価基準で高いスコアを達成するオブジェクトを進化させることができます。これには、本質的な価値と手段的な価値の両方があります。複数のアプリケーションでは、複数の評価基準に対応するソリューション (またはそれらすべてに同時に強い 1 つのソリューション) の開発に真剣に取り組んでいますが、1 つのメトリックが特に興味深い場合でも、複数のメトリックを最適化すると、単一のターゲット メトリックの結果が改善されることがよくあります。これは、異なる評価基準で優れているプログラムは、多くの場合、明確な構造やロジックを持っているためです。これらの多様で高性能なプログラムの例 (それぞれが異なる「良い」の定義を表す) を言語モデルに提供されるプロンプトに組み込むことで、より多様な候補ソリューションの生成を刺激し、ターゲット メトリックに非常に効果的な新しいアプローチを発見する可能性が高まります。
+<!--
+<strong>Multiple scores.</strong>　AlphaEvolve allows for optimizing multiple user-provided scores, i.e., evolving objects that achieve a high score under one or multiple evaluation metrics. This has both an intrinsic and instrumental value. While in multiple applications we genuinely care about developing solutions for multiple evaluation metrics (or one solution that is strong on all of them simultaneously), we fnd that even if one metric is of particular interest, optimizing for multiple metrics often improves results for the single target metric. Perhaps this occurs because programs excelling under diferent evaluation criteria often possess distinct structures or logic and, by incorporating examples of these diverse, high-performing programs—each representing a diferent defnition of “good”—into the prompts provided to the language model, we can stimulate the generation of more varied candidate solutions, increasing the chances of discovering novel approaches that are highly efective for the target metric. 
+-->
+</p>
+<h3>2.5. 進化 </h3>
+<!--
+<h3>2.5.  Evolution </h3>
+-->
+<p>
+AlphaEvolveは進化過程において、評価結果（スコアとプログラム出力）が付与された解を継続的に生成し、その数は増加していきます。これらの解は進化データベースに保存されます。進化データベースの主な目的は、過去に探索されたアイデアを将来の世代で最適に再浮上させることです。このようなデータベースを設計する際の重要な課題は、探索と活用のバランスを取り、多様性を維持しながら最良のプログラムを継続的に改善し、探索空間全体の探索を促進することです。AlphaEvolveの進化データベースは、MAPエリートアルゴリズム[71]と島型集団モデル[80, 94]を組み合わせたアルゴリズムを実装しています。
+<!--
+During its evolutionary procedure, AlphaEvolve continually generates a growing number of solutions with evaluation results (scores and program outputs) attached to them. These solutions are stored in an evolutionary database, the primary goal of which is to optimally resurface previously explored ideas in future generations. A key challenge in designing such databases is balancing exploration and exploitation, to continuously improve the best programs while maintaining diversity to encourage exploration of the entire search space. In AlphaEvolve, the evolutionary database implements an algorithm that is inspired by a combination of the MAP elites algorithm [71] and island-based population models [80, 94]. 
+-->
+</p>
+<h3>2.6. 分散パイプライン </h3>
+<!--
+<h3>2.6.  Distributed pipeline </h3>
+-->
+<p>
+
+AlphaEvolveは、非同期計算パイプライン（Pythonライブラリ asyncio を使用）として実装されています。このパイプラインでは、多数の計算が同時に実行されます。各計算は、次のステップが別の未完了の計算の結果に依存するたびにブロック（待機）されます。具体的には、非同期パイプラインはコントローラ、LLMサンプラー、および評価ノードで構成されます。パイプライン全体は、特定の計算速度ではなくスループットに最適化されており、特定の計算予算内で提案および評価できるアイデアの数を最大化します。
+<!--
+AlphaEvolve is implemented as an asynchronous computational pipeline (using the asyncio Python library) in which many computations are run concurrently, with each computation blocking (waiting) whenever its next step relies on the result of another, yet unfnished computation. More specifcally, the asynchronous pipeline comprises a controller, LLM samplers, and evaluation nodes. The entire pipeline is optimized for throughput (rather than the speed of any one particular computation), in order to maximize the number of ideas that can be proposed and evaluated within a specifc overall computation budget. 
+-->
+
+</p>
+<h2>3. 結果 </h2>
+<h3>3.1. テンソル分解のための新しいアルゴリズムの発見による行列乗算の高速化 </h3>
+<!--
+<h2>3.  Results </h2>
+<h3>3.1. Faster matrix multiplication via fnding novel algorithms for tensor decomposition </h3>
+-->
+<p>
+機械学習の計算を高速化することからリアルなコンピュータグラフィックスを可能にすることまで、行列の乗算はコンピュータサイエンスにおける数多くの重要なアルゴリズムとアプリケーションを支える基本的な演算として機能します。 Strassen [92] の先駆的な研究以来、2つの行列を乗算する任意のアルゴリズムは、特定の3Dテンソルをランク1テンソルに分解して表現できることが知られています。 分解のランク（項の数）は、行列積を計算するために必要なスカラー乗算の数を正確に指定します。 したがって、より高速な行列乗算アルゴリズムを開発するには、特定のテンソルの低ランク分解を見つける必要があります。 この問題には、専用の交代最小二乗ソルバー [90] から深層強化学習 [25] やカスタム検索アルゴリズム [46] まで、多くのアプローチで取り組まれてきました。しかし、数十年にわたる努力にもかかわらず、2つの3×3行列を乗算するという単純なケースでさえ、達成可能な最小ランクがわかっておらず、問題の難しさを示しています。
+<!--
+From accelerating machine learning computations to enabling realistic computer graphics, matrix multiplication serves as a fundamental operation underpinning numerous critical algorithms and applications within computer science. Since the pioneering work of Strassen [92], it has been known that any algorithm for multiplying two matrices can be represented as a decomposition of a given 3D tensor into rank-one tensors. The rank (number of terms) of the decomposition exactly specifes the number of scalar multiplications needed to compute the matrix product. Hence, to develop faster matrix multiplication algorithms one needs to fnd low-rank decompositions of particular tensors. This problem has been tackled with many approaches, from specialized alternating least squares solvers [90] to deep reinforcement learning [25] and custom search algorithms [46]; yet, despite decades of efort, even for the simple case of multiplying two 3 × 3 matrices, the minimum achievable rank is not known, showcasing the difculty of the problem. 
+-->
+</p><p>
+問題の説明と標準的な勾配ベースのアルゴリズム（初期化子、再構成損失関数、Adam 最適化装置 [48] を含む）から始めて、AlphaEvolve は既存のアプローチを上回る高度なテンソル分解アルゴリズムを開発できます。各進化プログラムを評価するには、行列乗算ターゲットのセットを選択し、セクション 2.4 で説明した評価カスケードを使用して複数のランダムシードで初期化されたアルゴリズムを実行します。次に、各ターゲットで達成された最高 (最低) ランクと、このランクを達成したシードの割合としてパフォーマンスが測定され、AlphaEvolve にヒルクライムを行うための信号が提供されます。分解の正確性を保証し、潜在的な数値エラーを回避するために、評価時に各要素を最も近い整数または最も近い半整数に丸めます。また、アルゴリズムが整数に近い解を生成するように、この要求を LLM のプロンプトに自然言語で含めます。
+<!--
+Starting from the problem description and a standard gradient-based algorithm (including an initializer, a reconstruction loss function, and an Adam optimizer [48]), AlphaEvolve is able to develop sophisticated tensor decomposition algorithms that outperform existing approaches. To evaluate each evolved program, we choose a set of matrix multiplication targets and run the algorithm, initialized with multiple random seeds using the evaluation cascade described in  Section 2.4 . The performance is then measured as the best (lowest) rank achieved on each target as well as the fraction of seeds that achieved this rank, providing a signal for AlphaEvolve to hill-climb. To ensure the exactness of the decomposition and avoid any potential numerical error, when evaluating, we round each element to the nearest integer or the nearest half-integer; and, to encourage the algorithm to generate near-integral solutions, we include this request in natural language in the LLM’s prompt. 
+-->
+</p><p>
+表 2 では、 AlphaEvolve が開発したさまざまなアルゴリズムが、14 種類の異なる行列乗算ターゲットの最先端技術を改善していることがわかります。特に、2 つの 4 × 4 行列の乗算では、Strassen [92] のアルゴリズムを再帰的に適用すると、乗算回数が 49 回のアルゴリズムが得られ、これは任意の体で機能します。2 つの要素を持つ体の乗算という非常に特殊なケースでは、Fawzi ら [25] が乗算回数が 47 回のアルゴリズムを見つけました。56 年もの間、標数 0 の任意の体で乗算回数が 49 回未満のアルゴリズムを設計することは未解決の問題でした。AlphaEvolve は、48 回の乗算を使用して 2 つの 4 × 4 複素数値行列の乗算を行うアルゴリズムを見つける最初の方法です。
+<!--
+In Table  2 , one can see that the various algorithms developed by AlphaEvolve improve the state of the art for 14 diferent matrix multiplication targets. Notably, for multiplying two 4 × 4 matrices, applying the algorithm of Strassen [92] recursively results in an algorithm with 49 multiplications, which works over any feld. For the very specifc case of multiplying in the feld with 2 elements, Fawzi et al. [25] found an algorithm with 47 multiplications. For 56 years, designing an algorithm with fewer than 49 multiplications over any feld with characteristic 0 was an open problem. AlphaEvolve is the frst method to fnd an algorithm to multiply two 4 × 4 complex-valued matrices using 48 multiplications. 
+-->
+</p>
+<center><img src="images/table2.png"></center>
+<p>
+表2 | 𝑚 × 𝑛行列と𝑛 × 𝑝行列の積を計算するために必要なスカラー乗算回数の上限。これは、パラメーター ⟨𝑚, 𝑛, 𝑝⟩ を持つ対応する3Dテンソルの階数と同等です。ここに示した例以外にも、すべてのパラメーター 𝑚, 𝑛, 𝑝 ≤ 5 に対して、AlphaEvolve は既知の最良解と同等かそれを上回り、正確なアルゴリズムを提供しました（詳細な結果は付録の表3を参照）。⟨3, 4, 7⟩、⟨4, 4, 4⟩、および ⟨4, 4, 8⟩ の場合、AlphaEvolve によって発見されたアルゴリズムは、複素数値の乗算を使用しており、これは複素数値または実数値行列の正確な乗算に使用できます。この表に示されている分解は、付属のGoogle Colabで確認できます。
+<!--
+Table 2 | Upper bounds on the number of scalar multiplications needed to compute the
+product of an 𝑚 × 𝑛 matrix and an 𝑛 × 𝑝 matrix; equivalently, the rank of the corresponding
+3D tensor with parameters ⟨𝑚, 𝑛, 𝑝⟩. Beyond the examples shown here, for all parameters
+𝑚, 𝑛, 𝑝 ≤ 5, AlphaEvolve either matched or surpassed the best known solutions, and provided
+exact algorithms (see Table 3 in appendix for full results). For ⟨3, 4, 7⟩, ⟨4, 4, 4⟩, and ⟨4, 4, 8⟩,
+the algorithms discovered by AlphaEvolve use complex-valued multiplications which can be
+used for exact multiplication of complex or real-valued matrices. The decompositions shown
+in this table can be found in the accompanying Google Colab.
+-->
+</p><p>
+図4に示すように、AlphaEvolveは初期プログラムに大幅な変更を加え、より優れたアルゴリズムを設計するための独自のアイデアをいくつか導入しています。表2の結果の大部分（⟨4,4,4⟩を含む）は単純な初期プログラムから得られたものですが、一部のパラメータについては、初期プログラムに独自のアイデア（評価関数に確率性を追加したり、進化的アプローチを用いたりするなど）を加えることで、パフォーマンスをさらに向上させることができることがわかりました。これは、研究者とAlphaEvolveとの科学的コラボレーションの可能性を示唆しています。
+<!--
+As shown in Figure  4 , AlphaEvolve makes signifcant changes to the initial program, introducing several original ideas to design increasingly better algorithms. While most results in Table  2  (including ⟨4,4,4⟩) were obtained from a simple initial program, we found that for some parameters, seeding the initial program with our own ideas (such as adding stochasticity to the evaluation function or using evolutionary approaches) could further boost performance, highlighting the possibility of scientifc collaboration between researchers and AlphaEvolve. 
+-->
+</p>
+<h3>3.2. 幅広い未解決数学問題に適した探索アルゴリズムの発見</h3>
+<!--
+<h3>3.2. Finding tailored search algorithms for a wide range of open mathematical problems </h3>
+-->
+<p>
+数学研究における重要なフロンティアの一つは、ある尺度に基づいて最適、あるいはほぼ最適な特性を持つ物体や構成を発見することです。例としては、幾何学的形状の稠密充填[28]の発見から、特定の組合せ論的制約や解析的制約を満たす関数や集合の特定（例：[38, 39, 68, 101]）まで多岐にわたります。進歩は、既知の例をすべて凌駕する単一の構成を発見し、それによって最適値の新たな下限または上限を確立することに大きく依存しています。AlphaEvolveは、これらの問題に内在する広大な探索空間を探索するための強力なツールとして機能し、多様な未解決の数学的課題に効果的に取り組むことができることを実証します。
+<!--
+A signifcant frontier in mathematical research involves discovering objects or constructions that possess optimal, or near-optimal, properties according to some measure. Examples range from fnding dense packings of geometric shapes [28] to identifying functions or sets satisfying specifc combinatorial or analytic constraints (e.g., [38, 39, 68, 101]). Progress often relies on fnding a single construction that surpasses all previously known examples, thereby establishing new lower or upper bounds for the optimal value. We demonstrate that AlphaEvolve serves as a powerful tool for exploring the vast search space inherent in these problems, successfully tackling a diverse array of open mathematical challenges. 
+-->
+</p><p>
+AlphaEvolveの能力を評価するため、解析学、組合せ論、数論、幾何学など、50以上の数学分野を網羅する厳選された数学問題セットにAlphaEvolveを適用し、様々なパラメータ設定（例えば、異なる次元やサイズ）で評価しました。AlphaEvolveは75%のケースで既知の最良の構成を再発見し、20%のケースでは、既知の最良の構成よりも優れた新しいオブジェクトを発見し、SOTAを改善しました。これらのケース全てにおいて、最初の出発点は単純な構成またはランダムな構成でした。これらの結果は、数学研究のための多用途ツールとしてのAlphaEvolveの幅広い可能性を裏付けています。
+<!--
+To assess its capabilities, we apply AlphaEvolve to a curated set of over 50 mathematical problems, spanning more than fve diferent branches of mathematics, including analysis, combinatorics, number theory, and geometry, evaluated across numerous specifc parameter settings (e.g., diferent dimensions or sizes). In 75% of the cases AlphaEvolve rediscovered the best known constructions, and in 20% of the cases it discovered a new object that is better than a previously known best construction, thereby improving the SOTA. In all these cases, the initial starting point was a simple or a random construction. These results underscore AlphaEvolve’s broad potential as a versatile tool for mathematical research. 
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+図4 | AlphaEvolveが提案した、より高速な行列乗算アルゴリズムを発見するための変更。差分全体は左側に概説されており（図9a～9cの拡大版を参照）、一部の抜粋は右側にハイライト表示されています。この例では、AlphaEvolveは、最適化と重みの初期化（右上）、損失関数（右中央）、ハイパーパラメータスイープ（右下）など、複数のコンポーネントにわたる広範な変更を提案しています。これらの変更は非常に重要であり、進化プロセス中に15回の突然変異を必要とします。
+<!--
+Figure 4 | Changes proposed by AlphaEvolve to discover faster matrix multiplication algo- rithms. The full dif is outlined on the left (see magnifed version in  Figures 9a  to  9c ) and some excerpts are highlighted on the right. In this example, AlphaEvolve proposes extensive changes across several components, including the optimizer and weight initialization (top right), the loss function (middle right), and hyperparameter sweep (bottom right). These changes are highly non-trivial, requiring 15 mutations during the evolutionary process. 
+-->
+
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+図5 | AlphaEvolveによって発見されたSOTAを破る数学的構成の例。AlphaEvolveの汎用性により、解析学（自己相関と不確実性不等式）、幾何学（パッキングと最小/最大距離問題）、組合せ論（エルデシュの最小重なり問題、有限集合の和と差）といった問題に取り組むことができます。
+<!--
+Figure 5 | Examples of SOTA-breaking mathematical constructions discovered with AlphaE- volve. The versatility of AlphaEvolve allows us to tackle problems in analysis (autocorrelation and uncertainty inequalities), geometry (packing and minimum/maximum distance prob- lems) and combinatorics (Erdős’s minimum overlap problem and sums and diferences of fnite sets). 
+-->
+
+</p><p>
+ここで使用されているAlphaEvolve構成の大きな利点は、その汎用性と適用速度です。進化型ヒューリスティック探索プログラム（詳細は後述）に重点を置いた中核的な手法は、多様な数学的構築問題や仮説に迅速に適用可能であり、従来の特注アプローチと比較して、問題固有の専門家による初期の調整が少なくて済む場合が多くあります。深い数学的洞察は当然のことながら問題の定式化と探索空間の定義に役立ちますが、AlphaEvolveは問題ランドスケープ内の微妙な構造を特定することで、効果的な探索パターンと攻撃戦略を自律的に発見する能力をしばしば示します。これにより、多くの異なる問題にまたがる効率的で大規模な探索が可能になります。
+<!--
+A signifcant advantage of the AlphaEvolve confguration used here is its versatility and speed of application. The core methodology, focused on evolving heuristic search programs (detailed below), can be rapidly deployed across a diverse range of mathematical construction problems and conjectures, often requiring less initial problem-specifc expert tailoring com- pared to traditional bespoke approaches. While deep mathematical insight naturally aids in problem formulation and search space defnition, AlphaEvolve often demonstrates a capacity to autonomously discover efective search patterns and attack strategies by identifying subtle structures within the problem landscape. This allows for efcient, large-scale exploration across many diferent problems. 
+-->
+</p><p>
+これらの発見を可能にした重要な方法論的革新は、AlphaEvolveが構造そのものを直接進化させるのではなく、ヒューリスティックな探索アルゴリズムを進化させる能力にあります。多くの問題、特に数学で一般的な高速な目的関数評価を伴う問題に対して、私たちは反復的な改良戦略を採用しました。AlphaEvolveの各世代は、探索ヒューリスティックを表現するプログラムを進化させるという課題を与えられました。このプログラムには固定された実行時間（例えば1000秒）が与えられ、以前の最良のヒューリスティックによって発見された最良の構成が提示されました。その目的は、この出発点と割り当てられた時間を活用して、さらに優れた構成を見つけることでした。このように、進化プロセスは、既に高品質な解をさらに改善するのに効果的なヒューリスティックを選択します。最終的な構成は、AlphaEvolveによって発見された、異なる特殊なヒューリスティックの連続的な結果であることが多くありました。初期のヒューリスティックは、ランダムまたは単純な初期状態から大きな利益を得ることに長けており、後期のヒューリスティックは、ほぼ最適な構成を微調整することに長けていました。この多段階の適応型探索戦略の自動発見は、手動で再現するのが困難であり、SOTAを超えるために不可欠であることが証明されました。
+<!--
+The key methodological innovation enabling these discoveries is AlphaEvolve’s ability to evolve heuristic search algorithms rather than directly evolving the constructions themselves. For many problems, particularly those with fast objective function evaluations—which are common in mathematics—we employed an iterative refnement strategy. Each generation of AlphaEvolvewas tasked with evolving a program representing a search heuristic. This program was given a fxed time budget (e.g., 1000 seconds) and was shown the best construction found by the previous best heuristic. Its goal was to leverage this starting point and the allotted time to fnd an even better construction. The evolutionary process thus selects for heuristics that are efective at improving already high-quality solutions. The fnal constructions were often the result of a sequence of diferent, specialized heuristics discovered by AlphaEvolve—early heuristics profcient at making large gains from random or simple initial states, and later heuristics adept at fne-tuning near-optimal confgurations. This automated discovery of multi-stage, adaptive search strategies is challenging to replicate manually and proved crucial for surpassing the SOTA. 
+-->
+</p><p>
+以下は、AlphaEvolve が新たな結果をもたらしたいくつかの問題についての高レベルの説明です。問題の完全なリストと詳細は付録 B に記載されています。
+<!--
+Below are high-level descriptions of some of the problems where AlphaEvolve yielded new results. Full list of problems and details are provided in Appendix  B . 
+-->
+<div class="styleBullet">
+<ul><li>
+• 解析
+<ul><li>
+– 自己相関不等式。AlphaEvolve は、いくつかの自己相関不等式における既知の最良の境界値を改善することができました。
+</li><li>– 不確定性原理。AlphaEvolve は、不確定性原理の構築 [32] を洗練させることで、フーリエ解析で生じる問題に対する洗練された構成を作成し、わずかに優れた上界値をもたらしました。
+</li></ul>
+</li><br><li>• 組合せ論と数論
+<ul><li>
+– エルデシュの最小重なり問題。AlphaEvolve は、最小重なり問題 [24] の新しい上界値を確立し、以前の記録 [39] をわずかに改善しました。
+</li></ul>
+</li><br><li>• 幾何学とパッキング
+<ul><li>
+</li><li>– キッシング数問題。 11次元において、AlphaEvolveはキス数の下限を改善し、中心の単位球に同時に接することができる593個の重なり合わない単位球の構成を発見しました。これは、以前の記録である592個[30]を上回りました。
+</li><li>– パッキング問題。AlphaEvolveは、パッキング問題においていくつかの新しい成果を達成しました。例えば、最大距離と最小距離の比を最小化する形状への点のパッキング、様々な多角形を他の多角形に最も効率的にパッキングすること、小面積の三角形を回避する点集合に関するハイルブロン問題の変種[28]などです。
+<!--
+• Analysis 
+<ul><li>
+– Autocorrelation inequalities. AlphaEvolve was able to improve the best known 
+bounds on several autocorrelation inequalities. 
+</li><li>– Uncertainty principles. AlphaEvolve was able to produce a refned confguration 
+for a problem arising in Fourier analysis, by polishing an uncertainty principle 
+construction [32] leading to a slightly better upper bound. 
+</li></ul>
+</li><br><li>• Combinatorics and number theory 
+<ul><li>
+– Erdős’s minimum overlap problem. AlphaEvolve established a new upper bound 
+for the minimum overlap problem [24], slightly improving upon the previous 
+record [39]. 
+</li></ul>
+</li><br><li>• Geometry and packing 
+<ul><li>
+</li><li>– Kissing number problem. In 11 dimensions, AlphaEvolve improved the lower 
+bound on the kissing number, fnding a confguration of 593 non-overlapping 
+unit spheres that can simultaneously touch a central unit sphere, surpassing the 
+previous record of 592 [30]. 
+</li><li>– Packing problems. AlphaEvolve achieved several new results in packing problems, 
+such as packing    points in a shape to minimize the ratio of the maximum 
+and minimum distance, packing various polygons in other polygons in the most 
+efcient way, and variants of the Heilbronn problem concerning point sets avoiding 
+small-area triangles [28]. 
+-->
+</li></ul>
+</li></ul></div>
+</p><p>
+
+問題の全リストは付録Bに掲載されており、AlphaEvolveによって発見された新しい構成は付随するGoogle Colabでご覧いただけます。これらの問題と使用された手法に関する詳細な例と詳細は、今後の論文で公開される予定です。これらの発見のほとんどは、外部の数学者であるJavier Gomez Serrano氏とTerence Tao氏から提案された未解決問題に関するもので、両氏はAlphaEvolveへの入力として最適な定式化方法についても助言をいただきました。これは、AlphaEvolveのようなAI駆動型発見エンジンと人間の数学的専門知識との相乗効果を生み出すパートナーシップの可能性を示唆しています。
+<!--
+The full list of problems appears in Appendix  B  and the new constructions found by AlphaEvolve can be found in the accompanying  Google Colab . More examples and details on these problems and the methods used will be provided in an upcoming paper. Most of these discoveries are on open problems suggested to us by external mathematicians Javier Gomez Serrano and Terence Tao, who also advised on how to best formulate them as inputs to AlphaEvolve. This highlights the potential for synergistic partnerships between AI-driven discovery engines like AlphaEvolve and human mathematical expertise. 
+-->
+</p>
+<h3>3.3. Google のコンピューティング エコシステムの最適化</h3>
+<!--
+<h3>3.3.  Optimizing Google’s computing ecosystem </h3>
+-->
+<p>
+前のセクションで紹介した科学的な応用に加えて、ここでは、AlphaEvolve を使用してミッションクリティカルなインフラストラクチャのパフォーマンスを向上させ、現実世界に影響を与える方法を示します。
+<!--
+In addition to the scientifc applications presented in preceding sections, here we demonstrate how AlphaEvolve has been used to improve performance of mission-critical infrastructure and deliver real-world impact.
+-->
+</p>
+<h4>3.3.1. データセンターのスケジュールの改善</h4>
+<!--
+<h4>3.3.1.  Improving data center scheduling </h4>
+-->
+<p>
+計算ジョブをマシンのクラスタに効率的にスケジューリングすることは、特に Borg [99] がオーケストレーションした Google のデータセンターの規模では、重要な最適化問題です。このタスクには、ジョブのリソース要件とマシンの容量に基づいて、利用可能なマシンにジョブを割り当てることが含まれます。非効率的な割り当ては、取り残されたリソースにつながる可能性があります。つまり、マシンがある種類のリソース (例: メモリ) を使い果たしたためにジョブを受け付けられなくなったが、他のリソース (例: CPU) はまだ空いているという状況です。スケジューリング効率を改善することで、これらの取り残されたリソースを回復し、同じ量の計算フットプリントでより多くのジョブを完了できるようになります。この回復は、リソース消費を比例的に増加させることなく、増大する計算ニーズに対応するために不可欠です。さらに、この問題は、古典的に難しいビンパッキング問題に加えて、デバッグ可能性やスケールなどの一般的なエンジニアリングの難しさも組み合わされているため、困難です。
+<!--
+Efciently scheduling compute jobs onto a cluster of machines is a critical optimization problem, particularly at the scale of Google’s data centers, orchestrated by Borg [99]. This task involves assigning jobs to available machines based on job resource requirements and machine capacity. Inefcient assignments can result in stranded resources: when a machine can no longer accept jobs because it has run out of one kind of resource (e.g., memory) but still has other resources free (e.g., CPU). Improvements in scheduling efciency can recover these stranded resources, allowing more jobs to be completed on the same amount of computational footprint. This recovery is essential to accommodate growing compute needs without a proportional increase in resource consumption. Furthermore, this problem is challenging since it combines typical engineering difculties, such as debuggability and scale, on top of the classically difcult bin-packing problem. 
+-->
+
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+図6 | 左：AlphaEvolveによって発見された、Googleのワークロードとキャパシティに合わせて調整されたヒューリスティック関数。右：ヒューリスティックスコアリング関数の視覚化。黄色の領域は高スコア、紫色の領域は低スコアを表します。
+<!--
+Figure 6 | Left: The heuristic function discovered by AlphaEvolve, tailored to Google’s workloads and capacity. Right: Visualization of the heuristic scoring function. Yellow regions represent high scores, while purple regions represent low scores. 
+-->
+</p><p>
+我々は、オンラインジョブスケジューリング問題を2変数のベクトルビンパッキング問題として捉えることで、この課題に取り組みます。この文脈において、マシンはCPUとメモリの容量が定義されたビンを表し、受信ジョブは特定のリソース需要を持つアイテムです。ヒューリスティック関数は、保留中のジョブのCPUとメモリの要件、および潜在的なマシンのCPUとメモリの可用性を入力として受け取ります。この関数は、マシンの優先度スコアを出力します。その後、Borgスケジューラは、保留中のジョブを、ヒューリスティック関数によって決定された最高の優先度スコアを持つマシンに割り当てます。このヒューリスティックは、Borgによって各保留中のジョブを実行可能と既に決定されたマシンの順位付けにのみ影響を与えるため、結果として得られるスケジューリング決定は、構成上、事実上正しいものとなります。
+<!--
+We address this challenge by framing the online job scheduling problem as a vector bin-packing problem with two variables. In this context, machines represent bins with defned capacities for CPU and memory, and incoming jobs are items with specifc resource demands. A heuristic function takes as input a pending job’s CPU and memory requirements and a potential machine’s CPU and memory availability. This function then outputs a priority score for the machine. The Borg scheduler subsequently assigns the pending job to the machine with the highest priority score as determined by the heuristic function, among other objectives. Because this heuristic only infuences the ranking of machines already determined by Borg to be available and capable of running each pending job, the resulting scheduling decisions are efectively correct by construction. 
+-->
+</p><p>
+AlphaEvolve の初期バージョンは、実稼働環境の既存の機能から進化した、驚くほどシンプルでありながら効果的なヒューリスティック関数（図 6 参照）を発見するために使用されました。Google のデータセンターシミュレーターを使用し、Google の拠点全体のワークロードと容量の履歴スナップショットに基づいて AlphaEvolve にフィードバックを提供します。一般化を確実にするために、最近のワークロードと容量の未公開のテストデータセットで AlphaEvolve のヒューリスティック関数のパフォーマンスを測定します。AlphaEvolve のヒューリスティック関数が実稼働環境のものよりも優れていることを確認したので、AlphaEvolve のヒューリスティック関数を拠点全体に展開しました。Google の拠点全体での展開後の測定により、シミュレーターの結果が確認され、このヒューリスティック関数は、そうでなければ取り残されることになる Google の拠点全体のコンピューティングリソースの平均 0.7% を継続的に回復することが明らかになりました。 AlphaEvolve が深層強化学習アプローチよりも選ばれたのは、そのコード ソリューションがパフォーマンスの向上につながるだけでなく、解釈可能性、デバッグ可能性、予測可能性、展開の容易さといった、ミッション クリティカルなシステムに不可欠な品質において明らかな利点も提供するためです。
+<!--
+An early version of AlphaEvolve was used to discover a remarkably simple yet efective heuristic function (shown in  Figure 6 ), evolving from the existing one in production. We use a simulator of our data centers to provide feedback to AlphaEvolve based on historical snapshots of workloads and capacity across Google’s feet. We measure the performance of AlphaEvolve’s heuristic function on an unseen test dataset of recent workloads and capacity to ensure generalization. Observing that AlphaEvolve’s heuristic function outperforms the one in production, we rolled out AlphaEvolve’s heuristic function to the entire feet. Post- deployment measurements across Google’s feet confrmed the simulator results, revealing that this heuristic function continuously recovers on average 0.7% of Google’s feet-wide compute resources, which would otherwise be stranded. AlphaEvolve was chosen over a deep reinforcement learning approach because its code solution not only leads to better performance, but also ofers clear advantages in interpretability, debuggability, predictability, and ease of deployment—essential qualities for a mission-critical system. 
+-->
+</p>
+<center><img src="images/fig7.png"></center>
+<p> 
+図7 | 行列積 = のタイリングヒューリスティック問題の視覚化。すべての入力形状に対して適切なタイルサイズ ( 、 、 ) を自動的に選択するヒューリスティックを作成するのは困難です。これは、行列乗算ユニットの最適な形状とメモリ容量、周囲の演算のメモリ要件、カーネルに組み込まれる追加の演算、低レベルのコンパイラの複雑さなど、さまざまな詳細を知る必要があるためです。
+<!--
+Figure 7 | Visualization of the tiling heuristic problem for a matrix product      =   . Creating a heuristic that automatically chooses the right tile size (  ,   ,   ) for all input shapes is difcult because one has to know the matrix multiplication unit’s optimal shapes and memory capacity, the memory requirements of surrounding operations, extra operations that are fused into the kernel, and low-level compiler intricacies, among other details. 
+-->
+</p>
+<h4>3.3.2. Geminiカーネルエンジニアリングの強化</h4>
+<!--
+<h4>3.3.2.  Enhancing Gemini kernel engineering </h4>
+-->
+<p>
+Gemini のような大規模モデルのトレーニングには、相​​当量の計算リソースが必要です。Gemini は JAX [9] 上に構築されており、Pallas は JAX の拡張機能で、ハードウェア アクセラレータで最適に実行できるようにカスタマイズされた高度に特殊化されたカスタム プログラム (カーネル) の作成を可能にします。したがって、効率的な Pallas カーネルは Gemini のトレーニング パフォーマンスを最適化するために不可欠です。カーネル最適化の重要な側面は、行列乗算演算のタイリング戦略の調整です (図 7 を参照)。この手法では、大規模な行列乗算計算を小さなサブ問題に分割して、計算とデータ移動のバランスを改善し、全体的な計算を高速化するための鍵となります。従来、カーネル エンジニアは、さまざまな入力形状に対してほぼ最適なタイリング構成を決定するために、検索ベースの自動調整か手動で作成したヒューリスティックのいずれかに依存しています。検索ベースの調整は研究ワークフローを中断するため、入力形状が変わるたびに再調整が必要になります。逆に、効果的なタイリングヒューリスティックを手作業で作成することは、その複雑さゆえにエンジニアリング上の大きなボトルネックとなり、カーネルの機能とハードウェアの複雑な部分の両方を深く理解する必要があります。高性能なヒューリスティックの主な利点は、任意の入力形状に対して高いパフォーマンスを提供できることです。したがって、新興ハードウェア向けの高性能カーネルの設計を迅速化し、モデル開発者による利用を簡素化するために、ヒューリスティック生成プロセスを容易にすることを目指します。
+<!--
+Training large models like Gemini requires substantial computational resources. Gemini is built on JAX [9], and Pallas is an extension to JAX that enables writing custom, highly specialized programs (kernels) tailored for optimal execution on hardware accelerators. Therefore, efcient Pallas kernels are crucial for optimizing Gemini’s training performance. A critical aspect of kernel optimization is tuning the tiling strategy for matrix multiplication operations (see  Figure 7 ). This technique involves dividing a large matrix multiplication computation into smaller subproblems to better balance computation with data movement, which is key to accelerating the overall computation. Traditionally, kernel engineers rely on either search-based autotuning or manually crafted heuristics to determine near-optimal tiling confgurations for various input shapes. Search-based tuning interrupts the research workfow, necessitating retuning for every input shape change. Conversely, manually crafting efective tiling heuristics is a major engineering bottleneck due to its complexity, demanding a deep understanding of both kernel functionality and hardware intricacies. The key advantage of a performant heuristic is its ability to deliver high performance across arbitrary input shapes. Consequently, to expedite the design of performant kernels for emerging hardware and to simplify their utilization by model developers, we aim to facilitate the heuristic generation process. 
+-->
+</p><p>
+この課題に対処するため、我々は AlphaEvolve を使用して、Gemini のトレーニングに使用される重要な行列乗算カーネルのタイリング ヒューリスティックスを最適化します。目的は、カーネルの実際の実行時間を最小限に抑えることです。AlphaEvolve は、候補コードを提案することで、このカーネルのタイリング ヒューリスティックスを反復的に探索および改良し、実際の TPU アクセラレータにおけるさまざまな入力形状での実行時間を最小限に抑えることを目指します。AlphaEvolve はカーネルの基礎となる数学的演算を変更するのではなく、タイリング戦略を最適化するため、カーネルの正確性は構築によって維持されます。AlphaEvolve のトレーニングおよび評価データセットを構築するために、カーネル ユーザーから現実的なカーネル入力形状を自動的に収集します。これらの入力形状の半分がトレーニング セットを形成し、進化プロセス中に最適化ターゲットを提供します。残りの入力形状は評価セットを形成し、結果として得られるヒューリスティックスの一般的な適用性をテストするために使用されます。
+<!--
+We address this challenge by employing AlphaEvolve to optimize tiling heuristics for an important matrix multiplication kernel used to train Gemini. The objective is to minimize the kernel’s actual runtime. AlphaEvolve iteratively explores and refnes tiling heuristics for this kernel by proposing candidate code, aiming to minimize this runtime on various input shapes on real TPU accelerators. The kernel’s correctness is maintained by construction because AlphaEvolve is optimizing the tiling strategy for this kernel rather than altering 
+its underlying mathematical operation. To build the training and evaluation datasets for AlphaEvolve, we automatically collect realistic kernel input shapes from kernel users. Half of these input shapes form the training set, providing the optimization targets during the evolutionary process. The remaining input shapes form the evaluation set, used to test the general applicability of the resulting heuristic. 
+-->
+</p><p>
+この自動化されたアプローチにより、AlphaEvolve は、既存の専門家が設計したヒューリスティックと比較して、すべてのカーネルで平均 23% のカーネル高速化を実現するヒューリスティックを発見し、それに応じて Gemini の全体的なトレーニング時間を 1% 削減できました。さらに、AlphaEvolve の使用により、カーネルの最適化に要する時間が大幅に短縮され、数か月に及ぶ専用エンジニアリング作業が、わずか数日間の自動化された実験にまで短縮されました。この高速化により、最適化されたカーネルの導入が迅速化され、カーネル エンジニアは専門知識をより戦略的で高レベルの最適化問題に専念できるようになります。さらに、AlphaEvolve は、手動によるチューニング プロセスを自動化し、Gemini カーネルの使用における人間工学的改善への道筋を提供します。AlphaEvolve によって発見されたタイリング ヒューリスティックは本番環境に導入され、Gemini のトレーニング効率と Gemini チームの研究およびエンジニアリングの速度を直接的に向上させました。この導入は、Gemini が AlphaEvolve の機能を通じて自身のトレーニング プロセスを最適化するという新しい例でもあります。
+<!--
+This automated approach enables AlphaEvolve to discover a heuristic that yields an average 23% kernel speedup across all kernels over the existing expert-designed heuristic, and a corresponding 1% reduction in Gemini’s overall training time. In addition, the use of AlphaEvolve signifcantly reduced the kernel optimization time, from several months of dedicated engineering efort to just days of automated experimentation. This acceleration speeds up the deployment of optimized kernels, allowing kernel engineers to dedicate their expertise to more strategic, higher-level optimization problems. Furthermore, AlphaEvolve ofers a path towards automating the manual tuning process and improving the ergonomics of Gemini kernel usage. The tiling heuristic discovered by AlphaEvolve has been deployed in production, directly enhancing Gemini’s training efciency and the Gemini team’s research and engineering velocity. This deployment also marks a novel instance where Gemini, through the capabilities of AlphaEvolve, optimizes its own training process. 
+-->
+</p>
+<h4>3.3.3. ハードウェア回路設計の支援</h4>
+<!--
+<h4>3.3.3.  Assisting in hardware circuit design </h4>
+-->
+<p>
+GoogleのTensor Processing Unit（TPU）などの専用ハードウェアは、現代のAIシステムを大規模に実行するために必要なリソース効率を実現するために不可欠です。しかし、新しいコンピュータチップの設計は複雑で時間のかかるプロセスであり、多くの場合、数年を要します。このプロセスの重要なステップであるレジスタ転送レベル（RTL）の最適化では、電力、性能、面積などの指標を改善するためにハードウェア記述を手作業で書き換える必要があり、高度なスキルを持つエンジニアによる数ヶ月にわたる反復作業が求められます。
+<!--
+Specialized hardware, such as Google’s Tensor Processing Units (TPUs), is crucial for achieving the resource efciency required to run modern AI systems at scale. However, designing new computer chips is a complex and time-consuming process, often spanning years. Register- Transfer Level (RTL) optimization, a critical step in this process, involves manually rewriting hardware descriptions to improve metrics like power, performance, and area, demanding months of iteration by highly skilled engineers. 
+-->
+</p><p>
+本研究では、AlphaEvolveは、行列乗算ユニット内の主要なTPU演算回路について、既に高度に最適化されたVerilog実装を最適化するという課題に取り組みました。最適化の目標は、コンポーネントのコア機能を維持しながら、面積と消費電力の両方を削減することでした。重要な点として、最終提案は、修正された回路が機能的な正当性を維持していることを確認するための堅牢な検証手法に合格する必要がありました。AlphaEvolveは、不要なビットを削除するシンプルなコード書き換えを見つけ出すことができ、この変更はTPU設計者によって正当性が検証されました。この具体的な改善は下流の合成ツールによっても個別に検出されましたが、RTL段階でのAlphaEvolveの貢献は、ソースRTLを改良し、設計フローの早い段階で最適化を提供する能力を実証しています。
+<!--
+In this work, AlphaEvolve was challenged to optimize an already highly optimized Verilog implementation of a key TPU arithmetic circuit within the matrix multiplication unit. The optimization objectives were to reduce both area and power consumption while preserving the component’s core functionality. Crucially, the fnal proposal must pass robust verifcation methods to confrm that the modifed circuit maintains functional correctness. AlphaEvolve was able to fnd a simple code rewrite that removed unnecessary bits, a change validated by TPU designers for correctness. While this specifc improvement was also independently caught by downstream synthesis tools, AlphaEvolve’s contribution at the RTL stage demonstrates its capability to refne source RTL and provide optimizations early in the design fow. 
+-->
+</p><p>
+次期TPUに統合されるこの改良は、AlphaEvolveを通じてGeminiがTPU演算回路に直接貢献する初の事例であり、将来の貢献への道を開くものです。AlphaEvolveの重要な利点は、ハードウェアエンジニアが使用する標準言語であるVerilogで提案された変更内容を直接伝達できることです。これにより、信頼性が高まり、導入が容易になります。この初期段階の検証は、LLMを活用したコード進化がハードウェア設計を支援し、市場投入までの時間を短縮できるという、革新的なアプローチを実証しています。
+<!--
+Integrated into an upcoming TPU, this improvement represents Gemini’s frst direct contribution to TPU arithmetic circuits, achieved via AlphaEvolve, paving the way for future contributions. A key advantage of AlphaEvolve is that it communicates the suggested changes directly in Verilog, the standard language used by hardware engineers, fostering trust and simplifying adoption. This early exploration demonstrates a novel approach where LLM- powered code evolution assists in hardware design, potentially reducing time to market. 
+-->
+</p>
+<h4>3.3.4. コンパイラ生成コードを直接最適化する</h4>
+<!--
+<h4>3.3.4.  Directly optimizing compiler-generated code </h4>
+-->
+<p>
+トランスフォーマーアーキテクチャ[97]は、LLMからAlphaFold [1]に至るまで、現代のニューラルネットワークの大部分で使用されています。トランスフォーマーの核となる計算はアテンションメカニズム[4]であり、最も一般的にはFlashAttention [21]を使用して実装されています。私たちのスタックでは、FlashAttentionはPallasのアクセラレータカーネルとして実装されており、入力の準備と出力の後処理を行うJAXの高レベルコードでラップされています。機械学習コンパイラ（XLA [74]）は、この実装を一連の中間表現（IR）に変換し、それぞれが特定のハードウェアでの実行のために詳細を追加します。これらの段階で、メモリアクセスオーケストレーションや計算スケジューリングに関する決定を改善することで、特定のハードウェアでの実行時間を大幅に短縮できます。
+<!--
+The transformer architecture [97] is used in the majority of modern neural networks, ranging from LLMs to AlphaFold [1]. The core computation of transformers is the attention mecha- nism [4], which is most commonly implemented using FlashAttention [21]. In our stack, FlashAttention is implemented as an accelerator kernel in Pallas, wrapped by higher-level code in JAX that handles input preparation and output postprocessing. The machine learning compiler (XLA [74]) then translates this implementation into a sequence of intermediate representations (IRs), each adding more detail for execution on particular hardware. At these stages, improved decisions on memory access orchestration or computation scheduling can signifcantly reduce runtime on specifc hardware. 
+-->
+</p><p>
+AlphaEvolveに、FlashAttentionカーネルをカプセル化したXLA生成IR（前処理および後処理コード）を直接最適化するよう依頼しました。GPU上での大規模推論に使用される、非常に影響力のあるトランスフォーマーモデルに対応する構成を最適化し、モジュール全体の実行時間を最小限に抑えることを目標としました。これは特に困難な作業でした。その理由は、(1)IRは開発者が直接編集するのではなくデバッグ用に設計されていること、(2)コンパイラによって生成され、既に高度に最適化されていることです。AlphaEvolveによって提案された各変更は、最適化全体を通して数値的な正確性を保証するために、ランダム化された入力に対する参照（変更されていない）コードと比較されました。最終バージョンのコードは、あらゆる入力に対して正しいことが専門家によって厳密に確認されました。
+<!--
+We challenged AlphaEvolve to directly optimize the XLA-generated IRs encapsulating the FlashAttention kernel along with pre- and postprocessing code. We optimized a confguration corresponding to a highly impactful transformer model used for inference at scale on GPUs, with the goal of minimizing the module’s overall execution time. This was a particularly challenging task, because (1) the IR is designed for debugging purposes rather than for direct editing by developers, and (2) it is compiler-generated and already highly optimized. Each modifcation proposed by AlphaEvolve was checked against the reference (unmodifed) code on randomized inputs in order to ensure numerical correctness throughout optimization. The fnal version of the code was rigorously confrmed by human experts to be correct for all possible inputs. 
+-->
+</p><p>
+AlphaEvolveは、IRによって公開された両方の抽象化レベルにおいて、有意義な最適化を提供できました。まず、対象の構成におけるFlashAttentionカーネルは32%高速化されました。次に、AlphaEvolveはカーネル入出力の前処理と後処理の改善を発見し、この部分で15%の高速化を実現しました。これらの結果は、AlphaEvolveがコンパイラ生成コードを最適化する能力を示しており、発見された最適化を特定のユースケース向けに既存のコンパイラに組み込む可能性、あるいは長期的にはAlphaEvolve自体をコンパイラワークフロー自体に組み込む可能性を示唆しています。
+<!--
+AlphaEvolve was able to provide meaningful optimizations for both levels of abstraction exposed by the IR. Firstly, the FlashAttention kernel for the confguration of interest was sped up by 32%. Secondly, AlphaEvolve found improvements in pre- and postprocessing of kernel inputs and outputs, resulting in a 15% speed up in this part. These results demonstrate the ability of AlphaEvolve to optimize compiler-generated code, ofering the potential of incorporating discovered optimizations into existing compilers for specifc use cases, or, in the longer term, incorporating AlphaEvolve into the compiler workfow itself. 
+-->
+</p>
+<h2>4. アブレーション</h2>
+<!--
+<h2>4.  Ablations </h2>
+-->
+<p>
+私たちは、行列乗算を高速化するためのテンソル分解の発見 (セクション 3.1) とキッシング数の下限の計算 (セクション 3.2) という 2 つのタスクのアブレーションを実行し、AlphaEvolve の以下のコンポーネントの有効性を理解することを目指しました。
+<!--
+We carried out ablations on two tasks: fnding tensor decompositions for faster matrix multiplication (Section 3.1) and computing lower bounds on kissing numbers (Section 3.2), aiming to understand the efcacy of the following components of AlphaEvolve. 
+-->
+<div class="styleBullet">
+<ul><li>
+• 進化的アプローチ。AlphaEvolveは進化的アプローチを採用しており、以前に生成されたプログラムはデータベースに保存され、以降の反復処理でより良いプログラムを生成するために使用されます。進化の重要性を分析するために、同じ初期プログラムを言語モデルに繰り返し入力する代替アプローチを検討します。このアプローチを「進化なし」と呼びます。
+</li><br><li>• プロンプトにおけるコンテキスト。AlphaEvolveは、大きなコンテキストウィンドウを備えた強力な言語モデルを使用しており、プロンプトに問題固有のコンテキストを提供することで、その出力を大幅に改善できます。コンテキストの重要性をテストするために、プロンプトに明示的なコンテキストを追加しない代替アプローチを検討します。このアプローチを「プロンプトにコンテキストなし」と呼びます。
+
+</li><br><li>• メタプロンプト。AlphaEvolveは、言語モデルに提供されるプロンプトを改善するために、メタプロンプトも使用します。これにより、人間のプロンプターを用いた場合のパフォーマンスを上回る可能性があります。メタプロンプティングの有効性をテストするために、テンソル分解のタスクではメタプロンプティングを無効にします。このアプローチを「メタプロンプティングなしの進化」と呼びます。
+</li><br><li>• フルファイル進化。FunSearchなどの従来のアプローチとは異なり、AlphaEvolveは単一の関数に焦点を当てるのではなく、コードベース全体を進化させることができます。フルファイル進化の重要性をテストするために、テンソル分解において損失関数のみを進化させる代替案を検討します。このアプローチを「フルファイル進化なし」と呼びます。
+</li><br><li>• 強力な言語モデル。AlphaEvolveは、非常に多様なサンプルを取得するために、小規模な言語モデルと大規模な言語モデルを組み合わせて利用しています。このコンポーネントの重要性を理解するために、単一の小さなベースモデルのみを使用する代替案を検討します。私たちはこのアプローチを「小規模ベースLLMのみ」と呼んでいます。
+<!--
+• Evolutionary approach. AlphaEvolve utilizes an evolutionary approach, where previ- 
+ously generated programs are stored in a database and used to obtain better programs 
+in subsequent iterations. To analyze the importance of evolution, we consider an 
+alternative approach, which repeatedly feeds the same initial program to the language 
+model. We refer to this approach as “No evolution”. 
+</li><br><li>• Context in prompts. AlphaEvolve uses powerful language models with large context 
+windows, whose output can be improved signifcantly by providing problem-specifc 
+context in the prompt. To test the importance of context, we consider an alternative 
+approach where no explicit context is added to the prompt. We refer to this approach 
+as “No context in the prompt”. 
+
+</li><br><li>• Meta prompts. AlphaEvolve also uses meta prompts in order to improve the prompts 
+that are provided to the language model. This allows it to potentially surpass the 
+performance one can obtain using a human prompter. To test the efcacy of meta 
+prompting, we disable it for the task of tensor decomposition. We refer to this approach 
+as “No meta prompt evolution”. 
+</li><br><li>• Full-fle evolution. Unlike previous approaches such as FunSearch, AlphaEvolve can 
+evolve an entire codebase instead of focusing on a single function. To test the im- 
+portance of full-fle evolution, we consider an alternative in the context of tensor 
+decomposition where only the loss function is evolved. We refer to this approach as “No full-fle evolution”. 
+</li><br><li>• Powerful language models. AlphaEvolve relies on a mixture of small and large lan- 
+guage models in order to obtain highly diverse samples. To understand the importance 
+of this component, we consider an alternative where only a single small base model is 
+used. We refer to this approach as “Small base LLM only”.
+-->
+</li></ul></div>
+</p><p>
+
+図8は、包括的なAlphaEvolveアプローチと、上記の様々な代替アプローチの結果を示しています。ご覧のとおり、各コンポーネントが結果の大幅な改善に貢献しています。
+<!--
+Figure 8  shows the results of the all-inclusive AlphaEvolve approach as well as the various alternatives listed above. As can be seen, each of the components is responsible for a signifcant improvement in the results. 
+-->
+</p>
+<center><img src="images/fig8.png"></center>
+<p>
+図8 | 左: 行列乗算を高速化するための低ランクテンソル分解を求める問題におけるAlphaEvolveのアブレーション。右: キッシング数を改善するための球面パッキングを求める問題におけるAlphaEvolveのアブレーション。各曲線は、計算予算を増加させた場合の個々の設定のパフォーマンスを、検討対象のすべてのターゲットにおける平均で示しています（ターゲットメトリックの値が高いほど優れています）。陰影は、異なる乱数シードで初期化されたAlphaEvolveの3回の独立した実行における平均のターゲット内標準偏差を示しています。
+<!--
+Figure 8 | Left: Ablations of AlphaEvolve on the problem of fnding low-rank tensor decom- position for faster matrix multiplication. Right: Ablations of AlphaEvolve on the problem of fnding sphere packings for improving kissing numbers. Each curve shows the performance of an individual setting with increasing compute budget, averaged over all considered targets (higher values on the target metric are better). The shades indicate intra-target standard deviation, averaged over three independent runs of AlphaEvolve, initialized with diferent random seeds. 
+-->
+</p>
+<h2>5. 関連研究 </h2>
+<!--
+<h2>5.  Related work </h2>
+-->
+<p>
+進化的手法　AlphaEvolveは、進化的プログラミング、あるいは遺伝的プログラミング[52]に関する研究の長い伝統を継承する。進化的プログラミングでは、一連の突然変異と交差演算子を繰り返し用いて、プログラムのプールを進化させる[5, 49]。特に、古典的な進化的手法は、記号回帰アプリケーション[64, 84]、自動化された科学的発見[20]またはアルゴリズム的発見[16]、およびスケジューリング[115]の問題において成功を収めてきた。しかし、これらの手法の課題は、手書きの進化演算子を使用することであり、これは設計が難しく、ドメインの重要な特性を捉えられない可能性がある。対照的に、AlphaEvolveはLLMを用いてこれらの演算子の構築を自動化する。つまり、LLMの世界知識を活用して、許可される突然変異演算子のセットを事前に定義することなく、プログラムを突然変異させる。
+<!--
+Evolutionary methods. AlphaEvolve extends a long tradition of research on evolutionary
+or genetic programming [52], where one repeatedly uses a set of mutation and crossover
+operators to evolve a pool of programs [5, 49]. In particular, classical evolutionary techniques
+have succeeded in symbolic regression applications [64, 84], automated scientific [20] or
+algorithmic [16] discovery, and scheduling [115] problems. However, a challenge with these
+methods is the use of handwritten evolution operators, which can be hard to design and may
+fail to capture important properties of the domain. In contrast, AlphaEvolve uses LLMs to
+automate the construction of these operators—it leverages the LLM’s world knowledge to
+mutate programs without the need to pre-define a set of allowed mutation operations.
+-->
+</p><p>
+AlphaEvolveはLLMを用いてこれらの演算子の構築を自動化します。つまり、LLMの世界知識を活用して、許可される突然変異操作のセットを事前に定義することなくプログラムを変化させます。
+AlphaEvolveに先立って、LLMと進化を組み合わせた最近の取り組みがいくつかありました。具体的には、Romera-Paredesら[80]が数学的発見へのアプローチとして導入したFunSearchシステムを拡張しています。FunSearchはその後、ベイズ最適化のための獲得関数の学習[2]、認知モデルの発見[13]、グラフ間の距離の計算[100]、組合せ競争プログラミング[98]などの下流タスクで使用されました。AlphaEvolveは、FunSearchとその最近の再実装[23]を3つの重要な点で凌駕しています。まず、FunSearchでは単一のPython関数の進化しか許可されていませんでしたが、AlphaEvolveでは、幅広いプログラミング言語で書かれたコードベース全体の進化を許可しています。第二に、FunSearchは単一の目的関数を最適化していたのに対し、AlphaEvolveは多目的最適化を実行する機能を提供しています。第三に、FunSearchのLLMは比較的小規模で、コードのみで学習されていました。これとは対照的に、AlphaEvolveは最先端のLLMと、豊富な自然言語コンテキストおよびフィードバックを活用しています。本論文で実証したように、これらの拡張により、AlphaEvolveはFunSearchでは対応できなかった重要な難問に取り組むことができます。
+<!--
+AlphaEvolve uses LLMs to automate the construction of these operators—it leverages the LLM’s world knowledge to mutate programs without the need to pre-defne a set of allowed mutation operations. 
+AlphaEvolve was preceded by a body of recent eforts that combine LLMs and evolution; specifcally, it extends the FunSearch system, introduced by Romera-Paredes et al. [80] as an approach to mathematical discovery. FunSearch was subsequently used in downstream tasks such as learning acquisition functions for Bayesian optimization [2], discovering cognitive models [13], computing distances between graphs [100], or combinatorial competitive pro- gramming [98]. AlphaEvolve goes beyond FunSearch and its recent reimplementation [23] in three key ways. First, while FunSearch only allowed the evolution of a single Python function, AlphaEvolve allows evolution over entire codebases written in a wide range of programming languages. Second, FunSearch optimized a single objective function, while AlphaEvolve provides the ability to perform multiobjective optimization. Third, the LLMs in FunSearch were relatively small and solely trained on code. By contrast, AlphaEvolve uses frontier LLMs and rich forms of natural-language context and feedback. As has been demonstrated in this paper, these extensions allow AlphaEvolve to address important challenging problems that were not amenable to FunSearch. 
+-->
+</p><p>
+このカテゴリーの他の取り組みとしては、シミュレーションされたロボットのセットのためのプログラム的なポリシーを発見するためにLLM誘導進化プロセスを使用するLehmanらによるアプローチ[55]や、コード合成のためのHembergらによるアプローチ[40]がある。同様のアプローチは、記号回帰[34, 86]、組み合わせ最適化のためのヒューリスティックの発見[61, 112, 114]、分子構造の合成[102]など、いくつかの科学的および数学的タスクで使用されている。LLM誘導進化は、LLMプロンプトの強化[26]やニューラルアーキテクチャの探索[14]によってAIシステムを改善するためにも使用されている。AlphaEvolveは、その規模、柔軟性、および幅広いドメインへの一般的な適用性においてこれらのアプローチとは異なる。
+<!--
+Other eforts in this category include the approach by Lehman et al. [55], which uses an LLM-guided evolution process to discover programmatic policies for a set of simulated robots; or the approach by Hemberg et al. [40] for code synthesis. Similar approaches have found use in several scientifc and mathematical tasks, including symbolic regression [34, 86], discovering heuristics for combinatorial optimization [61, 112, 114], and synthesizing molecular structures [102]. LLM-guided evolution has also been used to improve AI systems by enhancing LLM prompts [26] and searching over neural architectures [14]. AlphaEvolve difers from these approaches in its scale, fexibility, and general applicability to a broad range of domains. 
+-->
+</p><p>
+近年、LLM誘導進化の基本パラダイムを補完的なアイデアで拡張する研究がいくつか行われています。例えば、Surinaら[93]は強化学習を通してLLMを継続的にfnetuningすることで進化プロセスを補完しています。Grayeliら[34]は、プール内の高性能プログラムを自然言語に要約するLLM誘導概念学習ステップによって進化プロセスを強化しています。AlphaEvolveが動作する規模においてこれらのアイデアの利点を理解するには、さらなる調査が必要です。
+<!--
+Some recent eforts have augmented the basic paradigm of LLM-guided evolution with complementary ideas. For example, Surina et al. [93] complement the evolution process by continuously fnetuning the LLM through reinforcement learning. Grayeli et al. [34] enhance the evolution process with an LLM-directed concept learning step that summarizes high-performing programs in the pool into natural language. More investigation is required to understand the benefts of these ideas at the scale at which AlphaEvolve operates. 
+-->
+
+</p><p>
+進化的手法は、最近のAI Co-Scientist研究 [33] でも活用されています。この研究では、仮説発見、仮説のランク付け、文献レビューといったタスクにそれぞれ異なるエージェントを用いて科学的発見を自動化することを目指しています。AI Co-Scientistが科学的仮説とその評価基準を自然言語で表現するのに対し、AlphaEvolveは進化するコードに焦点を当て、プログラムによる評価関数を用いて進化を指示します。この選択により、LLMの幻覚を大幅に回避することができ、AlphaEvolveは多数のタイムステップにわたって進化プロセスを継続することができます。しかしながら、原理的にはこれら2つのアプローチを組み合わせることが可能であり、自然言語とプログラムによる表現を柔軟に組み合わせる手法が実現可能です。
+<!--
+Evolutionary methods have also found use in the recent AI Co-Scientist work [33], which seeks to automate scientifc discovery using distinct agents for tasks like hypothesis discovery, ranking of hypotheses, and literature review. While AI Co-Scientist represents scientifc hypotheses and their evaluation criteria in natural language, AlphaEvolve focuses on evolving code, and directs evolution using programmatic evaluation functions. This choice enables us to substantially sidestep LLM hallucinations, which allows AlphaEvolve to carry on the evolution process for a large number of time steps. Nevertheless, it is possible in principle to combine the two approaches, leading to a method that allows a fexible combination of natural-language and programmatic idioms. 
+-->
+</p><p>
+<strong>超最適化とアルゴリズム発見</strong> AlphaEvolveは、実行フィードバックを用いて初期プログラムを反復的に改善するという点で、コードの超最適化の手法と見なすことができます。コードの超最適化のアイデアは1980年代に遡ります[67]。LLM以前のこの問題へのアプローチには、体系的列挙[67]、遺伝的探索[19]、モンテカルロサンプリング[83]、深層強化学習[66]などがありました。さらに、行列乗算などの単一の問題に焦点を当てた限定的な設定では、AlphaTensorなどのシステムが証明可能に正しいアルゴリズムを発見することもできました[25]。
+<!--
+<strong>Superoptimization and algorithm discovery.</strong>　AlphaEvolve can be viewed as a method for code superoptimization in that it iteratively improves an initial program using execution feed- back. The idea of code superoptimization goes back to the 1980s [67]; pre-LLM approaches to the problem included systematic enumeration [67], genetic search [19], Monte Carlo sampling [83], and deep reinforcement learning [66]. Additionally, in limited settings that focus on a single problem such as matrix multiplication, there have been systems such as AlphaTensor that were also able to discover provably correct algorithms [25]. 
+-->
+</p><p>
+最近では、LLMをベースにした超最適化とアルゴリズム発見へのアプローチが数多く登場しています。これらの研究は、コーディングタスクにおけるLLMの成功に基づいており、AlphaCode [58]のような（シミュレーションによる）プログラミング競技での成功がその好例でしょう。例えば、LLMエージェントは、アテンション演算 [15] や、より一般的なユーザー指定演算 [54] など、GPUカーネルの特定の演算を最適化するために使用されています。また、LLMを用いて新しい進化アルゴリズムを発見する研究 [53]、言語モデルの訓練 [56]、ウェアハウス規模のコンピュータを最適化する研究 [59] もあります。その他の最近の研究 [105] では、数学的タスクとコーディングタスクを実行するために、複数のLLMエージェントが互いに対話する手法も提案されています。
+<!--
+More recently, a body of LLM-based approaches to superoptimization and algorithm discovery have emerged. This literature builds on the success of LLMs in coding tasks, perhaps best illustrated by their success in (simulated) programming competitions as in the case of AlphaCode [58]. For instance, LLM agents have been used to optimize certain operations in GPU kernels, such as the attention operation [15] or more general user-specifed operations [54]. There is also work on using LLMs to discover novel evolutionary algorithms [53], train language models [56], and optimize warehouse-scale computers [59]. Other recent work [105] has also proposed the use of multiple LLM agents that converse with each other to accomplish mathematical and coding tasks. 
+-->
+</p><p>
+LLM をアルゴリズム発見に使用するこれまでの研究では有望な結果が得られていますが、進化アルゴリズムに LLM を活用する AlphaEvolve のアプローチにより、第 3 章で示すように、はるかに困難な問題に取り組むことができます。
+<!--
+While previous work on using LLMs for algorithm discovery provided promising results, AlphaEvolve’s approach to leverage it for evolutionary algorithms allows us to address signif- cantly more challenging problems, as demonstrated in  Section 3 . 
+-->
+</p><p>
+<strong>科学的および数学的発見のためのAI</strong>　過去10年間で、AIシステムはタンパク質構造予測[45]から量子物理学[6、81]、気候科学[51]まで、幅広い科学分野とタスクに適用されてきました。特に、材料科学[44、69、91、116]、化学[12、62]、バイオインフォマティクス[65、82]、地球科学[76]、量子物理学[29、75]など、複数の分野の科学的問題を対象としたLLMベースの最近の方法が数多くあります（このトピックに関する調査については、[35、63、78]を参照）。
+<!--
+<strong>AI for scientifc and mathematical discovery.</strong>　Over the last decade, AI systems have been applied to a wide range of scientifc disciplines and tasks, from protein structure prediction [45] to quantum physics [6, 81] to climate sciences [51]. In particular, there are numerous recent LLM-based methods that target scientifc problems in multiple disciplines, such as materials science [44, 69, 91, 116], chemistry [12, 62], bioinformatics [65, 82], geoscience [76], and quantum physics [29,  75 ] (for surveys on the topic, see [35,  63 ,  78 ]). 
+-->
+</p><p>
+これらの手法の多くは、科学的発見プロセスのいくつかの異なる段階を自動化するために LLM を使用しています [36, 57, 103, 106, 109]。たとえば、仮説やアイデアの生成とランク付けなどです [37, 87]。これらの方法のうち、特に AlphaEvolve に関連するのは、LLM 誘導ツリー検索ベースアルゴリズム [11] や LLM 誘導進化アルゴリズム [33, 110, 117] を使用する方法です。他の研究では、LLM を使用して実験の計画と設計 [7, 10, 42, 72] や実験の実行とワークフロー [27, 60, 79, 102, 113] を最適化しています。最後に、データ分析段階に焦点を当てた研究もあります [77]。AlphaEvolve は、プログラム的な仮説表現と評価指標を使用する点で、これらの方法のほとんどと異なります。
+<!--
+Many of these methods use LLMs to automate several distinct stages of the scientifc discovery process [36, 57, 103, 106, 109], e.g., for generating and ranking hypotheses and ideas [37, 87]. Of these methods, especially related to AlphaEvolve are the methods that use LLM-guided tree search-based algorithms [11] or LLM-guided evolutionary algorithms [33, 110, 117]. Other works use LLMs to optimize experimental planning and design [7, 10, 42, 72] or experiment execution and workfow [27, 60, 79, 102, 113]. Finally, there are also works focusing on the data analysis stage [77]. AlphaEvolve difers from most of these methods in its use of programmatic hypothesis representations and evaluation metrics. 
+-->
+</p><p>
+AIシステムは純粋数学の進歩にも貢献してきました[22]。この文脈において、FunSearchアプローチ[23, 80]は、数学的命題の証拠と反例を発見するための強力なツールとしてLLM誘導進化を確立しました。これは、数学的命題の形式的および非形式的証明を見つける問題と相補的な問題です[3, 18, 95, 96, 107, 108]。
+<!--
+AI systems have also contributed to advances in pure mathematics [22]. In this context, the FunSearch approach [23, 80] established LLM-guided evolution as a powerful tool for discovering witnesses for, and counterexamples to, mathematical statements—a problem that is complementary to that of fnding formal and informal proofs of mathematical statements [3, 18,  95 ,  96 ,  107 ,  108 ]. 
+-->
+</p>
+<h2>6. 考察</h2>
+<!--
+<h2>6.  Discussion </h2>
+-->
+<p>
+AlphaEvolve は、最先端の LLM と進化的フレームワーク内の自動評価メトリックを組み合わせることで得られる驚くべきパワーを実証しており、数十年前の数学的問題に関する新たな発見や、高度に最適化されたコンピューティング スタックの実用的な改善につながる可能性があります。
+<!--
+AlphaEvolve demonstrates the surprising power of combining state-of-the-art LLMs with automated evaluation metrics within an evolutionary framework, which can lead to new discoveries on decades-old mathematical problems as well as practical improvements to highly optimized compute stacks. 
+-->
+</p><p>
+興味深いことに、AlphaEvolveは、同じ問題に異なる方法でアプローチすることを可能にします。例えば、解を直接探索する、解をゼロから構築する関数を見つける、あるいは解を見つけるための探索アルゴリズムを進化させるなどです。AlphaEvolveを異なる方法で適用すると、それぞれ異なるバイアスが生じます（例えば、構成関数を見つけると、対称性の高いオブジェクトを発見しやすくなる可能性があります[80]）。そのため、AlphaEvolveは異なる問題に適用できます。
+<!--
+Interestingly, AlphaEvolve often allows approaching the same problem in diferent ways: searching for the solution directly, fnding a function that constructs it from scratch, or evolving a search algorithm to fnd it. Applying AlphaEvolve in diferent ways comes with diferent biases (for example, fnding constructive functions may favor discovering highly symmetric objects [80]) and thus can suit diferent problems. 
+-->
+</p><p>
+AlphaEvolveは、進化的プロセスを通じてベースLLMの能力を大幅に向上させるテスト時計算エージェントとも捉えることができます（例えば、繰り返しサンプリングと比較して）。これは、機械フィードバックがテスト時計算を、新たな科学的発見や非常に価値の高い実用的な最適化が行われる領域までスケールアップし続けることをいかにして維持できるかを示す、説得力のあるデモンストレーションと言えるでしょう。一方で、自然な次のステップとして、AlphaEvolveによって強化されたベースLLMの性能を次世代のベースモデルに取り込むことを検討することが挙げられます。これは本質的な価値を持つ可能性があり、AlphaEvolveの次期バージョンの向上にも繋がる可能性も高いでしょう。
+<!--
+AlphaEvolve can also be seen as a test-time compute agent that, through its evolutionary procedure, signifcantly enhances the capability of the base LLM (compared to, e.g., repeated sampling). On one hand, this can be seen as a compelling demonstration of how machine feedback is able to sustain test-time compute scaling up to regimes where new scientifc discoveries and highly valuable practical optimizations are made. On the other hand, a natural next step will be to consider distilling the AlphaEvolve-augmented performance of the base LLMs into the next generation of the base models. This can have intrinsic value and also, likely, uplift the next version of AlphaEvolve. 
+-->
+</p><p>
+蒸留の他にも、AlphaEvolveが独自のインフラストラクチャと（将来のバージョンの）ベースLLMの効率性を向上させる実用的な発見を行えるという点も興味深い点です。現時点では、その効果は中程度で、次期バージョンのAlphaEvolveを改善するためのフィードバックループには数ヶ月かかります。しかし、これらの改善により、堅牢な評価関数を備えた環境（問題）を複数設定することの価値がより広く認識され、ひいては今後、より価値の高い実用的な発見につながると期待しています。
+<!--
+Beyond distillation, it is also intriguing that AlphaEvolve can make practical discoveries that increase the efciency of its own infrastructure and of (future versions of) its base LLMs. Currently, the gains are moderate and the feedback loops for improving the next version of AlphaEvolve are on the order of months. However, with these improvements we envision that the value of setting up more environments (problems) with robust evaluation functions will become more widely recognized, which in turn will result in more high-value practical discoveries going forward. 
+-->
+</p><p>
+AlphaEvolveの主な限界は、自動評価器を設計できる問題しか扱えないことです。これは数学および計算科学の多くの問題に当てはまりますが、自然科学など、一部の実験しかシミュレーションや自動化ができない分野もあります。AlphaEvolveはLLMによるアイデアの評価を可能にしますが、これは私たちが最適化した設定ではありません。しかし、同時並行研究によりこれが可能であることが示されており[33]、2つの設定を連携させ、LLMが高レベルのアイデアに関するフィードバックを提供し、その後実装段階に移行し、コード実行を通じて機械からのフィードバックを得るという自然な流れになるでしょう。
+<!--
+The main limitation of AlphaEvolve is that it handles problems for which it is possible to devise an automated evaluator. While this is true of many problems in the mathematical and computational sciences, there are domains such as the natural sciences where only some experiments can be simulated or automated. While AlphaEvolve does allow for LLM-provided evaluation of ideas, this is not a setting we have optimized for. However, concurrent work shows this is possible [33], and a natural step would be to link the two settings, with LLMs providing feedback on high-level ideas before transitioning to an implementation stage, for which machine feedback is available through code execution. 
+-->
+</p>
+<h2>謝辞</h2>
+<!--
+<h2>Acknowledgements </h2>
+-->
+<p>
+このホワイトペーパーをレビューしていただいたMichael Figurnov氏、初期の調査と洞察に満ちた議論をしてくださったAlhussein Fawzi氏、Bernardino Romera-Paredes氏、Ankit Anand氏、サポートとアドバイスをしてくださったStig Petersen氏とDemis Hassabis氏、実用的なアプリケーションの管理に関する有益なアドバイスをしてくださったJD Velasquez氏、そしてAlphaEvolveの初期ユーザーと協力者の皆様には、多様なユースケースと洞察に満ちたフィードバックを提供してくださったことに感謝いたします。これらの方々のおかげで、AlphaEvolveは幅広いアプリケーションに対応する、より堅牢で汎用性の高いツールへと進化しました。このホワイトペーパーで取り上げたアプリケーションへの、これらの方々の貴重な貢献に深く感謝いたします。
+<!--
+We thank Michael Figurnov for reviewing this white paper; Alhussein Fawzi, Bernardino Romera-Paredes, and Ankit Anand for early explorations and insightful discussions; Stig Petersen and Demis Hassabis for support and advice; JD Velasquez for helpful advice on managing the practical applications; and all early users and collaborators of AlphaEvolve for their diverse use cases and insightful feedback, which shaped it into a more robust and versatile tool for a wide range of applications. We gratefully acknowledge the invaluable contributions of these individuals towards the applications highlighted in this white paper: 
+-->
+</p><p>
+具体的な未解決の数学問題を提案し、AlphaEvolve に最適な定式化方法をアドバイスしてくれた Terence Tao、Javier Gomez Serrano、Jordan Ellenberg に感謝します。また、そのような問題に AlphaEvolve を適用する貢献をした Bogdan Georgiev と Johannes Bausch にも感謝します。
+<!--
+Terence Tao, Javier Gomez Serrano, and Jordan Ellenberg for suggesting specifc open mathematical problems and advising on how to best formulate them for AlphaEvolve; Bog- dan Georgiev and Johannes Bausch for their contributions to applying AlphaEvolve to such problems. 
+-->
+</p><p>
+データセンターのスケジューリングへの応用を共同で主導してくれた Mohammadamin Barekatain、Patrick Heisel、Chase Hensel、Robert O’Callahan、Pengming Wang に感謝します。多大な貢献をしてくれた Federico Piccinini、Sultan Kenjeyev、Andrea Michi に感謝します。有益なアドバイスを提供してくれた Kieran Milan、Daniel Mankowitz、Cosmin Paduraru、Calin Cascaval、Tammo Spalink、Natasha Antropova に感謝します。この研究をレビューしてくれた Aaron Gentleman、Gaurav Dhiman、Parthasarathy Ranganatha、Amin Vahdat に感謝します。
+<!--
+Mohammadamin Barekatain, Patrick Heisel, Chase Hensel, Robert O’Callahan, and Pengming Wang for co-leading the application to data center scheduling; Federico Piccinini, Sultan Kenjeyev, and Andrea Michi for making signifcant contributions; Kieran Milan, Daniel Mankowitz, Cosmin Paduraru, Calin Cascaval, Tammo Spalink, and Natasha Antropova for providing helpful advice; Aaron Gentleman, Gaurav Dhiman, Parthasarathy Ranganatha, and Amin Vahdat for reviewing this work. 
+-->
+</p><p>
+Gemini カーネル エンジニアリングへのアプリケーションをリードした Yanislav Donchev 氏、多大な貢献をした Richard Tan-burn 氏、役立つアドバイスを提供してくれた Justin Chiu 氏と Julian Walker 氏、この作業をレビューした Jean-Baptiste Alayrac 氏、Dmitry Lepikhin 氏、Sebastian Borgeaud 氏、Koray Kavukcuoglu 氏、Jef Dean 氏に感謝します。
+<!--
+Yanislav Donchev for leading the application to Gemini kernel engineering; Richard Tan- burn for making signifcant contributions; Justin Chiu and Julian Walker for providing helpful advice; Jean-Baptiste Alayrac, Dmitry Lepikhin, Sebastian Borgeaud, Koray Kavukcuoglu and Jef Dean for reviewing this work. 
+-->
+</p><p>
+TPU 回路設計への応用を主導した Timur Sitdikov 氏、回路評価インフラストラクチャを提供した Georges Rotival 氏、TPU 設計の結果の検証と妥当性確認を行った Kirk Sanders 氏、Srikanth Dwarakanath 氏、Indranil Chakraborty 氏、Christopher Clark 氏、有益なアドバイスをくれた Vinod Nair 氏、Sergio Guadarrama 氏、Dimitrios Vytiniotis 氏、Daniel Belov 氏、本研究をレビューした Kerry Takenaka 氏、Jef Dean 氏、Sridhar Lakshmanamurthy 氏、Parthasarathy Ranganathan 氏、Amin Vahdat 氏に感謝します。
+<!--
+Timur Sitdikov for leading the application to TPU circuit design; Georges Rotival for providing the circuit evaluation infrastructure; Kirk Sanders, Srikanth Dwarakanath, Indranil Chakraborty, Christopher Clark for verifying and validating the results in the TPU design; Vinod Nair, Sergio Guadarrama, Dimitrios Vytiniotis, and Daniel Belov for their helpful advice; Kerry Takenaka, Jef Dean, Sridhar Lakshmanamurthy, Parthasarathy Ranganathan, and Amin Vahdat for reviewing this work. 
+-->
+</p><p>
+XLA の変更に協力し、有益なアドバイスをくれた Benjamin Chetioui、Sergei Lebedev、Alexander Belyaev、Henning Becker、Oleg Shyshkov、Aliia Khasanova、本研究をレビューしてくれた Giorgio Arena、Marco Cornero、Sebastian Bodenstein に感謝します。
+<!--
+Benjamin Chetioui, Sergei Lebedev, Alexander Belyaev, Henning Becker, Oleg Shyshkov, and Aliia Khasanova for their help with XLA modifcations as well as their helpful advice; Giorgio Arena, Marco Cornero, and Sebastian Bodenstein for reviewing this work. 
+-->
+</p>
+<h2>著者情報</h2>
+<!--
+<h2>Author information </h2>
+-->
+<p>
+以下の著者が同等の貢献をしました：Alexander Novikov、Ngân Vu、Marvin Eisenberger、Emilien˜
+Dupont、Po-Sen Huang、Adam Zsolt Wagner、Sergey Shirabokov、Borislav Kozlovskii、およびMatej Balog。
+<!--
+These authors contributed equally: Alexander Novikov, Ngân Vu, Marvin Eisenberger, Emilien˜ 
+Dupont, Po-Sen Huang, Adam Zsolt Wagner, Sergey Shirobokov, Borislav Kozlovskii, and Matej Balog. 
+-->
+</p><p>
+<strong>貢献</strong>：A.N. と M.B. は、AlphaEvolve の初期バージョンを設計および実装しました。M.B.、A.N.、N.V.、および P.K. は、プロジェクトのビジョンを策定し、問題をスコープ設定しました。N.V. と P.- S.H. は、実際のアプリケーションを監督しました。E.D. と M.E. は、F.J.R.R. と M.B. からの入力に基づいて、AlphaEvolve の反復処理に使用される最初のベンチマーク問題を実装しました。A.N. と M.E. は、S.S.、P.-S.H. の貢献と、M.B.、E.D.、A.Z.W.、および N.V. からの入力に基づいて、AlphaEvolve の最終バージョンを開発しました。A.N.、S.S.、P.-S.H.、および M.E. は、AlphaEvolve の基盤となるインフラストラクチャを保守しました。M.E. と E.D. F.J.R.R. からの情報提供を受け、AlphaEvolve を使用して行列乗算の新しいアルゴリズムを発見しました。A.Z.W. は、A.M.、M.E.、A.N. の協力を得て、未解決の数学問題への応用に取り組みました。A.N. は、Borg スケジューリング アプリケーションに貢献しました。P.-S.H. と N.V. は、Gemini カーネル エンジニアリングへの応用に取り組みました。P.-S.H. と A.N. は、TPU 回路設計アプリケーションに貢献しました。B.K. と S.S. は、AlphaEvolve を適用してコンパイラ生成コードを直接最適化する作業に取り組みました。M.E. はアブレーション実験を実施しました。M.B.、A.N.、M.E.、S.S.、および P.-S. H. は、コード レビューの大部分を実施しました。 M.B.、E.D.、S.C.、N.V.、A.Z.W.、F.J.R.R.、M.E.、A.N.、B.K.、S.S.、A.M.、M.P.K.がA.S.、P.-S.H、P.K.の協力を得て論文を執筆しました。N.V.、E.D.、M.E.、S.C.、A.N.、A.Z.W.は図を作成しました。F.J.R.R.、A.M.、A.Z.W.は付随するGoogle Colabを組み立てました。S.N.、A.D.、P.K.は本研究の複数の分野に助言と支援を提供しました。M.B.、A.N.、N.V.、G.H.はチームの調整役を務めました。P.K.は研究プログラムの監督と調整役を務めました。
+<!--
+<strong>Contributions.</strong>　 A.N. and M.B. designed and implemented the initial version of AlphaEvolve. M.B., A.N., N.V. and P.K. developed project vision and scoped problems. N.V. and P.- S.H. oversaw the practical applications. E.D. and M.E. implemented the frst benchmark problem used for iterating on AlphaEvolve, with input from F.J.R.R. and M.B. A.N. and M.E. developed the fnal version of AlphaEvolve, with contributions from S.S., P.-S.H., and input from M.B., E.D., A.Z.W. and N.V. A.N., S.S., P.-S.H. and M.E. maintained the infrastructure underlying AlphaEvolve. M.E. and E.D. used AlphaEvolve to discover new algorithms for matrix multiplication, with input from F.J.R.R. A.Z.W. worked on the applications to open mathematical problems, with help from A.M., M.E., and A.N. A.N. contributed to the Borg scheduling application. P.-S.H. and N.V. worked on the application to Gemini kernel engineering. P.-S.H. and A.N. contributed to the TPU circuit design application. B.K. and S.S. worked on applying AlphaEvolve to directly optimize compiler-generated code. M.E. performed the ablation experiments. M.B., A.N., M.E., S.S. and P.-S. H. performed the 
+majority of code reviews. M.B., E.D., S.C., N.V., A.Z.W., F.J.R.R., M.E., A.N., B.K., S.S., A.M., and M.P.K. wrote the paper, with input from A.S., P.-S.H and P.K. N.V., E.D., M.E., S.C., A.N., and A.Z.W. created the fgures. F.J.R.R., A.M., and A.Z.W. assembled the accompanying Google Colab. S.N., A.D. and P.K. advised and enabled multiple strands of this work. M.B., A.N., N.V. and G.H. coordinated the team. P.K. supervised and coordinated the research program. 
+-->
+</p><p>
+<strong>責任著者</strong>：Matej Balog、Alexander Novikov、Pushmeet Kohli。
+<!--
+<strong>Corresponding authors.</strong>　Matej Balog, Alexander Novikov and Pushmeet Kohli. 
+-->
+</p><p>
+<h2>参考文献</h2>
+<!--
+<h2>References </h2>
+-->
+<div class="styleRef">
+<ul><li>
+[1] J. Abramson, J. Adler, J. Dunger, R. Evans, T. Green, A. Pritzel, O. Ronneberger, L. Will- 
+more, A. J. Ballard, J. Bambrick, et al. Accurate structure prediction of biomolecular 
+interactions with alphafold 3. Nature, 630(8016):493–500, 2024. 
+</li><br><li>[2] V. Aglietti, I. Ktena, J. Schrouf, E. Sgouritsa, F. J. R. Ruiz, A. Malek, A. Bellot, and 
+S. Chiappa. FunBO: Discovering acquisition functions for Bayesian optimization with 
+FunSearch. In International Conference on Machine Learning, 2025. 
+</li><br><li>[3] AlphaProof and AlphaGeometry teams. AI achieves silver-medal standard solving 
+International Mathematical Olympiad problems, 2024. URL https://deepmind.g 
+oogle/discover/blog/ai-solves-imo-problems-at-silver-medal-lev 
+el. 
+</li><br><li>[4] D. Bahdanau, K. Cho, and Y. Bengio. Neural machine translation by jointly learning 
+to align and translate. arXiv preprint arXiv:1409.0473, 2014. 
+</li><br><li>[5] W. Banzhaf, P. Nordin, R. E. Keller, and F. D. Francone. Genetic Programming: An 
+Introduction on the Automatic Evolution of computer programs and its Applications. The 
+Morgan Kaufmann Series in Artifcial Intelligence, 1998. 
+</li><br><li>[6] J. Bausch, A. W. Senior, F. J. H. Heras, T. Edlich, A. Davies, M. Newman, C. Jones, 
+K. Satzinger, M. Y. Niu, S. Blackwell, G. Holland, D. Kafri, J. Atalaya, C. Gidney, 
+D. Hassabis, S. Boixo, H. Neven, and P. Kohli. Learning high-accuracy error decoding 
+for quantum processors. Nature, 635(8040):834–840, 2024. doi: 10.1038/s41586-0 
+24-08148-8. 
+</li><br><li>[7] D. A. Boiko, R. MacKnight, B. Kline, and G. Gomes. Autonomous chemical research 
+with large language models. Nature, 624(7992):570–578, 2023. doi: 10.1038/s415 
+86-023-06792-0. 
+</li><br><li>[8] P. Boyvalenkov, S. Dodunekov, and O. Musin. A survey on the kissing numbers. Serdica 
+Math. J., 38(4):507–522, 2012. ISSN 1310-6600. 
+</li><br><li>[9] J. Bradbury, R. Frostig, P. Hawkins, M. J. Johnson, C. Leary, D. Maclaurin, G. Necula, 
+A. Paszke, J. VanderPlas, S. Wanderman-Milne, and Q. Zhang. JAX: composable 
+transformations of Python+NumPy programs, 2018. URL http://github.com/j 
+ax-ml/jax. 
+</li><br><li>[10] A. M. Bran, S. Cox, O. Schilter, C. Baldassari, A. D. White, and P. Schwaller. Augmenting 
+large language models with chemistry tools. Nature Machine Intelligence, 6(5):525– 
+535, 2024. doi: 10.1038/s42256-024-00832-8. 
+</li><br><li>[11] A. M. Bran, T. A. Neukomm, D. P. Armstrong, Z. Jončev, and P. Schwaller. Chemical 
+reasoning in LLMs unlocks steerable synthesis planning and reaction mechanism 
+elucidation. In arXiv preprint arXiv:2503.08537, 2025. 
+</li><br><li>[12] M. Caldas Ramos, C. J. Collison, and A. D. White. A review of large language models 
+and autonomous agents in chemistry. Chemical Science, 16:2514–2572, 2025. doi: 
+10.1039/D4SC03921A. 
+</li><br><li>[13] P. S. Castro, N. Tomasev, A. Anand, N. Sharma, R. Mohanta, A. Dev, K. Perlin, S. Jain, 
+K. Levin, N. Éltető, W. Dabney, A. Novikov, G. C. Turner, M. K. Eckstein, N. D. Daw, 
+K. J. Miller, and K. L. Stachenfeld. Discovering symbolic cognitive models from human 
+and animal behavior. In International Conference on Machine Learning, 2025. 
+</li><br><li>[14] A. Chen, D. M. Dohan, and D. R. So. EvoPrompting: Language models for code-level 
+neural architecture search. In Advances in Neural Information Processing Systems, 
+2023. 
+</li><br><li>[15] T. Chen, B. Xu, and K. Devleker. Automating GPU kernel generation with DeepSeek-R1 
+and inference time scaling, 2025. URL https://developer.nvidia.com/blog/ 
+automating-gpu-kernel-generation-with-deepseek-r1-and-inference- 
+time-scaling. 
+</li><br><li>[16] X. Chen, C. Liang, D. Huang, E. Real, K. Wang, H. Pham, X. Dong, T. Luong, C.-J. 
+Hsieh, Y. Lu, and Q. V. Le. Symbolic discovery of optimization algorithms. Advances 
+in Neural Information Processing Systems, 2023. 
+</li><br><li>[17] A. Cloninger and S. Steinerberger. On suprema of autoconvolutions with an application 
+to Sidon sets. Proceedings of the American Mathematical Society, 145(8):3191–3200, 
+2017. 
+</li><br><li>[18] K. M. Collins, A. Q. Jiang, S. Frieder, L. Wong, M. Zilka, U. Bhatt, T. Lukasiewicz, Y. Wu, 
+J. B. Tenenbaum, W. Hart, et al. Evaluating language models for mathematics through 
+interactions. Proceedings of the National Academy of Sciences, 121(24):e2318124121, 
+2024. 
+</li><br><li>[19] K. D. Cooper, D. Subramanian, and L. Torczon. Adaptive optimizing compilers for the 
+21st century. The Journal of Supercomputing, 23:7–22, 2002. 
+</li><br><li>[20] M. Cranmer. Interpretable machine learning for science with pysr and symbolicre- 
+gression. jl. arXiv preprint arXiv:2305.01582, 2023. 
+</li><br><li>[21] T. Dao, D. Fu, S. Ermon, A. Rudra, and C. Ré. Flashattention: Fast and memory- 
+efcient exact attention with io-awareness. Advances in neural information processing 
+systems, 35:16344–16359, 2022. 
+</li><br><li>[22] A. Davies, P. Veličković, L. Buesing, S. Blackwell, D. Zheng, N. Tomašev, R. Tanburn, 
+P. Battaglia, C. Blundell, A. Juhász, M. Lackenby, G. Williamson, D. Hassabis, and 
+P. Kohli. Advancing mathematics by guiding human intuition with AI. Nature, 600 
+(7887):70–74, 2021. doi: 10.1038/s41586-021-04086-x. 
+</li><br><li>[23] J. S. Ellenberg, C. S. Fraser-Taliente, T. R. Harvey, K. Srivastava, and A. V. Sutherland. 
+Generative modelling for mathematical discovery. arXiv preprint arXiv:2503.11061, 
+2025. 
+</li><br><li>[24]  P. Erdős. Some remarks on number theory. Riveon Lematematika, 9:45–48, 1955. 
+</li><br><li>[25] A. Fawzi, M. Balog, A. Huang, T. Hubert, B. Romera-Paredes, M. Barekatain, A. Novikov, 
+F. J. R. Ruiz, J. Schrittwieser, G. Swirszcz, D. Silver, D. Hassabis, and P. Kohli. Discov- 
+ering faster matrix multiplication algorithms with reinforcement learning. Nature, 
+610(7930):47–53, 2022. doi: 10.1038/s41586-022-05172-4. 
+</li><br><li>[26] C. Fernando, D. Banarse, H. Michalewski, S. Osindero, and T. Rocktäschel. Prompt- 
+breeder: Self-referential self-improvement via prompt evolution. arXiv preprint 
+arXiv:2309.16797, 2023. 
+</li><br><li>[27] N. Ferruz and B. Höcker. Controllable protein design with language models. Nature 
+Machine Intelligence, 4(6):521–532, 2022. 
+</li><br><li>[28] E. Friedman. Erich’s Packing Center. https://erich-friedman.github.io/pac 
+king/, 2025. Accessed: 2025-04-22. 
+</li><br><li>[29] F. Frohnert, X. Gu, M. Krenn, and E. van Nieuwenburg. Discovering emergent connec- 
+tions in quantum physics research via dynamic word embeddings. Machine Learning: 
+Science and Technology, 6(1):015029, 2025. doi: 10.1088/2632-2153/adb00a. 
+</li><br><li>[30]  M. Ganzhinov. Highly symmetric lines. In arXiv preprint arXiv:2207.08266v1, 2022. 
+</li><br><li>[31] Gemini team. Gemini 2.5: Our most intelligent AI model, 2025. URL https: 
+//blog.google/technology/google-deepmind/gemini-model-thinking-u 
+pdates-march-2025. 
+</li><br><li>[32] F. Gonçalves, D. O. e Silva, and S. Steinerberger. Hermite polynomials, linear fows 
+on the torus, and an uncertainty principle for roots. Journal of Mathematical Analysis 
+and Applications, 451(2):678–711, 2017. 
+</li><br><li>[33] J. Gottweis, W.-H. Weng, A. Daryin, T. Tu, A. Palepu, P. Sirkovic, A. Myaskovsky, 
+F. Weissenberger, K. Rong, R. Tanno, K. Saab, D. Popovici, J. Blum, F. Zhang, K. Chou, 
+A. Hassidim, B. Gokturk, A. Vahdat, P. Kohli, Y. Matias, A. Carroll, K. Kulkarni, 
+N. Tomasev, Y. Guan, V. Dhillon, E. D. Vaishnav, B. Lee, T. R. D. Costa, J. R. Penadés, 
+G. Peltz, Y. Xu, A. Pawlosky, A. Karthikesalingam, and V. Natarajan. Towards an AI 
+co-scientist. arXiv preprint arXiv:2502.18864, 2025. 
+</li><br><li>[34] A. Grayeli, A. Sehgal, O. Costilla Reyes, M. Cranmer, and S. Chaudhuri. Symbolic 
+regression with a learned concept library. Advances in Neural Information Processing 
+Systems, 37:44678–44709, 2024. 
+</li><br><li>[35] M. Gridach, J. Nanavati, C. Mack, K. Z. E. Abidine, and L. Mendes. Agentic AI for 
+scientifc discovery: A survey of progress, challenges, and future directions. In ICLR 
+Workshop: Towards Agentic AI for Science: Hypothesis Generation, Comprehension, 
+Quantifcation, and Validation, 2025. 
+</li><br><li>[36] X. Gu and M. Krenn. Interesting scientifc idea generation using knowledge 
+graphs and LLMs: Evaluations with 100 research group leaders. In arXiv preprint 
+arXiv:2405.17044, 2024. 
+</li><br><li>[37] S. Guo, A. H. Shariatmadari, G. Xiong, and A. Zhang. Embracing foundation models 
+for advancing scientifc discovery. In Proceedings of the IEEE International Conference 
+on Big Data, pages 1746–1755, 2024. doi: 10.1109/bigdata62323.2024.10825618. 
+</li><br><li>[38] K. Gyarmati, F. Hennecart, and I. Z. Ruzsa. Sums and diferences of fnite sets. 
+Functiones et Approximatio Commentarii Mathematici, 37(1):175–186, 2007. 
+</li><br><li>[39] J. K. Haugland. The minimum overlap problem revisited. 
+arXiv:1609.08000, 2016. 
+arXiv preprint 
+</li><br><li>[40] E. Hemberg, S. Moskal, and U.-M. O’Reilly. Evolving code with a large language 
+model. Genetic Programming and Evolvable Machines, 25(2):21, 2024. doi: 10.1007/ 
+s10710-024-09494-2. 
+</li><br><li>[41] J. E. Hopcroft and L. R. Kerr. On minimizing the number of multiplications necessary 
+for matrix multiplication. SIAM J. Appl. Math., 20(1):30–36, Jan. 1971. ISSN 0036- 
+1399. doi: 10.1137/0120004. 
+</li><br><li>[42] K. Huang, Y. Qu, H. Cousins, W. A. Johnson, D. Yin, M. Shah, D. Zhou, R. Altman, 
+M. Wang, and L. Cong. CRISPR-GPT: An LLM agent for automated design of gene- 
+editing experiments. In arXiv preprint arXiv:2404.18021, 2024. 
+</li><br><li>[43] L. Huang, W. Yu, W. Ma, W. Zhong, Z. Feng, H. Wang, Q. Chen, W. Peng, X. Feng, 
+B. Qin, et al. A survey on hallucination in large language models: Principles, taxonomy, 
+challenges, and open questions. ACM Transactions on Information Systems, 43(2): 
+1–55, 2025. 
+</li><br><li>[44] S. Jia, C. Zhang, and V. Fung. LLMatDesign: Autonomous materials discovery with 
+large language models. In arXiv preprint arXiv:2406.13163, 2024. 
+</li><br><li>[45] J. Jumper, R. Evans, A. Pritzel, T. Green, M. Figurnov, O. Ronneberger, K. Tunyasuvu- 
+nakool, R. Bates, A. Žídek, A. Potapenko, A. Bridgland, C. Meyer, S. A. A. Kohl, A. J. 
+Ballard, A. Cowie, B. Romera-Paredes, S. Nikolov, R. Jain, J. Adler, T. Back, S. Petersen, 
+D. Reiman, E. Clancy, M. Zielinski, M. Steinegger, M. Pacholska, T. Berghammer, S. Bo- 
+denstein, D. Silver, O. Vinyals, A. W. Senior, K. Kavukcuoglu, P. Kohli, and D. Hassabis. 
+Highly accurate protein structure prediction with AlphaFold. Nature, 596(7873): 
+583–589, 2021. doi: 10.1038/s41586-021-03819-2. 
+</li><br><li>[46] M. Kauers and J. Moosbauer. Flip graphs for matrix multiplication. In Proceedings 
+of the 2023 International Symposium on Symbolic and Algebraic Computation, pages 
+381–388, 2023. 
+</li><br><li>[47] M. Kauers and J. Moosbauer. Some new non-commutative matrix multiplication 
+algorithms of size (  ,   ,6). ACM Commun. Comput. Algebra, 58(1):1–11, Jan. 2025. 
+ISSN 1932-2232. doi: 10.1145/3712020.3712021. 
+</li><br><li>[48] D. P. Kingma and J. Ba. Adam: A method for stochastic optimization. In International 
+Conference on Learning Representations (ICLR), 2015. 
+</li><br><li>[49] J. R. Koza. Genetic programming as a means for programming computers by natural 
+selection. Statistics and Computing, 4(2):87–112, 1994. doi: 10.1007/BF00175355. 
+</li><br><li>[50] J. D. Laderman. A noncommutative algorithm for multiplying 3 × 3 matrices using 
+23 multiplications. Bulletin of the American Mathematical Society, 82(1):126 – 128, 
+1976. 
+</li><br><li>[51] R. Lam, A. Sanchez-Gonzalez, M. Willson, P. Wirnsberger, M. Fortunato, F. Alet, 
+S. Ravuri, T. Ewalds, Z. Eaton-Rosen, W. Hu, A. Merose, S. Hoyer, G. Holland, 
+O. Vinyals, J. Stott, A. Pritzel, S. Mohamed, and P. Battaglia. Learning skillful 
+medium-range global weather forecasting. Science, 382(6677):1416–1421, 2023. doi: 
+10.1126/science.adi2336. 
+</li><br><li>[52] W. B. Langdon and R. Poli. Foundations of genetic programming. Springer Science & 
+Business Media, 2013. 
+</li><br><li>[53] R. Lange, Y. Tian, and Y. Tang. Large language models as evolution strategies. In 
+Proceedings of the Genetic and Evolutionary Computation Conference Companion, GECCO 
+’24 Companion, pages 579–582. Association for Computing Machinery, 2024. doi: 
+10.1145/3638530.3654238. 
+</li><br><li>[54] R. T. Lange, A. Prasad, Q. Sun, M. Faldor, Y. Tang, and D. Ha. The AI CUDA engineer: 
+Agentic CUDA kernel discovery, optimization and composition. Technical report, 
+Sakana AI, 02 2025. 
+</li><br><li>[55] J. Lehman, J. Gordon, S. Jain, K. Ndousse, C. Yeh, and K. O. Stanley. Evolution through 
+large models. In Handbook of evolutionary machine learning, pages 331–366. Springer, 
+2023. 
+</li><br><li>[56] J. Lehman, J. Gordon, S. Jain, K. Ndousse, C. Yeh, and K. O. Stanley. Evolution 
+Through Large Models, pages 331–366. Springer Nature Singapore, 2024. doi: 
+10.1007/978-981-99-3814-8\_11. 
+</li><br><li>[57] P.-H. Li, Y.-Y. Sun, H.-F. Juan, C.-Y. Chen, H.-K. Tsai, and J.-H. Huang. A large language 
+model framework for literature-based disease–gene association prediction. Briefngs in 
+Bioinformatics, 26(1):bbaf070, 02 2025. ISSN 1477-4054. doi: 10.1093/bib/bbaf070. 
+</li><br><li>[58] Y. Li, D. Choi, J. Chung, N. Kushman, J. Schrittwieser, R. Leblond, T. Eccles, J. Keeling, 
+F. Gimeno, A. D. Lago, T. Hubert, P. Choy, C. de Masson d’Autume, I. Babuschkin, 
+X. Chen, P.-S. Huang, J. Welbl, S. Gowal, A. Cherepanov, J. Molloy, D. J. Mankowitz, 
+E. S. Robson, P. Kohli, N. de Freitas, K. Kavukcuoglu, and O. Vinyals. Competition- 
+level code generation with AlphaCode. Science, 378(6624):1092–1097, 2022. doi: 
+10.1126/science.abq1158. 
+</li><br><li>[59] H. Lin, M. Maas, M. Roquemore, A. Hasanzadeh, F. Lewis, Y. Simonson, T.-W. Yang, 
+A. Yazdanbakhsh, D. Altinbüken, F. Papa, et al. ECO: An LLM-driven efcient code 
+optimizer for warehouse scale computers. arXiv preprint arXiv:2503.15669, 2025. 
+</li><br><li>[60] Z. Lin, H. Akin, R. Rao, B. Hie, Z. Zhu, W. Lu, N. Smetanin, R. Verkuil, O. Kabeli, 
+Y. Shmueli, A. dos Santos Costa, M. Fazel-Zarandi, T. Sercu, S. Candido, and A. Rives. 
+Evolutionary-scale prediction of atomic-level protein structure with a language model. 
+Science, 379(6637):1123–1130, 2023. doi: 10.1126/science.ade2574. 
+</li><br><li>[61] F. Liu, X. Tong, M. Yuan, X. Lin, F. Luo, Z. Wang, Z. Lu, and Q. Zhang. Evolution of 
+heuristics: Towards efcient automatic algorithm design using large language model. 
+arXiv preprint arXiv:2401.02051, 2024. 
+</li><br><li>[62] F. Luo, J. Zhang, Q. Wang, and C. Yang. Leveraging prompt engineering in large 
+language models for accelerating chemical research. ACS Central Science, 2025. doi: 
+10.1021/acscentsci.4c01935. 
+</li><br><li>[63] Z. Luo, Z. Yang, Z. Xu, W. Yang, and X. Du. LLM4SR: A survey on large language 
+models for scientifc research. In arXiv preprint arXiv:2501.04306, 2025. 
+</li><br><li>[64] H. Ma, A. Narayanaswamy, P. Riley, and L. Li. Evolving symbolic density functionals. 
+Science Advances, 8(36):eabq0279, 2022. doi: 10.1126/sciadv.abq0279. 
+</li><br><li>[65] A. Madani, B. Krause, E. R. Greene, S. Subramanian, B. P. Mohr, J. M. Holton, J. L. 
+Olmos, C. Xiong, Z. Z. Sun, R. Socher, J. S. Fraser, and N. Naik. Large language models 
+generate functional protein sequences across diverse families. Nature Biotechnology, 41 
+(8):1099–1106, August 2023. ISSN 1087-0156. doi: 10.1038/s41587-022-01618-2. 
+</li><br><li>[66] D. J. Mankowitz, A. Michi, A. Zhernov, M. Gelmi, M. Selvi, C. Paduraru, E. Leurent, 
+S. Iqbal, J.-B. Lespiau, A. Ahern, T. Köppe, K. Millikin, S. Gafney, S. Elster, J. Broshear, 
+C. Gamble, K. Milan, R. Tung, M. Hwang, T. Cemgil, M. Barekatain, Y. Li, A. Mandhane, 
+T. Hubert, J. Schrittwieser, D. Hassabis, P. Kohli, M. Riedmiller, O. Vinyals, and D. Silver. 
+Faster sorting algorithms discovered using deep reinforcement learning. Nature, 618 
+(7964):257–263, 2023. doi: 10.1038/s41586-023-06004-9. 
+</li><br><li>[67] H. Massalin. Superoptimizer - A look at the smallest program. In R. H. Katz and 
+M. Freeman, editors, Proceedings of the Second International Conference on Architectural 
+Support for Programming Languages and Operating Systems (ASPLOS II), Palo Alto, 
+California, USA, October 5-8, 1987, pages 122–126. ACM Press, 1987. doi: 10.1145/ 
+36206.36194. 
+</li><br><li>[68] M. Matolcsi and C. Vinuesa. Improved bounds on the supremum of autoconvolutions. 
+Journal of mathematical analysis and applications, 372(2):439–447, 2010. 
+</li><br><li>[69] S. Miret and N. M. A. Krishnan. Are LLMs ready for real-world materials discovery? 
+In arXiv preprint arXiv:2402.05200, 2024. 
+</li><br><li>[70] J. Moosbauer and M. Poole. Flip graphs with symmetry and new matrix multiplication 
+schemes. arXiv preprint arXiv:2502.04514, 2025. 
+</li><br><li>[71] J.-B. Mouret and J. Clune. Illuminating search spaces by mapping elites. arXiv preprint 
+arXiv:1504.04909, 2015. 
+</li><br><li>[72] V. Naumov, D. Zagirova, S. Lin, Y. Xie, W. Gou, A. Urban, N. Tikhonova, K. Alawi, 
+M. Durymanov, F. Galkin, S. Chen, D. Sidorenko, M. Korzinkin, M. Scheibye-Knudsen, 
+A. Aspuru-Guzik, E. Izumchenko, D. Gennert, F. W. Pun, M. Zhang, P. Kamya, A. Aliper, 
+F. Ren, and A. Zhavoronkov. DORA AI scientist: Multi-agent virtual research team 
+for scientifc exploration discovery and automated report generation. In bioRxiv 
+preprint:10.1101/2025.03.06.641840. Cold Spring Harbor Laboratory, 2025. doi: 
+10.1101/2025.03.06.641840. 
+</li><br><li>[73] OpenAI. Introducing OpenAI o3 and o4-mini, 2025. URL https://openai.com/i 
+ndex/introducing-o3-and-o4-mini/. 
+</li><br><li>[74] OpenXLA. XLA: composable transformations of Python+NumPy programs. URL 
+https://github.com/openxla/xla. 
+</li><br><li>[75] H. Pan, N. Mudur, W. Taranto, M. Tikhanovskaya, S. Venugopalan, Y. Bahri, M. P. 
+Brenner, and E.-A. Kim. Quantum many-body physics calculations with large language 
+models. Communications Physics, 8(1):49, 2025. doi: 10.1038/s42005-025-01956-y. 
+</li><br><li>[76] D. Pantiukhin, B. Shapkin, I. Kuznetsov, A. A. Jost, and N. Koldunov. Accelerating Earth 
+science discovery via multi-agent LLM systems. In arXiv preprint arXiv:2503.05854, 
+2025. 
+</li><br><li>[77] Z. Rasheed, M. Waseem, A. Ahmad, K.-K. Kemell, W. Xiaofeng, A. N. Duc, and P. Abra- 
+hamsson. Can large language models serve as data analysts? a multi-agent assisted 
+approach for qualitative data analysis. arXiv preprint arXiv:2402.01386, 2024. 
+</li><br><li>[78] S. Ren, P. Jian, Z. Ren, C. Leng, C. Xie, and J. Zhang. Towards scientifc intelligence: 
+A survey of LLM-based scientifc agents. In arXiv preprint arXiv:2503.24047, 2025. 
+</li><br><li>[79] A. Rives, J. Meier, T. Sercu, S. Goyal, Z. Lin, J. Liu, D. Guo, M. Ott, C. L. Zitnick, J. Ma, 
+and R. Fergus. Biological structure and function emerge from scaling unsupervised 
+learning to 250 million protein sequences. Proceedings of the National Academy of 
+Sciences, 118(15):e2016239118, 2021. doi: 10.1073/pnas.2016239118. 
+</li><br><li>[80] B. Romera-Paredes, M. Barekatain, A. Novikov, M. Balog, M. P. Kumar, E. Dupont, 
+F. J. R. Ruiz, J. Ellenberg, P. Wang, O. Fawzi, P. Kohli, and A. Fawzi. Mathematical 
+discoveries from program search with large language models. Nature, 625(7995): 
+468–475, 2023. doi: 10.1038/s41586-023-06924-6. 
+</li><br><li>[81] F. J. R. Ruiz, T. Laakkonen, J. Bausch, M. Balog, M. Barekatain, F. J. H. Heras, 
+A. Novikov, N. Fitzpatrick, B. Romera-Paredes, J. van de Wetering, A. Fawzi, K. Me- 
+ichanetzidis, and P. Kohli. Quantum circuit optimization with AlphaTensor. Nature 
+Machine Intelligence, 7(3):374–385, 2025. doi: 10.1038/s42256-025-01001-1. 
+</li><br><li>[82] O. A. Sarumi and D. Heider. Large language models and their applications in bioinfor- 
+matics. Computational and Structural Biotechnology Journal, 23:3498–3505, 2024. 
+ISSN 2001-0370. doi: https://doi.org/10.1016/j.csbj.2024.09.031. 
+</li><br><li>[83] E. Schkufza, R. Sharma, and A. Aiken. Stochastic superoptimization. In V. Sarkar and 
+R. Bodík, editors, Architectural Support for Programming Languages and Operating 
+Systems, ASPLOS 2013, Houston, TX, USA, March 16-20, 2013, pages 305–316. ACM, 
+2013. doi: 10.1145/2451116.2451150. 
+</li><br><li>[84] M. Schmidt and H. Lipson. Distilling free-form natural laws from experimental data. 
+Science, 324(5923):81–85, 2009. doi: 10.1126/science.1165893. 
+</li><br><li>[85] N. Shinn, F. Cassano, A. Gopinath, K. Narasimhan, and S. Yao. Refexion: Language 
+agents with verbal reinforcement learning. Advances in Neural Information Processing 
+Systems, 36:8634–8652, 2023. 
+</li><br><li>[86] P. Shojaee, K. Meidani, S. Gupta, A. B. Farimani, and C. K. Reddy. LLM-SR: Scientifc 
+equation discovery via programming with large language models. In International 
+Conference on Learning Representations, 2025. 
+</li><br><li>[87] C. Si, D. Yang, and T. Hashimoto. Can LLMs generate novel research ideas? a large- 
+scale human study with 100+ NLP researchers. In International Conference on Learning 
+Representations, 2025. 
+</li><br><li>[88] A. Smirnov. Several bilinear algorithms for matrix multiplication problems ⟨3,   ,   ⟩. 
+https://www.researchgate.net/publication/350897049_Several_Bilin 
+ear_Algorithms_for_Matrix_Multiplication_Problems_3_P_Q, 04 2021. 
+</li><br><li>[89] A. Smirnov. Bilinear algorithm for matrix multiplication ⟨4×4×9; 104⟩. an irreducibly 
+irrational solution of the brent system? https://www.researchgate.net/publi 
+cation/364167198_Bilinear_Algorithm_for_Matrix_Multiplication_4 
+x4x9_104_An_irreducibly_irrational_solution_of_the_Brent_system, 
+10 2022. 
+</li><br><li>[90] A. V. Smirnov. The bilinear complexity and practical algorithms for matrix multipli- 
+cation. Computational Mathematics and Mathematical Physics, 53(12):1781–1795, 
+2013. 
+</li><br><li>[91] Z. Song, M. Ju, C. Ren, Q. Li, C. Li, Q. Zhou, and J. Wang. LLM-Feynman: Leveraging 
+large language models for universal scientifc formula and theory discovery. In arXiv 
+preprint arXiv:2503.06512, 2025. 
+</li><br><li>[92] V. Strassen. Gaussian elimination is not optimal. Numerische mathematik, 13(4): 
+354–356, 1969. 
+</li><br><li>[93] A. Surina, A. Mansouri, L. Quaedvlieg, A. Seddas, M. Viazovska, E. Abbe, and C. Gul- 
+cehre. Algorithm discovery with LLMs: Evolutionary search meets reinforcement 
+learning. In arXiv preprint arXiv:2504.05108, 2025. 
+</li><br><li>[94] R. Tanese. Distributed genetic algorithms for function optimization. University of 
+Michigan, 1989. 
+</li><br><li>[95] A. Thakur, G. Tsoukalas, Y. Wen, J. Xin, and S. Chaudhuri. An in-context learning 
+agent for formal theorem-proving. In Conference on Language Models, 2024. 
+</li><br><li>[96] T. H. Trinh, Y. Wu, Q. V. Le, H. He, and T. Luong. Solving olympiad geometry without 
+human demonstrations. Nature, 625(7995):476–482, 2024. 
+</li><br><li>[97] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and 
+I. Polosukhin. Attention is all you need. In Advances in Neural Information Processing 
+Systems, 2017. 
+</li><br><li>[98] P. Veličković, A. Vitvitskyi, L. Markeeva, B. Ibarz, L. Buesing, M. Balog, and A. Novikov. 
+Amplifying human performance in combinatorial competitive programming. 2024. 
+</li><br><li>[99] A. Verma, L. Pedrosa, M. Korupolu, D. Oppenheimer, E. Tune, and J. Wilkes. Large- 
+scale cluster management at Google with Borg. In Proceedings of the Tenth European 
+Conference on Computer Systems, EuroSys ’15, New York, NY, USA, 2015. Association 
+for Computing Machinery. ISBN 9781450332385. doi: 10.1145/2741948.2741964. 
+</li><br><li>[100] S. Verma, A. Goyal, A. Mathur, A. Anand, and S. Ranu. GRAIL: Graph edit distance 
+and node alignment using llm-generated code. In International Conference on Machine 
+Learning, 2025. 
+</li><br><li>[101] C. Vinuesa del Rio. Generalized Sidon sets. PhD thesis, Universidad Autónoma de 
+Madrid, 2010. 
+</li><br><li>[102] H. Wang, M. Skreta, C. T. Ser, W. Gao, L. Kong, F. Strieth-Kalthof, C. Duan, Y. Zhuang, 
+Y. Yu, Y. Zhu, Y. Du, A. Aspuru-Guzik, K. Neklyudov, and C. Zhang. Efcient evo- 
+lutionary search over chemical space with large language models. In International 
+Conference on Learning Representations, 2025. 
+</li><br><li>[103] Q. Wang, D. Downey, H. Ji, and T. Hope. SciMON: Scientifc inspiration machines 
+optimized for novelty. In Proceedings of the 62nd Annual Meeting of the Association for 
+Computational Linguistics (Volume 1: Long Papers), pages 279–299, Bangkok, Thailand, 
+2024. Association for Computational Linguistics. doi: 10.18653/v1/2024.acl-long.18. 
+</li><br><li>[104] E. P. White. A new bound for Erdős’ minimum overlap problem. Acta Arithmetica, 
+208:235–255, 2023. 
+</li><br><li>[105] Q. Wu, G. Bansal, J. Zhang, Y. Wu, B. Li, E. Zhu, L. Jiang, X. Zhang, S. Zhang, J. Liu, 
+A. H. Awadallah, R. W. White, D. Burger, and C. Wang. AutoGen: Enabling next-gen 
+LLM applications via multi-agent conversation. In arXiv preprint arXiv:2308.08155, 
+2023. 
+</li><br><li>[106] Y. Xia, P. Jin, S. Xie, L. He, C. Cao, R. Luo, G. Liu, Y. Wang, Z. Liu, Y.-J. Chen, Z. Guo, 
+Y. Bai, P. Deng, Y. Min, Z. Lu, H. Hao, H. Yang, J. Li, C. Liu, J. Zhang, J. Zhu, R. Bi, 
+K. Wu, W. Zhang, K. Gao, Q. Pei, Q. Wang, X. Liu, Y. Li, H. Zhu, Y. Lu, M. Ma, Z. Wang, 
+T. Xie, K. Maziarz, M. Segler, Z. Yang, Z. Chen, Y. Shi, S. Zheng, L. Wu, C. Hu, P. Dai, 
+T.-Y. Liu, H. Liu, and T. Qin. Nature language model: Deciphering the language of 
+nature for scientifc discovery. In arXiv preprint arXiv:2502.07527v2, 2025. 
+</li><br><li>[107] K. Yang, A. Swope, A. Gu, R. Chalamala, P. Song, S. Yu, S. Godil, R. J. Prenger, and 
+A. Anandkumar. Leandojo: Theorem proving with retrieval-augmented language 
+models. Advances in Neural Information Processing Systems, 36:21573–21612, 2023. 
+</li><br><li>[108] K. Yang, G. Poesia, J. He, W. Li, K. Lauter, S. Chaudhuri, and D. Song. Formal 
+mathematical reasoning: A new frontier in AI. arXiv preprint arXiv:2412.16075, 2024. 
+</li><br><li>[109] Z. Yang, X. Du, J. Li, J. Zheng, S. Poria, and E. Cambria. Large language models for 
+automated open-domain scientifc hypotheses discovery. In Findings of the Associa- 
+tion for Computational Linguistics: ACL 2024, pages 13545–13565. Association for 
+Computational Linguistics, 2024. doi: 10.18653/v1/2024.findings-acl.804. 
+</li><br><li>[110] Z. Yang, W. Liu, B. Gao, T. Xie, Y. Li, W. Ouyang, S. Poria, E. Cambria, and D. Zhou. 
+MOOSE-Chem: Large language models for rediscovering unseen chemistry scientifc 
+hypotheses. In International Conference on Learning Representations, 2025. 
+</li><br><li>[111] S. Yao, J. Zhao, D. Yu, N. Du, I. Shafran, K. Narasimhan, and Y. Cao. React: Synergizing 
+reasoning and acting in language models. In International Conference on Learning 
+Representations (ICLR), 2023. 
+</li><br><li>[112] S. Yao, F. Liu, X. Lin, Z. Lu, Z. Wang, and Q. Zhang. Multi-objective evolution of 
+heuristic using large language model. In AAAI Conference on Artifcial Intelligence, 
+volume 39, pages 27144–27152, 2025. doi: 10.1609/aaai.v39i25.34922. 
+</li><br><li>[113] G. Ye, X. Cai, H. Lai, X. Wang, J. Huang, L. Wang, W. Liu, and X. Zeng. DrugAssist: A 
+large language model for molecule optimization. In arXiv preprint arXiv:2401.10334, 
+2023. 
+</li><br><li>[114] H. Ye, J. Wang, Z. Cao, F. Berto, C. Hua, H. Kim, J. Park, and G. Song. ReEvo: Large 
+language models as hyper-heuristics with refective evolution. In Advances in Neural 
+Information Processing Systems, volume 37, 2024. 
+</li><br><li>[115] F. Zhang, S. Nguyen, Y. Mei, and M. Zhang. Genetic Programming for Production 
+Scheduling. Springer, 2021. 
+</li><br><li>[116] H. Zhang, Y. Song, Z. Hou, S. Miret, and B. Liu. HoneyComb: A fexible LLM-based 
+agent system for materials science. In Y. Al-Onaizan, M. Bansal, and Y.-N. Chen, 
+editors, Findings of the Association for Computational Linguistics: EMNLP 2024, pages 
+3369–3382. Association for Computational Linguistics, Nov. 2024. doi: 10.18653/v1/ 
+2024.findings-emnlp.192. 
+</li><br><li>[117]  Y. Zhou, H. Liu, T. Srivastava, H. Mei, and C. Tan. Hypothesis generation with large 
+language models. In L. Peled-Cohen, N. Calderon, S. Lissak, and R. Reichart, editors, 
+Proceedings of the 1st Workshop on NLP for Science (NLP4Science), pages 117–139. 
+Association for Computational Linguistics, 2024. doi: 10.18653/v1/2024.nlp4scien 
+ce-1.10. 
+</li></ul></div>
+</p><p>
+<h2>A. 高速行列乗算：完全な結果</h2>
+<!--
+<h2>A.  Faster matrix multiplication: Full results</h2>
+-->
+<p> 
+<strong>結果の全表</strong> 表3に、AlphaEvolveによって得られた最高順位を示します。全体として、実験では54種類の行列乗算サイズを検討しました。これらは、\(2 ≤ 𝑚, 𝑛 ≤ 5\) を満たすサイズ \(⟨𝑚, 𝑛, 𝑝⟩\) を大まかに表すように選択され、𝑝については妥当なカットオフが設定されています。基礎となる行列乗算テンソルの対称性により、3つの軸の任意の順列に対して同等のアルゴリズムが存在するため、ソートされたサイズ \(𝑚 ≤ 𝑛 ≤ 𝑝\) に焦点を当てます。
+<!--
+<strong>Full table of results.</strong> We provide the best ranks obtained by AlphaEvolve in Table 3. Overall,
+we considered 54 matrix multiplication sizes in our experiments. These were chosen roughly
+representing sizes \(⟨𝑚, 𝑛, 𝑝⟩\) where \(2 ≤ 𝑚, 𝑛 ≤ 5\), with some reasonable cutoff for 𝑝. Due to
+symmetries of the underlying matrix multiplication tensor, there exist equivalent algorithms
+for any permutations of the three axes, hence we focus on sorted sizes \(𝑚 ≤ 𝑛 ≤ 𝑝\).
+-->
+
+</p><p>
+AlphaEvolveは、検討した2つのサイズを除くすべてのサイズにおいて、既知の最高ランクと同等かそれを上回るプログラムを発見しました。ちなみに、問題のサイズを大きくしていくと、いくつかの問題が発生しました。発見したプログラムを、単一のGPUアクセラレータを搭載した評価器で、1000個のランダムシードを用いて⟨5,5,5⟩を超えるサイズで実行すると、メモリ不足に陥ることがよくありました。したがって、より大きな行列サイズにセットアップを拡張するには、さらなる最適化が必要です。
+<!--
+In all but two considered sizes, AlphaEvolve discovered programs which either match or surpass the best known rank. Anecdotally, we encountered some difculty when increasing the problem size: when we run the discovered programs on sizes beyond ⟨5,5,5⟩ on 1000 random seeds on evaluators with a single GPU accelerator, we often run out of memory. Hence, extending our setup to larger matrix sizes requires further optimization. 
+-->
+</p>
+<center><img src="images/table3.png"></center>
+<p>
+表 3 | 表 2 の完全版。考慮されたすべてのパラメータについて、テンソル分解で AlphaEvolve が得た最高ランクを示しています。54 のターゲットのうち、AlphaEvolve は 38 のケースで最先端技術に匹敵し、14 のケースでそれを上回り (緑)、2 のケースで遅れをとりました (赤)。すべてのケースで、AlphaEvolve は分解に整数または半整数エントリを使用した正確なアルゴリズムを提供します。⟨3,4,7⟩、⟨4,4,4⟩、および ⟨4,4,8⟩ の場合、AlphaEvolve によって発見されたアルゴリズムは複素数値の乗算を使用し、これは複素数値または実数値行列の正確な乗算に使用できます。この表に示されている分解は、付属の Google Colab で見つけることができます。
+<!--
+Table 3 | Full version of  Table 2 , showing the best ranks obtained by AlphaEvolve for tensor decomposition for all considered parameters. Of the 54 targets, AlphaEvolve matches the state of the art in 38 cases, surpasses it in 14 cases (green), and falls behind in 2 cases (red). In all cases, AlphaEvolve provides exact algorithms, using integer or half-integer entries in the decomposition. For ⟨3,4,7⟩, ⟨4,4,4⟩, and ⟨4,4,8⟩, the algorithms discovered by AlphaEvolve use complex-valued multiplications which can be used for exact multiplication of complex or real-valued matrices. The decompositions shown in this table can be found in the accompanying  Google Colab . 
+-->
+
+</p><p>
+<strong>図 4 (左) の拡大版</strong> 図 9a から 9c は、図 4 (左) の拡大版を示しています。これは、2 つの 4 × 4 行列を乗算する演算を表す 3D テンソルのランク 48 の分解を発見するプログラムに対応しています。
+<!--
+<strong>Magnifed version of  Figure 4  (left).</strong>　In  Figures 9a  to  9c , we show a magnifed version of Figure 4  (left), which corresponds to the program that discovers a decomposition of rank 48 for the 3D tensor representing the operation of multiplying two 4 × 4 matrices. 
+-->
+</p>
+<center><img src="images/fig9a.png"></center>
+<p>
+図 9a | 図 4 (左) の拡大版。4 × 4 行列を乗算するより高速なアルゴリズムを発見するプログラムを示しています (1/3)。
+<!--
+Figure 9a | Magnifed version of  Figure 4 (left), giving the program that discovers a faster algorithm to multiply 4 × 4 matrices (1/3). 
+-->
+</p>
+<center><img src="images/fig9b.png"></center>
+<p>
+図 9b | 図 4 (左) の拡大版。4 × 4 行列を乗算するより高速なアルゴリズムを発見するプログラムを示しています (2/3)。
+<!--
+Figure 9b | Magnifed version of  Figure 4 (left), giving the program that discovers a faster algorithm to multiply 4 × 4 matrices (2/3). 
+-->
+</p>
+<center><img src="images/fig9c.png"></center>
+<p>
+図9c | 図4（左）の拡大版。4×4行列の乗算をより高速に行うアルゴリズムを発見するプログラム（3/3）。ここで、hyperはハイパーパラメータスイープを生成するためのユーザー提供のライブラリです。
+<!--
+Figure 9c | Magnifed version of  Figure 4 (left), giving the program that discovers a faster algorithm to multiply 4 × 4 matrices (3/3). Here hyper is a user-provided library for generating hyperparameter sweeps. 
+-->
+</p>
+<h2>B. AlphaEvolveの数学的発見の詳細</h2>
+<!--
+<h2>B.  Details of mathematical discoveries of AlphaEvolve </h2>
+-->
+<p>
+このセクションで報告されているすべての構築のデータと検証コードは、付属の Google Colab に掲載されています。
+<!--
+The data and verifcation code for all constructions reported in this section appear in the accompanying  Google Colab . 
+-->
+</p>
+<h3>B.1. 最初の自己相関不等式 </h3>
+<!--
+<h3>B.1.  First autocorrelation inequality </h3>
+-->
+<p>
+任意の関数\(f:\mathbb ℝ → \mathbb ℝ\)に対して、\(f\)の自己畳み込みを次のように定義する。
+<!--
+For any function \(f:\mathbb ℝ → \mathbb ℝ\), defne the autoconvolution of \(f\) as
+-->
+\[
+f*f(t) := \int_{\mathbb R} f(t-x)f(x)dx
+\]
+\(\mathcal{C}_1\) を次の式を満たす最大の定数とする。
+<!--
+Let \(\mathcal{C}_1\) denote the largest constant satisfying 
+-->
+\[
+
+\max_{-1/2\leq t\leq 1/2} f*f(t)\geq \mathcal{C}_1\left(\int_{-1/4}^{1/4} f(x)dx\right)^2 \tag{1}
+\]
+全ての非負\(f:\mathbb ℝ → \mathbb ℝ\)に対して成り立つ。この問題は加法的な組合せ論において、シドン集合の大きさに関連して生じる。現在、
+<!--
+for all non-negative \(f:\mathbb ℝ → \mathbb ℝ\). This problem arises in additive combinatorics, relating to the size of Sidon sets. It is currently known that 
+-->
+\[
+1.28 ≤   C_1 ≤ 1.5098
+\]
+ 
+下限は[17]で達成され、上限は[68]でステップ関数の構築により達成された。AlphaEvolveは、\([−1/4,1/4]\)上に600個の等間隔区間を持つステップ関数を発見し、わずかに優れた上限\(C_1 ≤ 1.5053\)を与えた。
+<!--
+with the lower bound achieved in [17] and the upper bound achieved in [68] via a step function construction. AlphaEvolve found a step function with 600 equally-spaced intervals on \([−1/4,1/4]\) that gives a slightly better upper bound \(C_1 ≤ 1.5053\).
+-->
+</p>
+<h3>B.2. 第二自己相関不等式 </h3>
+<!--
+<h3>B.2.  Second autocorrelation inequality </h3>
+-->
+<p>
+\(C_2\) を最小の定数とすると、
+<!--
+Let \(C_2\) be the smallest constant for which one has 
+-->
+\[
+∥ f ∗ f ∥_2^2 ≤  C_2∥ f∗f∥_1∥ f∗f∥_∞ 
+\]
+全ての非負\(f:\mathbb ℝ → \mathbb ℝ\)に対して、
+<!--
+for all non-negative \(f:\mathbb ℝ → \mathbb ℝ\). It is known that 
+-->
+\[
+0.88922 ≤   C_2 ≤ 1
+\]
+下限はステップ関数の構築から得られる[68]。AlphaEvolveは、\([−1/4,1/4]\)上に50個の等間隔の区間を持つステップ関数を発見し、わずかに良い下限\(0.8962 ≤ C_2\)を与えた。
+<!--
+with the lower bound coming from a step function construction [68]. AlphaEvolve found a step function with 50 equally-spaced intervals on \([−1/4,1/4]\) that gives a slightly better lower bound \(0.8962 ≤  C_2\).
+-->
+</p> 
+<h3>B.3. 第三自己相関不等式 </h3>
+<!--
+<h3>B.3.  Third autocorrelation inequality </h3>
+-->
+<p>
+\(C_3\)を次の式を満たす最大の定数とする。
+<!--
+Let \(C_3\) be the largest constant satisfying
+-->
+\[
+\max_{-1/2 \leq t \leq 1/2}| f∗f(t)| ≥ C_3\left(\int_{-1/4}^{1/4}f(x)dx\right)^2
+\]
+
+任意の関数 \(f:\mathbb ℝ → \mathbb ℝ\) に対して。\(f\) が正と負の値を取れるようになったので、明らかに \(C_3 ≤ C_1\) である。上限 \(C_3 ≤ 1.45810\) を与えるステップ関数が存在する [101, 75 ページ]。AlphaEvolve は \([−1/4,1/4]\) 上に400 等間隔の区間を持つステップ関数を発見し、これはわずかに良い上限 \(C_3 ≤ 1.4557\) を与える。
+<!--
+for any function \(f:\mathbb ℝ → \mathbb ℝ\). Clearly \(C_3 ≤ C_1\), since we now allow \(f\) to take positive and negative values. There is a step function that gives the upper bound \(C_3 ≤ 1.45810\) [101, page 75]. AlphaEvolve found a step function with 400 equally-spaced intervals on \([−1/4,1/4]\) that gives a slightly better upper bound \(C_3 ≤ 1.4557\). 
+-->
+</p><p>
+<h3>B.4. 不確実性不等式</h3>
+<!--
+<h3>B.4.  An uncertainty inequality </h3>
+-->
+<p>
+関数\(f:\mathbb ℝ → \mathbb ℝ\)が与えられたとき、フーリエ変換\(\hat{f}(\xi):=\int_{\mathbb ℝ}f(x)e^{−2\pi iz\xi}dx\)を定義し、
+<!--
+Given a function \(f:\mathbb ℝ → \mathbb ℝ\), define the Fourier transform \(\hat{f}(\xi):=\int_{\mathbb ℝ}f(x)e^{−2\pi iz\xi}dx\) and 
+-->
+\[
+A(f):= inf\{r>0:f(x)≥ 0\; for\; all\; |x|≥r \}
+\]
+ 
+\(C_4\) を最大の定数とすると、
+<!--
+Let \(C_4\) be the largest constant for which one has 
+-->
+\[
+A(f)A(\hat{f}) ≥  C_ 4
+\]
+
+\(\max(f(0),\hat{f}(0)) < 0\)を満たすすべての偶数\(f\)に対して、
+<!--
+for all even \(f\) with \(\max(f(0),\hat{f}(0)) < 0\). It is known [32] that 
+-->
+\[
+0.2025 ≤ C_4 ≤ 0.3523.
+\]
+
+（論文では上限は0.353とされていますが、その解を4桁目に丸めると0.3523になります）。我々は[32]と同様の線形結合を用いて、上限を\(C_4 ≤ 0.3521\)に改善しましたが、AlphaEvolveによって発見された定数を使用しました。
+<!--
+(The upper bound is stated as 0.353 in the paper, but rounding their solution to the fourth digit gives 0.3523). We improved the upper bound to   \(C_4 ≤ 0.3521\) with a similar linear combination as in [32], but with refned constants that were found by AlphaEvolve. 
+-->
+</p><p>
+\(C_4\) の上限を得るには、条件を満たす特定の「テスト関数」\(f\) を構築し、この関数の値 \(A(f)A(\hat{f})\) を計算します。この値は、上限 \(C_4 ≤ A(f)A(\hat{f})\) を与えます。[32] のアプローチに倣い、テスト関数は \(f(x)=P(x)e^{-\pi x^2}\) の形式で求められます。ここで、\(P(x)\) は、エルミート多項式 \(H_{4k}(x)\) の線形結合として構成される偶多項式です。この形式は、\(H_n(x)e^{-\pi x^2}\) のフーリエ変換が \(i^n H_n(\xi)e^{-\pi \xi^2}\) であるため、特に有用です。偶数多項式 \(P(x)=\sum c_{4k}H_{4k}
+(x)\) に対して、\(f(x)\) のフーリエ変換は \(\hat{f}(\xi)=\sum c_{4k}i^{4k}H_{4k}(\xi)e^{-\pi \xi^2}=(\sum c_{4k}H_{4k}(\xi))e^{-\pi\xi^ 2}= P(\xi)e^{-\pi \xi^2}\) です。したがって、\(A(f)\) は \(P(x)\) の最大の正の根に関連し、\(A(\hat{f})\) は \(P(\xi)\) の最大の正の根に関連します。具体的には、\(|x| が大きい場合、\(P(x) ≥ 0\) 、A(f)\) は \(P(x)\) の最大の正根となり、\(A(\hat{f})\) は \(P(\xi)\) の最大の正根となり、\(A(f)=A(\hat{f})\) となります。不等式は \(c_4 ≤ (A(f))^2\) となります。
+<!--
+To obtain upper bounds for \(C_4\), one constructs a specifc "test function" \(f\) satisfying the conditions and calculates the value \(A(f)A(\hat{f})\) for this function, which provides an upper bound \(C_4 ≤  A(f)A(\hat{f})\). Following the approach in [32], the test function is sought in the form \(f(x)=P(x)e^{-\pi x^2}\), where \(P(x)\) is an even polynomial constructed as a linear combination of Hermite polynomials \(H_{4k}(x)\).This form is particularly useful because the Fourier transform of \(H_n(x)e^{-\pi x^2}\) is \(i^n H_n(\xi)e^{-\pi \xi^2}\). For an even polynomial \(P(x)=\sum c_{4k}H_{4k}
+(x)\), the Fourier transform of \(f(x)\) is \(\hat{f}(\xi)=\sum c_{4k}i^{4k}H_{4k}(\xi)e^{-\pi \xi^2}=(\sum c_{4k}H_{4k}(\xi))e^{-\pi\xi^ 2}= P(\xi)e^{-\pi \xi^2}\). Thus, \(A(f)\) is related to the largest positive root of \(P(x)\), and \(A(\hat{f})\) is related to the largest positive root of \(P(\xi)\). Specifcally, if \(P(x) ≥ 0\) for large \(|x|,A(f)\) is the largest positive root of \(P(x)\), and \(A(\hat{f})\) is the largest positive root of \(P(\xi)\), implying \(A(f)=A(\hat{f})\). The inequality becomes \(c_4 ≤ (A(f))^2\). 
+-->
+</p><p>
+この手法では、多項式 \(P(x) = c_0H_0(x)+c1H_4(x)+c_2H_8(x)+...\) の係数 \(c_0,c_1,c_2,...\) を求めます。この係数は、\(P(x)\) が特定の制約（\(f(0)<0,\hat{f}(0)< 0\) に関連し、大きな \(|x|\) に対して正であること）を満たし、\(P(x)\) の最大の正の根を最小化します。このアプローチでは、多項式 \(P(x)\) は \(P(0) = 0\)（最適化プロセスで制約を簡素化するために使用される条件）となるように構築されます。つまり、\(P(x)\) の係数は \(x^2\) になります。 \(P(x)\) の最大の正根 \(r_{max}\) は、\(P(x)/x^2\) の最大の正根である。この構成から導かれる \(C_4\) の上限は \(r_{max}^2/(2\pi)\) である。
+<!--
+The method involves fnding coefcients \(c_0,c_1,c_2,...\) for the polynomial \(P(x) =   c_0H_0(x)+c1H_4(x)+c_2H_8(x)+...\) such that \(P(x)\) satisfes certain constraints (related to \(f(0)<0,\hat{f}(0)< 0\) and being positive for large \(|x|\)) and minimizes the largest positive root of \(P(x)\). In our approach, the polynomial \(P(x)\) is constructed such that \(P(0) = 0\) (a condition used in the optimization process to simplify constraints), meaning \(P(x)\) has a factor of \(x^2\). The largest positive root \(r_{max}\) of \(P(x)\) is then the largest positive root of \(P(x)/x^2\). The upper bound on \(C_4\) derived from this construction is \(r_{max}^2/(2\pi)\). 
+-->
+</p><p>
+AlphaEvolveによって発見された\(P(x)=c_0H_0(x)+c_1H_4(x)+c_2H_8(x)\)の定数は、\([c_0,c_1,c_2] ≈ [0.32925,−0.01159,−8.9216 × 10^{-5}]\)です。これらの係数を用いて\(P(x)\)を構築し、その最大の正の根\(r_{max}\)（\(P(x)/x^2\)の最大の正の根を求めることによって）を求め、\(r_{max}^2/(2\pi)\)を計算すると、改善された上限\(C_4 ≤ 0.3521\)が得られます。定性的に我々の線形結合は[32]で見つかったものと非常に類似しており、したがって彼らの仮説を経験的に確認し、その構築はほぼ最適であることを示しています。
+<!--
+The refned constants found by AlphaEvolve for \(P(x)=c_0H_0(x)+c_1H_4(x)+c_2H_8(x)\) are 
+ \([c_0,c_1,c_2] ≈ [0.32925,−0.01159,−8.9216 × 10^{-5}]\). Using these coefcients to construct \(P(x)\), fnding its largest positive root \(r_{max}\) (by fnding the largest positive root of \(P(x)/x^2\)), and calculating \(r_{max}^2/(2\pi)\) yields the improved upper bound \(C_4 ≤ 0.3521\). Qualitatively our linear combination is very similar to the one found in [32], thus empirically confrming their hypothesis the construction is nearly optimal. 
+-->
+</p>
+<h3>B.5. エルデシュの最小重複問題 </h3>
+<!--
+<h3>B.5.  Erdős’ minimum overlap problem </h3>
+-->
+<p>
+\(C_5\) を最大の定数とすると、
+<!--
+Let \(C_5\) be the largest constant for which 
+-->
+\[
+\sup_{x\in [-2,2]} \int_{-1}^1 f(t)g(x+t)\; dt\geq C_5
+\]
+
+</p>
+<center><img src="images/fig10.png"></center>
+<p>
+図 10 | エルデシュの最小重なり問題に対して AlphaEvolve によって発見された構成。
+<!--
+Figure 10 | Construction found by AlphaEvolve for the minimum overlap problem of Erdős. 
+-->
+</p><p>
+\(f,g: [−1,1] → [0,1]\) に対して、\([−1,1]\) 上および \(\int f = 1\) 上で \(f+g = 1\) となる定数である。ただし、\([−1,1]\) の外側では \(f,g\) をゼロで拡張する。この定数は [24] の最小重複問題の漸近挙動を制御する。
+<!--
+for all non-negative \(f,g: [−1,1] → [0,1]\) with \(f+g = 1\) on \([−1,1]\) and \(\int f = 1\), where we extend \(f,g\)    by zero outside of \([−1,1]\). This constant controls the asymptotics of the Minimum Overlap Problem of [24]. The bounds 
+-->
+\[
+0.379005 ≤   C_5 ≤ 0.380927
+\]
+
+は既知であり、下限値は[104]で凸計画法によって得られたものである。
+<!--
+are known, where the lower bound was obtained in [104] via convex programming methods. 
+-->
+</p><p>
+
+この定数は、\([0,1]\)に値を持ち、\(\int_0^2 ℎ(x)dx = 1\)を満たす\([0,2]\)上のすべてのステップ関数\(h\)の下限値に等しいことが知られている（[39]を参照）。
+<!--
+It is known (see [39]) that this constant is equal to the infmum, over all step functions \(h\) on \([0,2]\) with values in \([0,1]\) and satisfying \(\int_0^2 ℎ(x)dx = 1\) of
+-->
+\[
+\max_{k} \int h(x)(1-h(x+k))dx
+\]
+
+この結果を用いて、[39]ではステップ関数の構築によってエルデシュ最小重なり問題の上限が得られた。図10に示すステップ関数は、以前の上限よりもわずかに良い値を示し、上限は\(C_5 ≤ 0.380924\)となる。
+<!--
+The upper bound to the Erdős minimum overlap problem was then obtained by using this result, in [39] by a step function construction. The step function depicted in  Figure 10  does ever so slightly better than the previous bound, giving the upper bound of \(C_5 ≤ 0.380924\). 
+-->
+</p>
+<h3>B.6. 有限集合の和と差</h3>
+<!--
+<h3>B.6.  Sums and diferences of fnite sets </h3>
+-->
+<p>
+\(C_6\) を次の命題が成り立つ最大の定数とします。\(|A+B|≪ |A|\) かつ \(|A−B|≫ |A+B|^{C_6}\) を満たす任意の大きさの有限整数集合 \(A,B\) が存在する。(ここで \(A+B=\{a+b:a∈A ,b∈B\}\) および \(A−B=\{a−b:a∈A ,b∈B\}\) はそれぞれ和集合および差集合を表す。\(X≪Y\) という表記は、\(A, B\) から独立な定数 \(C\) に対して \(X ≤ CY\) であることを意味する(十分に大きい集合 \(A,B\) に対して)。\(X≫Y\) という表記は、\(X≥C^\prime Y\) であることを意味する。 \(C^\prime\) は集合 \(A,B\) とは独立である（十分に大きな集合 \(A,B\) の場合）。
+<!--
+Let \(C_6\) be the largest constant for which the following statement holds: there exist arbitrarily large fnite sets of integers \(A,B\)with \(|A+B|≪ |A|\) and \(|A−B|≫ |A+B|^{C_6}\).(Here \(A+B=\{a+b:a∈A ,b∈B\}\) and \(A−B=\{a−b:a∈A ,b∈B\}\) denote the sumset and diference set, respectively. The notation \(X≪Y\) means that \(X ≤ CY\) for some constant \(C\) independent of the sets \(A, B\)(for sufficiently large sets \(A,B\)). The notation \(X≫Y\) means that \(X≥C^\prime Y\) for some positive constant \(C^\prime\) independent of the sets \(A,B\)(for sufficiently large sets \(A,B\)).)
+-->
+\[
+1.14465 ≤  C_6 ≤ \frac{4}{3} \tag{2} 
+\]
+
+上限については[38, 系3]を、下限については[38, 定理1]を参照。下限値を求める主なツールは、Gyarmati et al. [38]による以下の結果である。
+<!--
+see [38, Corollary 3] for the upper bound and [38, Theorem 1] for the lower bound. The main tool for the lower bound is the following result of Gyarmati et al. [38]: 
+-->
+\[
+C_6 \geq 1 + \frac{\log\frac{|U-U|}{|U+U|}}{\log(2\max(U)+1)} \tag{3}
+\]
+0を含み、\(|U−U| ≤ 2max(U)+1\)を満たす任意の非負整数の有限集合\(U\)について。AlphaEvolveは、下限を\(1.1479 ≤ C_6\)まで改善するサイズ2003の集合\(U_1\)を発見し、さらに下限を\(1.1584 ≤ C_6\)まで改善するサイズ54265の集合\(U_2\)を発見した。
+<!--
+for any fnite set \(U\) of non-negative integers containing zero satisfying \(|U−U| ≤ 2max(U)+1\). AlphaEvolve found a set \(U_1\) of size 2003 improving the lower bound to \(1.1479 ≤   C_6\), and another set \(U_2\) of size 54265 further improving the lower bound to \(1.1584 ≤   C_6\). 
+-->
+</p>
+<center><img src="images/fig11.png"></center>
+<p>
+
+図11 | AlphaEvolveによって発見されたパッキング問題の構成。左：辺の長さが3.931の正六角形に11個の単位六角形をパッキングする。右：辺の長さが3.942の正六角形に12個の単位六角形をパッキングする。
+<!--
+Figure 11 | Constructions of the packing problems found by AlphaEvolve. Left: Packing 11 unit hexagons into a regular hexagon of side length 3.931. Right: Packing 12 unit hexagons into a regular hexagon of side length 3.942. 
+-->
+</p>
+<h3>B.7. 正六角形の中に単位正六角形を詰め込む</h3>
+<!--
+<h3>B.7.  Packing unit regular hexagons inside a regular hexagon </h3>
+-->
+<p>
+単位辺長を持つ \(n\) 個の互いに素な正六角形を、より大きな正六角形に詰め込み、外側の六角形の辺長を最小化する問題を考えてみましょう。\(n\)= 11 および \(\n\)= 12 の場合、最もよく知られている構成では、外側の六角形の辺長はそれぞれ 3.943 および 4.0 です [28]。AlphaEvolve は、これらの境界をそれぞれ 3.931 および 3.942 に改善する詰め込み配置を発見しました。これらの配置を図 11 に示します。
+<!--
+Consider the problem of packing \(n\) disjoint regular hexagons with unit side length into a larger regular hexagon, minimizing the side length of the outer hexagon. For \(n\)= 11 and \(\n\)= 12, the best known constructions use outer hexagons of side lengths 3.943 and 4.0, respectively [28]. AlphaEvolve found packing arrangements that improve these bounds to 3.931 and 3.942, respectively. These arrangements are shown in  Figure 11 . 
+-->
+</p>
+<h3>B.8. 最大距離と最小距離の比を最小化する </h3>
+<!--
+<h3>B.8.  Minimizing the ratio of maximum to minimum distance </h3>
+-->
+<p>
+この問題の目的は、任意の \(n\) と \(d\) に対して、\(d\) 次元空間において、最大と最小のペア間距離の比を最小化する \(n\) 点を見つけることです。AlphaEvolve は、既知の最良の境界値を改善する 2 つの新しい構成を発見しました。発見された構成を図 12 に示します。
+<!--
+For any \(n\) and \(d\), the goal of this problem is to find \(n\) points in the \(d\)-dimensional space so as to minimize the ratio between the maximum and minimum pairwise distances. AlphaEvolve found two new constructions improving the best known bounds. The found constructions are shown in  Figure 12 . 
+-->
+</p><p>
+2次元では、AlphaEvolveは比\(≈ \sqrt{12.889266112}\)を持つ点を16個発見し、既知の最高値12.890[28]を改善しました。（この参考文献では、比そのものではなく、比の2乗が報告されており、私たちも同じ表記法を使用しています。）
+<!--
+In 2 dimensions, 
+AlphaEvolve found 16 points with ratio \(≈ \sqrt{12.889266112}\), improving the best known bound of 12.890 [28]. (In this reference, instead of the ratio itself, the square of the ratio is reported, and we use the same convention.) 
+-->
+
+</p><p>
+3次元では、AlphaEvolveは比率\(≈ \sqrt{4.165849767}\)を持つ14個の点を発見し、既知の最高境界4.168[28]を改善しました。
+<!--
+In 3 dimensions, AlphaEvolve 
+found 14 points with ratio \(≈ \sqrt{4.165849767}\), improving the best known bound of 4.168 [28]. 
+-->
+</p>
+<h3>B.9. 三角形のハイルブロン問題</h3>
+<!--
+<h3>B.9.  The Heilbronn problem for triangles </h3>
+-->
+<p>
+この問題の目的は、単位面積の三角形上または内部の点を探し、それらの点によって形成される最小の三角形の面積が最大となるようにすることです。= 11の場合、SOTAは0.036でした[28]。AlphaEvolveは、図13（左）に示すように、最小面積が0.0365より大きい構成を発見しました。
+<!--
+The goal of this problem is to fnd    points on or inside a triangle with unit area so that the area of the smallest triangle formed by these points is maximized. For    = 11, the SOTA was 0.036 [28], and AlphaEvolve found a construction with minimum area larger than 0.0365, which is shown in  Figure 13  (left). 
+-->
+</p>
+<center><img src="images/fig12.png"></center>
+<p>
+図12 | 左：2次元で最大距離と最小距離の比が \(≈ \sqrt{12.889266112}\) となる16点。右：3次元で最大距離と最小距離の比が \(≈ \sqrt{4.165849767}\) となる14点。どちらの構成も、既知の最良の境界値を改善している。
+<!--
+Figure 12 | Left: 16 points in 2 dimensions achieving a ratio of maximum distance to minimum distance of \(≈ \sqrt{12.889266112}\). Right: 14 points in 3 dimensions achieving a ratio of \(≈\sqrt{4.165849767}\). Both constructions improve the best known bounds. 
+-->
+</p>
+<h3>B.10. 凸領域におけるハイルブロン問題</h3>
+<!--
+<h3>B.10.  The Heilbronn problem for convex regions </h3>
+-->
+<p>
+この問題の目的は、単位面積の凸領域上または内部の点を探し、それらの点によって形成される最小の三角形の面積が最大になるようにすることです。AlphaEvolveは、最もよく知られている2つの境界を改善しました。
+<!--
+The goal of this problem is to fnd    points on or inside a convex region with unit area so that the area of the smallest triangle formed by these points is maximized. AlphaEvolve improved two of the best known bounds. 
+-->
+</p><p>
+𝑛 = 13の場合、SOTAは0.0306 [28]でしたが、AlphaEvolveによって0.0309に改善されました（図13（中央）参照）。𝑛 = 14の場合、SOTAは0.0277 [28]でしたが、AlphaEvolveによって0.0278に改善されました（図13（右）参照）。
+<!--
+For 𝑛 = 13, the SOTA was 0.0306 [28], and AlphaEvolve improved it to 0.0309 (see
+Figure 13 (middle)). For 𝑛 = 14, the SOTA was 0.0277 [28] and AlphaEvolve improved it to
+0.0278 (see Figure 13 (right)).
+-->
+</p>
+<h3>B.11. 11次元におけるキス数 </h3>
+<!--
+<h3>B.11.  Kissing number in dimension 11 </h3>
+-->
+<p>
+キッシング問題とは、与えられた単位球に接して、互いに素な単位球をいくつ詰め込めるかという問題である。次元におけるそのような最大数は、次元キッシング数と呼ばれる [8]。 = 11 の場合、最もよく知られている下限は 592 [30] で、AlphaEvolve はこれを 593 に改良した。次元 11 におけるキッシング数の下限 593 を証明するために、AlphaEvolve は、(a) これらの点の最大ノルムがそれらの最小ペアワイズ距離よりも小さく、(b) 任意の点のペアについて、それらのドット積の平方根がそれらの両方のノルムよりも小さい、という条件を満たす 11 次元の点を 593 個見つけた。 が見つかった点の最大ノルムを表すものとし、すべての点を正規化して、それらのノルムが に等しくなるようにする。2 番目の特性のため、この正規化によってそれらの最小ペアワイズ距離は減少しない。したがって、ノルムを 2 に縮小し、ポイントを中心とした単位球をパックすると、593 ポイントの有効なキス構成が得られます。
+<!--
+The kissing problem asks how many disjoint unit spheres can be packed tangent to a given unit sphere. The maximum such number in    dimensions is called the   -dimensional kissing number [8]. For    = 11, the best known lower bound was 592 [30] and AlphaEvolve improved this to 593. To prove the lower bound of 593 for the kissing number in dimension 11, AlphaEvolve found 593 many 11-dimensional points with integral coordinates satisfying (a) The maximum norm of these points is smaller than their minimum pairwise distance, and (b) for any pair of the points, the square root of their dot product is smaller than both of their norms. Let    denote the maximum norm of the found points, and normalize all points so their norms become equal to   . Because of the second property, this normalization does not decrease their minimum pairwise distance. This results in a set of 593 points in 11 dimensions with exactly the same norm such that their minimum pairwise distance is greater than their norm. Thus, we can scale the norm down to 2 and pack unit spheres centered at the points, obtaining a valid kissing confguration of 593 points. 
+-->
+</p>
+<center><img src="images/fig13.png"></center>
+<p>
+図13 | AlphaEvolveによって発見された、ハイルブロン問題の2つの変種における既知の最良の境界を改善する新たな構成。左：単位面積三角形内の11点。形成された三角形の面積はすべて0.0365以上。中央：単位面積の凸領域内の13点。形成された三角形の面積はすべて0.0309以上。右：最小面積が0.0278以上の単位凸領域内の14点。
+<!--
+Figure 13 | New constructions found by AlphaEvolve improving the best known bounds on two variants of the Heilbronn problem. Left: 11 points in a unit-area triangle with all formed triangles having area ≥ 0.0365. Middle: 13 points inside a convex region with unit area with all formed triangles having area ≥ 0.0309. Right: 14 points inside a unit convex region with minimum area ≥ 0.0278. 
+-->
+
+</p>
+<h3>B.12. 単位正方形内に円を詰め込み、半径の合計を最大化する </h3>
+<!--
+<h3>B.12.  Packing circles inside a unit square to maximize sum of radii </h3>
+-->
+<p>
+正の整数が与えられたとき、問題は単位正方形の中に互いに隣接しない円を詰め込み、それらの半径の合計が最大になるようにすることです。AlphaEvolveは、従来の技術を改善する2つの新しい構成を発見しました[28]。
+<!--
+Given a positive integer   , the problem is to pack    disjoint circles inside a unit square so as to maximize the sum of their radii. AlphaEvolve found two new constructions improving the state of the art [28]. 
+-->
+</p><p>
+𝑛 = 26 の場合、SOTA は 2.634 でしたが、AlphaEvolve によって 2.635 に改善されました。図 14
+(左) を参照してください。𝑛 = 32 の場合、SOTA は 2.936 でしたが、AlphaEvolve によって 2.937 に改善されました。図 14
+(中央) を参照してください。
+<!--
+For 𝑛 = 26, the SOTA was 2.634, and AlphaEvolve improved it to 2.635; see Figure 14
+(left). For 𝑛 = 32, the SOTA was 2.936, and AlphaEvolve improved it to 2.937; see Figure 14
+(middle).
+-->
+</p>
+<h3>B.13. 周囲長4の長方形内に円を詰め込み、半径の合計を最大化する </h3>
+<!--
+<h3>B.13.  Packing circles inside a rectangle of perimeter 4 to maximize sum of radii </h3>
+-->
+<p>
+正の整数𝑛が与えられたとき、問題は周囲長4の長方形内に𝑛個の互いに交わらない円を詰め込み、それらの半径の合計が最大になるようにすることです。AlphaEvolveは𝑛 = 21に対して新しい構成を発見し、従来の解を2.364 [28] から2.3658に改善しました。図14（右）を参照してください。
+<!--
+Given a positive integer 𝑛, the problem is to pack 𝑛 disjoint circles inside a rectangle of
+perimeter 4 so as to maximize the sum of their radii. AlphaEvolve found a new construction
+for 𝑛 = 21, improving the state of the art from 2.364 [28] to 2.3658; see Figure 14 (right). 
+-->
+</p>
+<center><img src="images/fig14.png"></center>
+<p>
+図14 | AlphaEvolveによって発見された、半径の合計を最大化する円の詰め込みに関する既知の最良の境界を改良した新しい構成。左：単位正方形内に半径の合計が\(2.635 ≥ )である26個の円。中央：単位正方形内に半径の合計が\(2.937 ≥ )である32個の円。右：周囲長4の長方形内に半径の合計が\(2.365 ≥ )である21個の円。
+<!--
+Figure 14 | New constructions found by AlphaEvolve improving the best known bounds on packing circles to maximize their sum of radii. Left: 26 circles in a unit square with sum of \(radii ≥ 2.635\). Middle: 32 circles in a unit square with sum of \(radii ≥ 2.937\). Right: 21 circles in a rectangle with perimeter 4, with sum of \(radii ≥ 2.365\). 
+-->
+</p>
+    </body>
+</html>
