@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Beyon Aha</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Beyond ‘Aha!’: Toward Systematic Meta-Abilities Alignment in Large Reasoning Models </center></h1>
+<center>「なるほど！(Aha!)」を超えて：大規模推論モデルにおける体系的なメタ能力の整合に向けて</center>
+<br>
+<center>Zhiyuan Hu1∗ Yibo Wang2 Hanze Dong3 Yuhui Xu3 </center>
+<center>Amrita Saha3 Caiming Xiong3 Bryan Hooi1† Junnan Li3† </center>
+<center>1 National University of Singapore </center>
+<center>2 Tsinghua University </center>
+<center>3 Salesforce AI Research </center>
+<h2><center>要旨</center></h2>
+<!--
+<h2><center>Abstract</center></h2>
+-->
+<p class="margin-abstract ">
+大規模推論モデル（LRM）は、既に長い思考連鎖推論の潜在能力を備えています。これまでの研究では、結果に基づく強化学習（RL）が、自己修正、バックトラッキング、検証といった高度な推論行動（モデルの「アハ体験」と呼ばれる現象）を偶発的に引き起こす可能性があることが示されています。しかし、これらの行動の出現タイミングと一貫性は予測不可能かつ制御不能であり、LRMの推論能力の拡張性と信頼性を制限しています。これらの限界に対処するため、私たちはプロンプトや偶発的な「アハ体験」への依存から脱却します。代わりに、自動生成され自己検証可能なタスクを用いて、モデルを演繹、帰納、アブダクション(仮説形成)という3つのメタ能力に明示的に適合させます。 3段階のパイプライン（個体アライメント、パラメータ空間のマージ、ドメイン固有の強化学習）は、命令調整後のベースラインと比較してパフォーマンスを10%以上向上させます。さらに、アライメントされたチェックポイントからのドメイン固有の強化学習は、数学、コーディング、科学のベンチマーク全体で、元のパフォーマンス上限から平均2%の追加的な向上をもたらし、明示的なメタ能力アライメントがスケーラブルで信頼性の高い推論基盤を提供することを実証しています。コードはこちらで公開されています。(https://github.com/zhiyuanhubj/Meta-Ability-Alignment)
+<!--
+Large reasoning models (LRMs) already possess a latent capacity for long chain-
+of-thought reasoning. Prior work has shown that outcome-based reinforcement 
+learning (RL) can incidentally elicit advanced reasoning behaviors such as self-
+correction, backtracking, and verification–phenomena often referred to as the 
+model’s “aha moment.” However, the timing and consistency of these emergent 
+behaviors remain unpredictable and uncontrollable, limiting the scalability and 
+reliability of LRMs’ reasoning capabilities. To address these limitations, we move 
+beyond reliance on prompts and coincidental ‘aha moments’. Instead, we explicitly 
+align models with three meta-abilities—deduction, induction, and abduction, 
+using automatically generated, self-verifiable tasks. Our three-stage pipeline 
+(individual alignment, parameter-space merging, domain-specific reinforcement 
+learning) boosts performance by over 10% relative to instruction-tuned baselines. 
+Furthermore, domain-specific RL from the aligned checkpoint yields an additional 
+2% average gain in original performance ceiling across math, coding, and science 
+benchmarks, demonstrating that explicit meta-ability alignment offers a scalable 
+and dependable foundation for reasoning. Our code are released here.(https://github.com/zhiyuanhubj/Meta-Ability-Alignment)
+-->
+</p>
+<h2>1 はじめに</h2>
+<!--
+<h2>1 Introduction </h2>
+-->
+<p>
+OpenAI-o1 [11]、o3 [17]、DeepSeek-R1 [8]、Grok 3.5 [27]、Gemini 2.5 Pro [3] などの大規模推論モデルは、顕著な能力を示しています。これらのモデルは、複雑なタスクに取り組む際に長い思考連鎖（CoT）[24]応答を生成することに優れており、高度で反射的な推論行動を示します。最近、DeepSeek-R1は、事前学習済みの基本モデルまたは命令調整モデルから始めて、ルールベースの報酬による純粋な強化学習（RL）が、長いCoT推論、自己修正、自己反省、およびその他の高度な行動、総称して「アハ体験」の出現を自発的にもたらすことができることを示しました。 SimpleRL-Zoo [31]、tinyzero [18]、Logic-RL [28]といったオープンソースの研究でも、R1のパフォーマンスと技術的詳細を再現しようと試みており、同様の「アハ体験」が観察されています。自己修正、自己検証、バックトラッキングといったこれらの行動は、モデルが強力な推論能力を内部的に経験していることを示しています。
+<!--
+Large reasoning models, including OpenAI-o1 [11], o3 [17], DeepSeek-R1 [8], Grok 3.5 [27], and Gemini 2.5 Pro [3], have demonstrated remarkable capabilities. These models excel at generating long Chain-of-Thought (CoT) [24] responses when tackling complex tasks and exhibit advanced, reflection-like reasoning behaviors. Recently, DeepSeek-R1 has shown that, starting from pretrained base or instruction-tuned models, pure reinforcement learning (RL) with rule-based rewards can spontaneously lead to the emergence of long CoT reasoning, self-correction, self-reflection, and other advanced behaviors, collectively referred to as the “aha moment”. Other open-source works, such as SimpleRL-Zoo [31], tinyzero [18], and Logic-RL [28], which attempt to reproduce R1’s performance and technical details, have also observed similar aha moments. These behaviors—such as self-correction, self-verification, and backtracking, signal the model’s internal experience of strong reasoning ability. 
+-->
+</p><p>
+しかし、創発的な行動のみに頼ることは、本質的に信頼性が低く、制御が困難です。モデルはこれらの高度な推論スキームを一貫して実現できない場合があり、LLMベースの推論の予測可能性とスケーラビリティの両方が制限されます。これを克服するために、我々はLLMを、ピアソンの古典的推論の三要素[19]から導かれた3つのドメイン汎用推論メタ能力（演繹、帰納、およびアブダクション）と明示的に連携させることを提案します。
+<!--
+However, relying solely on emergent behaviors is inherently unreliable and difficult to control. Models 
+may fail to consistently manifest these advanced reasoning schemes, which limits both the predictability 
+and scalability of LLM-based reasoning. To overcome this, we propose to explicitly align LLMs 
+with three domain-general reasoning meta-abilities—deduction, induction, and abduction—drawn 
+from Peirce’s classical inference triad [19]. 
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<center>図 1: これらのメタ能力は、統一された推論フレームワークを形成します。</center>
+<!--
+<center>Figure 1: These meta-abilities form a unified reasoning framework. </center>
+-->
+</p><p>
+演繹は、一般的な規則や仮説から特定の結果を推論し（H + R → O）、厳密な予測と検証を可能にします。帰納は、繰り返される共起から規則を抽象化し（H + O → R）、パターンの発見と一般化を促進します。アブダクションは、驚くべき観察に対して最も妥当な説明を推論し（O + R → H）、創造的で逆推論的な思考を促進します。
+<!--
+Deduction infers specific outcomes from general rules and 
+hypotheses (H + R → O), enabling rigorous prediction 
+and verification. Induction abstracts rules from repeated co-
+occurrences (H + O → R), facilitating pattern discovery 
+and generalization. Abduction infers the most plausible 
+explanation for surprising observations (O + R → H), 
+promoting creative and backward reasoning. 
+-->
+</p><p>
+これらはすべて、仮説の生成、検証、修正のための閉じた推論ループを形成し、科学的手法を反映し、堅牢で解釈可能な推論をサポートします。
+<!--
+Together, they form a closed inferential loop for hypothesis 
+generation, testing, and revision, mirroring the scientific 
+method and supporting robust and interpretable reasoning. 
+-->
+
+</p><p>
+これらのメタ能力を運用可能にするために、プログラムによって生成されたインスタンスと自動検証可能性を備えたタスクスイートを構築します。各タスクは、1つのコア推論モードを対象としています。演繹：命題充足可能性タスクは、ルールセットRと候補仮説Hを使用して、すべての前提が観測Oを含意するかどうかをテストします。帰納：マスクされたシーケンス補完では、モデルが部分入力H、Oから潜在ルールRを推論する必要があります。アブダクション：観測された結果OからルールグラフRを介して逆ルールグラフ検索バックチェーンを行い、最小の説明Hを推論します。これらのタスクは、一般的な事前学習コーパスと比較して分布外にある合成分布から構築されており、パフォーマンスの向上が暗記やショートカットの利用ではなく、真のメタ能力の獲得を反映することを保証します。
+<!--
+To operationalize these meta-abilities, we construct a task suite with programmatically generated 
+instances and automatic verifiability. Each task targets one core reasoning mode: Deduction: Propositional 
+satisfiability tasks use rule sets R and candidate hypotheses H to test if all premises entail the 
+observation O. Induction: Masked-sequence completion requires models to infer latent rules R 
+from partial inputs H, O. Abduction: Inverse rule-graph search backchains from observed consequences 
+O through a rule graph R to infer the minimal explanatory H. These tasks are constructed from 
+synthetic distributions that lie out-of-distribution relative to common pretraining corpora, ensuring 
+that performance improvements reflect genuine meta-ability acquisition rather than memorization or 
+shortcut exploitation. 
+-->
+</p><p>
+個々のメタ能力に合わせたモデルは相補的な誤差を生じることが観察されました。それらの予測を集約すると、バニラの指示調整ベースラインと比較して、全体的な精度が10%以上向上します。3つの能力を単一のネットワークに組み込むために、混合タスクコーパスでのトレーニングとパラメータ空間モデルのマージという2つのアプローチを比較しました。パラメータ空間のマージにより、数学、コーディング、科学全体の平均精度が、指示調整ベースラインと比較して、7Bモデルで2%、32Bモデルで4%向上し、マージされたメタ能力の強力な一般化が実証されました。
+<!--
+We observe that models aligned to individual meta-abilities make complementary errors. Aggregating 
+their predictions raises overall accuracy by more than 10% relative to a vanilla instruction-tuned 
+baseline. To incorporate the three competencies into a single network, we compared two approaches: 
+training on a mixed task corpus and parameter-space model merging. Parameter-space merging 
+improves average accuracy across math, coding, and science by 2% on a 7B model and 4% on a 
+32B model over the instruction-tuned baseline, demonstrating the strong generalization of merged 
+meta-abilities. 
+-->
+</p><p>
+さらに、メタ能力のアライメントがその後の学習のためのより強固な基盤を提供するかどうかを評価するために、すでにアライメント済みのチェックポイントからドメイン固有の強化学習を再開し、指示調整されたモデルに適用された同じ手順と比較しました。メタ能力チェックポイントから開始することで、達成可能なパフォーマンスの上限が引き上げられます。同一の継続的なドメイン固有の強化学習の後、モデルは指示のみのモデルと比較して平均約2%の向上を達成しました。私たちの主な貢献は次のとおりです。
+<!--
+Furthermore, to evaluate whether meta-ability alignment offers a stronger foundation for subsequent 
+learning, we resumed domain-specific RL training from a checkpoint that have already been aligned 
+and compared it with the same procedure applied to an instruction-tuned model. Starting from the 
+meta-ability checkpoint raises the attainable performance ceiling: after identical continual domain-
+specific RL training, the model achieves an average gain of about 2% over its instruction-only 
+counterpart. Our key contributions are as follows: 
+-->
+<div class="styleBullet">
+<ul><li>
+• メタ能力のためのタスクスイート。演繹、帰納、アブダクションという3つの古典的なメタ能力に合わせた、新たなRLタスクスイートを紹介します。これらのメタ能力はそれぞれ、大規模モデルにおけるドメイン汎用的な推論スキルの訓練と検証を目的として構築されています。
+</li><br><li>• 推論習得のためのレシピ。3段階のレシピを提案します。(1) 各メタ能力にモデルを個別にアラインメントする。(2) パラメータ空間統合によってそれらを統合する。(3) ドメイン固有のRLで微調整する。これにより、一般化と下流タスクの精度が向上します。
+</li><br><li>• 上限ブーストとスケーラビリティ。メタ能力のアラインメントによってパフォーマンスの上限が引き上げられることを実証しました。7Bおよび32Bモデルは、数学、コーディング、科学のベンチマークにおいて、命令調整されたベースラインに対して一貫したパフォーマンス向上を示しました。
+<!--
+• Task suite for meta-abilities. We introduce a novel RL task suite aligned with three classical 
+meta-abilities—deduction, induction, and abduction—each constructed to train and validate 
+domain-general reasoning skills in large models. 
+</li><br><li>• Recipe for Reasoning Mastery. We propose a three-stage recipe (1) independently align models 
+to each meta-ability; (2) merge them via parameter-space integration; and (3) fine-tune with 
+domain-specific RL. This leads to improved generalization and downstream task accuracy. 
+</li><br><li>• Upper-bound boost and scalability. We empirically demonstrate that meta-ability alignment 
+raises the performance ceiling: our 7B and 32B models show consistent gains over instruction-
+tuned baselines, across math, coding, and science benchmarks. 
+-->
+</li></ul></div>
+</p>
+<h2>2 関連研究 </h2>
+<!--
+<h2>2 Related Work </h2>
+-->
+<p>
+強化学習（RL）による推論能力の発現：最近の研究では、訓練後の直接的な強化学習（RL）によって、教師ありの微調整では達成できないような長い思考連鎖推論を解き放つことができることが示されています[31, 29, 8]。
+SimpleRL-Zoo [31]は、ルールベースの報酬を用いたゼロ強化学習（RL）のレシピを提案し、数学的推論の精度を向上させ、多様なベースモデル間で自己検証などの認知行動を誘発します。DeepSeekR1
+[8]はこのアイデアを大規模訓練に拡張し、公開されている複製であるLight-R1 [25]、Open-R1 [4]、そして最小限のコストで実現できるTinyZero [18]は、カリキュラムスケジュール、DPOウォームアップ、そして慎重に形成された長さの報酬を組み合わせることで、計算コストを抑えながら、より強力な論理的精度が得られることを確認しています。
+<!--
+RL-Driven Emergence of Reasoning Abilities Recent studies show that direct RL post-training 
+can unlock long chain-of-thought reasoning beyond what supervised fine-tuning achieves [31, 29, 8]. 
+SimpleRL-Zoo [31] proposes a zero-RL recipe using rule-based rewards, boosting math reasoning 
+accuracy and inducing cognitive behaviors like self-verification across diverse base models. DeepSeekR1 
+[8] extends this idea to large-scale training; its public replications—Light-R1 [25], Open-R1 [4], 
+and the minimal-cost TinyZero [18] —confirm that curriculum schedules, DPO warm-up, and carefully 
+shaped length rewards together yield stronger logical accuracy while keeping compute affordable. 
+-->
+
+</p><p>
+これらの一般的なパイプラインを補完するものとして、Logic-RL [28] はルール条件付き強化学習を合成された Knights-and-Knaves パズルに適用し、数学タスクへの転用可能な論理的推論を可能にしました。これらの研究により、RL は大規模推論モデルへの現実的な道筋として確立されました。
+<!--
+Complementary to these general pipelines, Logic-RL [28] applies rule-conditioned reinforcement 
+learning to synthetic Knights-and-Knaves puzzles, Enabling transferable logical reasoning for math 
+tasks. Together, these works establish RL as a viable path to large reasoning models. 
+-->
+</p><p>
+<strong>高度な推論能力</strong><br>
+強化学習（RL）による長鎖推論の強化に加えて、最近の研究では、自己修正、反事実的推論、自己検証などの特定の推論スキルが調査されています。Chenら[2]は、モデルを前向きと後ろ向きの両方で推論するように訓練することで、全体的な推論パフォーマンスを向上させ、逆思考の目標が前向き推論も改善できることを実証しました。Kumarら[13]は、モデルが自身の答えを繰り返し批判・改善することでオフラインの自己修正ギャップを埋めるオンラインRL手法であるSCoReを提案しています。ProCo [26]、S2R [14]、SETS [1]など、最近のいくつかの研究も、LLMに自己検証および自己修正能力を装備することに焦点を当てています。
+<!--
+<strong>Advanced reasoning ability</strong><br>
+In addition to enhancing long-chain reasoning through RL, recent 
+work investigates specific reasoning skills such as self-correction, counterfactual inference, self-
+verification and others. Chen et al. [2] enhances overall reasoning performance by training models 
+to reason both forward and backward, demonstrating that reverse-thinking objectives can improve 
+forward reasoning as well. Kumar et al. [13] proposes SCoRe, an online RL method where a model 
+iteratively critiques and improves its own answers, bridging the offline self-correction gap. Several 
+recent studies also focus on equipping LLMs with self-verification and self-correction abilities, 
+including ProCo [26], S2R [14], and SETS [1]. 
+-->
+</p><p>
+<strong>アハ体験の調査</strong><br>
+RLパイプラインはしばしば突然の精度の飛躍を示します。いくつかの同時分析は、それらの前に起こる内部的な「アハ体験」を明らかにすることを目的としています。Gandhiら[5]は、強化学習におけるモデルの自己改善能力を説明および設計するための診断ツールとして、4つの推論行動を導入しています。Yangら[30]は、「アハ体験」が擬人化言語、不確実性の調整、潜在空間のシフトを通じて出現し、モデルが推論の破綻を回避し、問題の難易度に適応するのに役立つことを示しています。さらに、Zhouら[32]は、教師ありウォームアップなしの2B視覚-言語モデルでも同様の出現が起こることを示しています。
+<!--
+<strong>Investigation of Aha-moment</strong><br>
+RL pipelines often show sudden accuracy jumps. Some concurrent 
+analyses aim to uncover the internal “aha” moments that precede them. Gandhi et al. [5] introduces 
+four reasoning behaviors as diagnostic tools to explain and engineer models’ capacity for self-
+improvement under reinforcement learning. Yang et al. [30] shows that “aha moments” emerge 
+through anthropomorphic language, uncertainty adjustment, and latent-space shifts, helping models 
+avoid reasoning collapse and adapt to problem difficulty. Additionally, Zhou et al. [32] shows that 
+similar emergence occurs in a 2B vision–language model without supervised warm-up. 
+-->
+</p>
+<h2>3 方法論 </h2>
+<h3>3.1 メタ能力の整合のためのタスク設計 </h3>
+<!--
+<h2>3 Methodology </h2>
+<h3>3.1 Task Design for Meta-Abilities Alignment </h3>
+-->
+<p>
+我々は、要素トライアド（H、R、O）を「2つが与えられ、3つ目を推論する」というフレームワークに体系的に具体化することで、3つの推論タスクを設計する。各タスクはそれぞれ異なる推論モードに対応する。演繹（H + R ⇒ O）では、モデルは論理規則Rの集合と真理値候補Hを仮説として与えられ、全体的な観測O（すなわち、すべての式が真である）が成り立つかどうかを検証する必要がある。これは命題充足可能性タスクとして定式化されている。帰納（H + O ⇒ R）では、モデルは観測可能な項目Oと不完全な入力H（例えば、マスクされたトークンや暗黙の推測）を与えられ、基礎となる生成規則Rを抽象化してシーケンスを正しく完成させる必要がある。これはマスクされたシーケンス完成タスクとして定式化されている。アブダクション（O + R ⇒ H）では、モデルは観測値OとルールグラフRを与えられ、結論を論理的に説明できる隠れた仮定Hの最小セットを逆順に復元する必要があります。これは逆ルールグラフ検索タスクとして提示されます。この設計は、厳密な「2つの既知と1つの推論」スキーマに準拠しており、推論タイプの明確な分離を確保し、すべてのタスクを統一された（H、R、O）トリプレット形式に再定式化します。これにより、一貫性があり、比較可能で、補完的なトレーニング信号が可能になり、モデルに幅広いメタ推論機能を体系的に装備できます。図2に示すように、各インスタンスは自動化されたジェネレータによって生成され、検証者によってスクリーニングされ、手動による注釈がまったく不要な、大規模で自己チェック済みのトレーニングデータが生成されます。
+<!--
+We design three reasoning tasks by by systematically instantiating the element triad (H, 
+R, O) into a “given two, infer the third” framework, each corresponding to a distinct reasoning mode. In deduction 
+(H + R ⇒ O), the model is given a set of logical rules R and a candidate truth assignment H as hypothesis, and must verify whether the overall observation O (i.e., all formulas being true) follows—formulated as a propositional satisfiability task. In induction (H + O ⇒ R), the model is provided with observable items O and incomplete inputs H 
+(e.g., masked tokens or implied guesses), and must abstract the underlying generative rule R 
+to correctly complete the sequence—framed as a masked-sequence completion task. In abduction (O + R ⇒ H), the model is given observations O and a rule graph R, and must trace backward to recover the minimal set of hidden assumptions H that can logically explain the conclusion—posed as a reverse rule-graph search task. This 
+design follows a strict two-known-one-infer schema, clearly ensuring a clean separation of reasoning 
+types, and reformulates all tasks into a unified (H,R,O) triplet format. This enables consistent, 
+comparable, and complementary training signals, systematically equipping the model with a full 
+range of meta-reasoning capabilities. As illustrated in Figure 2, each instance is produced by an 
+automated Generator and screened by a Verifier, yielding large-scale, self-checked training data 
+entirely free of manual annotation. 
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2: 3段階のパイプラインの概要：演繹、およびアブダクションの専門家を整合させ、それらをパラメータ空間でマージし、統合モデルを下流のドメインに継続的に強化学習適応させます。
+<!--
+Figure 2: Overview of the three-stage pipeline: align deduction, induction, and abduction specialists, 
+merge them in parameter space, and continually RL-adapt the unified model to downstream domains. 
+-->
+</p><p>
+<strong>演繹</strong><br>
+演繹的推論を植え付けるため、モデルは推測された仮説と特定の条件から厳密な予測を導き出し、体系的な仮説提案、経験的検証、そして自己修正を可能にします。標準的なブール演算子であるNOT、AND、OR、IMPLIES、IFF、XORを含む、簡潔なネストされた命題節の集合を提示するタスクを課します。モデルは、満足のいく真理値割り当てを返すか、節が満たされないと報告する必要があります。
+このタスクは、可能な変数割り当ての組み合わせ爆発を提示し、密接に結合した論理式によって、1つの変数の値が、論理依存関係の連鎖を通じて他の多くの変数の値を間接的に制約または決定する可能性があります。この相互依存性により、純粋に列挙的または経験的に推測された割り当てでは、すべての制約を満たす可能性が非常に低くなります。唯一実行可能なアプローチは、仮の割り当てから始め、各式を論理的前提として扱い、その帰結を体系的に導き出し、結果として生じる矛盾を特定し、それに応じて割り当てを修正することです。この反復的なループ（仮説の生成、論理的帰結の伝播、経験的な矛盾の検出、そして修正のための洗練）は、演繹的推論の中核構造を直接的に具体化します。
+<!--
+<strong>Deduction</strong><br>
+ To instill deductive reasoning, the model proceeds from a conjectured hypothesis and 
+specific conditions to derive rigorous predictions, thereby enabling systematic hypothesis proposal, 
+empirical testing, and self-correction. We pose task that present a concise cluster of nested propositional 
+clauses involving the standard Boolean operators NOT, AND, OR, IMPLIES, IFF, and XOR; 
+the model must either return a satisfying truth assignment or report that the clauses are unsatisfiable. 
+The task poses a combinatorial explosion of possible variable assignments, with tightly coupled 
+logical formulas such that the value of one variable may indirectly constrain or determine the values 
+of many others through chains of logical dependencies. This interdependence renders purely enumerative 
+or heuristically guessed assignments overwhelmingly unlikely to satisfy all constraints. The 
+only tractable approach is to begin with a provisional assignment, treat each formula as a logical 
+premise, systematically derive its consequences, identify any resulting contradictions, and revise 
+the assignment accordingly. This iterative loop—of hypothesis generation, logical consequence 
+propagation, empirical inconsistency detection, and corrective refinement—directly instantiates the 
+core structure of deductive reasoning. 
+-->
+</p><p>
+
+<strong>帰納法</strong><br>
+モデルにおける帰納的推論能力を開発するために、隠れた用語を含む自動生成シーケンスのタスクを設計します。各インスタンスは、未公開のパターン（数値推論、記号パターン、複数ステップの操作サイクルなど）に従う一連の要素を提示し、欠落している要素の特定を求めます。この手法は特に帰納的学習を対象としており、モデルは目に見えるシーケンスを支配する根本的な規則性を抽出し、それを適用して目に見えない値を予測する必要があります。このような構造化されたシーケンスを通じた帰納的学習は、モデルの基本能力である抽象化と一般化を強化します。これらは、ドメインをまたがる堅牢な推論に不可欠な要素です。
+<!--
+<strong>Induction</strong><br>
+ To develop inductive reasoning capabilities in models, we design a task for automatically-
+generated sequence with hidden terms. Each instance presents a series of elements following an 
+undisclosed pattern (including numeric reasoning, symbolic patterns, and multi-step operation cycles) 
+and requires identification of a missing element. This methodology specifically targets induction 
+as the model must extract the underlying regularity governing the visible sequence and apply it to 
+predict unseen values. Inductive learning through such structured sequences enhances the model’s 
+fundamental capabilities in abstraction and generalization, which are essential components for robust 
+reasoning across domains. 
+-->
+</p><p>
+<strong>アブダクション</strong></br>
+逆向き推論能力を育成するために、我々は逆ルールグラフ探索タスクを導入する。このタスクでは、前方推論を意図的に阻害しながら逆向き推論の効率性を維持する。
+各インスタンスは有向ルールグラフとして定式化され、アトムはノード、含意は前提集合から結論へのハイパーエッジとしてエンコードされる。観察された事実はソースノードを活性化し、ターゲット仮説は未知の真理値を持つシンクノードに対応する。前方連鎖における分岐係数を増大させることで、網羅的な探索は計算的に不可能になる。対照的に、逆向き戦略は目標から出発し、最小限の支持前提を仮説化し、それを既知の事実と照らし合わせて検証する。このアプローチは、関連するサブグラフを効率的に分離することができる。この設計は、目標指向の仮説形成、検証、修正の繰り返しサイクルを誘発し、それによってアブダクション推論の中核メカニズムを促進する。
+<!--
+<strong>Abduction</strong></br>
+ To cultivate backward reasoning ability, we introduce a reverse rule-graph search task 
+in which forward inference is deliberately obstructed while backward inference remains efficient. 
+Each instance is formulated as a directed rule graph, with atoms as nodes and implications encoded 
+as hyperedges from premise sets to conclusions. Observed facts activate source nodes, while target 
+hypotheses correspond to sink nodes with unknown truth values. By inflating the branching factor 
+in forward chaining, exhaustive exploration becomes computationally infeasible. In contrast, a 
+backward strategy starts from a goal, hypothesizes minimal supporting premises, and verifies them 
+against known facts. This approach can efficiently isolate relevant subgraphs. The design induces 
+repeated cycles of goal-directed hypothesis formation, verification, and revision, thereby fostering 
+the core mechanism of abductive reasoning. 
+-->
+</p>
+<h3>3.2 推論のトレーニングレシピ</h3>
+<!--
+<h3>3.2 Training Recipe for Reasoning </h3>
+-->
+<p>
+図2は、私たちがどのようにして「なるほど！」という瞬間を制御可能で構成可能なメタ能力へと変換するかを示しています。まず、メタ能力アライメントを実行し、演繹、帰納、アブダクションの専門家を合成診断で個別に訓練します。次に、これらの専門家をパラメータ空間マージによって融合し、それぞれの強みを維持した単一のチェックポイントを取得します。最後に、ドメイン固有の強化学習トレーニングによって、数学、コーディング、ソーシャルダイアログなどのドメイン固有のデータに基づいて、統合されたモデルをさらに改良します。
+<!--
+Figure 2 sketches how we transform the emergent “aha” moment into controllable, composable 
+meta-abilities: we first carry out Meta-Abilities Alignment, independently training deduction, 
+induction, and abduction specialists on synthetic diagnostics; we then fuse these specialists through 
+Parameter-Space Merging to obtain a single checkpoint that retains their complementary strengths; 
+finally, Domain-Specific Reinforcement Learning Training further refines the merged model on 
+domain-specific data such as math, coding, and social dialogue. 
+-->
+</p>
+<h4>3.2.1 ステージA: メタ能力の調整</h4>
+<!--
+<h4>3.2.1 Stage A: Meta-Abilities Alignment </h4>
+-->
+<p>
+我々は、3つの合成的だが診断的なデータセットをキュレーションした。演繹（命題充足可能性）、帰納（マスクされたシーケンス補完）、およびアブダクション（逆ルールグラフ探索）である。方策πθについては、批判的思考のないREINFORCE++損失[10]と、Logic-RLフレームワーク[28]で提案されたいくつかの改良を採用する。
+<!--
+We curate three synthetic but diagnostic datasets: Deduction (propositional satisfiability), Induction 
+(masked-sequence completion), and Abduction (reverse rule-graph search). For a policy πθ, we adopt 
+the critic-free REINFORCE++ loss [10], along with several improvements proposed in the Logic-RL 
+framework [28].: 
+-->
+\[
+\mathcal{J}_{R++}(\theta=\frac{1}{|O|}\sum_{i=1}^{|{O}}
+\left[r_i\hat{A}_i-\beta D_{KL}(\pi_\theta||\pi_{ref})\right],\;\hat{A}_i=\frac{r_i - \mu_r}{\sigma_r} \tag{1}
+\]
+ここで、Oは応答グループ、\(π_{ref}\)は凍結された指示モデル、\(r_i\)はスカラー報酬、{\(μ_r,σ_r\)}はグループ統計です。
+<!--
+where O is the response group, \(π_{ref}\) is the frozen instruction model, \(r_i\) the scalar reward, and {\(μ_r,σ_r\)} are group statistics. 
+-->
+</p><p>
+各報酬 \(r_i\) は、フォーマット報酬と回答報酬を組み合わせたルールベースのスキームによって計算されます。フォーマット報酬は、正規表現ベースのルールを使用して構造の準拠性をチェックします。モデルは、推論を <think> タグに、最終的な回答を <answer> タグに配置する必要があります。正しいフォーマットは +1 を、逸脱は -1 を出力します。回答報酬は、タスク固有の正解に対する正しさを評価します。完全に正しい回答は +2 を、解析できない回答または欠落した回答は -2 を受け取ります。この評価は、タスク固有の基準に基づいて行われます。演繹（命題の充足可能性）出力は、すべてのブール式を満たす場合にのみ正しいと判断されます。帰納（マスクされたシーケンス補完）予測は、予測された用語がシーケンスパターンに適合する場合に有効です。アブダクション（逆ルールグラフ検索）回答は、その前提が証拠からターゲットへの最小の一貫した因果パスを形成する場合に受け入れられます。次に、合計報酬をグループ全体で正規化して、\(\hat{A}_i\)iを生成します。
+<!--
+Each reward \(r_i\) is computed via a rule-based scheme combining Format Reward and Answer 
+Reward. The Format Reward checks structural compliance using regex-based rules: the model 
+must place reasoning in <think> 
+tags and the final answer in <answer> 
+tags. A correct format 
+yields +1, while any deviation gives −1. The Answer Reward evaluates correctness relative to 
+the task-specific ground truth: a fully correct answer receives +2, and an unparseable or missing 
+answer −2. Task-specific criteria guide this evaluation. A deduction (Propositional satisfiability) 
+output is correct only if it satisfies all Boolean formulas; an induction (masked-sequence completion) 
+prediction is valid if the predicted term fits the sequence pattern; and an abduction (inverse rule-graph 
+search) answer is accepted when its premises form the minimal consistent causal path from evidence to target. The total reward is then normalized across the group to produce \(\hat{A}_i\)i. 
+-->
+</p><p>
+<h4>3.2.2 ステージB: メタ能力統合のためのパラメータ空間の統合</h4>
+<!--
+<h4>3.2.2 Stage B: Parameter-Space Merging for Meta-Ability Integration </h4>
+-->
+<p>
+異なるメタ能力に特化したモデルの強みを統合するために、パラメータ空間のマージを採用しました。これにより、(i) 追加学習なしで補完的な能力をコスト効率よく組み合わせること、(ii) ステージCにおけるドメイン固有の微調整のための高品質な初期化が可能になります。
+<!--
+To unify the strengths of models specialized in distinct meta-abilities, we adopt parameter-space 
+merging, which enables: (i) a cost-efficient combination of complementary competencies without 
+additional training, and (ii) a high-quality initialization for domain-specific fine-tuning in Stage C. 
+-->
+</p><p>
+演繹、帰納、アブダクションに特化したスペシャリストのパラメータをそれぞれ \(Θ^{(d)}\)、\(Θ^{(i)}\)、\(Θ^{(a)}\) と表記します。これらのモデルは、それぞれのメタ能力について個別に学習され、予測結果を統合することで、非常に補完的な動作を示します。3つのスペシャリストの重みを線形補間することで、マージモデル \(Θ_{merge}\) を構築します。
+<!--
+We denote the parameters of the deduction-, induction-, and abduction-aligned specialists as \(Θ^{(d)}\), 
+\(Θ^{(i)}\), and \(Θ^{(a)}\), respectively. These models, trained separately on their respective meta-abilities, 
+demonstrate highly complementary behaviors—aggregating their predictions. We construct the 
+merged model \(Θ_{merge}\) by linearly interpolating the weights of the three specialists: 
+-->
+\[
+Θ_{merge} = λ_dΘ^{(d)}+λ_iΘ^{(i)}+λ_aΘ^{(a)} \tag{2}
+\]
+ 
+</p><p>
+各専門モデルの貢献度は、スカラー重み \(λ_d, λ_i,\) および \(λ_a\) によって制御されます。これらの係数は、統合モデルにおける各メタ能力の相対的な影響を決定します。特に、重み付けは均一であるとは想定されていません。不均等な割り当ての方が、推論モード間のタスク難易度や汎化効果の非対称性をより適切に反映する可能性があります。最適な重みは、パフォーマンスに基づいて経験的に選択されます。
+<!--
+We control the contribution of each specialist model via scalar weights \(λ_d, λ_i,\) and \(λ_a\). These 
+coefficients determine the relative influence of each meta-ability in the merged model. Notably, 
+uniform weighting is not assumed—unequal allocation may better reflect the asymmetry in task 
+difficulty or generalization benefit across reasoning modes. Optimal weights are selected empirically 
+based on the performance. 
+-->
+</p>
+<h4>3.2.3 ステージ C: ドメイン固有の強化学習トレーニング</h4>
+<!--
+<h4>3.2.3 Stage C: Domain-Specific Reinforcement Learning Training </h4>
+-->
+<p>
+メタ能力のアライメントが下流学習のより強固な基盤となるかどうかを評価するために、ドメイン固有のデータ、具体的には数学タスクを用いて、アライメントされたチェックポイントに強化学習を適用する。命令調整されたベースラインとの公平かつ制御された比較を行うため、SimpleRL-Zoo [31] の実験設定に従う。具体的には、正解に+1、それ以外に0を割り当てるルールベースの報酬関数を採用し、REINFORCE++などのより複雑な目的関数の代わりに、Group Relative Policy Optimization (GRPO) 目的関数 [21] を使用する。これらの選択はSimpleRL-Zooと一致し、初期化の影響を分離するのに役立ち、パフォーマンスの向上が最適化の違いではなくメタ能力のアライメントから生じることを保証する。
+<!--
+To evaluate whether meta-ability alignment provides a stronger foundation for downstream learning, 
+we apply reinforcement learning to the aligned checkpoints using domain-specific data, specifically 
+math tasks. For a fair and controlled comparison with instruction-tuned baselines, we follow the 
+experimental settings of SimpleRL-Zoo [31]. Specifically, we adopt a rule-based reward function that 
+assigns +1 to correct completions and 0 otherwise, and use the Group Relative Policy Optimization 
+(GRPO) objective [21] in place of more complex objectives such as REINFORCE++. These choices 
+match SimpleRL-Zoo and help isolate the impact of initialization, ensuring performance gains arise 
+from meta-ability alignment rather than optimization differences. 
+-->
+\[
+\mathcal{J}_{GRPO}(\theta|)=\frac{1}{\sum g|O_g|} \sum_{i=1}^G\sum_{t=1}^{|o_i}
+\min\left[ r_{i,t}\hat{A}_i,;clip(r_{i, t};1-\epsilon,1+\epsilon)\hat{A}_i\right]
+-\beta,D_{KL}(\pi_\theta|\pi_{ref}) \tag{3}
+\]
+ここで、\(r_{i,t}\)はトークンごとの重要度重みであり、\(π_{ref}\)は偏差を正規化するために使用される固定参照モデルです。
+<!--
+where \(r_{i,t}\) is the per-token importance weight and \(π_{ref}\) is a fixed reference model used to regularize 
+deviations. 
+-->
+</p>
+<h2>4 実験パフォーマンス</h2>
+<h3>4.1 実験設定</h3>
+<!--
+<h2>4 Experimental Performance</h2> 
+<h3>4.1 Experimental Setup </h3>
+-->
+<p>
+<strong>データセット</strong><br>
+各メタ能力タスクに対して、特定の難易度制御パラメータを導入します。これにより、
+各タスクに対して複数の難易度レベルを生成し、モデルを簡単なレベルから難しいレベルへと段階的に学習させるカリキュラム学習戦略を採用します。このスケジュールでは、7Bモデルはレベル2で収束し、より高いレベルでは報酬がそれ以上向上しないため、学習はレベル1～2に制限します。
+32Bモデルはレベル3で時折利益を得ますが、報酬曲線が不安定です。そのため、
+このモデルにも最初の2つのレベルのみを使用します。7Bモデルではレベルごとにタスクあたり200インスタンス、32Bモデルではレベルごとにタスクあたり2000インスタンスをサンプリングします。さらにドメイン固有の強化学習を行うために、
+SimpleRL-Zoo [31] と同じデータセットを採用します。
+<!--
+<strong>Dataset</strong><br>
+ For each meta-ability task we introduce a specific difficulty-controlling parameter. Thus, 
+we generate multiple difficulty levels for every task and adopt the curriculum learning strategy that 
+trains the model level by level from easy to hard. With this schedule, the 7B model converges by 
+Level 2, and its reward does not improve further at higher levels, so we restrict training to Levels 1–2. 
+The 32B model occasionally benefits from Level 3 but shows unstable reward curves. Therefore, we 
+also use only the first two levels for it. We sample 200 instances per task per level for the 7B model 
+and 2000 instances per task per level for the 32B model. For further domain-specific RL training, we 
+adopt the same dataset as SimpleRL-Zoo [31]. 
+-->
+</p><p>
+<strong>評価設定</strong><br>
+これらのメタ能力の一般化を検証するために、数学、コーディング、科学の分野から7つのベンチマークを選択しました。数学タスクでは、MATH-500 [9]、AIME 1983-2024コーパス全体[23]、最近のAMC 2023 [15]およびAIME 2024 [16]セット、そしてオリンピックレベルのOmniMathサブセット[6]を評価ベンチマークとして使用しました。LiveCodeBenchはコード生成用に設計されており[12]、GPQA [20]は大学院レベルの科学QAを対象としています。ほとんどのベンチマークについて、温度0.0、top-p 1.0を使用してpass@1の結果を報告します。一方、問題数が少ないAIME 2024とAMC 2023については、温度1.0、top-p 0.95を使用して、問題ごとに32サンプル以上計算した平均精度（avg@32）を報告します。
+<!--
+<strong>Evaluation Setup</strong><br>
+ To validate the generalization of these meta-ability, we select 7 benchmarks from 
+math, coding and science domain. In math tasks, we utilize MATH-500 [9], the full AIME 1983–2024 
+corpus [23], the recent AMC 2023 [15] and AIME 2024 [16] sets and the Olympiad-level OmniMath 
+subset [6] as the evaluation benchmark. LiveCodeBench is designed for code generation [12], and 
+GPQA [20] is aimed for graduate-level science QA. For most benchmarks, we report pass@1 results 
+using temperature 0.0 and top-p 1.0. While, for AIME 2024 and AMC 2023—which contain fewer 
+problems—we report average accuracy (avg@32), computed over 32 samples per problem using 
+temperature 1.0 and top-p 0.95. 
+-->
+</p><p>
+<strong>3段階学習のためのハイパーパラメータ</strong><br>
+メタ能力のアライメントと継続的強化学習にはVERL [22] を用い、異なるメタ能力を統合するためのパラメータ空間のマージにはMERGEKIT [7] を採用する。最適な重み係数は、λ_d=1.0、λ_i=0.2、λ_a=0.1に設定される。
+<!--
+<strong>Hyperparameter for Three Stage Training</strong><br>
+ We utilize VERL [22] for meta-abilities alignment 
+and continual reinforcement learning, and adopt MERGEKIT [7] for parameter-space merging to 
+integrate distinct meta-abilities. The optimal weighting coefficients are set to \(λ_d=1.0, λ_i 
+=0.2,\) and \(λ_a=0.1\). 
+-->
+</p>
+<h3>4.2 メタ能力の領域外一般化</h3>
+<!--
+<h3>4.2 Out-of-Domain Generalization of Meta-Abilities </h3>
+-->
+<p>
+表1は、合成診断タスクのみで訓練されたメタ能力のアラインメントが、すでに7つの未知のベンチマークに転移していることを示しています。7Bスケールでは、帰納法アラインメントモデルが平均スコアを1.7%上昇させ、平均改善率が最大となりました。一方、演繹法アラインメントモデルは、MATH500で2.8%の増加を示し、単一の数学タスクで最大のゲインをもたらしました。3つのメタ能力を統合モデルに統合すると、全体のスコアがさらに2.5%上昇し、能力が建設的に組み合わさっていることが確認されました。アラインメントされたモデルのいずれかが成功すれば問題を正解とマークするOracle Ensembleは、数学の平均を11.1%向上させ、より優れた融合手法によってまだ活用されていない強力な補完性を強調しています。
+<!--
+Table 1 shows that meta-ability alignment, trained solely on synthetic diagnostic tasks, already 
+transfers to seven unseen benchmarks. At the 7B scale, the induction-aligned model provides the 
+largest average improvement, lifting the mean score by 1.7%, whereas the deduction-aligned model 
+yields the largest single math task gain with a 2.8% increase on MATH500. Integrating the three 
+meta-abilities in the Merged model further raises the overall score by 2.5%, confirming that the 
+abilities combine constructively. An Oracle Ensemble that marks a problem correct if any aligned 
+model succeeds boosts the Math-average by 11.1% , underlining the strong complementarity still to 
+be tapped by better fusion methods. 
+-->
+</p>
+<center><img src="images/table1.png"></center>
+<p>
+表1：メタ能力アラインメントモデル、統合アンサンブル、およびオラクル上限の7つのベンチマークにおけるパフォーマンス（7Bおよび32Bパラメータスケールの両方）。スケーリングによる一貫したゲインを示している。
+<!--
+Table 1: Performance of meta-ability–aligned models, merged ensembles, and oracle upper bounds 
+on 7 benchmarks at both 7B and 32B parameter scales, illustrating consistent gains from scaling 
+-->
+</p><p>
+32Bモデルへのスケーリングにより、このパターンはさらに顕著になりました。各アライメントモデルはQwen2.5-32B-Instructベースラインを上回り、数学全体の指標で平均3.1%、全体平均で2.6%の向上を示しました。これらの結果は、提案されたアライメント戦略が、訓練領域を超えて確実に一般化する推論スキルを身につけさせることをさらに裏付けています。さらに、マージチェックポイントでは全体平均が3.5%向上し、数学平均では4.4%という顕著な向上が見られました。Oracle Ensembleを完全に実行すると、数学平均がさらに10.8%向上し、3つの推論モードは大規模でも非常に補完的であることを示しています。
+<!--
+Scaling to the 32B model amplifies the pattern: each aligned model surpasses the 
+Qwen2.5-32B-Instruct baseline, yielding a mean gain of 3.1% on the Math-overall metric and 
+2.6% on the overall average. These results further confirm that the proposed alignment strategy instills 
+reasoning skills that generalize reliably beyond their training domain. Additionally, the Merged 
+checkpoint improves the overall average by 3.5%, with a standout 4.4% gain on the Math-average. A 
+full Oracle Ensemble run shows an additional 10.8% lift in the math average, indicating that the three 
+reasoning modes remain highly complementary even at larger scale. 
+-->
+</p>
+<h3>4.3 メタ能力の調整によるスケーラブルな利益</h3>
+<!--
+<h3>4.3 Scalable Gains from Meta-Abilities Alignment </h3>
+-->
+<p>
+表2は、メタ能力を統合したチェックポイント（Domain-RL-Meta）からドメイン特化型強化学習を再開すると、命令調整モデル（Domain-RL-Ins）に適用された同じスケジュールよりも一貫して優れたパフォーマンスを発揮することを示しています。7Bでは、数学は38.8（命令ベースライン）からDomain-RL-Insで41.2に、Domain-RL-Metaで43.0に上昇し、全体の平均は35.3→37.8→39.0に上昇しています。最も大きな上昇は、構成AIME（+5.3）とオリンピック（+3.7）のサブセットで見られ、コードと科学は安定しています。 32Bにスケーリングすると、このパターンはさらに拡大します。数学は46.9→50.3→52.3に向上し、全体の平均は44.6→47.4→48.8に向上します。これは、相対的な数学の向上が7%（ドメイン強化学習インストゥルメント）、12%（ドメイン強化学習メタ）になることを意味します。したがって、タスク固有の強化学習の前に、一般的な演繹的、帰納的、およびアブダクションルーチンを組み込むことで、達成可能なパフォーマンスの上限が上がり、モデルの容量が増加するにつれて、その利点はさらに拡大します。
+<!--
+Table 2 shows that resuming domain-specific RL from a meta-ability–merged checkpoint 
+(Domain-RL-Meta) consistently outperforms the same schedule applied to an instruction-tuned model 
+(Domain-RL-Ins). At 7B, math rises from 38.8 (instruction baseline) to 41.2 with Domain-RL-Ins 
+and to 43.0 with Domain-RL-Meta, while the overall average climbs from 35.3→37.8→39.0; the 
+largest jumps appear on the compositional AIME (+5.3) and Olympic (+3.7) subsets, with code and 
+science remaining steady. Scaling to 32B amplifies the pattern: math improves 46.9→50.3→52.3 
+and the overall average 44.6→47.4→48.8, translating to relative math gains of 7% (Domain-RL-Ins) 
+and 12% (Domain-RL-Meta). Thus, embedding general deductive, inductive, and abductive routines 
+before task-specific RL raises the attainable performance ceiling, and the advantage widens as model 
+capacity grows. 
+-->
+</p>
+>center><img src="images/table2.png"></center>
+<p>
+表2：7Bスケールおよび32Bスケールのベースライン命令モデルと、継続的なドメイン固有強化学習バリアントの数学、コード、科学ベンチマークにおける比較。Domain-RL-Insは、命令モデルから開始する継続的なドメイン固有強化学習を表します。Domain-RL-Metaは同じ強化学習スケジュールを適用しますが、メタ能力を統合した初期化から開始するため、より高いパフォーマンス上限が得られます。
+<!--
+Table 2: Comparison of 7B-and 32B-scale baseline instruction models and our continual domain-
+specific RL variants across math, code, and science benchmarks. Domain-RL-Ins denotes continual 
+domain-specific RL starting from instruction model; Domain-RL-Meta applies the same RL schedule 
+but from a meta-ability–merged initialization, yielding a higher attainable performance ceiling. 
+-->
+</p>
+<h2>5 結論</h2>
+<!--
+<h2>5 Conclusion </h2>
+-->
+<p>
+この研究は、大規模な推論モデルが高度な問題解決能力を獲得するために、予測不可能な「ひらめき」に頼る必要がないことを示しています。自動生成され自己検証可能なタスクを通じて、演繹、帰納、アブダクションを明示的に連携させることで、追加の計算なしに、補完的な強みを単一のチェックポイントに統合できる専門エージェントを作成します。このチェックポイントは、命令調整されたベースラインと比較して、専用診断で10%以上、7つの多様な数学、コード、科学ベンチマークで最大2%優れたパフォーマンスを発揮します。このメタ能力連携モデルをドメイン固有の強化学習の出発点として使用すると、達成可能なパフォーマンスの上限がさらに4%上昇し、モデル容量が70億から320億のパラメーターに拡張されるにつれて、ギャップが広がります。これらの結果は、基本的な推論モードの体系的かつモジュール式のトレーニングが、下流の能力構成のための制御可能でスケーラブルな基盤を提供することを確認しています。今後の研究では、より豊富な融合戦略を探求し、タスクスイートをマルチモーダル設定に拡張し、明示的なメタ能力制御が大規模推論システムにおける解釈可能性と安全性をどのように向上させることができるかを調査します。
+<!--
+This work demonstrates that large reasoning models need not rely on unpredictable ‘aha moments’ to 
+acquire advanced problem-solving skills. By explicitly aligning deduction, induction, and abduction 
+through automatically generated, self-verifiable tasks, we create specialist agents whose complementary 
+strengths can be merged—without extra compute—into a single checkpoint that outperforms an 
+instruction-tuned baseline by more than 10% on purpose-built diagnostics and up to 2% on seven 
+diverse math, code, and science benchmarks. When this meta-ability-aligned model is used as the 
+starting point for domain-specific reinforcement learning, it lifts the attainable performance ceiling by 
+a further 4% and widens the gap as model capacity scales from 7B to 32B parameters. These results 
+confirm that systematic, modular training of fundamental reasoning modes provides a controllable and 
+scalable foundation for downstream capability composition. Future work will explore richer fusion 
+strategies, extend the task suite to multimodal settings, and investigate how explicit meta-ability 
+control can improve interpretability and safety in large-scale reasoning systems. 
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>References</h2>
+-->
+<p> 
+<div class="styleRef">
+<ul><li>
+[1] Jiefeng Chen, Jie Ren, Xinyun Chen, Chengrun Yang, Ruoxi Sun, and SercanÖ. Arık. Sets: Leveraging self-verification and self-correction for improved test-time scaling. arXiv preprint 
+arXiv:2501.19306, 2025. URL https://arxiv.org/abs/2501.19306.
+</li><br><li>[2] Justin Chih-Yao Chen, Zifeng Wang, Hamid Palangi, Rujun Han, Sayna Ebrahimi, Long Le, 
+Vincent Perot, Swaroop Mishra, Mohit Bansal, Chen-Yu Lee, et al. Reverse thinking makes 
+llms stronger reasoners. arXiv preprint arXiv:2411.19865, 2024. 
+</li><br><li>[3] Google DeepMind. Gemini 2.5 pro: The latest gemini multimodal model. https://deepmind. 
+google/technologies/gemini/, May 2024. Accessed: 2025-05-15. 
+</li><br><li>[4] Hugging Face. Open r1: A fully open reproduction of deepseek-r1, January 2025. URL 
+https://github.com/huggingface/open-r1. 
+</li><br><li>[5] Kanishk Gandhi, Ayush Chakravarthy, Anikait Singh, Nathan Lile, and Noah D Goodman. 
+Cognitive behaviors that enable self-improving reasoners, or, four habits of highly effective 
+stars. arXiv preprint arXiv:2503.01307, 2025. 
+</li><br><li>[6] Bofei Gao, Feifan Song, Zhe Yang, Zefan Cai, Yibo Miao, Qingxiu Dong, Lei Li, Chenghao 
+Ma, Liang Chen, Runxin Xu, Zhengyang Tang, Benyou Wang, Daoguang Zan, Shanghaoran 
+Quan, Ge Zhang, Lei Sha, Yichang Zhang, Xuancheng Ren, Tianyu Liu, and Baobao Chang. 
+Omnimath: A universal olympiad level mathematical benchmark for large language models. In 
+Proc. of ICLR, 2025. 
+</li><br><li>[7] Charles Goddard, Shamane Siriwardhana, Malikeh Ehghaghi, Luke Meyers, Vladimir 
+Karpukhin, Brian Benedict, Mark McQuade, and Jacob Solawetz. Arcee’s MergeKit: A 
+toolkit for merging large language models. In Franck Dernoncourt, Daniel Preo¸tiuc-Pietro, and 
+Anastasia Shimorina, editors, Proceedings of the 2024 Conference on Empirical Methods in 
+Natural Language Processing: Industry Track, pages 477–485, Miami, Florida, US, November 
+2024. Association for Computational Linguistics. doi: 10.18653/v1/2024.emnlp-industry.36. 
+URL https://aclanthology.org/2024.emnlp-industry.36. 
+</li><br><li>[8] Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, 
+Shirong Ma, Peiyi Wang, Xiao Bi, et al. Deepseek-r1: Incentivizing reasoning capability in 
+llms via reinforcement learning. arXiv preprint arXiv:2501.12948, 2025. 
+</li><br><li>[9] Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric Tang, Dawn 
+Song, and Jacob Steinhardt. Measuring mathematical problem solving with the math dataset. 
+arXiv preprint arXiv:2103.03874, 2021. 
+</li><br><li>[10] Jian Hu. Reinforce++: A simple and efficient approach for aligning large language models. 
+arXiv preprint arXiv:2501.03262, 2025. 
+</li><br><li>[11] Aaron Jaech, Adam Kalai, Adam Lerer, Adam Richardson, Ahmed El-Kishky, Aiden Low, Alec 
+Helyar, Aleksander Madry, Alex Beutel, Alex Carney, et al. Openai o1 system card. arXiv 
+preprint arXiv:2412.16720, 2024. 
+</li><br><li>[12] Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida I. Wang, Armando 
+Solar-Lezama, Koushik Sen, and Ion Stoica. Livecodebench: Holistic and contamination 
+free evaluation of large language models for code. arXiv preprint arXiv:2403.07974, 2024. 
+</li><br><li>[13] Aviral Kumar, Vincent Zhuang, Rishabh Agarwal, Yi Su, John D Co-Reyes, Avi Singh, Kate 
+Baumli, Shariq Iqbal, Colton Bishop, Rebecca Roelofs, et al. Training language models to 
+self-correct via reinforcement learning. arXiv preprint arXiv:2409.12917, 2024. 
+</li><br><li>[14] Ruotian Ma, Peisong Wang, Cheng Liu, Xingyan Liu, Jiaqi Chen, Bang Zhang, Xin Zhou, Nan 
+Du, and Jia Li. S2r: Teaching llms to self-verify and self-correct via reinforcement learning. 
+arXiv preprint arXiv:2502.12853, 2025. URL https://arxiv.org/abs/2502.12853. 
+</li><br><li>[15] Mathematical Association of America. American Mathematics Competitions (AMC) 2023, 
+2023. 
+</li><br><li>[16] Mathematical Association of America. American Invitational Mathematics Examination (AIME) 
+2024, 2024. 
+</li><br><li>[17] OpenAI. Openai o3 and o4-mini system card. 2025. 
+</li><br><li>[18] Jiayi Pan, Junjie Zhang, Xingyao Wang, Lifan Yuan, Hao Peng, and Alane Suhr. Tinyzero. 
+https://github.com/Jiayi-Pan/TinyZero, 2025. Accessed: 2025-01-24. 
+</li><br><li>[19] Charles Sanders Peirce. Collected papers of charles sanders peirce, volume 2: Elements of logic. 
+pages Chapter 7, especially paragraphs 619–645. Harvard University Press, 1931. Peirce’s 
+formulation of deduction, induction, and abduction as distinct forms of inference. 
+</li><br><li>[20] David Rein, Betty Li Hou, Asa Cooper Stickland, Jackson Petty, Richard Yuanzhe Pang, Julien 
+Dirani, Julian Michael, and Samuel R. Bowman. GPQA: A graduate-level google-proof q&a 
+benchmark. arXiv preprint arXiv:2311.12022, 2023. 
+</li><br><li>[21] Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, 
+Mingchuan Zhang, YK Li, Y Wu, et al. Deepseekmath: Pushing the limits of mathematical 
+reasoning in open language models. arXiv preprint arXiv:2402.03300, 2024. 
+</li><br><li>[22] Guangming Sheng, Chi Zhang, Zilingfeng Ye, Xibin Wu, Wang Zhang, Ru Zhang, Yanghua 
+Peng, Haibin Lin, and Chuan Wu. Hybridflow: A flexible and efficient rlhf framework. arXiv 
+preprint arXiv: 2409.19256, 2024. 
+</li><br><li>[23] Hemish Veeraboina. Aime problem set 1983-2024, 2023. URL https://www.kaggle.com/ 
+datasets/hemishveeraboina/aime-problem-set-1983-2024. 
+</li><br><li>[24] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi, Quoc V Le, 
+Denny Zhou, et al. Chain-of-thought prompting elicits reasoning in large language models. 
+Advances in neural information processing systems, 35:24824–24837, 2022. 
+</li><br><li>[25] Liang Wen, Yunke Cai, Fenrui Xiao, Xin He, Qi An, Zhenyu Duan, Yimin Du, Junchen Liu, 
+Lifu Tang, Xiaowei Lv, et al. Light-r1: Curriculum sft, dpo and rl for long cot from scratch and 
+beyond. arXiv preprint arXiv:2503.10460, 2025. 
+</li><br><li>[26] Zhenyu Wu, Qingkai Zeng, Zhihan Zhang, Zhaoxuan Tan, Chao Shen, and Meng Jiang. 
+Large language models can self-correct with key condition verification. arXiv preprint 
+arXiv:2405.14092, 2024. URL https://arxiv.org/abs/2405.14092. EMNLP 2024. 
+</li><br><li>[27] xAI. Grok 3.5: Advanced reasoning ai model by xai. https://grok.x.ai/, February 2025. 
+Accessed: 2025-05-15. 
+</li><br><li>[28] Tian Xie, Zitian Gao, Qingnan Ren, Haoming Luo, Yuqian Hong, Bryan Dai, Joey Zhou, 
+Kai Qiu, Zhirong Wu, and Chong Luo. Logic-rl: Unleashing llm reasoning with rule-based 
+reinforcement learning. arXiv preprint arXiv:2502.14768, 2025. 
+</li><br><li>[29] Wei Xiong, Jiarui Yao, Yuhui Xu, Bo Pang, Lei Wang, Doyen Sahoo, Junnan Li, Nan Jiang, 
+Tong Zhang, Caiming Xiong, et al. A minimalist approach to llm reasoning: from rejection 
+sampling to reinforce. arXiv preprint arXiv:2504.11343, 2025. 
+</li><br><li>[30] Shu Yang, Junchao Wu, Xin Chen, Yunze Xiao, Xinyi Yang, Derek F Wong, and Di Wang. 
+Understanding aha moments: from external observations to internal mechanisms. arXiv preprint 
+arXiv:2504.02956, 2025. 
+</li><br><li>[31] Weihao Zeng, Yuzhen Huang, Qian Liu, Wei Liu, Keqing He, Zejun Ma, and Junxian He. 
+Simplerl-zoo: Investigating and taming zero reinforcement learning for open base models in the 
+wild. arXiv preprint arXiv:2503.18892, 2025. 
+</li><br><li>[32] Hengguang Zhou, Xirui Li, Ruochen Wang, Minhao Cheng, Tianyi Zhou, and Cho-Jui 
+Hsieh. R1-zero’s" aha moment" in visual reasoning on a 2b non-sft model. arXiv preprint 
+arXiv:2503.05132, 2025. 
+</li></ul></div>
+</p>
+    </body>
+</html>
