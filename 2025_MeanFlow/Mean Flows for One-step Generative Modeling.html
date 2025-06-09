@@ -1,0 +1,1346 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Mean Flows</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+<h1><center>Mean Flows for One-step Generative Modeling</center></h1>
+<center>(ワンステップ生成モデリングのための MeanFlow)</center>
+<br>
+<center>Zhengyang Geng<sup>1</sup>　Mingyang Deng<sup>2</sup>　Xingjian Bai<sup>2</sup>　J. Zico Kolter<sup>1</sup>　Kaiming He<sup>2</sup></center>
+<center><sup>1</sup>CMU　<sup>2</sup>MIT</center>
+<h2><center>要旨</center></h2>
+<!--
+<h2><center>Abstract</center></h2>
+-->
+        <p class="margin-abstract ">
+我々は、ワンステップ生成モデリングのための原理的かつ効果的なフレームワークを提案する。
+フローマッチング法によってモデル化される瞬間速度とは対照的に、流れ場を特徴付ける平均速度の概念を導入する。平均速度と瞬間速度の間に明確に定義された恒等式が導出され、ニューラルネットワークの学習に用いられる。MeanFlowモデルと呼ばれる我々の手法は自己完結型であり、事前学習、蒸留、カリキュラム学習を必要としない。MeanFlowは強力な実験的性能を示し、ゼロから学習したImageNet 256×256における単一関数評価（1-NFE）で3.43のFIDを達成し、従来の最先端のワンステップ拡散／フローモデルを大幅に上回る性能を示した。本研究は、ワンステップ拡散／フローモデルとそのマルチステップ先行モデルとの間のギャップを大幅に縮めるものであり、これらの強力なモデルの基礎を再検討する将来の研究を促進することを期待する。
+<!--
+We propose a principled and effective framework for one-step generative modeling.
+We introduce the notion of average velocity to characterize flow fields, in contrast to
+instantaneous velocity modeled by Flow Matching methods. A well-defined identity
+between average and instantaneous velocities is derived and used to guide neural
+network training. Our method, termed the MeanFlow model, is self-contained and
+requires no pre-training, distillation, or curriculum learning. MeanFlow demonstrates
+strong empirical performance: it achieves an FID of 3.43 with a single
+function evaluation (1-NFE) on ImageNet 256×256 trained from scratch, significantly
+outperforming previous state-of-the-art one-step diffusion/flow models. Our
+study substantially narrows the gap between one-step diffusion/flow models and
+their multi-step predecessors, and we hope it will motivate future research to revisit
+the foundations of these powerful models.
+-->
+        </p>
+<h2>1 はじめに</h2>
+<!--
+<h2>1 Introduction</h2>
+-->
+<p>
+生成モデリングの目的は、事前分布をデータ分布に変換することです。フローマッチング[28, 2, 30]は、ある分布を別の分布に輸送するフローパスを構築するための直感的で概念的にシンプルなフレームワークを提供します。拡散モデル[42, 44, 19]と密接に関連するフローマッチングは、モデルの学習を導く速度場に焦点を当てています。導入以来、フローマッチングは現代の生成モデリングにおいて広く採用されています[11, 33, 35]。
+<!--
+The goal of generative modeling is to transform a prior distribution into the data distribution. Flow
+Matching [28, 2, 30] provides an intuitive and conceptually simple framework for constructing flow
+paths that transport one distribution to another. Closely related to diffusion models [42, 44, 19],
+Flow Matching focuses on the velocity fields that guide model training. Since its introduction, Flow
+Matching has seen widespread adoption in modern generative modeling [11, 33, 35].
+-->
+</p><p>
+フローマッチングモデルと拡散モデルはどちらも生成中に反復サンプリングを行う。最近の研究では、少数ステップ、特に1ステップのフィードフォワード生成モデルに大きな注目が集まっている。この分野の先駆者として、一貫性モデル[46, 43, 15, 31]は、同じパスに沿ってサンプリングされた入力に対するネットワーク出力に一貫性制約を導入する。有望な結果であるにもかかわらず、一貫性制約はネットワークの挙動の特性として課されるのに対し、学習を導くはずの根底にある真実の場の特性は依然として不明である。その結果、学習は不安定になる可能性があり、時間領域を徐々に制約するために慎重に設計された「離散化カリキュラム」[46, 43, 15]が必要となる。
+<!--
+Both Flow Matching and diffusion models perform iterative sampling during generation. Recent research
+has paid significant attention to few-step—and in particular, one-step, feedforward—generative
+models. Pioneering this direction, Consistency Models [46, 43, 15, 31] introduce a consistency constraint
+to network outputs for inputs sampled along the same path. Despite encouraging results, the
+consistency constraint is imposed as a property of the network’s behavior, while the properties of the
+underlying ground-truth field that should guide learning remain unknown. Consequently, training can
+be unstable and requires a carefully designed “discretization curriculum” [46, 43, 15] to progressively
+constrain the time domain.
+-->
+</p><p>
+本研究では、ワンステップ生成のための、原理的かつ効果的なフレームワーク「MeanFlow」を提案する。その核となるアイデアは、Flow Matchingで一般的にモデル化される瞬間速度とは対照的に、平均速度を表す新たな正解場を導入することである。平均速度は、変位と時間間隔の比として定義され、変位は瞬間速度の時間積分によって与えられる。この定義のみに基づいて、平均速度と瞬間速度の間に明確かつ本質的な関係を導出する。これは、ネットワーク学習を導くための原理的な基盤として自然に機能する。
+<!--
+In this work, we propose a principled and effective framework, termed MeanFlow, for one-step
+generation. The core idea is to introduce a new ground-truth field representing the average velocity,
+in contrast to the instantaneous velocity typically modeled in Flow Matching. Average velocity is
+defined as the ratio of displacement to a time interval, with displacement given by the time integral of
+the instantaneous velocity. Solely originated from this definition, we derive a well-defined, intrinsic
+relation between the average and instantaneous velocities, which naturally serves as a principled basis
+for guiding network training.
+-->
+</p><p>
+この基本概念に基づき、ニューラルネットワークを訓練して平均速度場を直接モデル化する。ネットワークが平均速度と瞬間速度の間の固有の関係を満たすように促す損失関数を導入する。追加の一貫性ヒューリスティックは不要である。真のターゲット場の存在により、最適解は原理的に特定のネットワークに依存しないことが保証され、実際にはより堅牢で安定した訓練につながる。さらに、このフレームワークは分類器不要のガイダンス（CFG）[18]をターゲット場に自然に組み込むことができ、ガイダンス使用時のサンプリング時に追加コストが発生しないことを示す。
+<!--
+Building on this fundamental concept, we train a neural network to directly model the average
+velocity field. We introduce a loss function that encourages the network to satisfy the intrinsic relation
+between average and instantaneous velocities. No extra consistency heuristic is needed. The existence
+of the ground-truth target field ensures that the optimal solution is, in principle, independent of the
+specific network, which in practice can lead to more robust and stable training. We further show
+that our framework can naturally incorporate classifier-free guidance (CFG) [18] into the target field,
+incurring no additional cost at sampling time when guidance is used.
+-->
+</p><p>
+我々のMeanFlowモデルは、ワンステップ生成モデリングにおいて高い経験的性能を示している。ImageNet 256×256 [7]において、我々の手法は1-NFE（関数評価回数）生成を用いて3.43のFIDを達成した。この結果は、同クラスの先行研究における最先端手法を50%から70%の相対マージンで大幅に上回る（図1）。さらに、我々の手法は自己完結型の生成モデルであり、事前学習、蒸留、カリキュラム学習を必要とせず、完全にゼロから学習される。本研究は、ワンステップ拡散/フローモデルと、それらのマルチステップ先行研究との間のギャップを大きく埋めるものであり、これらの強力なモデルの基礎を再考するための将来の研究に刺激を与えることを期待している。
+<!--
+Our MeanFlow Models demonstrate strong empirical performance in one-step generative modeling.
+On ImageNet 256×256 [7], our method achieves an FID of 3.43 using 1-NFE (Number of Function
+Evaluations) generation. This result significantly outperforms previous state-of-the-art methods in
+its class by a relative margin of 50% to 70% (Fig. 1). In addition, our method stands as a selfcontained
+generative model: it is trained entirely from scratch, without any pre-training, distillation,
+or curriculum learning. Our study largely closes the gap between one-step diffusion/flow models and
+their multi-step predecessors, and we hope it will inspire future work to reconsider the foundations of
+these powerful models.
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p class="margin-large">
+図1：ImageNetでの256×256のワンステップ生成。我々のMeanFlow（MF）モデルは、従来の最先端のワンステップ拡散/フロー法よりも大幅に優れた生成品質を実現している。ここで、iCT [43]、Shortcut [13]、そして我々のMFはすべて1-NFE生成であるのに対し、IMMの1ステップ結果[52]は2-NFEガイダンスを伴う。詳細な数値は表2に示している。表示されている画像は、我々の1-NFEモデルによって生成されたものである。
+<!--
+Figure 1: One-step generation on ImageNet
+256×256 from scratch. Our MeanFlow (MF)
+model achieves significantly better generation
+quality than previous state-of-the-art one-step diffusion/
+flow methods. Here, iCT [43], Shortcut
+[13], and our MF are all 1-NFE generation, while
+IMM’s 1-step result [52] involves 2-NFE guidance.
+Detailed numbers are in Tab. 2. Images
+shown are generated by our 1-NFE model.
+-->
+</p>
+<h2>2 関連研究</h2>
+<!--
+<h2>2 Related Work</h2>
+-->
+<p>
+<strong>
+拡散とフローマッチング
+</strong>
+過去10年間で、拡散モデル [42, 44, 19, 45] は、生成モデリングのための非常に成功したフレームワークへと発展してきました。これらのモデルは、クリーンなデータにノイズを徐々に追加し、ニューラルネットワークを学習させてこのプロセスを逆転させます。この手順では、確率微分方程式 (SDE) を解き、それを確率フロー常微分方程式 (ODE) [45, 22] として再定式化します。フローマッチング法 [28, 2, 30] は、分布間のフローパスを定義する速度場をモデル化することで、このフレームワークを拡張します。フローマッチングは、連続時間正規化フロー [36] の一種と見なすこともできます。
+<!--
+<strong>
+Diffusion and Flow Matching.
+</strong>
+Over the past decade, diffusion models [42, 44, 19, 45] have been
+developed into a highly successful framework for generative modeling. These models progressively
+add noise to clean data and train a neural network to reverse this process. This procedure involves
+solving stochastic differential equations (SDE), which is then reformulated as probability flow
+ordinary differential equations (ODE) [45, 22]. Flow Matching methods [28, 2, 30] extend this
+framework by modeling the velocity fields that define flow paths between distributions. Flow
+Matching can also be viewed as a form of continuous-time Normalizing Flows [36].
+-->
+</p><p>
+<strong>
+少ステップ拡散/フローモデル
+</strong>
+サンプリングステップの削減は、実践的および理論的な観点から重要な考慮事項となっている。一つのアプローチとして、事前学習済みの多ステップ拡散モデルを少ステップモデルに蒸留する手法（例えば、[39, 14, 41] やスコア蒸留 [32, 50, 53]）が挙げられる。少ステップモデルの学習に関する初期の研究 [46] は、蒸留に基づく手法の進化に基づいている。一方、一貫性モデル [46] は、蒸留を必要としないスタンドアロンの生成モデルとして開発されている。これらのモデルは、異なる時間ステップにおけるネットワーク出力に一貫性制約を課し、軌跡に沿って同じエンドポイントを生成するように促す。様々な一貫性モデルと学習戦略 [46, 43, 15, 31, 49] が研究されてきた。
+<!--
+<strong>
+Few-step Diffusion/Flow Models.
+</strong>
+ Reducing sampling steps has become an important consideration
+from both practical and theoretical perspectives. One approach is to distill a pre-trained many-step
+diffusion model into a few-step model, e.g., [39, 14, 41] or score distillation [32, 50, 53]. Early
+explorations into training few-step models [46] are built upon the evolution of distillation-based
+methods. Meanwhile, Consistency Models [46] are developed as a standalone generative model that
+does not require distillation. These models impose consistency constraints on network outputs at
+different time steps, encouraging them to produce the same endpoints along the trajectory. Various
+consistency models and training strategies [46, 43, 15, 31, 49] have been investigated.
+-->
+</p><p>
+最近の研究では、拡散／フローベースの量を2つの時間依存変数に関して特徴付けることに焦点を置いた手法がいくつか提案されています。[3]では、フローマップは2つの時間ステップ間のフローの積分として定義され、学習用にいくつかの形式のマッチング損失が開発されています。本手法が基づいている平均速度と比較すると、フローマップは変位に対応します。ショートカットモデル[13]は、フローマッチングに加えて、異なる離散時間間隔におけるフロー間の関係を捉える自己無撞着損失関数を導入しています。誘導モーメントマッチング[52]は、異なる時間ステップにおける確率的補間の自己無撞着性をモデル化します。
+<!--
+In recent work, several methods have focused on characterizing diffusion-/flow-based quantities with
+respect to two time-dependent variables. In [3], a Flow Map is defined as the integral of the flow
+between two time steps, with several forms of matching losses developed for learning. In comparison
+to the average velocity our method is based on, the Flow Map corresponds to displacement. Shortcut
+Models [13] introduce a self-consistency loss function in addition to Flow Matching, which captures
+relationships between the flows at different discrete time intervals. Inductive Moment Matching [52]
+models the self-consistency of stochastic interpolants at different time steps.
+-->
+</p>
+<h2>3 背景：フローマッチング</h3>
+<!--
+<h2>3 Background: Flow Matching</h3>
+-->
+<p>
+フローマッチング [28, 30, 1] は、速度場によって表されるフローを、2つの確率分布間でマッチングさせることを学習する生成モデルの一種です。正式には、データ \(x ∼ p_{data}(x)\) と事前分布 \(ϵ ∼ p_{prior}(ϵ)\) が与えられた場合、時間 \(t\) を持つフローパス \(z_t = a_tx + b_tϵ\) を構築できます。ここで、\(a_t\) と bt は定義済みのスケジュールです。速度 \(v_t\) は \(v_t = z_t^\prime = a_t^\prime x + b_t^\prime ϵ\) と定義され、\({}^\prime\) は時間微分を表します。この速度は[28]において条件付き速度と呼ばれ、\(v_t = v_t(z_t | x)\)と表記される。
+図2左を参照。一般的に用いられるスケジュールは\(a_t = 1 − t\)および\(b_t = t\)であり、\(v_t = ϵ − x\)となる。
+<!--
+Flow Matching [28, 30, 1] is a family of generative models that learn to match the flows, represented
+by velocity fields, between two probabilistic distributions. Formally, given data \(x ∼ p_{data}(x)\) and
+prior \(ϵ ∼ p_{prior}(ϵ)\), a flow path can be constructed as \(z_t = a_tx + b_tϵ\) with time \(t\), where \(a_t\) and bt are
+predefined schedules. The velocity \(v_t\) is defined as \(v_t = z_t^\prime = a_t^\prime x + b_t^\prime ϵ\), where \({}^\prime\) denotes the time
+derivative. This velocity is referred to as the conditional velocity in [28], denoted by \(v_t = v_t(z_t | x)\).
+See Fig. 2 left. A commonly used schedule is \(a_t = 1 − t\) and \(b_t = t\), which leads to \(v_t = ϵ − x\).
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+
+<p class="margin-large">
+図2: フローマッチングにおける速度場 [28]。左: 条件付きフロー [28]。与えられた \(z_t\) は異なる \((x,\epsilon)\) ペアから発生する可能性があり、その結果、異なる条件付き速度 vt が生じる。右: 周辺フロー [28]。これは、すべての可能な条件付き速度を周辺化することで得られる。周辺速度場は、ネットワーク学習の基礎となる真の値場として機能する。ここで示されるすべての速度は、本質的に瞬間速度である。図は [12] に続く。(灰色の点: 事前分布からのサンプル、赤色の点: データからのサンプル。)
+<!--
+Figure 2: Velocity fields in Flow Matching [28]. Left: conditional
+flows [28]. A given \(z_t\) can arise from different \((x,\epsilon)\)
+pairs, resulting in different conditional velocities vt. Right:
+marginal flows [28], obtained by marginalizing over all possible
+conditional velocities. The marginal velocity field serves
+as the underlying ground-truth field for network training. All
+velocities shown here are essentially instantaneous velocities.
+Illustration follows [12]. (Gray dots: samples from
+prior; red dots: samples from data.)
+-->
+</p><p>
+与えられた\(z_t\)とその\(v_t\)は異なる\(x\)と\(ϵ\)から生じる可能性があるため、フローマッチングは本質的に、限界速度[28]と呼ばれるすべての可能性に対する期待値をモデル化します（図2右）。
+<!--
+Because a given \(z_t\) and its \(v_t\) can arise from different \(x\) and \(ϵ\), Flow Matching essentially models the
+expectation over all possibilities, called the marginal velocity [28] (Fig. 2 right):
+-->
+\[
+v(z_t, t) ≜ \mathbb{E}_{p_t}(v_t|z_t)[v_t]  \tag{1}
+\]
+ニューラルネットワーク \(v_θ\) は、\(θ\) によってパラメータ化され、限界速度場 \(\mathcal{L}_{FM}(θ) =\mathbb{E}_{t,p_t(z_t)}v_θ(z_t, t) − v(z_t, t)^2\) に適合するように学習される。式 (1) の限界化のため、この損失関数を計算することは不可能であるが、代わりに条件付きフローマッチング損失を評価することが提案されている。[28] : \(\mathbb{L}_{CFM}(θ) = \mathbb{E}_{t,x,ϵ}v_θ(z_t, t) − v_t(z_t | x)^2\)、ここで、目標 \(v_t\) は条件付き速度である。 \(\mathcal{L}_{CFM}\)を最小化することは\(\mathcal{L}_{FM}\)を最小化することと同義である[28]。
+<!--
+A neural network \(v_θ\) parameterized by \(θ\) is learned to fit the marginal velocity field: \(\mathcal{L}_{FM}(θ) =\mathbb{E}_{t,p_t(z_t)}∥v_θ(z_t, t) − v(z_t, t)∥^2\). Although computing this loss function is infeasible due to the
+marginalization in Eq. (1), it is proposed to instead evaluate the conditional Flow Matching loss
+[28]: \(\mathbb{L}_{CFM}(θ) = \mathbb{E}_{t,x,ϵ}∥v_θ(z_t, t) − v_t(z_t | x)∥^2\), where the target \(v_t\) is the conditional velocity.
+Minimizing \(\mathcal{L}_{CFM}\) is equivalent to minimizing \(\mathcal{L}_{FM}\) [28].
+-->
+</p><p>
+
+限界速度場 \(v(z_t, t)\) が与えられた場合、サンプルは \(z_t\) の ODE を解くことによって生成されます。
+<!--
+Given a marginal velocity field \(v(z_t, t)\), samples are generated by solving an ODE for \(z_t\):
+-->
+\[
+\frac{d}{dt}z_t = v(z_t, t) \tag{2}
+\]
+
+\(z_1 = ϵ ∼ p_{prior}\) から開始します。解は次のように書けます: \(z_r = z_t −\int_r^t v(z_τ , τ )dτ\)。ここで、r は別の時間ステップを表します。実際には、この積分は離散時間ステップにわたって数値的に近似されます。たとえば、1 階の常微分方程式ソルバーであるオイラー法は、各ステップを次のように計算します:
+\(z_{t_{i+1}} = z_{t_i} + (t_{i+1} − t_i)v(z_{t_i} , t_i)\)。高階ソルバーも適用できます。
+<!--
+starting from \(z_1 = ϵ ∼ p_{prior}\). The solution can be written as: \(z_r = z_t −\int_r^t v(z_τ , τ )dτ\), where
+we use r to denote another time step. In practice, this integral is approximated numerically over
+discrete time steps. For example, the Euler method, a first-order ODE solver, computes each step as:
+\(z_{t_{i+1}} = z_{t_i} + (t_{i+1} − t_i)v(z_{t_i} , t_i)\). Higher-order solvers can also be applied.
+-->
+</p><p>
+
+条件付き流れが直線（「整流化」）となるように設計されている場合でも[28, 30]、限界速度場（式(1)）は典型的には曲線軌道を誘起することは注目に値する。図2に説明を示す。また、この非直線性はニューラルネットワーク近似の結果だけではなく、基礎となる真の限界速度場から生じていることも強調しておく。曲線軌道に粗い離散化を適用すると、数値常微分方程式ソルバーは不正確な結果をもたらす。
+<!--
+It is worth noting that even when the conditional flows are designed to be straight (“rectified") [28, 30],
+the marginal velocity field (Eq. (1)) typically induces a curved trajectory. See Fig. 2 for illustration.
+We also emphasize that this non-straightness is not only a result of neural network approximation,
+but rather arises from the underlying ground-truth marginal velocity field. When applying coarse
+discretizations over curved trajectories, numerical ODE solvers lead to inaccurate results.
+-->
+
+</p><p>
+
+<h2>4 MeanFlowモデル</h2>
+<h3>4.1 Mean Flows</h3>
+<!--
+<h2>4 MeanFlow Models</h2>
+<h3>4.1 Mean Flows</h3>
+-->
+<p>
+私たちのアプローチの核となるアイデアは、平均速度を表す新しい場を導入することです。一方、Flow Matchingでモデル化された速度は瞬間速度を表します。
+<!--
+The core idea of our approach is to introduce a new field representing average velocity, whereas the
+velocity modeled in Flow Matching represents the instantaneous velocity.
+-->
+</p><p>
+<strong>
+平均速度
+</strong>
+平均速度は、2つの時間ステップ \(t\) と \(r\) の間の変位（積分によって得られる）を時間間隔で割ったものと定義します。正式には、平均速度uは次のように表されます。
+<!--
+<strong>
+Average Velocity.
+</strong>
+ We define average velocity as the displacement between two time steps t and r
+(obtained by integration) divided by the time interval. Formally, the average velocity u is:
+-->
+\[
+u(z_t, r, t) ≜ \frac{1}{t − r}\int_r^t v(z_τ , τ )dτ  \tag{3}
+\]
+概念上の違いを強調するため、本稿では平均速度をu、瞬間速度をvと表記する。\(u(z_t, r, t)\) は \((r, t)\) に共に依存する場である。\(u\) の場は図3に示されている。一般に、平均速度uは瞬間速度 \(v\) の関数の結果である。つまり、\(u = \mathcal{F}[v] ≜ \frac{1}{t−r}\int_r^t vdτ\)である。これはvによって誘起される場であり、ニューラルネットワークには依存しない。概念的には、瞬間速度vがFlow Matchingにおける真の値場として機能するのと同様に、本稿における平均速度uは学習のための基礎となる真の値場を提供する。
+<!--
+To emphasize the conceptual difference, throughout this paper, we use the notation u to denote
+average velocity, and v to denote instantaneous velocity. \(u(z_t, r, t)\) is a field that is jointly dependent
+on \((r, t)\). The field of u is illustrated in Fig. 3. Note that in general, the average velocity u is the result
+of a functional of the instantaneous velocity \(v\): that is, \(u = \mathcal{F}[v] ≜ \frac{1}{t−r}\int_r^t vdτ\). It is a field induced
+by v, not depending on any neural network. Conceptually, just as the instantaneous velocity v serves
+as the ground-truth field in Flow Matching, the average velocity u in our formulation provides an
+underlying ground-truth field for learning.
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p class="margin-large">
+図3: 平均速度場 \(u(z, r, t)\)。左端：瞬間速度 \(v\) は経路の接線方向を決定しますが、式(3)で定義される平均速度 \(u(z, r, t)\) は、通常、v と一致しません。平均速度は変位と一致し、\((t − r)u(z, r, t)\) となります。右の3つのサブプロット：場 \(u(z, r, t)\) は \(r\) と \(t\) の両方に依存し、ここでは \(t =\) 0.5、0.7、1.0 の場合を示しています。
+<!--
+Figure 3: The field of average velocity \(u(z, r, t)\). Leftmost: While the instantaneous velocity
+\(v\) determines the tangent direction of the path, the average velocity \(u(z, r, t)\), defined in Eq. (3),
+is generally not aligned with v. The average velocity is aligned with the displacement, which is
+\((t − r)u(z, r, t)\). Right three subplots: The field \(u(z, r, t)\) is conditioned on both \(r\) and \(t\), and is
+shown here for \(t =\) 0.5, 0.7, and 1.0.
+-->
+</p><p>
+定義により、u 体は特定の境界条件と「無矛盾性」制約を満たす（[46] の用語を一般化する）。\(r→t\) のとき、\(\lim_{r→t} u = v\) が成立する。さらに、ある種の「無矛盾性」が自然に満たされる。つまり、[r, t] 上で 1 つの大きなステップを取ることは、任意の中間時刻 s において、\([r, s]\) と \([s, t]\) 上で 2 つの小さな連続したステップを取ることと「無矛盾」である。これを理解するには、\((t − r)u(z_t, r, t) = (s − r)u(z_s, r, s) + (t − s)u(z_t, s, t)\) という式に注目してください。これは、積分の加法性から直接導かれます。
+\(\int_r^t vdτ =\int_r^s vdτ +\int_s^t vdτ\)。したがって、真の u を正確に近似するネットワークは、明示的な制約を必要とせずに、本質的に整合性関係を満たすことが期待されます。
+<!--
+By definition, the field of u satisfies certain boundary conditions and “consistency” constraints
+(generalizing the terminology of [46]). As \(r→t\), we have: \(\lim_{r→t} u = v\). Moreover, a form of
+“consistency" is naturally satisfied: taking one larger step over [r, t] is “consistent" with taking two
+smaller consecutive steps over \([r, s]\) and \([s, t]\), for any intermediate time s. To see this, observe that
+\((t − r)u(z_t, r, t) = (s − r)u(z_s, r, s) + (t − s)u(z_t, s, t)\), which follows directly from the additivity of the integral:
+\(\int_r^t vdτ =\int_r^s vdτ +\int_s^t vdτ\). Thus, a network that accurately approximates the true u
+is expected to satisfy the consistency relation inherently, without the need for explicit constraints.
+-->
+</p><p>
+MeanFlowモデルの最終的な目的は、ニューラルネットワーク\(u_θ(z_t, r, t)\)を用いて平均速度を近似することです。この方法には、この量を正確に近似できれば、\(u_θ(ϵ, 0, 1)\)の1回の評価でフローパス全体を近似できるという大きな利点があります。言い換えれば、また実験的にも示すように、このアプローチは、瞬間速度をモデル化する際に必要だった推論時に時間積分を明示的に近似する必要がないため、単一または少数ステップの生成に適しています。しかし、式(3)で定義された平均速度をネットワークの学習に正解として直接使用することは、学習中に積分を評価する必要があるため、扱いにくいです。私たちの重要な洞察は、平均速度の定義式を操作することで、瞬間速度しかアクセスできない場合でも、最終的に学習に適した最適化ターゲットを構築できるということです。
+<!--
+The ultimate aim of our MeanFlow model will be to approximate the average velocity using a neural
+network \(u_θ(z_t, r, t)\). This has the notable advantage that, assuming we approximate this quantity
+accurately, we can approximate the entire flow path using a single evaluation of \(u_θ(ϵ, 0, 1)\). In
+other words, and as we will also demonstrate empirically, the approach is much more amenable
+to single or few-step generation, as it does not need to explicitly approximate a time integral at
+inference time, which was required when modeling instantaneous velocity. However, directly using
+the average velocity defined by Eq. (3) as ground truth for training a network is intractable, as it
+requires evaluating an integral during training. Our key insight is that the definitional equation of
+average velocity can be manipulated to construct an optimization target that is ultimately amenable to
+training, even when only the instantaneous velocity is accessible.
+-->
+</p><p>
+<strong>MeanFlow恒等式</strong> 訓練に適した定式化とするために、式(3)を次のように書き直します。
+<!--
+<strong>The MeanFlow Identity.</strong> To have a formulation amenable to training, we rewrite Eq. (3) as:
+-->
+\[
+(t − r)u(z_t, r, t) = \int_r^t v(z_τ , τ )dτ  \tag{4}
+\]
+ここで、\(r\) は \(t\) に依存しないとして、両辺を \(t\) について微分します。すると、次の式が得られます。
+<!--
+Now we differentiate both sides with respect to t, treating r as independent of t. This leads to:
+-->
+\[
+\frac{d}{dt}(t − r)u(z_t, r, t) =\frac{d}{dt}\int_r^t v(z_τ , τ )dτ  ⇒ u(z_t, r, t) + (t − r)
+\frac{d}{dt}u(z_t, r, t) = v(z_t, t)  \tag{5}
+\]
+
+ここで、左辺の操作には積の定理を用い、右辺には微積分学の基本定理<sup>2</sup>を用いる。項を整理すると、次の恒等式が得られる。
+<!--
+where the manipulation of the left hand side employs the product rule and the right hand side uses the
+fundamental theorem of calculus<sup>2</sup>. Rearranging terms, we obtain the identity:
+-->
+</p><p class="margin-large">
+<sup>2</sup>
+\(r\)が\(t\)に依存する場合、ライプニッツの定理[26]によれば\(\frac{d}{dt}\int_r^t v(z_τ, τ)dτ = v(z_t, t) − v(z_r, r)\frac{dr}{dt}\)となります。
+<!--
+If \(r\) depends on \(t\), the Leibniz rule [26] gives: \(\frac{d}{dt}\int_r^t v(z_τ , τ )dτ = v(z_t, t) − v(z_r, r)\frac{dr}{dt}\) .
+-->
+</p><p>
+
+\[
+\underbrace{u(z_t, r, t)}_{平均速度}= \underbrace{v(z_t, t)}_{瞬間速度.}
+−(t − r)\underbrace{\frac{d}{dt}u(z_t, r, t)}_{時間微分}  \tag{6}
+\]
+
+この式を「<strong>MeanFlow 恒等式</strong>」と呼びます。これは、\(v\) と \(u\) の関係を記述するものです。
+式 (6) と式 (4) が同値であることは簡単に示せます（付録 B.3 を参照）。
+<!--
+We refer to this equation as the “<strong>MeanFlow Identity</strong>", which describes the relation between \(v\) and \(u\).
+It is easy to show that Eq. (6) and Eq. (4) are equivalent (see Appendix B.3).
+-->
+</p><p>
+
+式(6)の右辺は\(u(z_t, r, t)\)の「ターゲット」形式を提供しており、これを利用してニューラルネットワークを学習するための損失関数を構築します。適切なターゲットとして機能するためには、時間微分項をさらに分解する必要があり、これについては次に説明します。
+<!--
+The right hand side of Eq. (6) provides a “target" form for \(u(z_t, r, t)\), which we will leverage to
+construct a loss function to train a neural network. To serve as a suitable target, we must also further
+decompose the time derivative term, which we discuss next.
+-->
+</p><p>
+
+<strong>時間微分の計算</strong> 式(6)の\(\frac{d}{dt}u\)項を計算する際、\(\frac{d}{dt}\)は全微分を表し、偏微分で展開できることに注意してください。
+<!--
+<strong>Computing Time Derivative.</strong> To compute the \(\frac{d}{dt}u\) term in Eq. (6), note that \(\frac{d}{dt}\) denotes a total
+derivative, which can be expanded in terms of partial derivatives:
+-->
+\[
+\frac{d}{dt}u(z_t, r, t) =\frac{dz_t}{dt}∂_zu +\frac{dr}{dt}∂_ru +\frac{dt}{dt}∂_tu  \tag{7}
+\]
+
+\(\frac{dz_t}{dt} = v(z_t, t)\) (式(2)参照)、\(\frac{dr}{dt} = 0\)、\(\frac{dt}{dt} = 1\)のとき、\(u\)と\(v\)の間には別の関係があります。
+<!--
+With \(\frac{dz_t}{dt} = v(z_t, t)\) (see Eq. (2)), \(\frac{dr}{dt} = 0\), and \(\frac{dt}{dt} = 1\), we have another relation between \(u\) and \(v\):
+-->
+\[
+\frac{d}{dt}u(z_t, r, t) = v(z_t, t)∂_zu + ∂_tu  \tag{8}
+\]
+
+この式は、全微分が、\([∂_zu, ∂_ru, ∂_tu]\)（関数uのヤコビ行列）と接ベクトル\([v, 0, 1]\)との間のヤコビベクトル積（JVP）によって与えられることを示しています。最近のライブラリでは、これはPyTorchのtorch.func.jvpやJAXのjax.jvpなどのjvpインターフェースによって効率的に計算できます（JAXについては後述します）。
+<!--
+This equation shows that the total derivative is given by the Jacobian-vector product (JVP) between
+\([∂_zu, ∂_ru, ∂_tu]\) (the Jacobian matrix of the function u) and the tangent vector \([v, 0, 1]\). In modern
+libraries, this can be efficiently computed by the jvp interface, such as torch.func.jvp in PyTorch
+or jax.jvp in JAX, which we discuss later.
+-->
+</p><p>
+
+<strong>平均速度を用いた学習</strong>ここまでの定式化は、ネットワークパラメータ化に依存しません。ここで、\(u\) を学習するモデルを導入します。正式には、ネットワーク \(u_θ\) をパラメータ化し、MeanFlow 恒等式 (式(6)) を満たすように促します。具体的には、この目的関数を最小化します。
+<!--
+<strong>Training with Average Velocity.</strong> Up to this point, the formulations are independent of any network
+parameterization. We now introduce a model to learn \(u\). Formally, we parameterize a network \(u_θ\) and
+encourage it to satisfy the MeanFlow Identity (Eq. (6)). Specifically, we minimize this objective:
+-->
+\[
+\begin{align}
+\mathcal{L}(θ) &= \mathbb{E}||u_θ(z_t, r, t) − sg(u_{tgt})||_2^2 \tag{9} \\
+\\
+ここで　u_{tgt} &= v(z_t, t) − (t − r) (v(z_t, t)∂_zu_θ + ∂_tu_θ)  \tag{10}
+\end{align}
+\]
+
+項 \(u_{tgt}\) は、式(6) によって決定される有効な回帰ターゲットとして機能します。このターゲットは、瞬間速度 \(v\) を唯一の正解信号として使用し、積分計算は不要です。ターゲットには \(u\) の微分 (つまり \(∂u\)) が含まれる必要がありますが、それらはパラメーター化された対応するもの (つまり \(∂_{u_θ}\)) に置き換えられます。損失関数では、一般的な手法 [46, 43, 15, 31, 13] に従って、ターゲット \(u_{tgt}\) に stop-gradient (sg) 演算が適用されます。このケースでは、ヤコビアンベクトル積を介した「二重逆伝播」が不要になり、高階最適化を回避できます。最適化のためのこれらの実践にもかかわらず、uθがゼロ損失を達成する場合、それがMeanFlow恒等式（式(6)）を満たし、したがって元の定義（式(3)）を満たすことが簡単に示せます。
+<!--
+The term \(u_{tgt}\) serves as the effective regression target, which is driven by Eq. (6). This target uses the
+instantaneous velocity \(v\) as the only ground-truth signal; no integral computation is needed. While
+the target should involve derivatives of \(u\) (that is, \(∂u\)), they are replaced by their parameterized
+counterparts (that is, \(∂_{u_θ}\)). In the loss function, a stop-gradient (sg) operation is applied on the target
+\(u_{tgt}\), following common practice [46, 43, 15, 31, 13]: in our case, it eliminates the need for “double
+backpropagation” through the Jacobian-vector product, thereby avoiding higher-order optimization.
+Despite these practices for optimizability, if uθ were to achieve zero loss, it is easy to show that it
+would satisfy the MeanFlow Identity (Eq. (6)), and thus satisfy the original definition (Eq. (3)).
+-->
+</p><p>
+
+式(10)の速度\(v(z_t, t)\)はFlow Matching[28]における限界速度である（図2右参照）。[28]に従ってこれを条件付き速度に置き換える（図2左）。これにより目標値は以下のようになる。
+<!--
+The velocity \(v(z_t, t)\) in Eq. (10) is the marginal velocity in Flow Matching [28] (see Fig. 2 right). We
+follow [28] to replace it with the conditional velocity (Fig. 2 left). With this, the target is:
+-->
+\[
+u_{tgt} = v_t − (t − r)\left(v_t∂_zu_θ + ∂_tu_θ\right)  \tag{11}
+\]
+
+\(v_t = a_t^\prime x + b_t^\prime \epsilon\) は条件付き速度 [28] であり、デフォルトでは \(v_t = \epsilon − x\) であることを思い出してください。
+<!--
+Recall that \(v_t = a_t^\prime x + b_t^\prime \epsilon\) is the conditional velocity [28], and by default, \(v_t = \epsilon − x\).
+-->
+</p><p>
+
+損失関数式(9)を最小化する擬似コードをアルゴリズム1に示す。全体として、本手法は概念的に単純であり、Flow Matchingと同様に動作するが、主な違いは、マッチング対象が平均速度の考慮により \(−(t−r) (v_t∂_zu_θ + ∂_tu_θ)\) によって変更される点である。特に、条件 \(t = r\) に制限すると、第2項が消滅し、本手法は標準的なFlow Matchingと完全に一致することに留意されたい。
+<!--
+Pseudocode for minimizing the loss function Eq. (9) is presented in Alg. 1. Overall, our method is
+conceptually simple: it behaves similarly to Flow Matching, with the key difference that the matching
+target is modified by \(−(t−r) (v_t∂_zu_θ + ∂_tu_θ)\), arising from our consideration of the average velocity.
+In particular, note that if we were to restrict to the condition \(t = r\), then the second term vanishes,
+and the method would exactly match standard Flow Matching.
+-->
+</p><p>
+
+アルゴリズム1では、jvp演算は非常に効率的です。
+本質的には、jvpによる\(\frac{d}{dt}u\)の計算には、ニューラルネットワークにおける標準的なバックプロパゲーションと同様に、1回のバックワードパスのみが必要です。\(\frac{d}{dt}u\)はターゲットutgtの一部であり、したがってstopgradの影響を受けるため（\(θ\)に関して）、ニューラルネットワーク最適化のためのバックプロパゲーション（\(θ\)に関して）では\(\frac{d}{dt}u\)を定数として扱い、高階勾配計算は発生しません。
+したがって、jvpは1回の余分なバックワードパスのみを導入し、そのコストはバックプロパゲーションと同程度です。アルゴリズム1のJAX実装では、オーバーヘッドは総トレーニング時間の20%未満です（付録を参照）。
+<!--
+In Alg. 1, the jvp operation is highly efficient.
+In essence, computing \(\frac{d}{dt}u\) via jvp requires only
+a single backward pass, similar to standard backpropagation
+in neural networks. Because \(\frac{d}{dt}u\) is
+part of the target utgt and thus subject to stopgrad
+(w.r.t. \(θ\)), the backpropagation for neural network
+optimization (w.r.t. \(θ\)) treats \(\frac{d}{dt}u\) as a constant,
+incurring no higher-order gradient computation.
+Consequently, jvp introduces only a single extra
+backward pass, and its cost is comparable to
+that of backpropagation. In our JAX implementation
+of Alg. 1, the overhead is less than 20%
+of the total training time (see appendix).
+-->
+</p>
+<center><img src="images/algo1.png"></center>
+<p>
+
+<strong>サンプリング</strong> MeanFlowモデルを用いたサンプリングは、時間積分を平均速度に置き換えるだけで実行されます。
+<!--
+<strong>Sampling.</strong> Sampling using a MeanFlow model
+is performed simply by replacing the time integral
+with the average velocity:
+-->
+\[
+z_r = z_t − (t − r)u(z_t, r, t)  \tag{12}
+\]
+
+1ステップサンプリングの場合、\(z_0 = z_1 − u(z_1, 0, 1)\) と単純に書けます。ただし、\(z_1 =\epsilon ∼ p_{prior}(\epsilon)\) です。
+アルゴリズム2に擬似コードを示します。本研究では1ステップサンプリングが主な焦点ですが、この式を用いれば数ステップサンプリングも簡単に実行できることを強調しておきます。
+<!--
+In the case of 1-step sampling, we simply have
+\(z_0 = z_1 − u(z_1, 0, 1)\), where \(z_1 =\epsilon ∼ p_{prior}(\epsilon)\).
+Alg. 2 provides the pseudocode. Although onestep
+sampling is the main focus on this work,
+we emphasize that few step sampling is also
+straightforward given this equation.
+-->
+</p>
+<center><img src="images/algo2.png"></center>
+<p>
+
+<strong>先行研究との関連</strong> 従来のワンステップ生成モデル [46, 43, 15, 31, 49, 23, 13, 52] と関連しながらも、本手法はより原理的な枠組みを提供する。本手法の中核は、2つの基礎場 \(v\) と \(u\) 間の関数的関係であり、これは自然に u が満たすべき MeanFlow 恒等式 (式 (6)) につながる。この恒等式はニューラルネットワークの導入に依存しない。対照的に、先行研究は通常、ニューラルネットワークの挙動に課される追加の一貫性制約に依存している。一貫性モデル [46, 43, 15, 31] は、データ側にアンカーされたパスに焦点を当てている。我々の表記法では、これは任意の t に対して \(r ≡ 0\) を固定することに相当する。結果として、一貫性モデルは、我々のモデルとは異なり、単一の時間変数を条件とする。一方、Shortcut [13] モデルと IMM [52] モデルは2つの時間変数を条件としており、追加の2時間自己無撞着制約を導入する。対照的に、本手法は平均速度の定義のみに基づいており、学習に用いる MeanFlow 恒等式（式(6)）はこの定義から自然に導かれ、追加の仮定は存在しない。
+<!--
+<strong>Relation to PriorWork.</strong> While related to previous one-step generative models [46, 43, 15, 31, 49,
+23, 13, 52], our method provides a more principled framework. At the core of our method is the functional relationship between two underlying fields v and u, which naturally leads to the MeanFlow
+Identity that u must satisfy (Eq. (6)). This identity does not depend on the introduction of neural
+networks. In contrast, prior works typically rely on extra consistency constraints, imposed on the
+behavior of the neural network. Consistency Models [46, 43, 15, 31] are focused on paths anchored
+at the data side: in our notations, this corresponds to fixing \(r ≡ 0\) for any t. As a result, Consistency
+Models are conditioned on a single time variable, unlike ours. On the other hand, the Shortcut [13]
+and IMM [52] models are conditioned on two time variables: they introduce additional two-time
+self-consistency constraints. In contrast, our method is solely driven by the definition of average
+velocity, and the MeanFlow Identity (Eq. (6)) used for training is naturally derived from this definition,
+with no extra assumption.
+-->
+</p>
+<h3>4.2 ガイダンス付き平均フロー</h3>
+<!--
+<h3>4.2 Mean Flows with Guidance</h3>
+-->
+<p>
+我々の手法は、分類器不要ガイダンス（CFG）[18]を自然にサポートする。サンプリング時にCFGを単純に適用するとNFEが2倍になるが、我々はCFGを基礎となる正解場の特性として扱う。この定式化により、サンプリング中の1-NFEの挙動を維持しながら、CFGの利点を享受することができる。
+<!--
+Our method naturally supports classifier-free guidance (CFG) [18]. Rather than naïvely applying
+CFG at sampling time, which would double NFE, we treat CFG as a property of the underlying
+ground-truth fields. This formulation allows us to enjoy the benefits of CFG while maintaining the
+1-NFE behavior during sampling.
+-->
+</p><p>
+
+<strong>正解場</strong> 新しい正解場 \(v^{cfg}\) を構築します。
+<!--
+<strong>Ground-truth Fields.</strong> We construct a new ground-truth field \(v^{cfg}\):
+-->
+\[
+v^{cfg}(z_t, t | c) ≜ ω v(z_t, t | c) + (1 − ω) v(z_t, t)  \tag{13}
+\]
+
+これはクラス条件場とクラス無条件場の線形結合です。
+<!--
+which is a linear combination of a class-conditional and a class-unconditional field:
+-->
+\[
+v(z_t, t | \mathbf{c}) ≜ \mathbb{E}_{p_t}(v_t|z_t,\mathbf{c})[v_t]　and　v(z_t, t) ≜ \mathbb{E}_c[v(z_t, t | c)]  \tag{14}
+\]
+
+ここで、\(v_t\)は条件付き速度[28]（より正確には、この文脈ではサンプル条件付き速度）である。
+MeanFlowの精神に従い、\(v^{cfg}\)に対応する平均速度\(u^{cfg}\)を導入する。
+MeanFlow恒等式（式(6)）によれば、\(u^{cfg}\)は以下を満たす。
+<!--
+where \(v_t\) is the conditional velocity [28] (more precisely, sample-conditional velocity in this context).
+Following the spirit of MeanFlow, we introduce the average velocity \(u^{cfg}\) corresponding to \(v^{cfg}\). As
+per the MeanFlow Identity (Eq. (6)), \(u^{cfg}\) satisfies:
+-->
+\[
+u^{cfg}(z_t, r, t | \mathbf{c}) = v^{cfg}(z_t, t | \mathbf{c}) − (t − r)
+\frac{d}{dt}u^{cfg}(z_t, r, t | \mathbf{c})  \tag{15}
+\]
+
+ここでも、\(v^{cfg}\) と \(u^{cfg}\) はニューラルネットワークに依存しない基礎的な正解場です。ここで、式(13)で定義されている\(v^{cfg}\) は次のように書き直すことができます。
+<!--
+Again, \(v^{cfg}\) and \(u^{cfg}\) are underlying ground-truth fields that do not depend on neural networks. Here,
+\(v^{cfg}\), as defined in Eq. (13), can be rewritten as:
+-->
+\[
+v^{cfg}(z_t, t | \mathbf{c}) = ω v(z_t, t | \mathbf{c}) + (1 − ω) u^{cfg}(z_t, t, t)  \tag{16}
+\]
+
+ここでは関係<sup>3</sup>: \(v(z_t, t) = v^{cfg}(z_t, t)\)、および \(v^{cfg}(z_t, t) = u^{cfg}(z_t, t, t)\) を活用します。
+<!--
+where we leverage the relation<sup>3</sup>: \(v(z_t, t) = v^{cfg}(z_t, t)\), as well as \(v^{cfg}(z_t, t) = u^{cfg}(z_t, t, t)\).
+-->
+</p><p class="margin-large">
+<sup>3</sup>
+
+次の式に注目してください: \(v^{cfg}(z_t, t) ≜ \mathbb{E}_c[v^{cfg}(z_t, t | \mathbf{c})] = ω \mathbb{E}_c[v(z_t, t | \mathbf{c})]+(1−ω) v(z_t, t) = v(z_t, t)\).
+<!--
+Observe that: \(v^{cfg}(z_t, t) ≜ \mathbb{E}_c[v^{cfg}(z_t, t | \mathbf{c})] = ω \mathbb{E}_c[v(z_t, t | \mathbf{c})]+(1−ω) v(z_t, t) = v(z_t, t)\).
+-->
+</p><p>
+
+<strong>ガイダンス付き学習</strong> 式(15)と式(16)を用いて、ネットワークとその学習目標を構築する。
+\(u^{cfg}\)を関数\(u_θ^{cfg}\)によって直接パラメータ化する。式(15)に基づいて、目的関数は以下の通りとなる。
+<!--
+<strong>Training with Guidance.</strong> With Eq. (15) and Eq. (16), we construct a network and its learning target.
+We directly parameterize \(u^{cfg}\) by a function \(u_θ^{cfg}\). Based on Eq. (15), we obtain the objective:
+-->
+\[
+\begin{align}
+\mathcal{L}(θ) &= \mathbb{E}||u_θ^{cfg}(z_t, r, t | \mathbf{c}) − sg(u^{tgt})||_2^2  \tag{17} \\
+\\
+where　u^{tgt} &= \tilde{v}_t − (t − r)\left(\tilde{v}_t∂_zu_θ^{cfg} + ∂_tu_θ^{cfg}\right)  \tag{18}
+\end{align}
+\]
+
+この定式化は式(9)に似ていますが、唯一の違いは修正された\(\tilde{v}_t\)を持つ点です。
+<!--
+This formulation is similar to Eq. (9), with the only difference that it has a modified \(\tilde{v}_t\):
+-->
+\[
+\tilde{v}_t ≜ ω v_t + (1 − ω) u_θ^{cfg} (z_t, t, t)  \tag{19}
+\]
+
+これは式(16)によって駆動される。式(16)の限界速度である\(v(z_t, t | \mathbf{c})\)の項は、[28]に従って（サンプル）条件付き速度vtに置き換えられる。\(ω = 1\)の場合には、この損失関数は式(9)のCFGなしの場合に退化する。
+<!--
+which is driven by Eq. (16): the term \(v(z_t, t | \mathbf{c})\) in Eq. (16), which is the marginal velocity, is replaced
+by the (sample-)conditional velocity vt, following [28]. If \(ω = 1\), this loss function degenerates to the no-CFG case in Eq. (9).
+-->
+</p><p>
+
+式(17)のネットワーク\(u_θ^{cfg}\)をクラス無条件入力にさらすために、[18]に従って、10%の確率でクラス条件を削除します。同様の動機から、式(19)の\(u_θ^{cfg} (z_t, t, t)\)をクラス無条件バージョンとクラス条件付きバージョンの両方にさらすこともできます。詳細は付録B.1を参照してください。
+<!--
+To expose the network \(u_θ^{cfg}\) in Eq. (17) to class-unconditional inputs, we drop the class condition with
+10% probability, following [18]. Driven by a similar motivation, we can also expose \(u_θ^{cfg} (z_t, t, t)\) in
+Eq. (19) to both class-unconditional and class-conditional versions: the details are in Appendix B.1.
+-->
+</p><p>
+
+<strong>CFGを用いた単一NFEサンプリング</strong> 我々の定式化では、\(u_θ^{cfg}\) は、CFG速度 \(v^{cfg}\) によって誘起される平均速度 \(u^{cfg}\) を直接モデル化します（式(13)）。その結果、サンプリング中に線形結合は不要になります。つまり、単一のNFEのみを使用したワンステップサンプリング（アルゴリズム2を参照）には、\(u_θ^{cfg}\) を直接使用します。
+この定式化は、望ましい単一NFEの挙動を維持します。
+<!--
+<strong>Single-NFE Sampling with CFG.</strong> In our formulation, \(u_θ^{cfg}\)
+ directly models \(u^{cfg}\), which is the average
+velocity induced by the CFG velocity \(v^{cfg}\) (Eq. (13)). As a result, no linear combination is required
+during sampling: we directly use \(u_θ^{cfg}\) for one-step sampling (see Alg. 2), with only a single NFE.
+This formulation preserves the desirable single-NFE behavior.
+-->
+</p>
+<h3>4.3 設計上の決定</h3>
+<!--
+<h3>4.3 Design Decisions</h3>
+-->
+<p>
+<strong>損失メトリクス</strong> 式(9)で考慮されているメトリクスはL2損失の2乗である。[46, 43, 15]に従って、様々な損失メトリクスを検討する。一般に、損失関数は\(\mathcal{L} = ‖Δ‖_2^{2γ}‖)の形で考慮される。
+ここで、‖Δ‖は回帰誤差を表す。\(‖Δ‖_2^{2γ}‖)を最小化することは、適応損失重みを用いてL2損失の2乗\(‖Δ‖_2^2‖)を最小化することと等価であることが証明されている（[15]を参照）。詳細は付録を参照。実際には、重みを \(w = 1/(Δ_2^2+ c)^p\) と設定します。ここで、\(p = 1 − γ\) かつ \(c > 0\) (例えば、\(10^{−3}\)) です。適応的に重み付けされた損失は \(sg(w)·\mathcal{L}\) であり、\(\mathcal{L} = ∥Δ_2^2\) です。\(p = 0.5\) の場合、これは [43] の Pseudo-Huber 損失に類似します。実験では異なる p 値を比較します。
+<!--
+<strong>Loss Metrics.</strong> In Eq. (9), the metric considered is the squared L2 loss. Following [46, 43, 15], we
+investigate different loss metrics. In general, we consider the loss function in the form of \(\mathcal{L} = ∥Δ∥_2^{2γ}\),
+where \(Δ\) denotes the regression error. It can be proven (see [15]) that minimizing \(∥Δ∥_2^{2γ}\) is equivalent
+to minimizing the squared L2 loss \(∥Δ∥_2^2\) with “adapted loss weights". Details are in the appendix. In
+practice, we set the weight as \(w = 1/(∥Δ∥_2^2+ c)^p\), where \(p = 1 − γ\) and \(c > 0\) (e.g., \(10^{−3}\)). The
+adaptively weighted loss is \(sg(w)·\mathcal{L}\), with \(\mathcal{L} = ∥Δ∥_2^2\)
+. If \(p = 0.5\), this is similar to the Pseudo-Huber
+loss in [43]. We compare different p values in experiments.
+-->
+</p><p>
+<strong>サンプリング時間ステップ \((r, t)\)。</strong> 定義済みの分布から2つの時間ステップ \((r, t)\) をサンプリングします。
+2種類の分布を調査します。(i) 一様分布 \(\mathcal{U}(0, 1)\)、および (ii) ロジット正規分布 [11] です。ロジット正規分布では、まず正規分布 \(\mathcal{N}(μ, σ)\) からサンプルが抽出され、次にロジスティック関数を用いて \((0, 1)\) にマッピングされます。サンプリングされたペアが与えられた場合、大きい方の値を \(t\) に、小さい方の値を \(r\) に割り当てます。\(r = t\) となるランダムサンプルを一定の割合で設定します。
+<!--
+<strong>Sampling Time Steps \((r, t)\).</strong> We sample the two time steps \((r, t)\) from a predefined distribution.
+We investigate two types of distributions: (i) a uniform distribution, \(\mathcal{U}(0, 1)\), and (ii) a logit-normal
+(lognorm) distribution [11], where a sample is first drawn from a normal distribution \(\mathcal{N}(μ, σ)\) and
+then mapped to \((0, 1)\) using the logistic function. Given a sampled pair, we assign the larger value to
+\(t\) and the smaller to \(r\). We set a certain portion of random samples with \(r = t\).
+-->
+</p><p>
+<strong>\((r, t)\) に関する条件付け</strong> 時間変数を符号化するために位置埋め込み [48] を使用し、これらを組み合わせてニューラルネットワークの条件付けとして提供します。場は \(u_θ(z_t, r, t)\) でパラメータ化されますが、ネットワークが \((r, t)\) を直接条件付ける必要はありません。
+例えば、\(Δt = t − r\) として、ネットワークが \((t,Δt)\) を直接条件付けることができます。この場合、\(u_θ(·, r, t) ≜ net(·, t, t − r)\) となり、net はネットワークです。JVP 計算は常に関数 \(u_θ(·, r, t)\) に関して行われます。実験では、さまざまな形式の条件付けを比較します。
+<!--
+<strong>Conditioning on \((r, t)\).</strong> We use positional embedding [48] to encode the time variables, which are
+then combined and provided as the conditioning of the neural network. We note that although the
+field is parameterized by \(u_θ(z_t, r, t)\), it is not necessary for the network to directly condition on \((r, t)\).
+For example, we can let the network directly condition on \((t,Δt)\), with \(Δt = t − r\). In this case, we
+have \(u_θ(·, r, t) ≜ net(·, t, t − r)\) where net is the network. The JVP computation is always w.r.t. the
+function \(u_θ(·, r, t)\). We compare different forms of conditioning in experiments.
+-->
+</p>
+<h2>5 実験</h2>
+<!--
+<h2>5 Experiments</h2>
+-->
+<p>
+実験設定。主要な実験はImageNet [7] を用いて256×256の解像度で生成する。5万枚の生成画像に対してFréchet Inception Distance (FID) [17] を評価する。関数評価回数（NFE）を検証し、デフォルトで1-NFE生成を研究する。[34, 13, 52] に従い、事前学習済みVAEトークナイザー [37] の潜在空間上にモデルを実装する。256×256画像の場合、トークナイザーは32×32×4の潜在空間を生成し、これがモデルへの入力となる。モデルはすべてゼロから学習した。実装の詳細は付録Aを参照。アブレーション研究では、[34] で開発されたViT-B/4アーキテクチャ（つまり、パッチサイズが4の「ベース」サイズ）[9] を使用し、80エポック（40万回の反復）学習を行った。参考までに、[34]のDiT-B/4は68.4 FID、SiT-B/4 [33]（我々の再現）は58.9 FIDであり、どちらも250-NFEサンプリングを使用している。
+<!--
+Experiment Setting. We conduct our major experiments on ImageNet [7] generation at 256×256
+resolution. We evaluate Fréchet Inception Distance (FID) [17] on 50K generated images. We
+examine the number of function evaluations (NFE) and study 1-NFE generation by default. Following
+[34, 13, 52], we implement our models on the latent space of a pre-trained VAE tokenizer [37]. For
+256×256 images, the tokenizer produces a latent space of 32×32×4, which is the input to the model.
+Our models are all trained from scratch. Implementation details are in Appendix A.
+In our ablation study, we use the ViT-B/4 architecture (namely, “Base" size with a patch size of 4) [9]
+as developed in [34], trained for 80 epochs (400K iterations). As a reference, DiT-B/4 in [34] has
+68.4 FID, and SiT-B/4 [33] (in our reproduction) has 58.9 FID, both using 250-NFE sampling.
+-->
+</p>
+<center><img src="images/table1.png"></center>
+<p class="margin-large">
+表1: 1-NFE ImageNet 256×256世代におけるアブレーション研究。FID-50Kが評価対象。デフォルト設定は灰色でマーク：B/4バックボーン、80エポックのゼロからの学習。
+<!--
+Table 1: Ablation study on 1-NFE ImageNet 256×256 generation. FID-50K is evaluated. Default
+configurations are marked in gray : B/4 backbone, 80-epoch training from scratch.
+-->
+</p>
+<h3>5.1 アブレーション研究</h3>
+<!--
+<h3>5.1 Ablation Study</h3>
+-->
+<p>
+表1のモデル特性を調査し、次に分析します。
+Flow MatchingからMean Flowsへ。本手法は、修正されたターゲット（アルゴリズム1）を持つFlow Matchingと見なすことができ、\(r\)が常に\(t\)に等しい場合、標準的なFlow Matchingに縮約されます。表1aは、\(r \neq t\)をランダムにサンプリングする比率を比較しています。\(r \neq t\)の比率が0%の場合（Flow Matchingに縮約）、1-NFE生成において妥当な結果が得られません。\(r \neq t\)の比率が0以外の場合、MeanFlowが有効になり、1-NFE生成において意味のある結果が得られます。モデルは、瞬間速度\((r = t)\)の学習と、修正されたターゲットを介して\(r \neq t\)への伝播の間でバランスをとっていることがわかります。ここで、最適な FID は 25% の比率で達成され、100% の比率でも有効な結果が得られます。
+<!--
+We investigate the model properties in Tab. 1, analyzed next:
+From Flow Matching to Mean Flows. Our method can be viewed as Flow Matching with a modified
+target (Alg. 1), and it reduces to standard Flow Matching when \(r\) always equals \(t\). Tab. 1a compares
+the ratio of randomly sampling \(r \neq t\). A 0% ratio of \(r \neq t\) (reducing to Flow Matching) fails to
+produce reasonable results for 1-NFE generation. A non-zero ratio of \(r \neq t\) enables MeanFlow to
+take effect, yielding meaningful results under 1-NFE generation. We observe that the model balances
+between learning the instantaneous velocity \((r = t)\) vs. propagating into \(r \neq t\) via the modified target.
+Here, the optimal FID is achieved at a ratio of 25%, and a ratio of 100% also yields a valid result.
+-->
+</p><p>
+<strong>JVP 計算</strong> JVP 演算式 (8) は、すべての \((r, t)\) 座標を結び付ける中核的な関係として機能します。表 1b では、意図的に誤った JVP 計算を実行する破壊的比較を行っています。これは、JVP 計算が正しい場合にのみ意味のある結果が得られることを示しています。特に、\(∂_zu\) に沿った JVP 接線は d 次元であり、\(d\) はデータ次元 (ここでは 32×32×4) です。一方、\(∂_ru\) と \(∂_tu\) に沿った接線は 1 次元です。それでも、これら 2 つの時間変数は場 \(u\) を決定するため、たとえ 1 次元であっても、その役割は重要です。
+<!--
+<strong>JVP Computation.</strong> The JVP operation Eq. (8) serves as the core relation that connects all \((r, t)\)
+coordinates. In Tab. 1b, we conduct a destructive comparison in which incorrect JVP computation is
+intentionally performed. It shows that meaningful results are achieved only when the JVP computation
+is correct. Notably, the JVP tangent along \(∂_zu\) is d-dimensional, where \(d\) is the data dimension
+(here, 32×32×4), and the tangents along \(∂_ru\) and \(∂_tu\9 are one-dimensional. Nevertheless, these two
+time variables determine the field u, and their roles are therefore critical even though they are only
+one-dimensional.
+-->
+</p><p>
+<strong>\((r, t)\) の条件付け</strong> 4.3節で述べたように、\(u_θ(z, r, t)\) は様々な形式の明示的な位置埋め込みによって表すことができます。例えば、\(u_θ(·, r, t) ≜ net(·, t, t − r)\) です。表1cはこれらのバリエーションを比較しています。表1cは、検討した \((r, t)\) 埋め込みのすべてのバリエーションが意味のある1-NFE結果をもたらし、フレームワークとしてのMeanFlowの有効性を実証していることを示しています。\((t, t − r)\)、つまり時間と間隔を埋め込むと最良の結果が得られますが、\((r, t)\) を直接埋め込むとほぼ同様の結果が得られます。特に、区間 \(t − r\) のみを埋め込んでも妥当な結果が得られます。
+<!--
+<strong>Conditioning on \((r, t)\).</strong> As discussed in Sec. 4.3, we can represent \(u_θ(z, r, t)\) by various forms of
+explicit positional embedding, e.g., \(u_θ(·, r, t) ≜ net(·, t, t − r)\). Tab. 1c compares these variants.
+Tab. 1c shows that all variants of \((r, t)\) embeddings studied yield meaningful 1-NFE results, demon-strating the effectiveness of MeanFlow as a framework. Embedding \((t, t − r)\), that is, time and
+interval, achieves the best result, while directly embedding \((r, t)\) performs almost as well. Notably,
+even embedding only the interval \(t − r\) yields reasonable results.
+-->
+</p><p>
+<strong>時間サンプラー</strong> 先行研究 [11] では、t をサンプリングするために使用される分布が生成品質に影響を与えることが示されている。表 1d では、\((r, t)\) をサンプリングするために使用される分布を調べる。\((r, t)\) は最初に独立にサンプリングされ、その後、スワップによって \(t > r\) を強制する後処理ステップが実行され、\(r \neq t\) の割合が指定された比率に制限される点に注意されたい。表 1d は、ロジット正規サンプラーが最良のパフォーマンスを発揮することを報告しており、これは Flow Matching [11] の観察と一致している。
+<!--
+<strong>Time Samplers.</strong> Prior work [11] has shown that the distribution used to sample t influences the
+generation quality. We study the distribution used to sample \((r, t)\) in Tab. 1d. Note that \((r, t)\) are first
+sampled independently, followed by a post-processing step that enforces \(t > r\) by swapping and then
+caps the proportion of \(r \neq t\) to a specified ratio. Tab. 1d reports that a logit-normal sampler performs
+the best, consistent with observations on Flow Matching [11].
+-->
+</p><p>
+<strong>損失メトリクス</strong> 損失メトリクスの選択は、数ステップ/1ステップ生成の性能に大きく影響することが報告されている[43]。この側面を表1eで考察する。我々の損失メトリクスは、べき乗p（第4.3節）を用いた適応的損失重み付け[15]によって実装されている。表1eは、\(p = 1\)が最良の結果を達成する一方で、\(p = 0.5\)（擬似Huber損失[43]に類似）も競争力のある性能を示すことを示している。標準の2乗L2損失（ここでは\(p = 0\)）は他の設定と比較して性能が劣るが、それでも[43]の観察と一致して有意義な結果を生成する。
+<!--
+<strong>Loss Metrics.</strong> It has been reported [43] that the choice of loss metrics strongly impacts the performance
+of few-/one-step generation. We study this aspect in Tab. 1e. Our loss metric is implemented
+via adaptive loss weighting [15] with power p (Sec. 4.3). Tab. 1e shows that \(p = 1\) achieves the
+best result, whereas \(p = 0.5\) (similar to Pseudo-Huber loss [43]) also performs competitively. The
+standard squared L2 loss (here, \(p = 0\)) underperforms compared to other settings, but still produces
+meaningful results, consistent with observations in [43].
+-->
+</p><p>
+<strong>ガイダンススケール</strong> 表1fはCFGを用いた結果を示しています。多段階生成における観察結果[34]と一致して、CFGは1-NFE設定でも生成品質を大幅に向上させます。私たちのCFG定式化（4.2節）は、1-NFEサンプリングを自然にサポートすることを強調します。
+<!--
+<strong>Guidance Scale.</strong> Tab. 1f reports the results with CFG. Consistent with observations in multi-step
+generation [34], CFG substantially improves generation quality in our 1-NFE setting too. We
+emphasize that our CFG formulation (Sec. 4.2) naturally support 1-NFE sampling.
+-->
+</p><p>
+<strong>スケーラビリティ</strong> 図4は、より大きなモデルサイズと異なる学習期間におけるMeanFlowの1-NFE FID結果を示しています。Transformerベースの拡散/フローモデル（DiT [34]およびSiT [33]）の挙動と一致して、MeanFlowモデルは1-NFE生成において有望なスケーラビリティを示しています。
+<!--
+<strong>Scalability.</strong> Fig. 4 presents the 1-NFE FID results of MeanFlow across larger model sizes and
+different training durations. Consistent with the behavior of Transformer-based diffusion/flow models
+(DiT [34] and SiT [33]), MeanFlow models exhibit promising scalability for 1-NFE generation.
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p class="margin-large">
+図4：ImageNet 256×256におけるMeanFlowモデルのスケーラビリティ。1-NFE生成FIDが報告されています。すべてのモデルはゼロから学習されています。CFGは1-NFEサンプリング動作を維持しながら適用されています。本手法は、モデルサイズに関して有望なスケーラビリティを示しています。
+<!--
+Figure 4: Scalability of MeanFlow models on
+ImageNet 256×256. 1-NFE generation FID is
+reported. All models are trained from scratch.
+CFG is applied while maintaining the 1-NFE
+sampling behavior. Our method exhibits promising
+scalability with respect to model size.
+-->
+</p>
+<h3>5.2 先行研究との比較</h3>
+<!--
+<h3>5.2 Comparisons with PriorWork</h3>
+-->
+<p>
+ImageNet 256×256の比較。図1では、表2（左）にまとめられている従来の1ステップ拡散/フローモデルと比較しています。全体的に、MeanFlowは同クラスの従来の手法を大きく上回っています。MeanFlowは3.43 FIDを達成しており、これはIMMの1ステップ結果7.77 [52] と比較して50%以上の相対的改善です。1-NFE（1ステップだけでなく）生成のみを比較すると、MeanFlowは従来の最先端技術（10.60、Shortcut [13]）と比較して約70%の相対的改善を示しています。私たちの手法は、1ステップ拡散/フローモデルと多ステップ拡散/フローモデル間のギャップを大きく埋めます。
+<!--
+ImageNet 256×256 Comparisons. In Fig. 1 we compare with previous one-step diffusion/flow
+models, which are also summarized in Tab. 2 (left). Overall, MeanFlow largely outperforms previous
+methods in its class: it achieves 3.43 FID, which is an over 50% relative improvement vs. IMM’s
+one-step result of 7.77 [52]; if we compare only 1-NFE (not just one-step) generation, MeanFlow has
+nearly 70% relative improvement vs. the previous state-of-the-art (10.60, Shortcut [13]). Our method
+largely closes the gap between one-step and many-step diffusion/flow models.
+-->
+</p><p>
+2段階NFE生成において、本手法はFID 2.20を達成した（表2、左下）。この結果は、多段階拡散／フローモデルの代表的なベースライン、すなわちDiT [34]（FID 2.27）およびSiT [33]（FID 2.15）と同等であり、どちらも同じXL/2バックボーンに基づくNFEは250×2である（表2、右）。本結果は、少段階拡散／フローモデルが多段階拡散／フローモデルに匹敵することを示唆している。REPA [51]などの直交改良法も適用可能であり、これは今後の課題である。
+<!--
+In 2-NFE generation, our method achieves an FID of 2.20 (Tab. 2, bottom left). This result is on par
+with the leading baselines of many-step diffusion/flow models, namely, DiT [34] (FID 2.27) and SiT
+[33] (FID 2.15), both having an NFE of 250×2 (Tab. 2, right), under the same XL/2 backbone. Our results suggest that few-step diffusion/flow models can rival their many-step predecessors. Orthogonal
+improvements, such as REPA [51], are applicable, which are left for future work.
+-->
+</p><p>
+
+特筆すべきは、我々の手法が自己完結型であり、完全にゼロから学習されていることです。事前学習、蒸留、あるいは[43, 15, 31]で採用されたカリキュラム学習を一切行わずに、優れた結果を達成しています。
+<!--
+Notably, our method is self-contained and trained entirely from scratch. It achieves the strong results
+without using any pre-training, distillation, or the curriculum learning adopted in [43, 15, 31].
+-->
+</p>
+<center><img src="images/table2.png"></center>
+<p class="margin-large">
+表2：ImageNet-256×256におけるクラス条件付き生成。該当する場合、すべてのエントリはCFGを用いて報告されています。左：ゼロから学習した1-NFEおよび2-NFE拡散/フローモデル。右：参考として他の生成モデルファミリー。両方の表で「×2」は、CFGではサンプリングステップごとにNFEが2になることを示しています。MeanFlowモデルはすべて240エポックで学習されていますが、「MeanFlow-XL+」はより多くのエポックで学習され、付録に記載されているより長い学習用に選択された構成で学習されています。†：iCT [43]の結果は[52]によって報告されています。
+<!--
+Table 2: Class-conditional generation on ImageNet-256×256. All entries are reported with CFG,
+when applicable. Left: 1-NFE and 2-NFE diffusion/flow models trained from scratch. Right: Other
+families of generative models as a reference. In both tables, “×2" indicates that CFG incurs an
+NFE of 2 per sampling step. Our MeanFlow models are all trained for 240 epochs, except that
+“MeanFlow-XL+” is trained for more epochs and with configurations selected for longer training,
+specified in appendix. †: iCT [43] results are reported by [52].
+-->
+</p><p>
+CIFAR-10との比較。表3に、CIFAR-10 [25] (32×32) における無条件生成結果を示す。FID-50Kは1-NFEサンプリングで報告されている。すべてのエントリは、[44] (約55M) から開発された同じU-net [38] をピクセル空間に直接適用したものである。他の競合手法はすべてEDMスタイルの前処理器 [22] を使用しているのに対し、本手法は前処理器を使用していない。実装の詳細は付録を参照。このデータセットにおいて、本手法は従来の手法と競合可能である。
+<!--
+
+CIFAR-10 Comparisons. We report unconditional generation
+results on CIFAR-10 [25] (32×32) in Tab. 3. FID-50K is
+reported with 1-NFE sampling. All entries are with the same
+U-net [38] developed from [44] (∼55M), applied directly on
+the pixel space. All other competitors are with the EDMstyle
+pre-conditioner [22], and ours has no preconditioner.
+Implementation details are in the appendix. On this dataset,
+our method is competitive with prior approaches.
+-->
+</p>
+<center><img src="images/table3.png"></center>
+<p class="margin-large">
+<center>
+表3: 無条件CIFAR-10
+<!--
+Table 3: Unconditional CIFAR-10
+-->
+</center>
+</p>
+<h2>6 結論</h2>
+<!--
+<h2>6 Conclusion</h2>
+-->
+<p>
+我々は、ワンステップ生成のための原理的かつ効果的なフレームワークであるMeanFlowを紹介しました。大まかに言えば、本研究で検討するシナリオは、物理学におけるマルチスケールシミュレーション問題に関連しており、空間または時間において、様々なスケール、長さ、解像度を伴う場合があります。数値シミュレーションの実行は、コンピュータが様々なスケールを解像する能力によって本質的に制限されます。我々の定式化は、基礎となる量を粗い粒度レベルで記述することを伴っており、これは物理学における多くの重要な応用の根底にある共通のテーマです。我々の研究が、関連分野における生成モデリング、シミュレーション、および力学システムの研究との橋渡しとなることを願っています。
+<!--
+We have presented MeanFlow, a principled and effective framework for one-step generation. Broadly
+speaking, the scenario considered in this work is related to multi-scale simulation problems in physics
+that may involve a range of scales, lengths, and resolution, in space or time. Carrying out numerical
+simulation is inherently limited by the ability of computers to resolve the range of scales. Our
+formulation involves describing the underlying quantity at coarsened levels of granularity, a common
+theme that underlies many important applications in physics. We hope that our work will bridge
+research in generative modeling, simulation, and dynamical systems in related fields.
+-->
+</p>
+<h2>謝辞</h2>
+<!--
+<h2>Acknowledgement</h2>
+-->
+<p>
+TPUへのアクセスを許可してくださったGoogle TPU Research Cloud（TRC）に深く感謝いたします。Zhengyang Gengは、Bosch Center for AIからの資金提供の一部を受けています。Zico Kolterは、Boschによるラボへの資金提供に深く感謝いたします。Mingyang DengとXingjian Baiは、MIT-IBM Watson AI Labの助成金の一部を受けています。JAXとTPUの実装にご協力いただいたRunqian Wang、Qiao Sun、Zhicheng Jiang、Hanhong Zhao、Yiyang Lu、Xianbang Wangに感謝いたします。
+<!--
+We greatly thank Google TPU Research Cloud (TRC) for granting us access to TPUs. Zhengyang
+Geng is partially supported by funding from the Bosch Center for AI. Zico Kolter gratefully acknowledges
+Bosch’s funding for the lab. Mingyang Deng and Xingjian Bai are partially supported by
+the MIT-IBM Watson AI Lab funding award. We thank Runqian Wang, Qiao Sun, Zhicheng Jiang,
+Hanhong Zhao, Yiyang Lu, and Xianbang Wang for their help on the JAX and TPU implementation.
+-->
+</p>
+<h2>参考文献</h2>
+<!--
+<h2>References</h2>
+-->
+<p>
+<div class="styleRef">
+<ul><li>
+[1] Michael S Albergo and Eric Vanden-Eijnden. Building normalizing flows with stochastic
+interpolants. arXiv preprint arXiv:2209.15571, 2022. 2
+</li><br><li>[2] Michael Samuel Albergo and Eric Vanden-Eijnden. Building normalizing flows with stochastic
+interpolants. In International Conference on Learning Representations (ICLR), 2023. 1, 2
+</li><br><li>[3] Nicholas M Boffi, Michael S Albergo, and Eric Vanden-Eijnden. Flow map matching. arXiv
+preprint arXiv:2406.07507, 2024. 2
+</li><br><li>[4] James Bradbury, Roy Frostig, Peter Hawkins, Matthew James Johnson, Chris Leary, Dougal
+Maclaurin, George Necula, Adam Paszke, Jake VanderPlas, Skye Wanderman-Milne, and
+Qiao Zhang. JAX: composable transformations of Python+NumPy programs, 2018. URL
+http://github.com/google/jax. 16
+</li><br><li>[5] Andrew Brock, Jeff Donahue, and Karen Simonyan. Large scale GAN training for high fidelity
+natural image synthesis. In International Conference on Learning Representations (ICLR),
+2019. 9
+</li><br><li>[6] Huiwen Chang, Han Zhang, Lu Jiang, Ce Liu, and William T Freeman. Maskgit: Masked
+generative image transformer. In IEEE Conference on Computer Vision and Pattern Recognition
+(CVPR), 2022. 9
+</li><br><li>[7] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. Imagenet: A large-scale
+hierarchical image database. In IEEE Conference on Computer Vision and Pattern Recognition
+(CVPR), 2009. 2, 7
+</li><br><li>[8] Prafulla Dhariwal and Alexander Nichol. Diffusion models beat gans on image synthesis.
+Neural Information Processing Systems (NeurIPS), 34, 2021. 9
+</li><br><li>[9] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai,
+Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly,
+Jakob Uszkoreit, and Neil Houlsby. An image is worth 16x16 words: Transformers for image
+recognition at scale. In International Conference on Learning Representations (ICLR), 2021. 7,
+14
+</li><br><li>[10] Patrick Esser, Robin Rombach, and Bjorn Ommer. Taming transformers for high-resolution
+image synthesis. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR),
+2021. 9
+</li><br><li>[11] Patrick Esser, Sumith Kulal, Andreas Blattmann, Rahim Entezari, Jonas Müller, Harry Saini,
+Yam Levi, Dominik Lorenz, Axel Sauer, Frederic Boesel, et al. Scaling rectified flow transformers
+for high-resolution image synthesis. In Forty-first international conference on machine
+learning, 2024. 1, 7, 8
+</li><br><li>[12] Tor Fjelde, Emile Mathieu, and Vincent Dutordoir. An introduction to flow matching. https:
+//mlg.eng.cam.ac.uk/blog/2024/01/20/flow-matching.html, January 2024. Cambridge
+Machine Learning Group Blog. 3
+</li><br><li>[13] Kevin Frans, Danijar Hafner, Sergey Levine, and Pieter Abbeel. One step diffusion via shortcut
+models. In International Conference on Learning Representations (ICLR), 2025. 1, 2, 5, 6, 7, 8,
+9
+
+</li><br><li>[14] Zhengyang Geng, Ashwini Pokle, and J Zico Kolter. One-step diffusion distillation via deep
+equilibrium models. Neural Information Processing Systems (NeurIPS), 36, 2024. 2
+</li><br><li>[15] Zhengyang Geng, Ashwini Pokle, William Luo, Justin Lin, and J Zico Kolter. Consistency
+models made easy. arXiv preprint arXiv:2406.14548, 2024. 1, 2, 5, 6, 7, 8, 9, 15
+</li><br><li>[16] Priya Goyal, Piotr Dollár, Ross Girshick, Pieter Noordhuis, Lukasz Wesolowski, Aapo Kyrola,
+Andrew Tulloch, Yangqing Jia, and Kaiming He. Accurate, large minibatch sgd: Training
+imagenet in 1 hour. arXiv preprint arXiv:1706.02677, 2017. 14
+</li><br><li>[17] Martin Heusel, Hubert Ramsauer, Thomas Unterthiner, Bernhard Nessler, and Sepp Hochreiter.
+Gans trained by a two time-scale update rule converge to a local nash equilibrium. Neural
+Information Processing Systems (NeurIPS), 2017. 7
+</li><br><li>[18] Jonathan Ho and Tim Salimans. Classifier-free diffusion guidance. arXiv preprint
+arXiv:2207.12598, 2022. 2, 6, 14, 15
+</li><br><li>[19] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Neural
+Information Processing Systems (NeurIPS), 2020. 1, 2
+</li><br><li>[20] Emiel Hoogeboom, Jonathan Heek, and Tim Salimans. simple diffusion: End-to-end diffusion
+for high resolution images. In International Conference on Machine Learning (ICML), 2023. 9
+</li><br><li>[21] Minguk Kang, Jun-Yan Zhu, Richard Zhang, Jaesik Park, Eli Shechtman, Sylvain Paris, and
+Taesung Park. Scaling up gans for text-to-image synthesis. In IEEE Conference on Computer
+Vision and Pattern Recognition (CVPR), 2023. 9
+</li><br><li>[22] Tero Karras, Miika Aittala, Timo Aila, and Samuli Laine. Elucidating the design space of
+diffusion-based generative models. In Neural Information Processing Systems (NeurIPS), 2022.
+2, 9, 14
+</li><br><li>[23] Dongjun Kim, Chieh-Hsin Lai, Wei-Hsiang Liao, Naoki Murata, Yuhta Takida, Toshimitsu
+Uesaka, Yutong He, Yuki Mitsufuji, and Stefano Ermon. Consistency trajectory models:
+Learning probability flow ODE trajectory of diffusion. In International Conference on Learning
+Representations (ICLR), 2024. 5
+</li><br><li>[24] Diederik P. Kingma and Jimmy Ba. Adam: A method for stochastic optimization. In International
+Conference on Learning Representations (ICLR), 2015. 14
+</li><br><li>[25] Alex Krizhevsky. Learning multiple layers of features from tiny images. 2009. URL https:
+//www.cs.toronto.edu/~kriz/cifar.html. 9
+</li><br><li>[26] Gottfried Wilhelm Leibniz. Epistola LXXI ad johannem bernoullium, 5 aug 1697. In Johann
+Bernoulli, editor, Virorum celeberrimorum G. G. Leibnitii et Johannis Bernoullii Commercium
+philosophicum et mathematicum, volume I, pages 368–370. Marc-Michel Bousquet, Lausanne &
+Geneva, 1745. URL https://archive.org/details/bub_gb_lO3wOMxjoF8C/page/368.
+First explicit statement of the Leibniz integral rule. 4
+</li><br><li>[27] Tianhong Li, Yonglong Tian, He Li, Mingyang Deng, and Kaiming He. Autoregressive image
+generation without vector quantization. Neural Information Processing Systems (NeurIPS),
+2024. 9
+</li><br><li>[28] Yaron Lipman, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matthew Le. Flow
+matching for generative modeling. In International Conference on Learning Representations
+(ICLR), 2023. 1, 2, 3, 5, 6
+</li><br><li>[29] Yaron Lipman, Marton Havasi, Peter Holderrieth, Neta Shaul, Matt Le, Brian Karrer, Ricky
+T. Q. Chen, David Lopez-Paz, Heli Ben-Hamu, and Itai Gat. Flow matching guide and code,
+2024. URL https://arxiv.org/abs/2412.06264. 14
+</li><br><li>[30] Xingchao Liu, Chengyue Gong, and qiang liu. Flow straight and fast: Learning to generate
+and transfer data with rectified flow. In International Conference on Learning Representations
+(ICLR), 2023. 1, 2, 3
+
+</li><br><li>[31] Cheng Lu and Yang Song. Simplifying, stabilizing and scaling continuous-time consistency
+models. In International Conference on Learning Representations (ICLR), 2025. 1, 2, 5, 6, 9
+</li><br><li>[32] Weijian Luo, Tianyang Hu, Shifeng Zhang, Jiacheng Sun, Zhenguo Li, and Zhihua Zhang. Diffinstruct:
+A universal approach for transferring knowledge from pre-trained diffusion models.
+Neural Information Processing Systems (NeurIPS), 2024. 2
+</li><br><li>[33] Nanye Ma, Mark Goldstein, Michael S Albergo, Nicholas M Boffi, Eric Vanden-Eijnden, and
+Saining Xie. Sit: Exploring flow and diffusion-based generative models with scalable interpolant
+transformers. In European Conference on Computer Vision (ECCV), 2024. 1, 7, 8, 9
+</li><br><li>[34] William Peebles and Saining Xie. Scalable diffusion models with transformers. In IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR), 2023. 7, 8, 9, 14
+</li><br><li>[35] Adam Polyak, , et al. Movie Gen: A cast of media foundation models, 2025. 1
+</li><br><li>[36] Danilo Rezende and Shakir Mohamed. Variational inference with normalizing flows. In
+International Conference on Machine Learning (ICML), 2015. 2
+</li><br><li>[37] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. Highresolution
+image synthesis with latent diffusion models. In IEEE Conference on Computer
+Vision and Pattern Recognition (CVPR), 2021. 7, 9
+</li><br><li>[38] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. U-net: Convolutional networks for
+biomedical image segmentation. In Medical image computing and computer-assisted intervention
+(MICCAI), 2015. 9, 14
+</li><br><li>[39] Tim Salimans and Jonathan Ho. Progressive distillation for fast sampling of diffusion models.
+In International Conference on Learning Representations (ICLR), 2022. 2
+</li><br><li>[40] Axel Sauer, Katja Schwarz, and Andreas Geiger. Stylegan-xl: Scaling stylegan to large diverse
+datasets. In ACM Transactions on Graphics (SIGGRAPH), 2022. 9
+</li><br><li>[41] Axel Sauer, Dominik Lorenz, Andreas Blattmann, and Robin Rombach. Adversarial diffusion
+distillation. In European Conference on Computer Vision (ECCV), 2024. 2
+</li><br><li>[42] Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised
+learning using nonequilibrium thermodynamics. In International Conference on Machine
+Learning (ICML), 2015. 1, 2
+</li><br><li>[43] Yang Song and Prafulla Dhariwal. Improved techniques for training consistency models. In
+International Conference on Learning Representations (ICLR), 2024. 1, 2, 5, 6, 7, 8, 9, 15
+</li><br><li>[44] Yang Song and Stefano Ermon. Generative modeling by estimating gradients of the data
+distribution. Neural Information Processing Systems (NeurIPS), 2019. 1, 2, 9, 14
+</li><br><li>[45] Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and
+Ben Poole. Score-based generative modeling through stochastic differential equations. In
+International Conference on Learning Representations (ICLR), 2021. 2
+</li><br><li>[46] Yang Song, Prafulla Dhariwal, Mark Chen, and Ilya Sutskever. Consistency models. In
+International Conference on Machine Learning (ICML), 2023. 1, 2, 3, 5, 6, 7
+</li><br><li>[47] Keyu Tian, Yi Jiang, Zehuan Yuan, Bingyue Peng, and Liwei Wang. Visual autoregressive
+modeling: Scalable image generation via next-scale prediction. Neural Information Processing
+Systems (NeurIPS), 2024. 9
+</li><br><li>[48] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez,
+Lukasz Kaiser, and Illia Polosukhin. Attention is all you need. Neural Information Processing
+Systems (NeurIPS), 2017. 7
+</li><br><li>[49] Ling Yang, Zixiang Zhang, Zhilong Zhang, Xingchao Liu, Minkai Xu, Wentao Zhang, Chenlin
+Meng, Stefano Ermon, and Bin Cui. Consistency flow matching: Defining straight flows with
+velocity consistency. arXiv preprint arXiv:2407.02398, 2024. 2, 5
+
+</li><br><li>[50] Tianwei Yin, Michaël Gharbi, Richard Zhang, Eli Shechtman, Frédo Durand, William T
+Freeman, and Taesung Park. One-step diffusion with distribution matching distillation. In IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR), 2024. 2
+</li><br><li>[51] Sihyun Yu, Sangkyung Kwak, Huiwon Jang, Jongheon Jeong, Jonathan Huang, Jinwoo Shin,
+and Saining Xie. Representation alignment for generation: Training diffusion transformers is
+easier than you think. In International Conference on Learning Representations (ICLR), 2025.
+9
+</li><br><li>[52] Linqi Zhou, Stefano Ermon, and Jiaming Song. Inductive moment matching. arXiv preprint
+arXiv:2503.07565, 2025. 1, 2, 5, 6, 7, 8, 9
+</li><br><li>[53] Mingyuan Zhou, Huangjie Zheng, Zhendong Wang, Mingzhang Yin, and Hai Huang. Score
+identity distillation: Exponentially fast distillation of pretrained diffusion models for one-step
+generation. In International Conference on Machine Learning (ICML), 2024. 2
+</li></ul></div>
+</p>
+<h2>付録</h2>
+<h3>実装</h3>
+<!--
+<h2>Appendix</h2>
+<h3>A Implementation</h3>
+-->
+<p>
+<strong>ImageNet 256×256</strong>。潜在表現の抽出には標準的なVAEトークナイザーを使用する。<sup>4</sup>
+潜在表現のサイズは32×32×4で、これがモデルへの入力となる。バックボーンアーキテクチャはDiT [34]に準拠しており、DiTはViT [9]をベースにadaLN-Zero [34]を用いて条件付けを行っている。2つの時間変数（例えば(r, t)）を条件付けするには、各時間変数に位置埋め込みを適用し、その後2層MLPを適用して合計する。DiTアーキテクチャブロックはそのまま残し、アーキテクチャの改善は直交かつ可能である。構成の詳細は表4に示す。
+<!--
+<strong>ImageNet 256×256.</strong> We use a standard VAE tokenizer to extract the latent representations.<sup>4</sup> The
+latent size is 32×32×4, which is the input to the model. The backbone architectures follow DiT
+[34], which are based on ViT [9] with adaLN-Zero [34] for conditioning. To condition on two
+time variables (e.g., (r, t)), we apply positional embedding on each time variable, followed by a
+2-layer MLP, and summed. We keep the the DiT architecture blocks untouched, while architectural
+improvements are orthogonal and possible. The configuration specifics are in Tab. 4.
+-->
+</p><p class="margin-large">
+<sup>4</sup> https://huggingface.co/pcuenq/sd-vae-ft-mse-flax
+</p>
+<center><img src="images/table4.png"></center>
+<p class="margin-large">
+表4: ImageNet 256×256での構成。B/4は私たちのアブレーションモデルです。
+<!--
+Table 4: Configurations on ImageNet 256×256. B/4 is our ablation model.
+-->
+</p><p>
+<strong>CIFAR-10</strong> CIFAR-10上でクラス無条件生成の実験を行う。実装は標準的なFlow Matchingの手法[29]に従う。モデルへの入力はピクセル空間で32×32×3である。ネットワークは[44] (∼55M) から開発されたU-net [38]であり、これは比較対象となる他のベースラインでも一般的に使用されている。2つの時間変数（ここでは\((t, t − r)\)）に位置埋め込みを適用し、それらを連結して条件付けを行う。EDM前処理[22]は使用しない。
+<!--
+<strong>CIFAR-10.</strong> We experiment with class-unconditional generation on CIFAR-10. Our implementation
+follows standard Flow Matching practice [29]. The input to the model is 32×32×3 in the pixel
+space. The network is a U-net [38] developed from [44] (∼55M), which is commonly used by other
+baselines we compare. We apply positional embedding on the two time variables (here, \((t, t − r)\))
+and concatenate them for conditioning. We do not use any EDM preconditioner [22].
+-->
+</p><p>
+Adamを用い、学習率0.0006、バッチサイズ1024、((β_1, β_2) = (0.9, 0.999))、ドロップアウト0.2、重み減衰0、EMA減衰0.99995とする。モデルは80万回反復学習し（ウォームアップ1万回を含む）、[16]で評価した。((r, t))サンプラーはlognorm(-2.0, 2.0)である。サンプリング比(r \neq t)は75%である。適応重み付けの検出力(p)は0.75である。データ拡張の設定は[22]に従い、垂直反転と回転は無効である。
+<!--
+We use Adam with learning rate 0.0006, batch size 1024, \((β_1, β_2) = (0.9, 0.999)\), dropout 0.2, weight
+decay 0, and EMA decay of 0.99995. The model is trained for 800K iterations (with 10K warm-up
+[16]). The \((r, t)\) sampler is lognorm(–2.0, 2.0). The ratio of sampling \(r \neq t\) is 75%. The power \(p\)
+for adaptive weighting is 0.75. Our data augmentation setup follows [22], with vertical flipping and
+rotation disabled.
+-->
+</p></p>
+<h3>B 追加技術詳細</h3>
+<h4>B.1 MeanFlow の改良 CFG</h4>
+<!--
+<h3>B Additional Technical Details</h3>
+<h4>B.1 Improved CFG for MeanFlow</h4>
+-->
+<p>
+4.2節では、我々の手法をCFGをサポートするように自然に拡張する方法について議論した。必要な唯一の変更は、式(19)を用いてターゲットを修正することである。式(19)には、クラス無条件の \(u^{cfg}\) のみが与えられていることがわかる。オリジナルのCFG [18]では、クラス条件付き予測とクラス無条件予測を混合し、ランダムドロップ法でアプローチするのが標準的な方法である。同様の考え方が我々の回帰ターゲットにも適用できることが分かる。
+<!--
+In Sec. 4.2, we have discussed how to naturally extend our method to supporting CFG. The only
+change needed is to revise the target by Eq. (19). We notice that only the class-unconditional ucfg is
+presented in Eq. (19). In the original CFG [18], it is a standard practice to mix class-conditional and
+class-unconditional predictions, approached by random dropping. We observe that a similar idea can
+be applied to our regression target as well.
+-->
+</p><p>
+
+正式には、混合スケール\(κ\)を導入し、式(16)を次のように書き直す。
+<!--
+Formally, we introduce a mixing scale \(κ\) and rewrite Eq. (16) as:
+-->
+\[
+v^{cfg}(z_t, t | \mathbf{c}) = ω v(z_t, t | \mathbf{c}) + κ u^{cfg}(z_t, t, t | \mathbf{c}) + (1−ω−κ) u^{cfg}(z_t, t, t)  \tag{20}
+\]
+
+ここで、κ の役割は、右辺で \(u^{cfg}( · | \mathbf{c})\) と混合することです。式 (20) は、式 (16) を導出する際に使用した関係 \(v(z_t, t) = v^{cfg}(z_t, t)\) および  \(v^{cfg}(z_t, t) = u^{cfg}(z_t, t, t)\) を利用することで、実効誘導スケール \(ω^\prime = \frac{ω}{1−κ}\) を持つ元の CFG 定式化 (式 (13)) を満たすことが示せます。
+これにより、式 (19) は次のように書き直されます。
+<!--
+Here, the role of κ is to mix with \(u^{cfg}( · | \mathbf{c})\) on the right hand side. We can show that Eq. (20) satisfies
+the original CFG formulation (Eq. (13)) with the effective guidance scale of \(ω^\prime = \frac{ω}{1−κ}\) , leveraging the
+relation \(v(z_t, t) = v^{cfg}(z_t, t)\) and \(v^{cfg}(z_t, t) = u^{cfg}(z_t, t, t)\) that we have used for deriving Eq. (16).
+With this, Eq. (19) is rewritten as
+-->
+\[
+\tilde{v}_t ≜ ω\underbrace{(\epsilon − x)}_{sample\; v_t}
++ \underbrace{κu_θ^{cfg} (z_t, t, t | \mathbf{c}) }_{クラス条件出力}
++ \underbrace{(1−ω−κ) u_θ^{cfg}(z_t, t, t)}_{クラス無条件出力}  \tag{21}
+\]
+
+損失関数は式(17)で定義されたものと同じである。
+<!--
+The loss function is the same as defined in Eq. (17).
+-->
+</p><p>
+
+κ導入の影響は表5に示されている。ここでは、実効誘導スケール \(ω^\prime\) を2.0に固定し、\(κ\) を変化させている。これは、\(κ\) による混合によって発電品質がさらに向上することを示す。ただし、本論文の表1fにおけるアブレーションではこの改善は考慮されておらず、\(κ\) は0に設定されていることに注意されたい。
+<!--
+The influence of introducing κ is explored in Tab. 5, where we fix the effective guidance scale \(ω^\prime\) as
+2.0 and vary \(κ\). It shows that mixing by \(κ\) can further improve generation quality. We note that the
+ablation in Tab. 1f in the main paper did not involve this improvement, i.e., \(κ\) was set as 0.
+-->
+</p>
+<center><img src="images/table5.png"></center>
+<p class="margin-large">
+表5: MeanFlowの改良CFG。\(κ\)は式(20)で定義され、その目的はクラス条件付き\(u^{cfg}(·|\mathbf{c})\)とクラス無条件\(u^{cfg}(·)\)の両方がターゲットに現れるようにすることである。この表では、\(ω^\prime\)（\(ω^\prime = ω/(1 − κ)\)で与えられる）を2.0に固定する。したがって、異なる\(κ\)値に対して、\(ω\)を\(ω = (1−κ)·ω^\prime\)に設定する。\(κ = 0\)の場合、式(19)のCFGの場合にフォールバックする（表1fも参照）。標準的なCFGのクラス条件をランダムに削除する手法[18]と同様に、クラス条件付きucfgとクラス無条件ucfgをターゲットに混在させることで生成品質が向上することがわかりました。
+<!--
+Table 5: Improved CFG for MeanFlow. \(κ\) is as defined in Eq. (20), whose
+goal is to enable both class-conditional \(u^{cfg}( · | \mathbf{c})\) and class-unconditional
+\(u^{cfg}(·)\) to appear in the target. In this table, we fix the effective guidance
+scale \(ω^\prime\), given by \(ω^\prime = ω/(1 − κ)\), as 2.0. Accordingly, for different \(κ\)
+values, we set \(ω\) by \(ω = (1−κ)·ω^\prime\). If \(κ = 0\), it falls back to the CFG case in
+Eq. (19) (see also Tab. 1f). Similar to standard CFG’s practice of randomly
+dropping class conditions [18], we observe that mixing class-conditional
+and class-unconditional ucfg in our target improves generation quality.
+-->
+</p>
+<h4>B.2 損失メトリック</h4>
+<!--
+<h4>B.2 Loss Metrics</h4>
+-->
+<p>
+L2損失の2乗は\(\mathcal{L} = ‖Δ‖_2^2\)で与えられ、\(Δ = u_θ − u^{tgt}\)は回帰誤差を表す。
+一般的に、べき乗L2損失\(\mathcal{L}_γ = ‖Δ‖_2^{2γ}\)を採用することができる。ここで、\(γ\)はユーザーが指定したハイパーパラメータである。
+この損失を最小化することは、適応的に重み付けされたL2損失の2乗を最小化することと同等である。
+([15]を参照): \(\frac{d}{dθ}\mathcal{L}_γ = γ(‖Δ‖_2^2)^{(γ−1)} ·\frac{d‖Δ‖_2^2}{dθ}\)。これは、L2損失の2乗
+\((‖Δ‖_2^2)\) を損失適応型重み \(λ ∝ ‖Δ‖_2^{2(γ−1)}\) で重み付けしていると考えることができる。実際には、[15] に従って、次のように重み付けする。
+<!--
+The squared L2 loss is given by \(\mathcal{L} = ∥Δ∥_2^2\), where \(Δ = u_θ − u^{tgt}\) denotes the regression error.
+Generally, one can adopt the powered L2 loss \(\mathcal{L}_γ = ∥Δ∥_2^{2γ}\), where \(γ\) is a user-specified hyperparameter.
+Minimizing this loss is equivalent to minimizing an adaptively weighted squared L2 loss
+(see [15]): \(\frac{d}{dθ}\mathcal{L}_γ = γ(∥Δ∥_2^2)^{(γ−1)} ·\frac{d∥Δ∥_2^2}{dθ}\). This can be viewed as weighting the squared L2 loss
+\((∥Δ∥_2^2)\) by a loss-adaptive weight \(λ ∝ ∥Δ∥_2^{2(γ−1)}\) . In practice, we follow [15] and weight by:
+-->
+\[
+w = 1/(∥Δ∥_2^2+ c)^p  \tag{22}
+\]
+
+ここで、\(p = 1 − γ\) および \(c > 0\) はゼロ除算を避けるための小さな定数です。\(p = 0.5\) の場合、これは [43] の擬似Huber損失に類似します。適応的に重み付けされた損失は \(sg(w) ·\mathcal{L}\) であり、sg は停止勾配演算子を表します。
+<!--
+where \(p = 1 − γ\) and \(c > 0\) is a small constant to avoid division by zero. If \(p = 0.5\), this is similar
+to the Pseudo-Huber loss in [43]. The adaptively weighted loss is \(sg(w) ·\mathcal{L}\), where sg denotes the
+stop-gradient operator.
+-->
+</p>
+<h4>B.3 MeanFlow 恒等式の十分性について</h4>
+<!--
+<h4>B.3 On the Sufficiency of the MeanFlow Identity</h4>
+-->
+<p>
+本論文では、定義式(4)から出発して、MeanFlow恒等式(6)を導出した。これは、「式(4)⇒式(6)」、すなわち式(6)が式(4)の必要条件であることを示す。
+次に、それが十分条件でもあることを示す。すなわち、「式(6)⇒式(4)」である。
+<!--
+In the main paper, starting from the definitional Eq. (4), we have derived the MeanFlow Identity
+Eq. (6). This indicates that “Eq. (4)⇒Eq. (6)”, that is, Eq. (6) is a necessary condition for Eq. (4).
+Next, we show that it is also a sufficient condition, that is, “Eq. (6)⇒Eq. (4)”.
+-->
+</p><p>
+一般に、微分が等しいことは積分が等しいことを意味しません。定数分だけ異なる場合もあります。
+ここでは、定数分が打ち消されることを示します。「変位場」S を次のように書き表すとします。
+<!--
+In general, equality of derivatives does not imply equality of integrals: they may differ by a constant.
+In our case, we show that the constant is canceled out. Consider a “displacement field” S written as:
+-->
+\[
+S(z_t, r, t) = (t − r)u(z_t, r, t)  \tag{23}
+\]
+
+\(S\)  を任意関数として扱うと、一般に、導関数の等式は、ある定数を除けば、積分の等式にのみ帰着する。
+<!--
+If we treat S as an arbitrary function, then in general, equality of derivatives can only lead to equality
+of integrals, up to some constants:
+-->
+\[
+\frac{d}{dt}S(z_t, r, t) = v(z_t, t) ⇒ S(z_t, r, t) + C_1 =\int_r^t v(z_τ , τ )dτ + C_2  \tag{24}
+\]
+
+しかし、Sの定義では\(S|_{t=r} = 0\)となり、また\(t = r\)のとき\(\int_r^t vdτ = 0\)となり、\(C_1 = C_2\)となります。これは「式(6) ⇒ 式(4)」を示しています。
+<!--
+However, the definition of S gives \(S|_{t=r} = 0\), and we also have
+\(\int_r^t vdτ = 0\) when \(t = r\), which gives
+\(C_1 = C_2\). This indicates “Eq. (6) ⇒Eq. (4)”.
+-->
+</p><p>
+
+この十分性は、変位 \(S\) を直接モデル化するのではなく、平均速度 \(u\) をモデル化することによる結果であることに注意してください。変位の微分値の等式、例えば \(\frac{d}{dt}S = v\) を強制しても、自動的に \(S =\int_r^t vdτ\) が得られるわけではありません。\(S\) を直接パラメータ化すると、追加の境界条件 \(S|_{t=r} = 0\) が必要になります。この定式化は、この条件を自動的に満たします。
+<!--
+We note that this sufficiency is a consequence of modeling the average velocity \(u\), rather than directly
+the displacement \(S\). Enforcing the equality of derivatives on the displacement, for example, \(\frac{d}{dt}S = v\),
+does not automatically yield \(S =\int_r^t vdτ\). If we were to parameterize \(S\) directly, an extra boundary
+condition \(S|_{t=r} = 0\) is needed. Our formulation can automatically satisfy this condition.
+-->
+</p>
+<h4>B.4 ヤコビベクトル積（JVP）計算の解析</h4>
+<!--
+<h4>B.4 Analysis on Jacobian-Vector Product (JVP) Computation</h4>
+-->
+<p>
+
+JVP計算はいくつかの手法では懸念事項となる場合がありますが、本手法では非常に軽量です。本手法では、計算された積（ヤコビ行列と接線ベクトルの積）は停止勾配（式(10)）の影響を受けるため、\(θ\)に対するバックプロパゲーションを用いてSGDを実行する際には定数として扱われます。したがって、\(θ\)バックプロパゲーションにオーバーヘッドは追加されません。
+<!--
+While JVP computation can be seen as a concern in some methods, it is very lightweight in ours. In
+our case, as the computed product (between the Jacobian matrix and the tangent vector) is subject
+to stop-gradient (Eq. (10)), it is treated as a constant when conducting SGD using backpropagation
+w.r.t. \(θ\). Consequently, it does not add any overhead to the \(θ\)-backpropagation.
+-->
+</p><p>
+したがって、この積を計算することで発生する追加の計算は、jvp演算によって実行される「後方」パスです。この後方パスは、ニューラルネットワークの最適化に使用される標準的な後方パス（\(θ\)に関して）に類似しています。実際、JAX [4]などの一部の深層学習ライブラリでは、標準的なバックプロパゲーション（\(θ\)に関して）を計算するために同様のインターフェースを使用しています。私たちのケースでは、パラメータ\(θ\)ではなく入力変数へのバックプロパゲーションのみが必要なため、標準的なバックプロパゲーションよりもさらにコストが低くなります。このオーバーヘッドは小さいです。
+<!--
+
+As such, the extra computation incurred by computing this product is the “backward" pass performed
+by the jvp operation. This backward is analogous to the standard backward pass used for optimizing
+neural networks (w.r.t. \(θ\))—in fact, in some deep learning libraries, such as JAX [4], they use similar
+interfaces to compute the standard backpropagation (w.r.t. \(θ\)). In our case, it is even less costly
+than a standard backpropagation, as it only needs to backpropagate to the input variables, not to the
+parameters \(θ\). This overhead is small.
+-->
+</p><p>
+アブレーションモデルB/4において、JVPによるオーバーヘッドをベンチマークしました。モデルはJAXで実装し、v4-8 TPUでベンチマークを行いました。MeanFlowをFlow Matchingと比較すると、JVPによるバックワードパスのみがオーバーヘッドとなります。JVPのフォワードパスは標準的なフォワードプロパゲーションであり、Flow Matching（または一般的な目的関数）でも同様に実行する必要があることに注意してください。ベンチマークでは、Flow Matchingを使用した場合のトレーニングコストは0.045秒/イテレータ、MeanFlowを使用した場合のトレーニングコストは0.052秒/イテレータで、ウォールクロックオーバーヘッドはわずか16%です。
+<!--
+We benchmark the overhead caused by JVP in our ablation model, B/4. We implement the model
+in JAX and benchmark in v4-8 TPUs. We compare MeanFlow with its Flow Matching counterpart,
+where the only overhead is the backward pass incurred by JVP; notice that the forward pass of JVP
+is the standard forward propagation, which Flow Matching (or any typical objective function) also
+needs to perform. In our benchmarking, the training cost is 0.045 sec/iter using Flow Matching,
+and 0.052 sec/iter using MeanFlow, which is a merely 16% wall-clock overhead.
+-->
+</p>
+<h3>C 定性的な結果</h3>
+<!--
+<h3>C Qualitative Results</h3>
+-->
+<p>
+図5は、1-NFEモデルを使用したImageNet 256×256でのキュレーション生成例を示しています。
+<!--
+Fig. 5 shows curated generation examples on ImageNet 256×256 using our 1-NFE model.
+-->
+</p>
+<center><img src="images/fig5.png"></center>
+<p class="margin-large">
+図5：1-NFE生成結果。1-NFEモデル（MeanFlow-XL/2、3.43 FID）を用いたImageNet 256×256におけるクラス条件付き生成のキュレーション例を示します。
+<!--
+Figure 5: 1-NFE Generation Results. We show curated examples of class-conditional generation on
+ImageNet 256×256 using our 1-NFE model (MeanFlow-XL/2, 3.43 FID).
+-->
+</p>
+    </body>
+</html>
