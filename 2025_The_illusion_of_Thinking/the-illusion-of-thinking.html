@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>思考の錯覚</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>The Illusion of Thinking: Understanding the Strengths and Limitations of Reasoning Models via the Lens of Problem Complexity </center></h1>
+<center>思考の錯覚：問題の複雑さというレンズを通して推論モデルの長所と限界を理解する</center>
+<br>
+<div class="three-columns">
+<div class="column">
+<center>Parshin Shojaee ∗† </center>
+ </div>
+
+<div class="column">
+<center>Iman Mirzadeh ∗ </center>
+</div>
+
+<div class="column">
+<center>Keivan Alizadeh </center>
+</div>
+</div>
+<div class="three-columns">
+<div class="column">
+<center>Maxwell Horton </center>
+</div>
+
+<div class="column">
+<center>Samy Bengio </center>
+</div>
+
+<div class="column">
+<center>Mehrdad Farajtabar </center>
+</div>
+</div>
+<br>
+<center>Apple </center>
+
+<h2><center>要旨</center></h2>
+<!--
+<h2><center>Abstract</center></h2>
+-->
+<p class="margin-abstract ">
+近年の最前線の言語モデルでは、解答を出す前に詳細な思考プロセスを生成する大規模推論モデル（LRM：Large Reasoning Models）が導入されている。これらのモデルは推論ベンチマークで性能向上を示しているものの、その基本的能力、スケーリング特性、限界については未だ十分に解明されていない。現在の評価は主に確立された数学的およびコーディングベンチマークに焦点を当てており、最終的な解答の精度を重視している。しかし、この評価パラダイムはデータ汚染の影響を受けやすく、推論の痕跡の構造や質に関する知見が得られない。本研究では、制御可能なパズル環境を用いてこれらのギャップを体系的に調査する。この環境は、一貫した論理構造を維持しながら、構成上の複雑さを正確に操作することを可能にする。この設定により、最終的な解答だけでなく内部の推論の痕跡も分析できるようになり、LRMがどのように「考える」かについての知見が得られる。多様なパズルを対象とした広範な実験を通じて、フロンティアLRMは、ある一定の複雑さを超えると精度が完全に崩壊することを示す。さらに、それらは直感に反するスケーリング限界を示す。つまり、推論の努力は問題の複雑さとともにある点までは増加するが、その後は十分なトークン予算があるにもかかわらず減少する。同等の推論計算条件下で LRM を標準的な LLM と比較することにより、3 つのパフォーマンス状況を特定した。(1) 標準モデルが LRM より驚くほど優れている低複雑度のタスク、(2) LRM での追加思考が優位性を発揮する中複雑度のタスク、(3) 両方のモデルが完全に崩壊する高複雑度のタスク。LRM には正確な計算における限界があることがわかった。明示的なアルゴリズムを使用できず、パズル間で一貫して推論しない。また、推論のトレースをより詳細に調査し、探索されたソリューションのパターンを研究し、モデルの計算動作を分析して、その長所と限界を明らかにし、最終的にはその真の推論能力に関する重要な疑問を提起した。
+<!--
+Recent generations of frontier language models have introduced Large Reasoning Models (LRMs) that generate detailed thinking processes before providing answers. While these models demonstrate improved performance on reasoning benchmarks, their fundamental capabilities, scal- ing properties, and limitations remain insufficiently understood. Current evaluations primarily fo- cus on established mathematical and coding benchmarks, emphasizing ﬁnal answer accuracy. How- ever, this evaluation paradigm often suffers from data contamination and does not provide insights into the reasoning traces’ structure and quality. In this work, we systematically investigate these gaps with the help of controllable puzzle environments that allow precise manipulation of composi- tional complexity while maintaining consistent logical structures. This setup enables the analysis of not only ﬁnal answers but also the internal reasoning traces, offering insights into how LRMs “think”. Through extensive experimentation across diverse puzzles, we show that frontier LRMs face a complete accuracy collapse beyond certain complexities. Moreover, they exhibit a counter- intuitive scaling limit: their reasoning effort increases with problem complexity up to a point, then declines despite having an adequate token budget. By comparing LRMs with their standard LLM counterparts under equivalent inference compute, we identify three performance regimes: (1) low- complexity tasks where standard models surprisingly outperform LRMs, (2) medium-complexity tasks where additional thinking in LRMs demonstrates advantage, and (3) high-complexity tasks where both models experience complete collapse. We found that LRMs have limitations in exact computation: they fail to use explicit algorithms and reason inconsistently across puzzles. We also investigate the reasoning traces in more depth, studying the patterns of explored solutions and analyzing the models’ computational behavior, shedding light on their strengths, limitations, and ultimately raising crucial questions about their true reasoning capabilities. 
+-->
+</p>
+<h2>1 はじめに</h2>
+<!--
+<h2>1 Introduction </h2>
+-->
+<p>
+大規模言語モデル（LLM）は近年進化を遂げ、推論タスク向けに明示的に設計された特化型、すなわちOpenAIのo1/o3 [1, 2]、DeepSeek-R1 [3]、Claude 3.7 Sonnet Thinking [4]、Gemini Thinking [5] などの大規模推論モデル（LRM）が含まれるようになりました。これらのモデルは、自己反省を伴う長い思考連鎖（CoT）などの「思考」メカニズムを特徴とする新しい成果物であり、様々な推論ベンチマークにおいて有望な結果を示しています。これらのモデルの出現は、LLMシステムが複雑な推論や問題解決タスクに取り組む方法に潜在的なパラダイムシフトをもたらすことを示唆しており、一部の研究者は、LLMをより汎用的な人工知能機能への重要なステップとして提案しています。
+<!--
+Large Language Models (LLMs) have recently evolved to include specialized variants explicitly designed for reasoning tasks—Large Reasoning Models (LRMs) such as OpenAI’s o1/o3 [1, 2], DeepSeek-R1 [3], Claude 3.7 Sonnet Thinking [4], and Gemini Thinking [5]. These models are new artifacts, characterized by their “ thinking ” mechanisms such as long Chain-of-Thought (CoT) with self-reﬂection, and have demonstrated promising results across various reasoning benchmarks. Their emergence suggests a potential paradigm shift in how LLM systems approach complex reasoning and problem-solving tasks, with some researchers proposing them as signiﬁcant steps toward more general artiﬁcial intelligence capabilities. 
+-->
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+図 1: 上: この設定により、最終的な答えと中間の推論トレースの両方を検証できるため、モデルの思考動作を詳細に分析できます。下(左)と下(中央): 複雑度が低い場合、非思考モデルの方が精度が高く、トークン効率も高くなります。複雑度が増すにつれて、推論モデルの方がパフォーマンスが高くなりますが、より多くのトークンが必要になります。最終的には、どちらも臨界しきい値を超えてトレースが短くなります。下(右:) 正しく解決されたケースでは、Claude 3.7 の思考は、複雑度が低い場合は早く答えを見つけ、複雑度が高い場合は遅く答えを見つける傾向があります。失敗したケースでは、多くの場合、初期の間違った答えに固執し、残りのトークン バジェットを無駄にします。どちらのケースも、推論プロセスの非効率性を示しています。
+<!--
+Figure 1: Top : Our setup enables veriﬁcation of both ﬁnal answers and intermediate reasoning traces, allowing detailed analysis of model thinking behavior. Bottom left & middle : At low complexity, non-thinking models are more accurate and token-efficient. As complexity increases, reasoning models outperform but require more tokens—until both collapse beyond a critical threshold, with shorter traces. Bottom right : For correctly solved cases, Claude 3.7 Thinking tends to ﬁnd answers early at low complexity and later at higher complexity. In failed cases, it often ﬁxates on an early wrong answer, wasting the remaining token budget. Both cases reveal inefficiencies in the reasoning process. 
+-->
+</p><p>
+こうした主張や性能向上にもかかわらず、LRMの根本的な利点と限界は依然として十分に理解されていない。重要な疑問は依然として残っている。これらのモデルは一般化可能な推論が可能なのか、それとも異なる形態のパターンマッチング[6]を活用しているだけなのか？問題の複雑さが増すにつれて、その性能はどのように変化するのか？同じ推論トークン計算を与えた場合、思考しない標準的なLLMモデルとどのように比較されるのか？最も重要なのは、現在の推論アプローチに内在する限界は何なのか、そしてより堅牢な推論能力を実現するためにはどのような改善が必要なのか、ということである。
+<!--
+
+Despite these claims and performance advancements, the fundamental beneﬁts and limitations of LRMs remain insufficiently understood. Critical questions still persist: Are these models capable of generalizable reasoning, or are they leveraging different forms of pattern matching [6]? How does their performance scale with increasing problem complexity? How do they compare to their non-thinking standard LLM counterparts when provided with the same inference token compute? Most importantly, what are the inherent limitations of current reasoning approaches, and what improvements might be necessary to advance toward more robust reasoning capabilities? 
+-->
+</p><p>
+これらの疑問を調査する体系的な分析が不足しているのは、現在の評価パラダイムの限界によるものだと考えています。既存の評価は主に、確立された数学的およびコーディング的ベンチマークに焦点を当てていますが、これらは有用ではあるものの、データ汚染の問題を抱えることが多く、異なる設定や複雑性において制御された実験条件を実現することができません。さらに、これらの評価では推論トレースの構造や品質に関する知見が得られません。これらのモデルの推論動作をより厳密に理解するには、制御された実験を可能にする環境が必要です。
+<!--
+
+We believe the lack of systematic analyses investigating these questions is due to limitations in current evaluation paradigms. Existing evaluations predominantly focus on established mathematical and coding benchmarks, which, while valuable, often suffer from data contamination issues and do not allow for controlled experimental conditions across different settings and complexities. Moreover, these evaluations do not provide insights into the structure and quality of reasoning traces. To understand the reasoning behavior of these models more rigorously, we need environments that enable controlled experimentation. 
+-->
+</p><p>
+本研究では、問題の複雑性という観点から、フロンティアLRMの推論メカニズムを検証する。標準的なベンチマーク（例えば数学問題）ではなく、制御可能なパズル環境を採用する。この環境において、パズルの要素を調整することで複雑性を体系的に変化させ、解と内部推論の両方を検証する（図1上）。これらのパズルは、(1)複雑性をきめ細かく制御できること、(2)既存のベンチマークによくある混入を回避できること、(3)明示的に提供されたルールのみを要求し、アルゴリズム的推論を重視できること、(4)シミュレータを用いた厳密な評価をサポートし、正確な解の検証と詳細な失敗分析を可能にすること、といった特徴を持つ。私たちの実証的調査により、現在の言語推論モデル (LRM) に関するいくつかの重要な発見が明らかになりました。第一に、強化学習によって学習された洗練された自己反省メカニズムにもかかわらず、これらのモデルは計画タスクのための一般化可能な問題解決能力を開発することができず、特定の複雑さのしきい値を超えるとパフォーマンスがゼロに低下します。第二に、同等の推論コンピューティング環境における LRM と標準的な LLM の比較により、3 つの異なる推論方式が明らかになりました (図 1 下部)。より単純で構成の少ない問題の場合、標準的な LLM は優れた効率と精度を示します。問題の複雑さが中程度に増加すると、思考モデルが有利になります。しかし、問題が高複雑度に達し、構成の深さが長くなると、両方のモデル タイプでパフォーマンスが完全に低下します (図 1 下部左)。特に、この低下点に近づくと、LRM は世代長の制限をはるかに下回って動作しているにもかかわらず、問題の複雑さが増加するにつれて推論の労力 (推論時間トークンで測定) を削減し始めます (図 1 下部中央)。これは、問題の複雑さに対するLRMの推論能力における根本的な推論時間スケーリングの限界を示唆しています。最後に、中間推論の痕跡または思考の分析により、複雑さに依存するパターンが明らかになりました。より単純な問題では、推論モデルはしばしば正しい解を早期に特定しますが、非効率的に誤った選択肢の探索を継続します。これは「考えすぎ」現象です。中程度の複雑さでは、正しい解は誤った経路を広範囲に探索した後にのみ出現します。特定の複雑さの閾値を超えると、モデルは正しい解を完全に見つけられなくなります（図1、右下）。これは、LRMが限られた自己修正能力しか持たないことを示しており、これは有用ではあるものの、根本的な非効率性と明確なスケーリング限界を露呈しています。
+<!--
+
+In this study, we probe the reasoning mechanisms of frontier LRMs through the lens of problem complexity. Rather than standard benchmarks (e.g., math problems), we adopt controllable puzzle en- vironments that let us vary complexity systematically—by adjusting puzzle elements while preserving the core logic—and inspect both solutions and internal reasoning (Fig. 1, top). These puzzles: (1) of- fer ﬁne-grained control over complexity; (2) avoid contamination common in established benchmarks; (3) require only the explicitly provided rules, emphasizing algorithmic reasoning; and (4) support rigorous, simulator-based evaluation, enabling precise solution checks and detailed failure analyses. Our empirical investigation reveals several key ﬁndings about current Language Reasoning Models (LRMs): First, despite their sophisticated self-reﬂection mechanisms learned through reinforcement learning, these models fail to develop generalizable problem-solving capabilities for planning tasks, with performance collapsing to zero beyond a certain complexity threshold. Second, our comparison between LRMs and standard LLMs under equivalent inference compute reveals three distinct reason- ing regimes (Fig. 1, bottom). For simpler, low-compositional problems, standard LLMs demonstrate greater efficiency and accuracy. As problem complexity moderately increases, thinking models gain an advantage. However, when problems reach high complexity with longer compositional depth, both model types experience complete performance collapse (Fig. 1, bottom left). Notably, near this collapse point, LRMs begin reducing their reasoning effort (measured by inference-time tokens) as problem complexity increases, despite operating well below generation length limits (Fig. 1, bottom middle). This suggests a fundamental inference time scaling limitation in LRMs’ reasoning capabilities relative to problem complexity. Finally, our analysis of intermediate reasoning traces or thoughts reveals complexity-dependent patterns: In simpler problems, reasoning models often identify correct solutions early but inefficiently continue exploring incorrect alternatives—an “overthinking” phenomenon. At moderate complexity, correct solutions emerge only after extensive exploration of incorrect paths. Beyond a certain complexity threshold, models completely fail to ﬁnd correct solutions (Fig. 1, bottom right). This indicates LRMs possess limited self-correction capabilities that, while valuable, reveal fundamental inefficiencies and clear scaling limitations. 
+-->
+</p><p>
+これらの研究結果は、既存のLRMの長所と限界の両方を浮き彫りにし、これらのシステムにおける推論の性質に関する疑問を提起し、その設計と展開に重要な示唆を与えています。私たちの主な貢献は以下のとおりです。
+<!--
+
+These ﬁndings highlight both the strengths and limitations of existing LRMs, raising questions about the nature of reasoning in these systems with important implications for their design and deployment. Our key contributions are: 
+-->
+<div class="styleBullet">
+<ul><li>
+• 既存の数学ベンチマークにおけるLRMの現在の評価パラダイムに疑問を投げかけ、問題の複雑さに応じて制御可能な実験を可能にするアルゴリズムパズル環境を活用することで、制御された実験テストベッドを設計する。
+</li><br><li>
+• 最先端のLRM（例：o3-mini、DeepSeek-R1、Claude-3.7-Sonnet-Thinking）は、依然として一般化可能な問題解決能力を開発できておらず、様々な環境において、特定の複雑さを超えると精度が最終的にゼロに低下することを示す。
+</li><br><li>
+• 問題の複雑さに対するLRMの推論努力にはスケーリング限界が存在することを発見した。これは、ある複雑さのポイントを超えた後の思考トークンの直感に反する減少傾向によって証明される。
+</li><br><li>• 我々は、最終的な正確さに基づく現在の評価パラダイムに疑問を投げかけ、決定論的パズルシミュレータを用いて、思考痕跡の中間解まで評価範囲を拡張する。分析の結果、問題の複雑さが増すにつれて、正しい解は誤った解と比較して思考の後の段階で体系的に出現することが明らかになり、LRMにおける自己修正メカニズムに関する定量的な知見が得られる。
+</li><br><li>
+• LRMの正確な計算能力には、明示的なアルゴリズムの恩恵を受けられないことや、パズルの種類によって推論に一貫性がないなど、驚くべき限界があることが明らかになった。
+<!--
+
+• We question the current evaluation paradigm of LRMs on established math benchmarks and 
+design a controlled experimental testbed by leveraging algorithmic puzzle environments that enable 
+controllable experimentation with respect to problem complexity. 
+</li><br><li>
+• We show that state-of-the-art LRMs (e.g., o3-mini, DeepSeek-R1, Claude-3.7-Sonnet-Thinking) 
+still fail to develop generalizable problem-solving capabilities, with accuracy ultimately collapsing 
+to zero beyond certain complexities across different environments. 
+</li><br><li>
+• We ﬁnd that there exists a scaling limit in the LRMs’ reasoning effort with respect to problem 
+complexity, evidenced by the counterintuitive decreasing trend in the thinking tokens after a 
+complexity point. 
+</li><br><li>• We question the current evaluation paradigm based on ﬁnal accuracy and extend our evaluation 
+to intermediate solutions of thinking traces with the help of deterministic puzzle simulators. Our 
+analysis reveals that as problem complexity increases, correct solutions systematically emerge at 
+later positions in thinking compared to incorrect ones, providing quantitative insights into the 
+self-correction mechanisms within LRMs. 
+</li><br><li>
+• We uncover surprising limitations in LRMs’ ability to perform exact computation, including their 
+failure to beneﬁt from explicit algorithms and their inconsistent reasoning across puzzle types. 
+-->
+</li></ul></div>
+</p>
+<h2>2 関連研究</h2>
+<!--
+<h2>2 Related Works </h2>
+-->
+<p>
+言語モデルにおける推論。大規模言語モデル（LLM）は、膨大な量のトレーニングデータを使用して、コストのかかる複数のトレーニング段階を経ます。これらのLLMは強力な圧縮機能により有望な言語理解を示していますが、その知能と推論能力は依然として科学的な議論の重要なトピックです[7, 8]。初期のLLM [9, 10, 11]は、推論ベンチマークで低いパフォーマンスを示しました[12, 13, 14, 6]。これらの欠点に対処するために、トレーニングデータとテスト時の計算の両方を「スケーリング」するという共通のテーマを持ついくつかのアプローチが検討されてきました。たとえば、思考の連鎖（CoT）[15, 16, 17, 18]を生成し、最終答えの前に自己検証を組み込む[19, 20, 21]と、モデルのパフォーマンスが向上することが示されています。しかし、高品質でスケーラブルな CoT データは希少であるため、入手コストが非常に高くなります。別の研究では、教師あり学習や強化学習 [22, 23, 24, 25, 26, 27] を通じてモデルがより効果的に考えるように教えることで、教師ありデータの不足を補うことに焦点を当てています。これらの改善の注目すべきオープンソースの例は Deepseek-R1 [3] で、検証可能な報酬を伴う RL を適用することでモデルのパフォーマンスが大幅に向上し、OpenAI の o1 [2] などのクローズドモデルに匹敵することを実証し、Gemini flash thinking [5]、Claude 3.7 Sonnet thinking [4] などの Large Reasoning Models (LRM) と呼ばれる新世代の言語モデルにつながっています。
+<!--
+Reasoning in Language Models. Large Language Models (LLMs) undergo multiple costly training phases using vast amounts of training data. While these LLMs demonstrate promising language understanding with strong compression capabilities, their intelligence and reasoning abilities remain a critical topic of scientiﬁc debate [7, 8]. Earlier iterations of LLMs [9, 10 , 11] exhibited poor performance on reasoning benchmarks [12 , 13 , 14 , 6]. To address these shortcomings, several approaches have been explored with the common theme among them being “scaling” both the training data and test-time computation. For instance, generating a Chain of Thought (CoT) [15 , 16 , 17 , 18] and incorporating self-veriﬁcation [19 , 20 , 21] prior to the ﬁnal answer have been shown to improve model performance. However, obtaining high-quality and scalable CoT data is quite expensive due to its scarcity. Another line of research focuses on compensating for the lack of supervised data by teaching models to think more effectively through supervised learning or reinforcement learning [22 , 23 , 24 , 25 , 26 , 27]. A notable open-source example of these improvements is Deepseek- R1 [3], which demonstrated that applying RL with veriﬁable rewards can signiﬁcantly enhance model performance, matching that of closed models like OpenAI’s o1 [2], leading to a new generation of language models referred to as Large Reasoning Models (LRMs) such as Gemini ﬂash thinking [5], Claude 3.7 Sonnet thinking [4], etc. 
+-->
+</p><p>
+
+<strong>大規模推論モデルを理解する。</strong>　最近の研究では、推論行動のさまざまな側面が調査されています。大規模推論モデルでは、思考の痕跡と最終的な答えの不一致 [28 , 29] などの新たな行動や、研究者が「考えすぎ現象」 [30 , 31 , 32 , 33] と呼ぶ効率性に関する懸念が示されています。つまり、モデルは解決策を見つけた後でも冗長で冗長な出力を生成し、推論の計算に大きなオーバーヘッドが生じます。この研究では、タスクの複雑さに関してモデルがどの程度考えるかを体系的に分析します。最近、Ballon ら [34] は、新しい LRM では数学の問題で思考が増加すると精度が一般的に低下するのに対し、制御されたパズル環境では難易度が一定のレベルを超えるとモデルがあまり考えなくなり、思考とタスクの複雑さの逆の相関関係はあるしきい値までしか起こらないことを実証しました。Yue ら [35] [35]は、強化学習が本当に新しい推論パターンを引き出すのかどうか疑問視し、推論モデルと非推論モデルのpass@kが同じ点に収束することを示しています。また、MATH-500では推論モデルと非推論モデルのpass@kは近いものの、パズルの難易度が中程度および高い場合では異なるパターンが見られ、これは一般的な評価に用いられる既存の数学ベンチマークでは容易に観察できません。
+<!--
+
+<strong>Understanding Large Reasoning Models.</strong>  Recent studies have explored various aspects of reasoning behavior: Large Reasoning Models have shown emergent behaviors such as discrepancy between thought traces and ﬁnal answers [28 , 29] as well as efficiency concerns through what researchers term the “overthinking phenomenon” [30 , 31 , 32 , 33], where models produce verbose, redundant outputs, even after ﬁnding the solution, creating signiﬁcant inference computational overhead. In this work, we systematically analyze how much model thinks w.r.t task complexity. Recently, Ballon et al. [34] demonstrated that in newer LRMs accuracy generally declines when thinking increases in math problems, in contrast we observe when in controlled puzzle environment difficulty passes a certain level the model starts to think less and opposite corelation of thinking and task complexity only happens up to some threshold. Yue et al. [35] questioned whether reinforcement learning truly elicits novel reasoning patterns and shows pass@k of reasoning vs non-reasoning models converge to the same point. We also observe that in MATH-500 pass@k is close for reasoning versus non-reasoning models but we observed different patterns under medium and high complexity of puzzles, which is not easily observable on established math benchmarks used in common evaluations. 
+-->
+</p><p>
+<strong>制御可能な評価環境。</strong>　言語モデルの推論能力を評価するために数学の問題に焦点を当てた以前の研究とは異なり、本研究では制御可能なパズル環境を導入します。これらの環境では、一貫した論理プロセスを維持しながら問題の複雑さを正確に操作できるため、推論パターンと制限のより厳密な分析が可能になります。制御可能な環境は文献では珍しくありません [12 , 36 , 37]。ただし、私たちの主な目的は新しいベンチマークを提案することではなく、言語モデルの推論能力を理解するための実験を設計するためのツールとしてこれらのベンチマークを使用します。Valmeekam らによる密接に関連する研究 [38] では、o1 モデルが以前のモデルと比較して大幅なパフォーマンスの向上を示すことが実証されました。私たちの研究は、思考/非思考モデルのペア (例: DeepSeek-R1/V3、Claude 3.7 Sonnet の思考/非思考) を調べるなど、追加の洞察を提供します。さらに、LRM の推論の痕跡をより詳細に研究し、さまざまな複雑さのレベルにわたるさまざまな動作を明らかにしました。
+<!--
+
+<strong>Controllable Evaluation Environments.</strong> Unlike earlier studies that focused on mathematical problems to evaluate the reasoning capabilities of language models, this work introduces controllable puzzle environments. These environments allow for precise manipulation of problem complexity while maintaining consistent logical processes, enabling a more rigorous analysis of reasoning patterns and limitations. Controllable environments are not uncommon in the literature [12 , 36 , 37]. However, our primary aim is not to propose a new benchmark; instead, we use these benchmarks as tools for designing experiments to understand the reasoning capabilities of language models. A closely related study by Valmeekam et al. [38] demonstrated that o1-models show signiﬁcant performance improvements compared to previous models. Our work offers additional insights, such as examining pairs of thinking/non-thinking models (e.g., DeepSeek-R1/V3, Claude 3.7 Sonnet thinking/non- thinking). Furthermore, we study the reasoning traces of the LRMs in more depth, revealing different behaviors across various complexity levels. 
+-->
+</p><p>
+近年のLRMの有望な結果は、重要な疑問を提起する。それは、これまで報告されてきたLLMの限界はどの程度改善されたのか、ということである。本研究では、これらのLRMの性能を単に測定するだけでなく、LRMが様々な複雑さの問題にどれほどうまく対処できるかを分析し、その推論プロセスの特性を検証する。
+<!--
+
+Overall, the promising results from recent LRMs raise a critical question: how much have the previously reported limitations of LLMs been improved? In this work, we move beyond merely measuring the performance of these LRMs. We analyze how well these LRMs tackle problems of varying complexities and examine the properties of their reasoning processes. 
+-->
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+図2：数学ベンチマークにおける思考型モデルと非思考型モデルの比較分析では、一貫性のないパフォーマンスパターンが明らかになりました。MATH-500データセットの結果では、思考型モデルと非思考型モデルのパフォーマンスはほぼ同等でしたが、AIME24およびAIME25ベンチマークでは思考型モデルが優れたパフォーマンスを示しました。さらに、AIME24からAIME25へのベンチマークで観測されたパフォーマンスの低下は、これらのベンチマークがデータ汚染の問題に対して脆弱であることを浮き彫りにしています。
+<!--
+
+Figure 2: Comparative analysis of thinking versus non-thinking models across math benchmarks reveals inconsistent performance patterns. While results on the MATH-500 dataset show comparable performance between both model types, the thinking models demonstrate superior performance on AIME24 and AIME25 benchmarks. Additionally, the observed performance degradation from AIME24 to AIME25 highlights the vulnerability of these benchmarks to data contamination issues. 
+-->
+</p>
+<h2>3つの数学とパズルの環境</h2>
+<!--
+<h2>3 Math and Puzzle Environments </h2>
+-->
+<p>
+現在、最近のRLベースの思考モデルで観察されたパフォーマンスの向上が、確立された数学ベンチマークデータへの露出の増加に起因するのか、思考トークンに割り当てられた大幅に大きな推論計算に起因するのか、それともRLベースのトレーニングによって開発された推論能力に起因するのかは明らかではない。最近の研究[35、39]では、RLベースの思考モデルの上限機能（pass@k）を非思考の標準LLMの対応するものと比較することにより、確立された数学ベンチマークでこの問題を調査した。彼らは、同等の推論トークン予算の下で、非思考LLMは最終的にMATH500 [40]やAIME24 [41]などのベンチマークで思考モデルに匹敵するパフォーマンスに到達できることを示した。我々はまた、Claude-3.7-Sonnet（思考あり vs. 思考なし）やDeepSeek（R1 vs. V3）などの最先端のLRMの比較分析も行った。私たちの結果（図2に示す）は、MATH500データセットにおいて、同じ推論トークンバジェットを与えられた場合、思考モデルのpass@kパフォーマンスは非思考モデルのそれと同等であることを裏付けています。しかし、このパフォーマンスギャップはAIME24ベンチマークでは広がり、AIME25ではさらに広がることが分かりました。このギャップの拡大は解釈上の課題を提示します。これは、(1)複雑さが増すにつれてより洗練された推論プロセスが必要となり、より複雑な問題に対して思考モデルの真の利点が明らかになった、または(2)新しいベンチマーク（特にAIME25）でのデータ汚染が減少したことのいずれかに起因すると考えられます。興味深いことに、AIME25における人間のパフォーマンスは実際にはAIME24よりも高く[42, 43]、AIME25の方が複雑でない可能性があることを示唆しています。しかし、モデルはAIME25上ではAIME24よりもパフォーマンスが低く、これはフロンティアLRMのトレーニング中にデータ汚染が発生した可能性を示唆しています。これらの根拠のない観察と、数学のベンチマークでは問題の複雑さを制御された方法で操作できないという事実を考慮して、私たちはより正確で体系的な実験を可能にするパズル環境に目を向けました。
+<!--
+
+Currently, it is not clear whether the performance enhancements observed in recent RL-based thinking models are attributable to increased exposure to established mathematical benchmark data, to the signiﬁcantly greater inference compute allocated to thinking tokens, or to reasoning capabilities developed by RL-based training? Recent studies [35 , 39] have explored this question with established math benchmarks by comparing the upper-bound capabilities (pass@k) of RL-based thinking models with their non-thinking standard LLM counterparts. They have shown that under equivalent inference token budgets, non-thinking LLMs can eventually reach performance comparable to thinking models on benchmarks like MATH500 [40] and AIME24 [41]. We also conducted our comparative analysis of frontier LRMs like Claude-3.7-Sonnet (with vs. without thinking) and DeepSeek (R1 vs. V3) . Our results (shown in Fig. 2) conﬁrm that, on the MATH500 dataset, the pass@k performance of thinking models is comparable to their non-thinking counterparts when provided with the same inference token budget. However, we observed that this performance gap widens on the AIME24 benchmark and widens further on AIME25. This widening gap presents an interpretive challenge. It could be attributed to either: (1) increasing complexity requiring more sophisticated reasoning processes, thus revealing genuine advantages of the thinking models for more complex problems, or (2) reduced data contamination in newer benchmarks (particularly AIME25). Interestingly, human performance on AIME25 was actually higher than on AIME24 [42 , 43], suggesting that AIME25 might be less complex. Yet models perform worse on AIME25 than AIME24—potentially suggesting data contamination during the training of frontier LRMs. Given these non-justiﬁed observations and the fact that mathematical benchmarks do not allow for controlled manipulation of problem complexity, we turned to puzzle environments that enable more precise and systematic experimentation. 
+-->
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+図3：4つのパズル環境の図解。列は、ハノイの塔（杭間のディスクの移動）、チェッカージャンプ（色付きトークンの位置交換）、川渡り（川を渡ってエンティティを移動）、ブロックワールド（スタックの再構成）の各パズルについて、初期状態（上）から中間状態（中）、目標状態（下）への進行を示しています。
+<!--
+
+Figure 3: Illustration of the four puzzle environments. Columns show the progression from initial state (top) through intermediate state (middle) to target state (bottom) for puzzles: Tower of Hanoi (disk transfer across pegs), Checkers Jumping (position swapping of colored tokens), River Crossing (transporting entities across a river), and Blocks World (stack reconﬁguration). 
+-->
+</p>
+<h3>3.1 パズル環境</h3>
+<!--
+<h3>3.1 Puzzle Environments </h3>
+-->
+<p>
+我々は、構成の深さ、計画の複雑さ、および分配設定にまたがる4つの制御可能なパズルでLRM推論を評価します。パズルは以下に定義され、図3に示されています。ハノイの塔は、3つの杭と、最初の杭にサイズ順（一番大きいものが下）に積み重ねられたn個の異なるサイズのディスクを備えたパズルです。目標は、最初の杭から3番目の杭にすべてのディスクを移動することです。有効な動きには、一度に1枚のディスクのみを移動すること、杭から一番上のディスクのみを取ること、大きいディスクを小さいディスクの上に置かないことが挙げられます。このタスクの難易度は、初期ディスクの数によって制御できます。\(n\) 個の初期ディスクで必要な最小の動きの数は \(2n − 1\) になります。ただし、この研究では、最終解の最適性については評価せず、各動きの正確さと目標状態への到達のみを測定します。
+<!--
+We evaluate LRM reasoning on four controllable puzzles spanning compositional depth, planning complexity, and distributional settings. The puzzles are deﬁned below and illustrated in Fig. 3. Tower of Hanoi is a puzzle featuring three pegs and n disks of different sizes stacked on the ﬁrst peg in size order (largest at bottom). The goal is to transfer all disks from the ﬁrst peg to the third peg. Valid moves include moving only one disk at a time, taking only the top disk from a peg, and never placing a larger disk on top of a smaller one. The difficulty in this task can be controlled by the number of initial disks as the minimum number of required moves with n initial disks will be \(2n − 1\). However, in this work we do not grade for optimality of ﬁnal solution and only measuring the correctness of each move and reaching the target state. 
+-->
+</p><p>
+<strong>チェッカージャンピング</strong> は、赤いチェッカー、青いチェッカー、そして1つの空きスペースを一列に並べる1次元パズルです。目的は、すべての赤と青のチェッカーの位置を入れ替え、最初の配置を反転させることです。有効な動きは、チェッカーを隣接する空きスペースにスライドさせるか、反対色のチェッカーを1つだけ飛び越えて空きスペースに着地することです。パズルの過程で、チェッカーを後方へ移動させることはできません。このタスクの複雑さはチェッカーの数によって制御できます。\(2n\) 個のチェッカーを使用する場合、必要な最小移動回数は \((n + 1)^2 - 1\) になります。
+<!--
+<strong>Checker Jumping</strong> is a one-dimensional puzzle arranging red checkers, blue checkers, and a single empty space in a line. The objective is to swap the positions of all red and blue checkers, effectively mirroring the initial conﬁguration. Valid moves include sliding a checker into an adjacent empty space or jumping over exactly one checker of the opposite color to land in an empty space. No checker can move backward in the puzzle process. The complexity of this task can be controlled by the number of checkers: with \(2n\) checkers, the minimum number of moves required will be \((n + 1)^2 - 1\). 
+-->
+</p><p>
+<strong>川渡り</strong> (River Crossing) は、\(n\) 人のアクターとそれに対応する  \(n\) 人のエージェントがボートを使って川を渡る制約充足計画パズルです。目標は、\(2n\) 人の個体すべてを左岸から右岸に輸送することです。ボートは最大 k 人の個体を運ぶことができ、空のまま移動することはできません。アクターが他のエージェントの前にいるときに自分のエージェントがいないと、各エージェントは競合するエージェントからクライアントを保護する必要があるため、無効な状況が発生します。このタスクの複雑さは、存在するアクター/エージェントのペアの数によっても制御できます。\(n = 2、n = 3\) ペアの場合、ボートの定員は \(k = 2\) を使用し、ペアの数が多い場合は \(k = 3\) を使用します。
+<!--
+
+<strong>River Crossing</strong> is a constraint satisfaction planning puzzle involving n actors and their corresponding n agents who must cross a river using a boat. The goal is to transport all \(2n\) individuals from the left bank to the right bank. The boat can carry at most k individuals and cannot travel empty. Invalid situations arise when an actor is in the presence of another agent without their own agent present, as each agent must protect their client from competing agents. The complexity of this task can also be controlled by the number of actor/agent pairs present. For \(n = 2 , n = 3\) pairs, we use boat capacity of \(k = 2\) and for larger number of pairs we use \(k = 3\). 
+-->
+</p><p>
+<strong>Blocks World</strong>は、ブロックを初期配置から指定された目標配置に並べ替えるブロック積み上げパズルです。この変形に必要な最小移動回数を見つけることが目的です。有効な移動は積み上げの最上部のブロックに限られ、積み上げられたブロックは空の積み上げか、他のブロックの上に置くことができます。この課題の難易度は、積み上げられるブロックの数によって調整できます。
+<!--
+
+<strong>Blocks World</strong> is a block-stacking puzzle requiring rearrangement of blocks from an initial conﬁgu- ration into a speciﬁed goal conﬁguration. The objective is to ﬁnd the minimum number of moves needed for this transformation. Valid moves are restricted to the topmost block of any stack, which can be placed either on an empty stack or on top of another block. The complexity in this task can be controlled by the number of blocks present. 
+-->
+</p>
+<h2>4 実験と結果 </h2>
+<h3>4.1 実験設定 </h3>
+<!--
+<h2>4 Experiments & Results </h2>
+<h3>4.1 Experimental Setup </h3>
+-->
+<p>
+私たちの実験のほとんどは、Claude 3.7 Sonnet（思考/非思考）やDeepSeek-R1 / V3などの推論モデルとその非思考モデルで行われています。これらのモデルを選択したのは、OpenAIのoシリーズなどのモデルとは異なり、思考トークンにアクセスできるためです。最終的な精度のみに焦点を当てた実験では、oシリーズモデルの結果も報告します。Claude 3.7 Sonnetモデルの場合、最大トークンバジェット（64k）を許可します。同様に、ローカルサーバー上のDeepSeek-R1 / V3モデルの場合、最大長を64kトークンまで許可します。各パズルインスタンスについて、25のサンプルを生成し、それらの各モデルの平均パフォーマンスを報告します。実験のセットアップと結果の包括的な詳細は、付録に記載されています。
+<!--
+
+Most of our experiments are conducted on reasoning models and their non-thinking counterparts, such as Claude 3.7 Sonnet (thinking/non-thinking) and DeepSeek-R1/V3. We chose these models because they allow access to the thinking tokens, unlike models such as OpenAI’s o-series. For experiments focused solely on ﬁnal accuracy, we also report results on the o-series models. For Claude 3.7 Sonnet models, we allow the maximum token budget ( 64 k). Similarly, for DeepSeek-R1/V3 models on local servers, we allow the maximum length to be up to 64 k tokens. For each puzzle instance, we generate 25 samples and report the average performance of each model across them. Comprehensive details of our experimental setup and results are provided in the Appendix. 
+-->
+</p>
+<h3>4.2 複雑性は推論にどのような影響を与えるか？</h3>
+<h4>4.2.1 複雑性の3つの状態</h4>
+<!--
+<h3>4.2 How Does Complexity Affect Reasoning?</h3> 
+<h4>4.2.1 Three Regimes of Complexity </h4>
+-->
+<p>
+図2の観察結果に基づき、問題の複雑さが推論行動に与える影響を体系的に調査するため、制御されたパズル環境において、思考型モデルと非思考型モデルのペアを比較する実験を行いました。分析は、同一のモデルバックボーンを持つLLMのペア、具体的にはClaude-3.7-Sonnet（思考あり vs. 思考なし）とDeepSeek（R1 vs. V3）に焦点を当てました。各パズルにおいて、問題サイズ \(N\)（ディスク数、チェッカー数、ブロック数、または交差要素を表す）を操作することで複雑さを変化させました。
+<!--
+
+Motivated by the observations in Fig. 2, to systematically investigate the impact of problem complexity on reasoning behavior, we conducted experiments comparing thinking and non-thinking model pairs across our controlled puzzle environments. Our analysis focused on matched pairs of LLMs with identical model backbones, speciﬁcally Claude-3.7-Sonnet (w. vs. w/o thinking) and DeepSeek (R1 vs. V3) . In each puzzle, we vary the complexity by manipulating problem size \(N\) (representing disk count, checker count, block count, or crossing elements). 
+-->
+</p><p>
+図4は、すべてのパズル環境における問題の複雑さの関数として、両モデルの精度を示しています。これを補完する図5は、同等の推論トークン計算（すべてのパズルの平均）におけるこれらのモデルペアの上限性能能力（pass@k）を示しています。これは、数学ベンチマーク（図2）での以前の分析を、制御されたパズル環境に拡張したものです。これらの図の結果は、数学における観察とは異なり、複雑さに関するこれらのモデルの挙動には3つの領域が存在することを示しています。問題の複雑さが低い最初の領域では、非思考モデルは、よりトークン効率の高い推論を行う思考モデルと同等、あるいはそれ以上の性能を達成できることが観察されます。中程度の複雑さを持つ2番目の領域では、長い思考の連鎖を生成できる推論モデルの利点が現れ始め、モデルペア間の性能差が拡大します。最も興味深い領域は、問題の複雑さが高く、両モデルのパフォーマンスがゼロにまで低下した3番目の領域です。結果は、思考モデルがこの崩壊を遅らせる一方で、思考しないモデルと同じ基本的な限界に最終的に遭遇することを示しています。
+<!--
+
+Fig. 4 presents the accuracy of both model types as a function of problem complexity across all puzzle environments. Complementing this, Fig. 5 shows the upper bound performance capabilities (pass@k) of these model pairs under equivalent inference token compute (averaged across all puzzles), extending earlier analyses from mathematical benchmarks (Fig. 2) to the controlled puzzle environ- ments. Results from both these ﬁgures demonstrate that, unlike observations from math, there exists three regimes in the behavior of these models with respect to complexity. In the ﬁrst regime where problem complexity is low, we observe that non-thinking models are capable to obtain performance comparable to, or even better than thinking models with more token-efficient inference. In the second regime with medium complexity, the advantage of reasoning models capable of generating long chain-of-thought begin to manifest, and the performance gap between model pairs increases. The most interesting regime is the third regime where problem complexity is higher and the performance of both models have collapsed to zero. Results show that while thinking models delay this collapse, they also ultimately encounter the same fundamental limitations as their non-thinking counterparts. 
+-->
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+図 4: すべてのパズル環境とさまざまなレベルの問題の複雑さにおける、思考モデル (思考機能付き Claude 3.7 Sonnet、DeepSeek-R1) と非思考モデル (Claude 3.7 Sonnet、DeepSeek-V3) の精度の比較。
+<!--
+Figure 4: Accuracy of thinking models (Claude 3.7 Sonnet with thinking, DeepSeek-R1) versus their non-thinking counterparts (Claude 3.7 Sonnet, DeepSeek-V3) across all puzzle environments and varying levels of problem complexity. 
+00>
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+図5：低、中、高の複雑度のパズル環境において、同等の計算予算で思考型モデルと非思考型モデルのPass@kパフォーマンスを比較した。非思考型モデルは単純な問題で優れたパフォーマンスを示し、思考型モデルは中程度の複雑度で優位性を示す。一方、高複雑度では計算予算に関わらず、どちらのアプローチも失敗している。
+<!--
+Figure 5: Pass@k performance of thinking vs. non-thinking models across equivalent compute budgets in puzzle environments of low , medium , and high complexity. Non-thinking models excel in simple problems, thinking models show advantages at medium complexity, while both approaches fail at high complexity regardless of compute allocation. 
+-->
+</p>
+<h4>4.2.2 推論モデルの崩壊</h4>
+<!--
+<h4>4.2.2 Collapse of Reasoning Models </h4>
+-->
+<p>
+次に、思考トークンを備えたさまざまな特化型推論モデルが、増大する問題の複雑さにどのように対応するかを調べます。実験では、最先端の思考モデル o3-mini (中および高構成)、DeepSeek-R1、DeepSeek-R1-Qwen-32B、Claude-3.7-Sonnet (思考) の 5 つを評価します。図 6 は、さまざまな複雑さのレベルにわたって、精度 (上) と思考トークンの使用 (下) の観点からこれらのモデルのパフォーマンスを示しています。結果は、すべての推論モデルが複雑さに関して同様のパターンを示していることを示しています。つまり、問題の複雑さが増すにつれて精度は徐々に低下し、モデル固有の複雑さのしきい値を超えると完全に崩壊 (精度 0) します。推論思考トークン計算の分析では、これらのモデルによって学習された思考トークンの割り当てにおける興味深いパターンも明らかになりました。推論モデルは最初、問題の複雑さに比例して思考トークンを増加させることがわかります。しかし、臨界閾値（精度崩壊点にほぼ相当）に近づくと、モデルは直感に反して、問題の難易度が上昇するにもかかわらず、推論労力を削減し始めます。この現象はo3-miniバリアントで最も顕著で、Claude-3.7-Sonnet（思考）モデルではそれほど顕著ではありません。特に、十分な推論予算を利用できる状態で世代長の制限をはるかに下回る動作をしているにもかかわらず、これらのモデルは問題が複雑になるにつれて思考フェーズで追加の推論計算を活用できていません。この動作は、問題の複雑さに対する現在の推論モデルの思考能力の根本的なスケーリング限界を示唆しています。
+<!--
+
+We next examine how different specialized reasoning models equipped with thinking tokens respond to increasing problem complexity. Our experiments evaluate ﬁve state-of-the-art thinking models: o3-mini (medium and high conﬁgurations), DeepSeek-R1 , DeepSeek-R1-Qwen-32B , and Claude-3.7- Sonnet (thinking) . Fig. 6 demonstrates these models’ performance in terms of accuracy (top) and thinking token usage (bottom) across varying complexity levels. Results show that all reasoning models exhibit a similar pattern with respect to complexity: accuracy progressively declines as problem complexity increases until reaching complete collapse (zero accuracy) beyond a model- speciﬁc complexity threshold. Analysis of inference thinking token compute also reveals an intriguing pattern in thinking token allocation learned by these models. We observe that reasoning models initially increase their thinking tokens proportionally with problem complexity. However, upon approaching a critical threshold—which closely corresponds to their accuracy collapse point—models counterintuitively begin to reduce their reasoning effort despite increasing problem difficulty. This phenomenon is most pronounced in o3-mini variants and less severe in the Claude-3.7-Sonnet (thinking) model. Notably, despite operating well below their generation length limits with ample inference budget available, these models fail to take advantage of additional inference compute during the thinking phase as problems become more complex. This behavior suggests a fundamental scaling limitation in the thinking capabilities of current reasoning models relative to problem complexity. 
+-->
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+図6：パズル環境における推論モデルの精度と思考トークン数と問題の複雑さの関係。複雑さが増すにつれて、推論モデルは当初より多くのトークンを消費しますが、精度は徐々に低下し、ある臨界点に達すると推論は破綻します。つまり、パフォーマンスが急激に低下し、推論にかかる労力も減少します。
+<!--
+Figure 6: Accuracy and thinking tokens vs. problem complexity for reasoning models across puzzle environments. As complexity increases, reasoning models initially spend more tokens while accuracy declines gradually, until a critical point where reasoning collapses—performance drops sharply and reasoning effort decreases. 
+-->
+</p>
+<h3>4.3 推論モデルの思考の中で何が起こっているのか? </h3>
+<!--
+<h3>4.3 What Happens Inside the Thoughts of Reasoning Models? </h3>
+-->
+<p>
+推論モデルの思考プロセスに関するより深い洞察を得るために、推論トレースの詳細な分析を実施しました。図1に示すように、パズル環境を用いた設定により、最終的な答えだけでなく、これらのモデルが生成する推論トレース（「思考」）に関するより詳細な洞察を得ることができます。パズルシミュレータを用いて、モデルの思考の中で探求された中間解を抽出し、分析します。この調査では、これらの中間解のパターンと特性、推論プロセスにおける順序位置に対する正確性、そして問題の複雑さの増加に伴ってこれらのパターンがどのように変化するかを検証します。この分析では、パズルスイート全体にわたってClaude-3.7-Sonnet-Thinkingによって生成された推論トレースに焦点を当てます。トレース内で特定された各中間解について、(1)推論トレース内の相対位置（総思考長で正規化）、(2)パズルシミュレータによって検証された正確性、(3)対応する問題の複雑さを記録しました。これにより、推論プロセス全体を通じてソリューション開発の進行と精度を特徴付けることができます。
+<!--
+
+To gain deeper insights into the thinking processes of reasoning models, we conducted a ﬁne-grained analysis of their reasoning traces. As shown in Fig. 1, our setup with puzzle environments allows us to look beyond ﬁnal answer and obtain more detailed insight into the reasoning traces (“thoughts”) produced by these models. We extract and analyze the intermediate solutions explored within the thoughts of a model with the help of puzzle simulators. Our investigation examines the patterns and characteristics of these intermediate solutions, their correctness relative to their sequential position in the reasoning process, and how these patterns evolve with increasing problem complexity. For this analysis, we focus on the reasoning traces generated by Claude-3.7-Sonnet-Thinking across our puzzle suite. For each intermediate solution identiﬁed within the traces, we recorded: (1) its relative position within the reasoning trace (normalized by total thought length), (2) its correctness as validated by our puzzle simulators, and (3) the complexity of the corresponding problem. This allows to characterize the progression and accuracy of solution development throughout the reasoning process. 
+-->
+</p><p>
+図7aは、思考における中間解の位置、その正しさ、そしてあらゆるパズル環境における問題の複雑さの関係を示しています。推論トレースからの分析は、上記で議論した3つの複雑さの領域をさらに検証するものです。より単純な問題の場合、推論モデルは思考の初期段階で正しい解を見つけることが多いものの、その後は誤った解の探索を続けます。誤った解（赤）の分布は、正しい解（緑）と比較して、思考の終わりに向かってより上方にシフトしていることに注意してください。文献では「考えすぎ」と呼ばれるこの現象は、計算の無駄につながります。問題が中程度に複雑になると、この傾向は逆転します。モデルは最初に誤った解を探索し、その後、主に思考の後半で正しい解に到達します。今回は、誤った解（赤）の分布は、正しい解（緑）と比較してより下方にシフトしています。最後に、より複雑な問題では、モデルが思考の中で正しい解を生成できないことを意味する崩壊が発生します。
+<!--
+Fig. 7a demonstrates the relation between the position of intermediate solutions within thoughts, their correctness, and problem complexity across all puzzle environments. Our analysis from reasoning traces also further validates three regimes of complexity discussed above. For simpler problems, reasoning models often ﬁnd the correct solution early in their thinking but then continue exploring incorrect solutions. Note the distribution of incorrect solutions (red) is shifted more upward towards end of thinking compared to correct solutions (green). This phenomenon, referred to as “overthinking” in the literature, leads to the waste of compute. As problems become moderately more complex, this trend reverses: models ﬁrst explore incorrect solutions and mostly later in thought arrive at the correct ones. This time the distribution of incorrect solutions (red) is shifted more downward compared to correct ones (green). Finally, for the problems with higher complexity, collapse emerges, meaning that the model fails to generate any correct solutions within the thought. 
+</p><p>
+
+図7bは、ハノイの塔環境における思考の連続セグメント（ビン）における解答精度の補完的な分析を示しています。より単純な問題（\(N\)が小さい）では、思考の進行に伴って解答精度が低下したり変動したりする傾向があり、考えすぎ現象のさらなる証拠となっています。しかし、より複雑な問題ではこの傾向は変わり、思考の進行に伴って解答精度は一定の閾値まで向上します。この複雑さの閾値を超えると、「崩壊モード」となり、精度はゼロになります。
+<!--
+Fig. 7b presents a complementary analysis of solution accuracy within sequential segments (bins) of the thoughts in the Tower of Hanoi environment. It can be observed that for simpler problems (smaller \(N\)), solution accuracy tends to decrease or oscillate as thinking progresses, providing further evidence of the overthinking phenomenon. However, this trend changes for more complex problems, where solution accuracy increases with thinking progression—up to a certain threshold. Beyond this complexity threshold, in the “collapse mode”, accuracy is zero.
+-->
+</p>
+<center><img src="images/fig7.png"></center>
+<p>
+図7：左と中央：4つのパズルにおける推論の軌跡における中間解の位置と正確性。✓は正解、✗は不正解を示し、分布密度は網掛けで示されています。右：ハノイの塔における、異なる複雑さにおける思考過程における解答の正確性と解答位置の関係。単純な問題（\(N=1-3\)）では、時間の経過とともに早期の正確性が低下し（考えすぎ）、中程度の問題（\(N=4-7\)）では推論を続けることで正確性がわずかに向上し、複雑な問題（\(N ≥8\)）では一貫して正確性がほぼゼロであり、推論が完全に失敗したことを示しています。
+<!--
+Figure 7: Left & Middle: Position and correctness of intermediate solutions within reasoning traces across four puzzles at varying complexity levels. ✓ indicates correct solutions, ✗ indicates incorrect solutions, with distribution density shown by shading; Right: Solution accuracy versus position in thinking for Tower of Hanoi at different complexity levels. Simple problems (\(N=1-3\)) show early accuracy declining over time (overthinking), moderate problems (\(N=4-7\)) show slight improvement in accuracy with continued reasoning, and complex problems (\(N ≥8\)) exhibit consistently near-zero accuracy, indicating complete reasoning failure. 
+--> 
+</p>
+<h3>4.4 未解決の質問：推論モデルの不可解な動作</h3>
+<!--
+<h3>4.4 Open Questions: Puzzling Behavior of Reasoning Models </h3>
+-->
+<p>
+このセクションでは、正確な問題解決手順を実行する際の推論モデルの限界に関する驚くべき結果を示し、また、移動回数に基づいたモデルの異なる動作を示します。
+<!--
+
+In this section, we present surprising results concerning the limitations of reasoning models in executing exact problem-solving steps, as well as demonstrating different behaviors of the models based on the number of moves. 
+-->
+</p><p>
+図 8a と 8b に示すように、ハノイの塔の環境では、プロンプトでアルゴリズムを提供してモデルが規定の手順を実行するだけで済むようにした場合でも、パフォーマンスは向上せず、観測された崩壊はほぼ同じ時点で依然として発生します。解決策を見つけて考案するには、単に特定のアルゴリズムを実行するよりも、はるかに多くの計算 (検索と検証など) が必要になるはずなので、これは注目に値します。これは、検証と問題を解決するための論理的手順に従うことにおける推論モデルの限界をさらに強調しており、このようなモデルの記号操作機能を理解するにはさらなる研究が必要であることを示唆しています [44 , 6]。さらに、図 8c と 8d では、クロード 3.7 ソネットの思考モデルとは非常に異なる動作が見られます。ハノイの塔環境では、提案された解におけるモデルの最初のエラーは、多くの場合、(\(N=10\)) の場合 100 手目あたりなど、かなり後の段階で発生します。これに対し、川を渡る環境では、モデルは 4 手目まで有効な解を生成できません。また、このモデルは、31 手を必要とする (N=5\) のハノイの塔を解く際にはほぼ完璧な精度を達成しますが、11 手で解ける (\(N=3\)) の川を渡るパズルを解くことができないことに注意してください。これは、Web 上で \(N >2\) の川を渡る例がほとんどないことを示唆しており、LRM はトレーニング中にこのような例に頻繁に遭遇したり、記憶したりしなかった可能性があります。
+<!--
+
+As shown in Figures 8a and 8b, in the Tower of Hanoi environment, even when we provide the algorithm in the prompt—so that the model only needs to execute the prescribed steps—performance does not improve, and the observed collapse still occurs at roughly the same point. This is noteworthy because ﬁnding and devising a solution should require substantially more computation (e.g., for search and veriﬁcation) than merely executing a given algorithm. This further highlights the limitations of reasoning models in veriﬁcation and in following logical steps to solve a problem, suggesting that further research is needed to understand the symbolic manipulation capabilities of such models [44 , 6]. Moreover, in Figures 8c and 8d, we observe very different behavior from the Claude 3.7 Sonnet think- ing model. In the Tower of Hanoi environment, the model’s ﬁrst error in the proposed solution often occurs much later, e.g., around move 100 for (\(N=10\)), compared to the River Crossing environment, where the model can only produce a valid solution until move 4. Note that this model also achieves near-perfect accuracy when solving the Tower of Hanoi with (N=5), which requires 31 moves, while it fails to solve the River Crossing puzzle when (\(N=3\)), which has a solution of 11 moves. This likely suggests that examples of River Crossing with \(N >2\) are scarce on the web, meaning LRMs may not have frequently encountered or memorized such instances during training. 
+-->
+</p>
+<center><img src="images/fig8.png"></center>
+<p>
+図 8: (a) および (b) プロンプトでソリューション アルゴリズムを提供しているにもかかわらず、同様のポイントで実行エラーが発生し、論理ステップ実行における推論モデルの限界が強調されています。 (c) および (d) 特に、Claude 3.7 Sonnet モデルは、川を渡るシナリオの初期のエラーと比較して、ハノイの塔でエラーのないシーケンスがはるかに長くなっています。
+<!--
+
+Figure 8: (a) & (b) Despite providing the solution algorithm in the prompt, execution failure occurs at similar points, highlighting reasoning model limitations in logical step execution. (c) & (d) Notably, the Claude 3.7 Sonnet model demonstrates much longer error-free sequences in the Tower of Hanoi compared to early errors in the River Crossing scenario. 
+-->
+</p>
+<h2>5 結論</h2>
+<!--
+<h2>5 Conclusion </h2>
+-->
+<p>
+本稿では、制御可能なパズル環境を用いて、問題の複雑性という観点から、最先端の大規模推論モデル（LRM）を体系的に検証する。その結果、現行モデルには根本的な限界があることが明らかになった。高度な自己反省メカニズムを備えているにもかかわらず、これらのモデルは特定の複雑性閾値を超えると、一般化可能な推論能力を開発できない。我々は3つの異なる推論領域を特定した。標準的なLLMは低複雑性ではLRMよりも優れた性能を示し、LRMは中複雑性で優れた性能を示し、高複雑性では両者とも限界に達する。特に懸念されるのは、問題が臨界複雑性に近づくにつれて推論労力が直感に反して減少することであり、これはLRMの計算スケールの本質的な限界を示唆している。推論トレースの詳細な分析により、単純な問題における非効率的な「考えすぎ」から複雑な問題における完全な失敗に至るまで、複雑性に依存する推論パターンがさらに明らかになった。これらの知見は、LRMの能力に関する一般的な仮定に疑問を投げかけ、現行のアプローチが一般化可能な推論への根本的な障壁に直面している可能性を示唆する。最後に、LRMに関するいくつかの驚くべき結果を示し、今後の研究に向けたいくつかの未解決の課題を提示した。最も注目すべき点は、正確な計算を行う際の限界が観察されたことです。例えば、「ハノイの塔」の解アルゴリズムをモデルに提供した場合でも、このパズルにおけるパフォーマンスは向上しませんでした。さらに、モデルの最初の失敗手を調べると、驚くべき挙動が明らかになりました。例えば、「ハノイの塔」では最大100手正解できたのに対し、「川渡り」パズルでは5手以上正解できなかったのです。この結果は、これらのシステムの推論能力に関する今後の研究への道を開くものと考えています。
+<!--
+In this paper, we systematically examine frontier Large Reasoning Models (LRMs) through the lens of problem complexity using controllable puzzle environments. Our ﬁndings reveal fundamental limitations in current models: despite sophisticated self-reﬂection mechanisms, these models fail to develop generalizable reasoning capabilities beyond certain complexity thresholds. We identiﬁed three distinct reasoning regimes: standard LLMs outperform LRMs at low complexity, LRMs excel at moderate complexity, and both collapse at high complexity. Particularly concerning is the counterin- tuitive reduction in reasoning effort as problems approach critical complexity, suggesting an inherent compute scaling limit in LRMs. Our detailed analysis of reasoning traces further exposed complexity- dependent reasoning patterns, from inefficient “overthinking” on simpler problems to complete failure on complex ones. These insights challenge prevailing assumptions about LRM capabilities and suggest that current approaches may be encountering fundamental barriers to generalizable reasoning. Finally, we presented some surprising results on LRMs that lead to several open questions for future work. Most notably, we observed their limitations in performing exact computation; for example, when we provided the solution algorithm for the Tower of Hanoi to the models, their performance on this puzzle did not improve. Moreover, investigating the ﬁrst failure move of the models revealed surprising behaviors. For instance, they could perform up to 100 correct moves in the Tower of Hanoi but fail to provide more than 5 correct moves in the River Crossing puzzle. We believe our results can pave the way for future investigations into the reasoning capabilities of these systems. 
+-->
+</p>
+<h3>制限事項</h3>
+<!--
+<h3>Limitations </h3>
+-->
+<p>
+本研究には限界があることを認識しています。本研究のパズル環境は、問題の複雑さをきめ細かく制御しながら制御された実験を可能にしますが、推論タスクのごく一部しか表しておらず、現実世界や知識集約型の推論問題の多様性を捉えきれていない可能性があります。注目すべきは、本研究の実験のほとんどが、閉境LRMへのブラックボックスAPIアクセスに依存しているため、内部状態やアーキテクチャコンポーネントの分析能力が制限されていることです。さらに、決定論的なパズルシミュレータの使用は、推論が段階的に完全に検証できることを前提としています。しかし、構造化されていない領域では、このような正確な検証は実現不可能な場合があり、この分析をより一般化可能な他の推論手法に転用できる可能性が制限されます。
+<!--
+
+We acknowledge that our work has limitations. While our puzzle environments enable controlled experimentation with ﬁne-grained control over problem complexity, they represent a narrow slice of reasoning tasks and may not capture the diversity of real-world or knowledge-intensive reasoning problems. It is notable that most of our experiments rely on black-box API access to the closed frontier LRMs, limiting our ability to analyze internal states or architectural components. Furthermore, the use of deterministic puzzle simulators assumes that reasoning can be perfectly validated step by step. However, in less structured domains, such precise validation may not be feasible, limiting the transferability of this analysis to other more generalizable reasoning. 
+-->
+</p>
+<h2>謝辞</h2>
+<!--
+<h2>Acknowledgments </h2>
+-->
+<p>
+著者は、貴重なフィードバックとサポートを提供してくれた Scott Hoang、Yichen Jiang、Minsik Cho、Mohammad Sekhavat、David Harrison、Mohammadreza Armandpour、および Devi Krishna に感謝の意を表します。
+<!--
+
+The authors would like to thank Scott Hoang, Yichen Jiang, Minsik Cho, Mohammad Sekhavat, David Harrison, Mohammadreza Armandpour and Devi Krishna for the valuable feedback and support.
+-->
+</p>
+ <h2>参考文献</h2>
+<!--
+<h2>References </h2>
+-->
+<p>
+<div class="styleRef">
+<ul><li>
+[1] Aaron Jaech, Adam Kalai, Adam Lerer, Adam Richardson, Ahmed El-Kishky, Aiden Low, Alec 
+Helyar, Aleksander Madry, Alex Beutel, Alex Carney, et al. Openai o1 system card. arXiv 
+preprint arXiv:2412.16720 , 2024. 
+</li><br><li>[2] OpenAI. Introducing openai o1. Jan 2024. 
+</li><br><li>[3] Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, 
+Shirong Ma, Peiyi Wang, Xiao Bi, et al. Deepseek-r1: Incentivizing reasoning capability in llms 
+via reinforcement learning. arXiv preprint arXiv:2501.12948 , 2025. 
+</li><br><li>[4] Anthropic. Claude 3.7 sonnet. Feb 2025. 
+</li><br><li>[5] Google. Gemini ﬂash thinking. Google AI Blog , Jan 2025. 
+</li><br><li>[6] Seyed Iman Mirzadeh, Keivan Alizadeh, Hooman Shahrokhi, Oncel Tuzel, Samy Bengio, 
+and Mehrdad Farajtabar. GSM-symbolic: Understanding the limitations of mathematical 
+reasoning in large language models. In The Thirteenth International Conference on Learning 
+Representations , 2025. 
+</li><br><li>[7] Francois Chollet, Mike Knoop, Gregory Kamradt, Bryan Landers, and Henry Pinkard. Arc-agi-2: 
+A new challenge for frontier ai reasoning systems. arXiv preprint arXiv:2505.11831 , 2025. 
+</li><br><li>[8] Gary Marcus. Five ways in which the last 3 months — and especially the deepseek era — have 
+vindicated "deep learning is hitting a wall". Marcus on AI (Substack), February 2025. Blog 
+post. 
+</li><br><li>[9] Marah I Abdin, Sam Ade Jacobs, Ammar Ahmad Awan, Jyoti Aneja, Ahmed Awadallah, Hany 
+Awadalla, Nguyen Bach, Amit Bahree, Arash Bakhtiari, Harkirat S. Behl, and et. al. Phi-3 
+technical report: A highly capable language model locally on your phone. CoRR, abs/2404.14219, 
+2024. 
+</li><br><li>[10] Albert Q. Jiang, Alexandre Sablayrolles, Arthur Mensch, Chris Bamford, Devendra Singh Chap- 
+lot, Diego de Las Casas, Florian Bressand, Gianna Lengyel, Guillaume Lample, Lucile Saulnier, 
+Lélio Renard Lavaud, Marie-Anne Lachaux, Pierre Stock, Teven Le Scao, Thibaut Lavril, 
+Thomas Wang, Timothée Lacroix, and William El Sayed. Mistral 7b. CoRR, abs/2310.06825, 
+2023. 
+</li><br><li>[11] Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, 
+Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, Anirudh Goyal, Anthony 
+Hartshorn, Aobo Yang, Archi Mitra, Archie Sravankumar, Artem Korenev, Arthur Hinsvark, 
+Arun Rao, Aston Zhang, Aurélien Rodriguez, Austen Gregerson, Ava Spataru, Baptiste Rozière, 
+Bethany Biron, Binh Tang, Bobbie Chern, Charlotte Caucheteux, Chaya Nayak, Chloe Bi, Chris 
+Marra, Chris McConnell, Christian Keller, Christophe Touret, Chunyang Wu, Corinne Wong, 
+Cristian Canton Ferrer, Cyrus Nikolaidis, Damien Allonsius, Daniel Song, Danielle Pintz, Danny 
+Livshits, David Esiobu, Dhruv Choudhary, Dhruv Mahajan, Diego Garcia-Olano, Diego Perino, Dieuwke Hupkes, Egor Lakomkin, Ehab AlBadawy, Elina Lobanova, Emily Dinan, Eric Michael Smith, Filip Radenovic, Frank Zhang, Gabriel Synnaeve, Gabrielle Lee, Georgia Lewis Anderson, Graeme Nail, Grégoire Mialon, Guan Pang, Guillem Cucurell, Hailey Nguyen, Hannah Korevaar, Hu Xu, Hugo Touvron, and et al. The llama 3 herd of models. CoRR, abs/2407.21783, 2024. 
+</li><br><li>[12] Nouha Dziri, Ximing Lu, Melanie Sclar, Xiang Lorraine Li, Liwei Jiang, Bill Yuchen Lin, Sean 
+Welleck, Peter West, Chandra Bhagavatula, Ronan Le Bras, Jena D. Hwang, Soumya Sanyal, 
+Xiang Ren, Allyson Ettinger, Zaïd Harchaoui, and Yejin Choi. Faith and fate: Limits of 
+transformers on compositionality. In Alice Oh, Tristan Naumann, Amir Globerson, Kate Saenko, 
+Moritz Hardt, and Sergey Levine, editors, Advances in Neural Information Processing Systems 
+36: Annual Conference on Neural Information Processing Systems 2023, NeurIPS 2023, New 
+Orleans, LA, USA, December 10 - 16, 2023 , 2023. 
+</li><br><li>[13] R. Thomas McCoy, Shunyu Yao, Dan Friedman, Matthew Hardy, and Thomas L. Griffiths. 
+Embers of autoregression: Understanding large language models through the problem they are 
+trained to solve, 2023. 
+</li><br><li>[14] Marianna Nezhurina, Lucia Cipolina-Kun, Mehdi Cherti, and Jenia Jitsev. Alice in wonderland: 
+Simple tasks showing complete reasoning breakdown in state-of-the-art large language models. 
+arXiv preprint arXiv:2406.02061 , 2024. 
+</li><br><li>[15] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed H. Chi, 
+Quoc V. Le, and Denny Zhou. Chain-of-thought prompting elicits reasoning in large language 
+models. In Sanmi Koyejo, S. Mohamed, A. Agarwal, Danielle Belgrave, K. Cho, and A. Oh, 
+editors, Advances in Neural Information Processing Systems 35: Annual Conference on Neural 
+Information Processing Systems 2022, NeurIPS 2022, New Orleans, LA, USA, November 28 - 
+December 9, 2022 , 2022. 
+</li><br><li>[16] Mehran Kazemi, Najoung Kim, Deepti Bhatia, Xin Xu, and Deepak Ramachandran. Lam- 
+bada: Backward chaining for automated reasoning in natural language. arXiv preprint 
+arXiv:2212.13894 , 2022. 
+</li><br><li>[17] Hattie Zhou, Azade Nova, Hugo Larochelle, Aaron Courville, Behnam Neyshabur, and Hanie 
+Sedghi. Teaching algorithmic reasoning via in-context learning. arXiv preprint arXiv:2211.09066 , 
+2022. 
+</li><br><li>[18] Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yutaka Matsuo, and Yusuke Iwasawa. Large 
+language models are zero-shot reasoners. Advances in neural information processing systems , 
+35:22199–22213, 2022. 
+</li><br><li>[19] Yixuan Weng, Minjun Zhu, Fei Xia, Bin Li, Shizhu He, Shengping Liu, Bin Sun, Kang Liu, and 
+Jun Zhao. Large language models are better reasoners with self-veriﬁcation. In Houda Bouamor, 
+Juan Pino, and Kalika Bali, editors, Findings of the Association for Computational Linguistics: 
+EMNLP 2023 , pages 2550–2575, Singapore, December 2023. Association for Computational 
+Linguistics. 
+</li><br><li>[20] Yifei Li, Zeqi Lin, Shizhuo Zhang, Qiang Fu, Bei Chen, Jian-Guang Lou, and Weizhu Chen. 
+Making language models better reasoners with step-aware veriﬁer. In Proceedings of the 61st 
+Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , 
+pages 5315–5333, 2023. 
+</li><br><li>[21] Eric Zhao, Pranjal Awasthi, and Sreenivas Gollapudi. Sample, scrutinize and scale: Effective 
+inference-time search by scaling veriﬁcation. arXiv preprint arXiv:2502.01839 , 2025. 
+</li><br><li>[22] Eric Zelikman, Yuhuai Wu, Jesse Mu, and Noah Goodman. STar: Bootstrapping reasoning 
+with reasoning. In Alice H. Oh, Alekh Agarwal, Danielle Belgrave, and Kyunghyun Cho, editors, 
+Advances in Neural Information Processing Systems , 2022. 
+</li><br><li>[23] Sachin Goyal, Ziwei Ji, Ankit Singh Rawat, Aditya Krishna Menon, Sanjiv Kumar, and 
+Vaishnavh Nagarajan. Think before you speak: Training language models with pause tokens. 
+In The Twelfth International Conference on Learning Representations , 2024. 
+</li><br><li>[24] David Herel and Tomas Mikolov. Thinking tokens for language modeling. ArXiv , abs/2405.08644, 
+2024. 
+</li><br><li>[25] Zhihong Shao, Peiyi Wang, Runxin Xu Qihao Zhu, Junxiao Song, Mingchuan Zhang, Y.K. Li, 
+Y. Wu, and Daya Guo. Deepseekmath: Pushing the limits of mathematical reasoning in open 
+language models, 2024. 
+</li><br><li>[26] Amirhossein Kazemnejad, Milad Aghajohari, Eva Portelance, Alessandro Sordoni, Siva Reddy, 
+Aaron Courville, and Nicolas Le Roux. Vineppo: Unlocking rl potential for llm reasoning 
+through reﬁned credit assignment, 2024. 
+</li><br><li>[27] Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish Ivison, Faeze 
+Brahman, Lester James V. Miranda, Alisa Liu, Nouha Dziri, Shane Lyu, Yuling Gu, Saumya 
+Malik, Victoria Graf, Jena D. Hwang, Jiangjiang Yang, Ronan Le Bras, Oyvind Tafjord, Chris 
+Wilhelm, Luca Soldaini, Noah A. Smith, Yizhong Wang, Pradeep Dasigi, and Hannaneh Ha- 
+jishirzi. Tülu 3: Pushing frontiers in open language model post-training. ArXiv , abs/2411.15124, 
+2024. 
+</li><br><li>[28] Yanda Chen, Joe Benton, Ansh Radhakrishnan, Jonathan Uesato, Carson Denison, John 
+Schulman, Arushi Somani, Peter Hase, Misha Wagner, Fabien Roger, et al. Reasoning models 
+don’t always say what they think. arXiv preprint arXiv:2505.05410 , 2025. 
+</li><br><li>[29] Dacheng Li, Shiyi Cao, Tyler Griggs, Shu Liu, Xiangxi Mo, Eric Tang, Sumanth Hegde, Kourosh 
+Hakhamaneshi, Shishir G Patil, Matei Zaharia, et al. Llms can easily learn to reason from 
+demonstrations structure, not content, is what matters! arXiv preprint arXiv:2502.07374 , 2025. 
+</li><br><li>[30] Xingyu Chen, Jiahao Xu, Tian Liang, Zhiwei He, Jianhui Pang, Dian Yu, Linfeng Song, Qiuzhi 
+Liu, Mengfei Zhou, Zhuosheng Zhang, et al. Do not think that much for 2+ 3=? on the 
+overthinking of o1-like llms. arXiv preprint arXiv:2412.21187 , 2024. 
+</li><br><li>[31] Yang Sui, Yu-Neng Chuang, Guanchu Wang, Jiamu Zhang, Tianyi Zhang, Jiayi Yuan, Hongyi 
+Liu, Andrew Wen, Hanjie Chen, Xia Hu, et al. Stop overthinking: A survey on efficient reasoning 
+for large language models. arXiv preprint arXiv:2503.16419 , 2025. 
+</li><br><li>[32] Sara Vera Marjanović, Arkil Patel, Vaibhav Adlakha, Milad Aghajohari, Parishad 
+BehnamGhader, Mehar Bhatia, Aditi Khandelwal, Austin Kraft, Benno Krojer, Xing Han 
+Lù, et al. Deepseek-r1 thoughtology: Let’s< think> about llm reasoning. arXiv preprint 
+arXiv:2504.07128 , 2025. 
+</li><br><li>[33] Yuxiao Qu, Matthew YR Yang, Amrith Setlur, Lewis Tunstall, Edward Emanuel Beeching, 
+Ruslan Salakhutdinov, and Aviral Kumar. Optimizing test-time compute via meta reinforcement 
+ﬁne-tuning. arXiv preprint arXiv:2503.07572 , 2025. 
+</li><br><li>[34] Marthe Ballon, Andres Algaba, and Vincent Ginis. The relationship between reasoning and 
+performance in large language models–o3 (mini) thinks harder, not longer. arXiv preprint 
+arXiv:2502.15631 , 2025. 
+</li><br><li>[35] Yang Yue, Zhiqi Chen, Rui Lu, Andrew Zhao, Zhaokai Wang, Shiji Song, and Gao Huang. Does 
+reinforcement learning really incentivize reasoning capacity in llms beyond the base model? 
+arXiv preprint arXiv:2504.13837 , 2025. 
+</li><br><li>[36] Benjamin Estermann, Luca A. Lanzendörfer, Yannick Niedermayr, and Roger Wattenhofer. 
+Puzzles: A benchmark for neural algorithmic reasoning, 2024. 
+</li><br><li>[37] Karthik Valmeekam, Alberto Olmo Hernandez, Sarath Sreedharan, and Subbarao Kambhampati. 
+Large language models still can’t plan (A benchmark for llms on planning and reasoning about 
+change). CoRR, abs/2206.10498, 2022. 
+</li><br><li>[38] Karthik Valmeekam, Kaya Stechly, and Subbarao Kambhampati. Llms still can’t plan; can 
+lrms? a preliminary evaluation of openai’s o1 on planbench. 2024. 
+</li><br><li>[39] Wenjie Ma, Jingxuan He, Charlie Snell, Tyler Griggs, Sewon Min, and Matei Zaharia. Reasoning 
+models can be effective without thinking. arXiv preprint arXiv:2504.09858 , 2025. 
+</li><br><li>[40] Hunter Lightman, Vineet Kosaraju, Yura Burda, Harri Edwards, Bowen Baker, Teddy Lee, Jan 
+Leike, John Schulman, Ilya Sutskever, and Karl Cobbe. Let’s verify step by step. arXiv preprint 
+arXiv:2305.20050 , 2023. 
+</li><br><li>[41] Mathematical Association of America. American invitational math- 
+ematics examination (aime). https://maa.org/math-competitions/ 
+american-invitational-mathematics-examination-aime , 2025. Accessed: 2025-05-15. 
+</li><br><li>[42] Art of Problem Solving. Amc historical results - aime i (february 1, 2024). 
+https://artofproblemsolving.com/wiki/index.php/AMC_historical_results#AIME_ 
+I_.28February_1.2C_2024.29 , 2024. Accessed: 2025-05-15. 
+</li><br><li>[43] Art of Problem Solving. Amc historical results – aime i (february 6, 2025). 
+https://artofproblemsolving.com/wiki/index.php/AMC_historical_results#AIME_ 
+I_.28February_6.2C_2025.29 , 2025. Accessed: 2025-05-15. 
+</li><br><li>[44] Gary F Marcus. The algebraic mind: Integrating connectionism and cognitive science . MIT 
+press, 2003. 
+</li><br><li>[45] Saul Amarel. On representations of problems of reasoning about actions. In Readings in artiﬁcial 
+intelligence , pages 2–22. Elsevier, 1981. 
+</li><br><li>[46] Günter Rote. Crossing the bridge at night. Bulletin of the EATCS , 78:241, 2002. 
+</li></ul></div>
+</p>
+
+<h2>付録</h2>
+<!--
+<h2>A Appendix </h2>
+-->
+<p>
+この付録では、実験セットアップの仕様、追加の結果、拡張分析など、本文を補足する詳細を提供します。
+<!--
+In this appendix, we provide details supplementing the main text, including experimental setup speciﬁcations, additional results, and extended analysis. 
+-->
+</p>
+<h3>A.1 パズル環境の仕様と設計の詳細</h3>
+<h4>A.1.1 ハノイの塔</h4>
+<!--
+<h3>A.1 Details on Puzzle Environment Speciﬁcations and Design</h3> 
+<h4>A.1.1 Tower of Hanoi </h4>
+-->
+<p>
+<strong>問題の説明</strong> ハノイの塔は古典的な再帰パズルで、推論モデルの順次推論および計画能力を評価するための優れた問題となります。このパズルは 3 つの杭 (左から右に 0、1、2 とラベル付け) とさまざまなサイズの N 枚のディスクで構成され、各ディスクには 1 (最小) から N (最大) までの一意の番号が付けられています。初期構成では、N 枚のディスクすべてがサイズの降順で左端の杭 (杭 0) に積み重ねられ、最大のディスクが一番下、最小のディスクが一番上になります。残りの 2 つの杭 (1 と 2) は最初は空です。目標は、同じサイズの順序 (最大が一番下、最小が一番上) を維持しながら、すべてのディスクを杭 0 から杭 2 に移動することです。このパズルは、3 つの基本的な制約によって決まります。(1) 単一のディスクの移動: 一度に移動できるディスクは 1 枚だけです。 (2) 最上部のディスクアクセス：どの杭からでも最上部のディスクのみを移動対象として選択できます。(3) サイズ順序制約：大きいディスクを小さいディスクの上に置くことはできません。このパズルは、問題をサブ問題に分解する（再帰的思考）、複数の状態とディスクの位置を同時に追跡する（ワーキングメモリ管理）、移動ルールと制約を遵守しながら事前に計画を立てる（制約充足）、最終目標を達成するための正しい操作順序を決定する（順次計画）といった重要な認知的要求をモデルに示す必要があるため、モデルの推論能力と計画能力を評価するための優れたテストベッドとなります。
+<!--
+
+<strong>Problem Description.</strong> The Tower of Hanoi is a classic recursive puzzle that serves as a great problem for evaluating sequential reasoning and planning capabilities in reasoning models. The puzzle consists of three pegs (labeled 0, 1, and 2 from left to right) and N disks of varying sizes, where each disk is uniquely numbered from 1 (smallest) to N (largest). In the initial conﬁguration, all N disks are stacked on the leftmost peg (peg 0) in descending order of size, with the largest disk at the bottom and the smallest at the top. The remaining two pegs (1 and 2) are initially empty. The goal is to transfer all disks from peg 0 to peg 2, maintaining the same size ordering (largest at bottom, smallest at top). This puzzle is governed by three fundamental constraints: (1) Single Disk Movement: Only one disk may be moved at a time; (2) Top Disk Access: Only the topmost disk from any peg can be selected for movement; and (3) Size Ordering Constraint: A larger disk may never be placed on top of a smaller disk. This puzzle is a good evaluation testbed for reasoning and planning capabilities of models as it requires models to demonstrate key cognitive demands such as breaking down the problem into subproblems (recursive thinking), tracking multiple states and disk positions simultaneously (working memory management), adhering to movement rules and constraints while planning ahead (constraint satisfaction), and determining the correct order of operations to achieve the ﬁnal goal (sequential planning). 
+-->
+</p><p>
+\(N\) 枚のディスクを用いたハノイの塔再帰パズルを解くために必要な最小移動回数は \(2N −1\) であり、指数関数的にスケーリングする問題となります。この特性により、初期ディスク数に応じて問題サイズを調整することで、きめ細かな難易度制御が可能になります。しかし、本評価フレームワークでは、最適性ではなく解の正しさに重点を置き、各移動の妥当性とモデルが目標状態に到達する能力を成功基準として評価します。
+<!--
+
+The minimum number of moves required to solve the Tower of Hanoi recursive puzzle with N disks is \(2N −1\), making it an exponentially scaling problem. This property allows for ﬁne-grained difficulty control by adjusting the problem size with number of initial disks. However, in our evaluation framework, we focus on solution correctness rather than optimality, assessing each of the move’s validity and the model’s ability to reach the target state as the success criteria. 
+-->
+</p><p>
+
+<strong>プロンプトのデザイン</strong> システムプロンプトは、パズルのセットアップを説明した明確な問題文から始まります。動きのルールと、すべてのディスクを3番目の杭に移動させるという目的が明確に示されています。理解を容易にするために、プロンプトには例題のデモンストレーションに加え、重要なフォーマットと推論の期待値が含まれています。
+<!--
+
+<strong>Prompt Design.</strong> The system prompt begins with a clear problem statement describing the puzzle setup. It explicitly states the movement rules and the objective of transferring all disks to the third peg. To facilitate understanding, the prompt includes example demonstrations as well as the critical formatting and reasoning expectations. 
+-->
+</p><p class="margin-large">
+<code>
+システムプロンプト － ハノイの塔 <br>
+<br>
+あなたは親切なアシスタントです。このパズルを解いてください。<br>
+3つの杭があり、最初の杭に n 枚の異なるサイズのディスクが積み重ねられています。ディスクには1（最小）からn（最大）までの番号が付けられています。このパズルにおけるディスクの動きは以下のとおりです。<br>
+1. 一度に動かせるディスクは1枚だけです。<br>
+2. 各動きは、1つの積み重ねから一番上のディスクを取り、別の積み重ねの上に置くことで構成されます。<br>
+3. 大きいディスクを小さいディスクの上に置くことはできません。<br>
+<br>
+目標は、積み重ねられたディスク全体を3番目の杭に移動させることです。
+例：1（最小）、2、3（最大）の番号が付けられた3枚のディスクがある場合、初期状態は[[3, 2, 1]、[]、[]]で、解は次のようになります。<br>
+moves = [[1 , 0, 2]、[2, 0, 1]、[1, 2, 1]、[3, 0, 2]、
+[1, 1, 0]、[2, 1, 2]、[1, 0, 2]] <br>
+これは、ディスク1を杭0から杭2に移動し、次にディスク2を杭0から杭1に移動し、というように繰り返すことを意味します。<br>
+<br>
+<strong>要件：</strong><br>
+• 思考プロセスで潜在的な解決策を検討する際は、常に対応する移動の完全なリストを含めてください。<br>
+• 位置は0からインデックス付けされます（左端の杭が0です）。 <br>
+• 最終的な回答には、移動の完全なリストを次の形式で含めてください: moves = [[ディスクID, 移動元杭, 移動先杭], ...] <br>
+
+<!--
+System Prompt - Tower of Hanoi <br>
+<br>
+You are a helpful assistant. Solve this puzzle for me. <br>
+There are three pegs and n disks of different sizes stacked on the ﬁrst peg. The disks are numbered from 1 (smallest) to n (largest). Disk moves in this puzzle should follow: <br>
+1. Only one disk can be moved at a time. <br>
+2. Each move consists of taking the upper disk from one stack and placing it on top of 
+another stack. <br>
+3. A larger disk may not be placed on top of a smaller disk. <br>
+<br>
+The goal is to move the entire stack to the third peg. 
+Example: With 3 disks numbered 1 (smallest), 2, and 3 (largest), the initial state is [[3, 2, 1], [], []], and a solution might be: <br>
+moves = [[1 , 0, 2], [2, 0, 1], [1, 2, 1], [3, 0, 2], 
+[1, 1, 0], [2, 1, 2], [1, 0, 2]] <br>
+This means: Move disk 1 from peg 0 to peg 2, then move disk 2 from peg 0 to peg 1, and so on. <br>
+<br>
+<strong>Requirements:</strong><br> 
+• When exploring potential solutions in your thinking process, always include the corre- sponding complete list of moves.<br>
+• The positions are 0-indexed (the leftmost peg is 0). <br>
+• Ensure your ﬁnal answer includes the complete list of moves in the format: moves = [[disk id, from peg, to peg], ...] <br>
+-->
+</code></p>
+<p>
+
+システム プロンプトの後のユーザー プロンプトには、杭間のディスクの分布を示す現在の構成と、ターゲット状態を指定する目標構成を含む特定のパズル インスタンスが表示されます。
+<!--
+The user prompt after the system prompt presents the speciﬁc puzzle instance with current conﬁgu- ration showing the distribution of disks across pegs and the goal conﬁguration specifying the target state. 
+-->
+</p><p class="margin-large">
+<code>
+ユーザープロンプト　N 枚のディスク用テンプレート －ハノイの塔 <br>
+異なるサイズのディスク N 枚のパズルがあります。<br>
+<br>
+<strong>初期設定</strong>:<br>
+• 杭 0: N (下)、... 2、1 (上) <br>
+• 杭 1: (空) <br>
+• 杭 2: (空) <br>
+<br>
+<strong>ゴール設定:</strong><br>
+• 杭 0: (空) <br>
+• 杭 1: (空) <br>
+• 杭 2: N (下)、... 2、1 (上) <br>
+<br>
+<strong>ルール:</strong> <br>
+• 一度に動かせるディスクは 1 枚だけです。 <br>
+• どのスタックでも、一番上のディスクだけを移動できます。<br>
+• 大きいディスクを小さいディスクの上に置くことはできません。<br>
+<br>
+初期配置を目標配置に変換するための移動順序を見つけてください。
+<!--
+
+User Prompt Template for $N$ Disks - Tower of Hanoi <br>
+I have a puzzle with $N$ disks of different sizes with <br>
+<br>
+<strong>Initial conﬁguration</strong>:<br>
+• Peg 0: $N$ (bottom), . . . 2, 1 (top) <br>
+• Peg 1: (empty) <br>
+• Peg 2: (empty) <br>
+<br>
+<strong>Goal conﬁguration:</strong><br>
+• Peg 0: (empty) <br>
+• Peg 1: (empty) <br>
+
+• Peg 2: $N$ (bottom), . . . 2, 1 (top) <br>
+<br>
+<strong>Rules:</strong> <br>
+• Only one disk can be moved at a time. <br>
+• Only the top disk from any stack can be moved. <br>
+• A larger disk may not be placed on top of a smaller disk. <br>
+<br>
+Find the sequence of moves to transform the initial conﬁguration into the goal conﬁguration. 
+-->
+</code></p>
+<p>
+<strong>シミュレータ</strong>：LRMから得られる解の厳密かつ一貫した評価を保証するため、各パズルに個別のパズルシミュレータを採用しています。ハノイの塔シミュレータは、3つの杭間のディスク構成を追跡し、提案された各移動をパズルの基本制約に照らして検証する、ステートフルな環境として設計されています。シミュレータのアーキテクチャは、状態管理、移動の検証、解の検証を明確に分離したモジュール型設計パターンに従っています。このシミュレータには、現在のディスク構成を追跡し、パズルの基本制約を適用するパズルクラスがあります。また、パズルのセットアップにおける各移動を実行し、4層の検証を行うメソッドも用意されています。4層の検証とは、杭境界条件（0～2）のチェック、元の杭にディスクが含まれていることの検証、指定されたディスクが最上位にあることの確認、そして大きなディスクが小さなディスクの上に配置されないようにするサイズ順序制約の適用です。検証が成功すると、メソッドはディスク転送を実行し、ゲームの状態を更新します。次に、移動リストを順番に処理し、目標状態の達成を確認することで、完全なソリューションの検証が行われます。
+<!--
+
+<strong>Simulator.</strong> Our evaluation framework employs separate puzzle simulators for each puzzle to ensure rigorous and consistent assessment of solutions obtained from LRMs. The Tower of Hanoi simulator is designed as a stateful environment that tracks disk conﬁgurations across three pegs and validates each proposed move against the puzzle’s fundamental constraints. The simulator architecture follows a modular design pattern with clear separation between state management, move validation, and solution veriﬁcation. In this simulator, we have a puzzle class which tracks the current disk conﬁguration and enforces the puzzle’s fundamental constraints. We also have a method to execute each move in the puzzle setup and perform four-layer validation: checking peg boundary conditions (0-2), verifying source pegs contain disks, conﬁrming the speciﬁed disk is topmost, and enforcing the size ordering constraint that prevents larger disks from being placed on smaller ones. Upon successful validation, the method executes the disk transfer and updates the game state. Then, the complete solution validation is processed by sequentially processing move lists, and verifying goal state achievement. 
+-->
+</p>
+<h4>A.1.2 チェッカージャンプ</h4>
+<!--
+<h4>A.1.2 Checker Jumping </h4>
+-->
+<p>
+<strong>問題の説明</strong> チェッカージャンピングは、1次元の制約充足パズルで、連続的な推論、計画、ルール理解能力をテストするように設計されています。このパズルは、赤いチェッカー（’R’）、青いチェッカー（’B’）、そして1つの空きスペース（’_’）が直線状に並んだものです。標準的な配置では、N個の赤いチェッカーが左側に配置され、その後ろに中央に空きスペース、そして右側にN個の青いチェッカーが配置され、長さ \(2N + 1\) の直線状のボードが形成されます。目的は、すべての赤と青のチェッカーの位置を入れ替え、最初の配置を実質的に反転させることです。つまり、赤いチェッカーが右側、青いチェッカーが左側に配置されます。このパズルにおける動きは、2つの基本ルールに従います。(1) スライド移動：チェッカーは隣接する空きスペースに前方にスライドすることができます。(2) ジャンプ移動：チェッカーは、反対色のチェッカーを1つだけ飛び越えて空きスペースに着地することができます。したがって、チェッカーはスタート地点から後退することはできません。つまり、赤チェッカーは右方向、青チェッカーは左方向のみに移動できます。このパズルは認知的な課題を提示するため、推論モデルの優れたテストベッドとなります。例えば、モデルは空間推論（チェッカーの位置と可能な動きを追跡する）、制約充足（パズル中の移動ルールの遵守）、先読み計画（現在の動きがゴールへの将来の可能性にどのように影響するかを予測する）、状態空間探索（可能な動きのシーケンスを検索して有効な解を見つける）のいずれかの側面を示す必要があります。
+<!--
+
+<strong>Problem Description.</strong> Checker Jumping is a one-dimensional constraint-satisfaction puzzle designed to test sequential reasoning, planning, and rule understanding capabilities. The puzzle consists of a linear arrangement of red checkers (’R’), blue checkers (’B’), and a single empty space (’_’). In the standard conﬁguration, N red checkers are positioned on the left side, followed by an empty space in the middle, and N blue checkers on the right side, forming a linear board of length \(2N + 1\). The objective is to swap the positions of all red and blue checkers, effectively mirroring the initial conﬁguration, where red checkers end up on the right and blue checkers on the left. Movement in this puzzle is governed by two fundamental rules: (1) Slide Movement: A checker can slide forward into an adjacent empty space; and (2) Jump Movement: A checker can jump forward over exactly one checker of the opposite color to land in an empty space. Therefore, checkers cannot move backward toward their starting side—red checkers can only move rightward, and blue checkers can only move leftward from the initial conﬁguration. This puzzle presents cognitive challenges that make it a great testbed for reasoning models. For example, models must demonstrate some aspect of spatial reasoning (tracking checker positions and possible moves), constraint satisfaction (adhering to movement rules during puzzle), lookahead planning (anticipating how current moves affect future 
+possibilities towards goal), and state-space exploration (searching through possible move sequences to ﬁnd a valid solution path). 
+-->
+</p><p>
+チェッカージャンピングパズルの難易度はチェッカーの数に比例します。各色のチェッカーがN個の場合、最小解は \((N + 1)^2−1\) 回の移動を必要とし、問題の大きさと解の複雑さの間には二次関係が生まれます。私たちの評価フレームワークでは、最適性よりも解の正しさに主に焦点を当て、各移動をパズルの制約に照らし合わせて評価し、最終状態が目標構成と一致することを確認します。このアプローチにより、解の過程で発生する可能性のある推論の失敗や制約違反を正確に特定できます。
+<!--
+
+The difficulty of the Checker Jumping puzzle scales with the number of checkers: with N checkers of each color, the minimum solution requires \((N + 1)^2− 1\) moves, creating a quadratic relationship between problem size and solution complexity. In our evaluation framework, we mainly focus on solution correctness rather than optimality, evaluating each move against the puzzle constraints and conﬁrming that the ﬁnal state matches the goal conﬁguration. This approach allows us to precisely identify reasoning failures and constraint violations that might occur during the solution process. 
+-->
+</p><p>
+<strong>プロンプトのデザイン</strong> システムプロンプトは、パズルの設定と動きのルールを説明した明確な問題文から始まります。目的を明確に示し、小さなボード構成を用いた具体的な例を用いて、動きの表現方法を説明します。
+<!--
+
+<strong>Prompt Design.</strong> The system prompt begins with a clear problem statement describing the puzzle setup and movement rules. It explicitly states the objective and provides a concrete example with a small board conﬁguration to illustrate how moves should be represented. 
+-->
+</p><p class="margin-large">
+<code>
+システムプロンプト－チェッカージャンプ <br>
+あなたは親切なアシスタントです。このパズルを解いてください。 <br>
+1次元のボード上に、赤いチェッカー (’R’)、青いチェッカー (’B’)、そして1つの空きスペース (’_’) があります。チェッカーは次のいずれかの方法で移動できます。 <br>
+1. 隣接する空きスペースに前方にスライドする。または <br>
+2. 反対色のチェッカーを1つだけ飛び越えて空きスペースに着地する。 <br>
+目標は、すべての赤と青のチェッカーの位置を入れ替え、初期状態を反転させることです。 <br>
+<strong>例:</strong> 初期状態が [’R’, ’_’, ’B’] の場合、目標は [’B’, ’_’, ’R’] に到達することです。解答は、各移動が [チェッカーの色、位置の開始位置、位置の終了位置] で表される移動のリストである必要があります。例: <br>
+moves = [[’R’, 0, 1], [’B’, 2, 0], [’R’, 1, 2]] <br>
+これは、赤いチェッカーを位置0から1に移動し、次に青いチェッカーを位置2から0に移動し、というように繰り返すことを意味します。 <br>
+<strong>要件:</strong><br>
+• 思考プロセスで潜在的な解決策を検討する際は、常に対応する移動の完全なリストを含めてください。 <br>
+• 位置は0からインデックス付けされます（左端の位置が0です）。 <br>
+• 最終的な答えには、最終解決策の移動の完全なリストが moves = [[checker_color, position_from, position_to], ...] という形式で含まれていることを確認してください。 <br>
+<!--
+
+System Prompt - Checker Jumping <br>
+You are a helpful assistant. Solve this puzzle for me. <br>
+On a one-dimensional board, there are red checkers (’R’), blue checkers (’B’), and one empty space (’_’). A checker can move by either: <br>
+1. Sliding forward into an adjacent empty space, or <br>
+2. Jumping over exactly one checker of the opposite color to land in an empty space. <br>
+The goal is to swap the positions of all red and blue checkers, effectively mirroring the initial state. <br>
+<strong>Example:</strong> If the initial state is [’R’, ’_’, ’B’], the goal is to reach [’B’, ’_’, ’R’]. Your solution should be a list of moves where each move is represented as [checker_color, position_from, position_to]. For example: <br>
+moves = [[’R’, 0, 1], [’B’, 2, 0], [’R’, 1, 2]] <br>
+This means: Move the red checker from position 0 to 1, then move the blue checker from position 2 to 0, and so on. <br>
+<strong>Requirements:</strong><br> 
+• When exploring potential solutions in your thinking process, always include the corre- sponding complete list of moves. <br>
+• The positions are 0-indexed (the leftmost position is 0). <br>
+• Ensure your ﬁnal answer includes the complete list of moves for ﬁnal solution in the format: moves = [[checker_color, position_from, position_to], ...] <br>
+-->
+</code></p>
+<p>
+
+ユーザー プロンプトには、初期のボード構成と目標状態を含む特定のパズル インスタンスが表示されます。
+<!--
+The user prompt presents the speciﬁc puzzle instance with the initial board conﬁguration, and the goal state. 
+-->
+</p><p class="margin-large">
+<code>
+ユーザープロンプト　N 個のチェッカーチェッカージャンプ用のテンプレート <br>
+2N+1 個の位置を持つパズルがあります。左側に N 個の赤いチェッカー (’R’)、右側に $N$ 個の青いチェッカー (’B’)、そしてその間に 1 つの空きスペース (’_’) が一列に並んでいます。<br>
+<strong>初期ボード: R R ... R _ B B ... B </strong><br>
+<strong>ゴールボード: B B ... B _ R R ... R </strong><br>
+<strong>ルール:</strong> <br>
+• チェッカーは隣接する空きスペースに滑り込むことができます。<br>
+• チェッカーは反対色のチェッカーを 1 つだけ飛び越えて空きスペースに着地することができます。<br>
+• チェッカーは後方 (スタート側) に移動することはできません。<br>
+初期ボードをゴールボードに変換するための最小の動きの順序を求めてください。<br>
+<!--
+
+User Prompt Template for $N$ Checkers - Checker Jumping <br>
+I have a puzzle with 2$N$+1 positions, where $N$ red checkers (’R’) on left, $N$ blue checkers (’B’) on right, and one empty space (’_’) in between are arranged in a line. <br>
+<strong>Initial board: R R ... R _ B B ... B </strong><br>
+<strong>Goal board: B B ... B _ R R ... R </strong><br>
+<strong>Rules:</strong> <br>
+• A checker can slide into an adjacent empty space. <br>
+• A checker can jump over exactly one checker of the opposite color to land in an empty space. <br>
+• Checkers cannot move backwards (towards their starting side). <br>
+Find the minimum sequence of moves to transform the initial board into the goal board. <br>
+-->
+</code></p>
+<p>
+<strong>シミュレータ</strong>: 評価フレームワークでは、チェッカージャンピングパズルの解を検証するためにカスタムシミュレータを採用しています。このシミュレータは、パズルのすべての制約を適用しながら、解のパス全体にわたって状態の推移を追跡する包括的な検証システムを実装しています。チェッカージャンピングシミュレータは、すべてのチェッカーと空きスペースの位置を追跡し、パズルの移動ルールに照らし合わせて、与えられた解の各移動を検証する、ステートフルな環境として設計されています。シミュレータはまず、初期状態とゴール状態の両方が、赤と青のチェッカーが同じ数で、空きスペースが 1 つだけ含まれている、整形式であることを検証します。次に、各移動は、位置の境界の検証、ソースでのチェッカーの色の正確さの確認、ターゲット位置が空であることの確認、移動タイプがスライド（距離 = 1）またはジャンプ（距離 = 2）であることを検証する、多層検証を実行するメソッドを使用して実行されます。シミュレータは、後方への移動を阻止する方向制約（赤いチェッカーは右へ、青いチェッカーは左へ）を適用し、ジャンプ動作の検証は、中央の位置に反対色のチェッカーが存在することを確認することで行います。検証に成功すると、位置を更新し、ソースをクリアすることでチェッカーの移動を実行します。その後、最終的な目標状態を検証しながら、動作シーケンス全体を処理します。
+<!--
+
+<strong>Simulator.</strong> Our evaluation framework employs a custom simulator for validating Checker Jumping puzzle solutions. The simulator implements a comprehensive validation system that enforces all puzzle constraints while tracking the state evolution throughout the solution path. The Checker Jumping simulator is designed as a stateful environment that tracks the position of all checkers and the empty space, validating each move of a given solution against the puzzle’s movement rules. The simulator begins by validating that both the initial and goal states are well-formed, containing the same number of red and blue checkers and exactly one empty space. Then, each move is executed with a method that performs multi-layer validation: verifying position boundaries, conﬁrming correct checker color at source, ensuring target positions are empty, and validating move types as either slides (distance=1) or jumps (distance=2). The simulator enforces directional constraints preventing backward movement (red checkers move right, blue checkers move left) and validates jump moves by conﬁrming the presence of an opposite-colored checker in the middle position. Upon successful validation, the method executes the checker transfer by updating positions and clearing the source. Then, the complete move sequences are processed with ﬁnal goal state veriﬁcation. 
+-->
+</p>
+<h4>A.1.3 川渡り(River Crossing)</h4>
+<!--
+<h4>A.1.3 River Crossing </h4>
+-->
+<p>
+<strong>問題の説明</strong> 川渡りは、マルチエージェントの調整と制約管理をテストする制約満足度計画パズルです。 このパズルは、宣教師と人食い人種問題や橋とたいまつ問題など、計画に関する文献 [45 , 46] で広く研究されてきた古典的な問題を一般化したものです。 川渡りパズルには、N 人のアクター (\(a_1, a_2, ..., a_N\) で示される) とそれに対応する \(N\) 人のエージェント (\(A_1, A_2, ..., A_N\) で示される) が関与し、ボートを使用して川を渡らなければなりません。 初期状態では、すべての \(2N\) 人が川の左岸にいます。 目標は、全員を安全に右岸まで輸送することです。このパズルは、いくつかの重要な移動制約の下で動作します。(1) ボートの定員制約: ボートは一度に最大 k 人の個人を運ぶことができます。k は通常、小さいパズル (\(N ≤ 3\)) の場合は 2、大きいパズル (\(N ≤ 5\)) の場合は 3 に設定されます。(2) ボートが空でない制約: ボートは空で移動することはできず、少なくとも 1 人が乗っている必要があります。(3) 安全制約: エージェントは競合するエージェントからクライアントを保護する必要があるため、アクターは自分のエージェントも存在しない限り、他のエージェントの存在下にいることはできません。この安全制約は、岸とボートの両方に適用されます。このパズルでは、参加者が常に安全制約を維持しながら慎重に横断を調整する必要があるため、複雑な計画と状態追跡が必要です。解答者は、安全に一緒に移動できる個人のさまざまな組み合わせを推論し、横断後に誰がボートで戻るべきかを決定し、最終的に制約に違反することなく全員を右岸に連れて行くシーケンスを戦略的に計画する必要があります。このタスクの複雑さは、アクターとエージェントのペアの数とボートの容量を調整することで制御でき、推論モデルにスケーラブルな課題を生み出します。
+<!--
+
+<strong>Problem Description.</strong> River Crossing is a constraint satisfaction planning puzzle that tests multi- agent coordination and constraint management. This puzzle is a generalization of classic problems such as the Missionaries and Cannibals problem and the Bridge and Torch problem, which have been widely studied in planning literature [45 , 46]. The river crossing puzzle involves N actors (denoted by \(a_1, a_2, ..., a_N\)) and their corresponding \(N\) agents (denoted by \(A_1, A_2, ..., A_N\)) who must cross a river using a boat. In the initial state, all \(2N\) individuals are on the left bank of the river. The goal is to trans- port everyone safely to the right bank. The puzzle operates under several key movement constraints: (1) Boat Capacity Constraint: The boat can carry at most k individuals at a time, where k is typically set to 2 for smaller puzzles (\(N ≤ 3\)) and 3 for larger puzzles (\(N ≤ 5\)); (2) Non-Empty Boat Constraint: The boat cannot travel empty and must have at least one person aboard; (3) Safety Constraint: An actor cannot be in the presence of another agent unless their own agent is also present, as agents must protect their clients from competing agents. This safety constraint applies both on the banks and in the boat. This puzzle requires complex planning and state tracking as participants must carefully coordinate their crossings while maintaining safety constraints at all times. The solver must reason through different combinations of individuals who can safely travel together, determine who should return with the boat after a crossing, and strategically plan a sequence that eventually brings everyone to the right bank without violating any constraints. The complexity of this task can be controlled by adjusting the number of actor-agent pairs and the boat capacity, creating a scalable challenge for reasoning models. 
+-->
+</p><p>
+<strong>プロンプトの設計。</strong> システムプロンプトは、アクターとエージェントを表す表記法を導入し、ボートの動きのリストとしてソリューション形式を確立し、その形式を示す簡単な例を提供します。
+<!--
+
+<strong>Prompt Design.</strong> The system prompt introduces the notation for representing actors and agents, establishes the solution format as a list of boat moves, and provides a simple example to demonstrate the format. 
+-->
+
+</p><p class="margin-large">
+<code>
+システムプロンプト－ 川渡り <br>
+あなたは親切なアシスタントです。このパズルを解いてください。
+アクターは a1、a2、…、エージェントは A1、A2、… で表すことができます。解答はボートの移動のリストでなければなりません。各移動はボートに乗っている人々を表します。例えば、アクターが2人、エージェントが2人いる場合、次の式を返す必要があります。
+moves =[[" A_2", "a_2 "], [" A_2 "], [" A_1", "A_2 "], [" A_1 "], [" A_1", "a_1
+"]]
+<br>
+これは、最初の移動では A_2 と a_2 が左から右へ並び、2番目の移動では A_2 が右から左へ並び、以下同様に続くことを示します。 <br>
+<strong>要件:</strong>
+• 思考プロセスにおいて潜在的な解決策を検討する際は、必ず対応するボートの動きの完全なリストを含めてください。<br>
+• リストにはコメントを含めないでください。<br>
+• 最終的な回答にも、最終的な解決策に必要な動きの完全なリストが含まれていることを確認してください。<br>
+<!--
+
+System Prompt - River Crossing <br>
+You are a helpful assistant. Solve this puzzle for me. 
+You can represent actors with a_1, a_2, ... and agents with A_1, A_2, ... . Your solution must be a list of boat <br>
+moves where each move indicates the people on the boat. For example, if there were two actors and two agents, you should return: 
+moves =[[" A_2", "a_2 "], [" A_2 "], [" A_1", "A_2 "], [" A_1 "], [" A_1", "a_1 
+"]] 
+<br>
+which indicates that in the ﬁrst move, A_2 and a_2 row from left to right, and in the second move, A_2 rows from right to left and so on. <br>
+<strong>Requirements:</strong> 
+• When exploring potential solutions in your thinking process, always include the corre- sponding complete list of boat moves. <br>
+• The list shouldn’t have comments. <br>
+• Ensure your ﬁnal answer also includes the complete list of moves for ﬁnal solution. <br>
+-->
+</code></p>
+<p>
+ユーザープロンプトには、N 個のアクターとエージェントのペア、ボートの定員 k、およびソリューション全体で維持する必要がある安全制約を含む特定のパズルインスタンスが表示されます。
+<!--
+The user prompt presents the speciﬁc puzzle instance with N actor-agent pairs, and the boat capacity k, and the safety constraint that must be maintained throughout the solution. 
+^^>
+</p><p class="margin-large">
+<code>
+N ペア向けユーザープロンプトテンプレート - 川渡り <br>
+N 人のアクターと N 人のエージェントは、一度に  k 人しか乗れないボートで川を渡ろうとしています。<strong>制約として、各アクターは、自分のエージェントが同乗していない限り、ボートに乗っている間も含め、他のエージェントと同席することはできません</strong>。これは、各エージェントがライバルにクライアントを奪われることを懸念しているためです。最初、すべてのアクターとエージェントはボートと共に川の左側にいます。彼らはどのように川を渡るべきでしょうか？（注：ボートは空のままでは渡れません）
+<!--
+User Prompt Template for $N$ Pairs - River Crossing <br>
+$N$ actors and their $N$ agents want to cross a river in a boat that is capable of holding only $k$ people at a time, <strong>with the constraint that no actor can be in the presence of another agent, including while riding the boat, unless their own agent is also present</strong> , because each agent is worried their rivals will poach their client. Initially, all actors and agents are on the left side of the river with the boat. How should they cross the river? (Note: the boat cannot travel empty) 
+-->
+</code></p>
+<p>
+<strong>シミュレータ</strong>: 評価フレームワークでは、川渡りパズルから抽出された解を検証するためにカスタム シミュレータを採用しています。シミュレータは、すべてのパズル制約を適用しながら、すべての個体 (アクターとエージェント) の状態とボートの位置を追跡します。各移動は、ボートの定員制限の確認、すべての乗客がボートの現在の側にいるかどうかの確認、および移動後のボート上と各岸の両方で、アクターが自分のエージェントがいない限り他のエージェントの存在下にいられないという重要な安全制約の適用など、複数段階の検証を伴って実行されます。シミュレータは、動的なボートの位置を管理し、各横断後に自動的に側を切り替え、各移動後に完全な状態を検証して、どちらの岸でも安全違反が発生しないことを確認します。次に、完全な横断シーケンスが検証され、2 N 個の個体すべてが右岸に正常に到達します。
+<!--
+
+<strong>Simulator.</strong> Our evaluation framework employs a custom simulator for validating River Crossing puzzle extracted solutions. The simulator tracks the state of all individuals (actors and agents) and the boat position while enforcing all puzzle constraints. Each move is executed with multi-step validation: checking boat capacity limits, verifying all passengers are on the boat’s current side, and enforcing the critical safety constraint that actors cannot be in the presence of other agents without their own agent present, both on the boat and on each bank after the move. The simulator manages dynamic boat positioning, automatically switching sides after each crossing, and validates the complete state after each move to ensure no safety violations occur on either bank. Then, the complete crossing sequences are veriﬁed that all 2 N individuals successfully reach the right bank. 
+-->
+</p>
+<h4>A.1.4 ブロックワールド</h4>
+<!--
+<h4>A.1.4 Blocks World </h4>
+-->
+<p>
+<strong>問題の説明</strong> Blocks Worldは、LLMの計画能力を分析するために最近研究されている古典的なプランニングパズルです[37, 38]。このパズルは、複数のブロック（A、B、Cなど）のスタックを、初期構成から指定された目標構成に再配置するものです。各ブロックは文字によって一意に識別され、初期状態を目標状態に変換するために必要な最小限の移動シーケンスを見つけることが目的です。このパズルは、2つの基本的な制約の下でのみ動作します。(1) 最上位ブロックの移動：スタックの最上位ブロックのみを移動できます。(2) 有効な配置：ブロックは、空いている位置か、他のブロックの上にのみ配置できます。これらの制約により、操作の順序が重要になるプランニング問題が生じます。これは、一部の構成では、後で下にあるブロックにアクセスするために、一時的にブロックを配置する必要がある場合があるためです。Blocks Worldは、前向きな思考と状態追跡を必要とするため、推論モデルのプランニング能力を評価するための優れたテストベッドとして機能します。最近の研究では、このパズルを様々な設定で検証し、3～5ブロックという簡略化された設定を含む、シーケンシャルプランニングタスクにおけるLLMのパフォーマンスを評価しています[37, 38]。モデルは、複雑な状態遷移を有効なシーケンシャルムーブメントに分解し、ブロック間の依存関係を推論し（例えば、下位のブロックにアクセスする前にブロックを解除する）、不正なムーブメントを伴わずに目標状態へのパスを効率的に計画する能力を示す必要があります。
+<!--
+
+<strong>Problem Description.</strong> Blocks World is a classical planning puzzle that has been recently studied for analyzing the planning capabilities of LLMs [37 , 38]. The puzzle involves multiple stacks of blocks (A, B, C, etc.) that must be rearranged from an initial conﬁguration to a speciﬁed goal conﬁguration. Each block is uniquely identiﬁed by its letter, and the objective is to ﬁnd the minimum sequence of moves needed to transform the initial state into the goal state. The puzzle operates only under two fundamental constraints: (1) Top Block Movement: Only the topmost block from any stack can be moved; and (2) Valid Placement: A block can only be placed either on an empty position or on top of another block. These constraints create planning problem where the order of operations becomes critical, as some conﬁgurations may require temporary placement of blocks to access those beneath them later. Blocks World serves as a great testbed for evaluating planning capabilities in reasoning models because it requires forward thinking, and state tracking. Recent studies have examined this puzzle in various conﬁgurations, including simpliﬁed settings with as few as 3 to 5 blocks, to evaluate LLM performance on sequential planning tasks [37 , 38]. Models must demonstrate the ability to decompose complex state transformations into valid sequential moves, reason about dependencies between blocks (e.g., unblocking lower blocks before accessing them), and efficiently plan paths to the goal state without illegal moves. 
+-->
+</p><p>
+このパズルの難易度は、ブロック数、スタック数、そして初期構成と目標構成の複雑さといったいくつかのパラメータを調整することで調整できます。複雑性は主にブロック数Nによって制御しますが、初期構成と目標構成には明確な構造パターンが存在します。実験設計では、初期構成ではN個のブロックがアルファベット順に2つのスタックに分割され、3つ目のスタックは作業スペースとして空けられます。目標構成では、すべてのブロックが最初のスタックに統合され、2つの初期スタックのブロックが交互に配置されます。この配置は、既存のスタックを完全に分解して再構成する必要がある特定の配置です。例えば、N = 4の場合、初期状態ではブロックが2つのスタック[["A", "B"], ["C", "D"], []]に分割され、目標状態[["D", "B", "C", "A"], [], []]では両方のスタックのブロックが交互に配置されます。また、 N = 6 の場合、初期状態 [["A", "B", "C"], ["D", "E", "F"], []] を [["F", "C", "E", "B", "D", "A"], [], []] に変換して、複雑な交互パターンを形成する必要があります。 N が増加すると、状態空間は階乗的に大きくなり、最小解の長さは N とともにほぼ線形に増加します。 N の値が小さい場合 (2-7)、パズルは基本的な計画をテストします。中程度の値の場合 (8-20)、より長い計画期間を伴うより複雑な推論が必要になり、値が大きい場合 ( N > 20 )、長い解決パス全体で広範な一時的な動きとパターン認識が必要になることで、順次推論機能の限界に挑戦します。
+<!--
+
+The difficulty of this puzzle can be scaled by adjusting several parameters: the number of blocks, the number of stacks, and the complexity of the initial and goal conﬁgurations. We primarily control complexity through the block count N, while following clear structural patterns in the initial and goal conﬁgurations. In our experimental design, the initial conﬁguration consistently divides the N blocks between two stacks in alphabetical order, with the third stack empty as workspace. The goal conﬁguration consolidates all blocks onto the ﬁrst stack in a systematic interleaved pattern that alternates between blocks from the two initial stacks, with speciﬁc positioning that requires complete disassembly and reassembly of the existing stacks. For example, for N = 4 , the initial state has blocks divided between two stacks [["A", "B"], ["C", "D"], []] and the goal state [["D", "B", "C", "A"], [], []] requires interleaving blocks from both stacks; and for N = 6 , the initial state [["A", "B", "C"], ["D", "E", "F"], []] must be transformed to [["F", "C", "E", "B", "D", "A"], [], []] , forming a complex alternating pattern. As N increases, the state space grows factorially, and the minimum solution length increases approximately linearly with N. For small values of N (2-7), the puzzles test basic planning; for medium values (8-20), they require more complex reasoning with longer planning horizons; and for large values ( N > 20 ), they challenge the limits of sequential reasoning capabilities by requiring extensive temporary movements and pattern recognition across lengthy solution paths. 
+-->
+</p><p>
+<strong>プロンプトのデザイン。</strong> システム プロンプトは、Blocks World パズルの基本的なルールを紹介し、移動の表現形式を確立し、解決構造を示す簡単な例を提供します。
+<!--
+<strong>Prompt Design.</strong> The system prompt introduces the fundamental rules of the Blocks World puzzle, establishes the move representation format, and provides a simple example to demonstrate the solution structure. 
+-->
+
+</p><p class="margin-large">
+<code>
+システムプロンプト － Blocks World <br>
+あなたは親切なアシスタントです。このパズルを解いてください。
+このパズルでは、ブロックが積み重ねられており、一連の動きを使って、目標の構成にブロックを並べ替えることが目的です。<br>
+• どの積み重ねでも、一番上のブロックだけを動かすことができます。 <br>
+• ブロックは、空いている位置に置くことも、他のブロックの上に置くこともできます。<br>
+例：初期状態が ["C"]] の場合、解決策は次のようになります。<br>
+[["A", "B"], ["C"], []] <br>
+そして目標状態は <br>
+[["A"], ["B"], <br>
+moves = [["C", 1, 2], ["B", 0, 1]] <br>
+これは、ブロック C をスタック 1 からスタック 2 に移動し、次にブロック B をスタック 0 からスタック 1 に移動させることを意味します。<br> <strong>要件:</strong> <br>
+• 思考プロセスにおいて潜在的な解決策を検討する際は、必ず対応する移動の完全なリストを含めてください。<br>
+• 最終的な答えにも、最終解決策の移動の完全なリストが、moves = [[ブロック, from stack, to stack], ...] という形式で含まれていることを確認してください。<br>
+<!--
+
+System Prompt - Blocks World <br>
+You are a helpful assistant. Solve this puzzle for me. 
+In this puzzle, there are stacks of blocks, and the goal is to rearrange them into a target conﬁguration using a sequence of moves where: <br>
+• Only the topmost block from any stack can be moved. <br>
+• A block can be placed either on an empty position or on top of another block.<br>
+Example: With initial state ["C"]] , a solution might be: <br>
+[["A", "B"], ["C"], []] <br>
+and goal state <br>
+[["A"], ["B"], <br>
+moves = [["C", 1, 2], ["B", 0, 1]] <br>
+This means: Move block C from stack 1 to stack 2, then move block B from stack 0 to stack 1.<br> <strong>Requirements:</strong> <br>
+• When exploring potential solutions in your thinking process, always include the corre- sponding complete list of moves. <br>
+• Ensure your ﬁnal answer also includes the complete list of moves for ﬁnal solution in the format: moves = [[block, from stack, to stack], ...] <br>
+-->
+</code>
+</p><p>
+ユーザープロンプトは、提供された初期構成と目標構成を含む特定のパズルインスタンスを提示し、モデルに移動制約を明示的に通知します。
+<!--
+The user prompt presents the speciﬁc puzzle instance with the initial and goal conﬁgurations provided, and explicitly reminds the model about the movement constraint. 
+-->
+</p><p class="margin-large">
+<code>
+N 個のブロック用ユーザープロンプトテンプレート - BlocksWorld <br>
+N 個のブロックを使ったパズルがあります。初期状態: <br>
+スタック 0: blocks_0 (上) <br>
+スタック 1: blocks_1 (上) <br>
+… <br>
+スタック m: blocks_m (上) <br>
+ゴール状態: <br>
+スタック 0: goal_blocks_0 (上) <br>
+スタック 1: goal_blocks_1 (上) <br>
+… <br>
+スタック m: goal_blocks_m (上) <br>
+<!--
+
+User Prompt Template for $N$ Blocks - BlocksWorld <br>
+I have a puzzle with $N$ blocks. Initial state: <br>
+Stack 0: $blocks_0$ (top) <br>
+Stack 1: $blocks_1$ (top) <br>
+... <br>
+Stack $m$: $blocks_m$ (top) <br>
+Goal state: <br>
+Stack 0: $goal_blocks_0$ (top) <br>
+Stack 1: $goal_blocks_1$ (top) <br>
+... <br>
+Stack $m$: $goal_blocks_m$ (top) <br>
+-->
+</code></p>
+<p>
+初期状態を目標状態に変換するための最小の移動シーケンスを見つけてください。各スタックの最上部のブロックのみを移動できることを覚えておいてください。
+<!--
+Find the minimum sequence of moves to transform the initial state into the goal state. Remember that only the topmost block of each stack can be moved. 
+-->
+</p><p>
+シミュレータ。当社の評価フレームワークは、Blocks Worldパズルから抽出された解を検証するためにカスタムシミュレータを採用しています。シミュレータは、パズルの移動制約を適用しながら、スタック全体のすべてのブロックの状態を管理します。各移動は、パズルのセットアップ内で3層の検証を経て実行されます。検証は、スタックインデックスが境界内にあること、ソーススタックにブロックが含まれていること、指定されたブロックがスタックの先頭にあること（最上位ブロックのみの移動ルールを適用）の3層です。検証が成功すると、ブロック転送が実行され、ブロックはソーススタックからポップされ、宛先スタックに追加されます。最後に、ブロック移動の完全なソリューションシーケンスが処理され、結果の構成が目標のゴール状態と一致することが検証されます。
+<!--
+
+Simulator. Our evaluation framework employs a custom simulator for validating Blocks World puzzle extracted solutions. The simulator manages the state of all blocks across stacks while enforcing the puzzle’s movement constraints. Each move is executed in the puzzle setup with three-layer validation: verifying stack indices are within bounds, conﬁrming the source stack contains blocks, and ensuring the speciﬁed block is at the top of its stack (enforcing the top-block-only movement rule). Upon successful validation, the block transfer is executed and the block is popped from the source stack and appended to the destination stack. Finally, the complete solution sequences of block movements are processed and veriﬁed that the resulting conﬁguration matches the target goal state. 
+-->
+</p>
+<h3>A.2 実装の詳細 </h3>
+<!--
+<h3>A.2 Implementation Details </h3>
+-->
+<p>
+<strong>構成</strong>　私たちの実験では、思考プロセスを徹底的に分析できるように、主に推論モデルとその非思考モデルを使用しました。分析に不可欠な思考トレースにアクセスできるため、Claude 3.7 Sonnet（思考/非思考）とDeepSeek-R1 / V3を特に選択しました。最終的な精度メトリックのみに焦点を当てた実験では、思考にアクセスできないため、OpenAIのo3-miniモデルの結果も含めました。Claude 3.7 Sonnet（思考および非思考）モデルでは、APIインターフェイスを介してアクセスする最大64,000トークンの生成予算を使用しました。すべてのAPI rus（Claude-3.7-Sonnetおよびo3-mini実行）の温度は1.0に設定されています。 DeepSeek-R1、DeepSeek-V3、DeepSeek-R1-Distill-Qern-32Bを用いた実験は、ローカルサーバー上で実施され、最大世代長は64,000、温度は1.0に設定されています。すべての実験において、各複雑度レベル（N値）でパズルインスタンスごとに25個のサンプルを生成し、全サンプルの平均パフォーマンスを報告しました。
+<!--
+
+<strong>Conﬁgurations</strong>　Our experiments primarily utilized reasoning models and their non-thinking counterparts to enable thorough analysis of the thinking process. We speciﬁcally selected Claude 3.7 Sonnet (thinking/non-thinking) and DeepSeek-R1/V3 due to their ability to provide access to thinking traces, a critical requirement for our analysis. For experiments focused solely on ﬁnal accuracy metrics, we also included results from OpenAI’s o3-mini models, as they lack access to thoughts. For Claude 3.7 Sonnet (thinking and non-thinking) models we used maximum generation budget of 64,000 tokens, accessed through the API interface. Temperature is set to 1.0 for all API rus (Claude-3.7-Sonnet and o3-mini runs). The experiments with DeepSeek-R1, DeepSeek-V3, and DeepSeek-R1-Distill-Qern-32B are conducted on local servers with maximum generation length set to 64,000 and temperature set to 1.0. In all experiments, we generated 25 samples per puzzle instance at each complexity level (N value) and reported performance averages across all samples. 
+-->
+</p><p>
+<strong>解決策の抽出</strong>　モデルの応答と中間推論トレース（思考）を処理するためのカスタム抽出パイプラインを開発しました。このパイプラインは複数の主要コンポーネントで構成されています。最終的な応答と思考トレースの両方において、潜在的な解決策の試みを特定するために、柔軟な正規表現ベースの抽出器を実装しました。抽出プロセスでは、正規表現を用いて解決策のパターン（明示的な「 moves = 」パターンと代替的な括弧ベースの解決策の両方）を特定します。抽出された候補解決策は、(i) リストからコメント（任意の行の「#」に続くテキスト）を削除し、(ii) 文脈から示唆される動きの形式に正規化することで、一貫性のある構造を確保することで、処理およびクリーンアップされます。次に、解決策の形式と構造を検証し、無効な一致を除外します。抽出中に、抽出された各解決策のトークン位置のメタデータも取得します。特に、思考トレース内の位置を正確に追跡するために、対応するモデルと同じトークナイザー（cl100k_base）を使用して、すべての実験でトークンをカウントしました。また、サンプル間の比較を可能にするために、トークンの位置は思考の長さに対して正規化されました。最後に、思考トレース内に記録された解が一意であることを確認し、重複する解（同一の手のリスト）は除外します。重複する解がある場合は、最初の解のみが分析のために記録されます。
+<!--
+
+<strong>Solution Extraction</strong>　A custom extraction pipeline was developed to process model responses and intermediate reasoning traces (thoughts). The pipeline consists of several key components. We implemented a ﬂexible regex-based extractors to identify potential solution attempts in both the ﬁnal response and thinking trace. The extraction process identify solution patterns using regular expressions (both explicit “ moves = ” patterns and alternative bracket-based solutions). We process and clean each extracted candidate solution by ( i) Removing comments from the list (text following "#" in any line), and ( ii ) Normalizing move formats to what suggested in context to ensure consistent structure. Then, we validate solution format and structure to ﬁlter out invalid matches. During the extraction, we also capture metadata of token position for each extracted solution. Notably, for accurate position tracking within thinking traces, we employed the same tokenizer ( cl100k_base ) as the corresponding model to count tokens across all experiments. Token positions were also normalized with respect to thought length to enable cross-sample comparison. Finally, we make sure that the recorded solutions within the thought trace are unique and duplicate solutions (identical moves list) were ﬁltered. In case of duplicate solutions, only the ﬁrst solution is recorded for analysis. 
+-->
+</p><p>
+<strong>解の評価</strong>　抽出後、各解候補は詳細な検証のために対応するパズルシミュレータに渡されます。シミュレータは解を移動リストとして受け取り、パズルに対して評価します（各パズルシミュレータの詳細については付録A.1を参照してください）。合成解の各移動は、以前の移動とパズルのルールに従って順番に実行されます。次に、シーケンス内のすべての移動から得られた最終状態がパズルの目標状態と比較され、完全な解の正しさが判定されます。誤った解については、パズルシミュレータによる移動検証中に、最初の失敗した移動の詳細と失敗の種類も収集されます。
+<!--
+
+<strong>Solution Evaluation</strong>　After extraction, each solution candidate is passed to the corresponding simulator of puzzle for ﬁne-grained veriﬁcation. The simulator takes a solution as list of moves and evaluate that with respect to the puzzle (check App. A.1 for details of each puzzle simulator). Each move in the compositional solution is executed sequentially according to previous moves and the puzzle rules. Then, the ﬁnal state obtained from all moves in the sequence is compared to the goal state of puzzle to determine full solution correctness. For incorrect solutions, details of ﬁrst failure move and the type of failure is also collected during the move veriﬁcation with puzzle simulator. 
+-->
+</p><p>
+<strong>規定ステップの実行</strong>　さまざまなパズルにわたるオープンエンドの問題解決に加えて、規定ステップによる明示的な解決アルゴリズムのガイダンスを提供することがこれらの推論モデルの動作にどのように影響するかをテストするための集中的な実験も実施しました（セクション4.4）。ゼロから解決策を見つけて考案するには、特定のアルゴリズムの手順に従うだけよりも、モデルに対してかなり多くの計算（検索と検証など）が必要になると予想しました。ただし、図8aと8bの結果は、推論モデルの動作はそれほど変わらず、この設定では以前とほぼ同じポイントで崩壊が発生することを示しています。この発見は、制限が問題解決と解決策戦略の発見だけでなく、生成された推論チェーン全体にわたる一貫した論理的検証とステップ実行の制限にも存在するという証拠を強化します。
+<!--
+<strong>Execution of Prescribed Steps</strong>　In addition to open-ended problem solving across different puzzles, we also conducted focused experiments to test how providing the explicit solving algorithm guidance with prescribed steps would affect behavior of these reasoning models (Sec. 4.4). We expected that ﬁnding and devising solution from scratch should require substantially more computation for model (e.g., for search and veriﬁcation) than just following a given algorithm’s steps. However, results in Figures 8a and 8b show that reasoning models’ behavior does not change that much and the collapse still occurs at roughly same points as before with this setting. This ﬁnding strengthens evidence that the limitation is not just in problem-solving and solution strategy discovery but also in consistent logical veriﬁcation and step execution limitation throughout the generated reasoning chains. 
+-->
+</p><p>
+例えば、モデルにはハノイの塔パズルを解くための完全な再帰アルゴリズムが以下のように提供されています。このアルゴリズムのスクラッチパッドは、推論行動への影響をテストするために、標準的な問題プロンプトに追加されました。
+<!--
+For example, models are provided with a complete recursive algorithm of solving Tower of Hanoi puzzle as follows. This algorithm scratchpad was appended to the standard problem prompt to test its impact on reasoning behavior. 
+-->
+</p><p class="margin-large">
+<code>
+ハノイの塔の規定アルゴリズムの例 <br>
+<br>
+パズルを解くための再帰アルゴリズムの擬似コードを以下に示します。 <br>
+
+アルゴリズム Solve(n, source, target,auxiliary, moves) <br>
+// n = 移動するディスクの枚数 <br>
+// source = 開始杭 (0, 1, または 2) <br>
+// target = 移動先杭 (0, 1, または 2) <br>
+//auxiliary = 未使用の杭 (0, 1, または 2) <br>
+// moves = 移動のシーケンスを格納するリスト <br>
+IF n = 1 THEN <br>
+// ソース杭の一番上のディスクを取得 <br>
+disk = ソース杭の一番上のディスク <br>
+// 移動をリストに追加: [disk_id, source, target] <br>
+ADD [disk, source, target] to moves <br>
+RETURN <br>
+END IF <br>
+// n-1 個のディスクをソースから補助杭に移動する Solve(n-1, ソース, 補助, ターゲット, moves) <br>
+// n 番目のディスクをソースからターゲットに移動する ディスク = ソース杭の一番上のディスク ADD [disk, source, target] to moves <br>
+// n-1 個のディスクを補助からターゲットに移動する <br>
+Solve(n-1, 補助, ターゲット, ソース, moves) END ALGORITHM <br>
+<!--
+
+Example of Prescribed Algorithm for Tower of Hanoi <br>
+<br>
+Here is a pseudocode of recursive algorithm to solve the puzzle: <br>
+
+ALGORITHM Solve(n, source, target, auxiliary, moves) <br>
+// n = number of disks to move <br>
+// source = starting peg (0, 1, or 2) <br>
+// target = destination peg (0, 1, or 2) <br>
+// auxiliary = the unused peg (0, 1, or 2) <br>
+// moves = list to store the sequence of moves <br>
+IF n equals 1 THEN <br>
+// Get the top disk from source peg <br>
+disk = the top disk on the source peg <br>
+// Add the move to our list: [disk_id, source, target] <br>
+ADD [disk, source, target] to moves <br>
+RETURN <br>
+END IF <br>
+// Move n-1 disks from source to auxiliary peg Solve(n-1, source, auxiliary, target, moves) <br>
+// Move the nth disk from source to target disk = the top disk on the source peg ADD [disk, source, target] to moves <br>
+// Move n-1 disks from auxiliary to target <br>
+Solve(n-1, auxiliary, target, source, moves) END ALGORITHM <br>
+-->
+</code></p>
+
+<p>
+n枚のディスクを杭0から杭2へ移動するパズル全体を解くには、次のようにします。<br>
+<br>
+1. 空のリスト「moves」を初期化します。<br>
+2. Solve(n, 0, 2, 1, moves) を実行します。<br>
+3. 「moves」リストに完全な解が格納されます。<br>
+<br>
+
+注: この擬似コードを実行する際は、各杭の上にあるディスクを追跡してください。「moves」リスト内のディスクIDは、実際に移動するディスクに対応している必要があります。
+このアルゴリズムは、問題を段階的に解くためのスクラッチパッドとして使用できます。
+<!--
+
+To solve the entire puzzle of moving n disks from peg 0 to peg 2: <br>
+<br>
+1. Initialize an empty list ’moves’ <br>
+2. Execute Solve(n, 0, 2, 1, moves) <br>
+3. The ’moves’ list will contain the complete solution <br>
+<br>
+
+Note: When executing this pseudocode, track which disk is currently on top of each peg. The disk IDs in the moves list should correspond to the actual disk being moved. 
+You can use this algorithm as a scratchpad to help you solve the problem step by step. 
+-->
+</p>
+<h3>A.3 計算複雑性の詳細 </h3>
+<h4>A.3.1 構成深度の特性評価 </h4>
+<!--
+<h3>A.3 Details on Computational Complexity </h3>
+<h4>A.3.1 Compositional Depth Characterization </h4>
+-->
+<p>
+構成深度とは、完全な解に到達するまでに必要な連続した操作（つまり、移動）の数です。図9は、4つのパズル環境において、この深度が問題のサイズ（N）に応じてどのように変化するかを示しています。各パズルには、その基礎となる計算複雑性を反映した明確な成長パターンがあります。例えば、「ハノイの塔」は指数関数的な成長（\(2N−1\)）を示し、「チェッカージャンピング」は二次関数的な成長（\((N + 1)^2
+− 1\)）を示します。「川渡り」パズルと「ブロックワールド」パズルは、Nに対してより緩やかで、ほぼ線形な成長を示します。これらの変化する構成深度プロファイルにより、言語推論モデルがさまざまな種類の連続推論課題をどのように処理するか、また、その精度がパズルを解くために必要な構成深度と常に相関しているかどうかを評価できます。この分析の詳細は、付録A.4の図10に記載されています。
+<!--
+
+Compositional depth is the number of sequential op- erations (i.e., moves) required to reach a full solution. Figure 9 demonstrates how this depth scales with problem size ( N) across our four puzzle environments. Each puzzle has a distinct growth pattern, reﬂecting its underlying computational complexity. For exam- ple, Tower of Hanoi shows exponential growth (\(2N−1\)), and Checker Jumping displays quadratic scaling (\((N + 1)^2 
+− 1\)). The River Crossing and Blocks World puzzles show more moderate, near-linear growth with N. These varying compositional depth proﬁles enable us to evaluate how language reasoning models handle different types of sequential reasoning challenges and if their accuracy is always correlated with the com- positional depth required to solve the puzzle. More details regarding this analysis is provided in Figure 10 
+in App. A.4. 
+-->
+</p>
+<center><img src="images/fig9.png"></center>
+<p>
+図 9: 4 つのパズル環境におけるさまざまな問題サイズの構成の深さ (必要な移動回数)。
+<!--
+Figure 9: Compositional depth (number of moves required) across different problem sizes for our four puzzle environments. 
+-->
+</p>
+<center><img src="images/fig10.png"></center>
+<p>
+図 10: 4 つのパズル環境における 3 つの LRM (DeepSeek-R1、思考機能付き Claude-3.7-Sonnet、o3-mini) の精度と構成の深さ (必要な移動回数) の関係。
+<!--
+Figure 10: Accuracy versus compositional depth (number of moves required) for three LRMs (DeepSeek-R1, Claude-3.7-Sonnet with thinking, and o3-mini) across four puzzle environments. 
+-->
+</p>
+<h4>A.3.2 パフォーマンスと構成の深さ</h4>
+<!--
+<h4>A.3.2 Performance vs Compositional Depth </h4>
+-->
+<p>
+直感的には問題の複雑さとモデルの精度の間には負の相関関係があると思われますが、私たちの分析では、構成の深さと LRM のパフォーマンスの間にはより微妙な関係があることが明らかになりました。図 10 は、私たちのパズル スイートにおける 3 つの最先端推論モデル (Claude-3.7-Sonnet w. thinking、DeepSeek-R1、o3-mini) 全体でこれを示しています。個々のパズルの種類内では、予想される負の相関関係が見られます。つまり、構成の深さが増すにつれて、モデルの精度は一貫して低下します。ただし、異なるパズルの種類間では、この関係は崩れます。モデルは、構成の深さの低いパズルでは苦戦する一方で、構成の深さが高い別のパズルでは成功する場合があります。たとえば、モデルは、約 \(10^2\) の移動を必要とするハノイの塔のインスタンスで 50% を超える精度を達成しますが、構成の深さが大幅に低い (\(∼10^1\) の移動)
+<!--
+
+While intuition suggests a negative correlation between problem complexity and model accuracy, our analysis reveals a more nuanced relationship between compositional depth and LRM performance. Figure 10 demonstrates this across three state-of-the-art reasoning models (Claude-3.7-Sonnet w. thinking, DeepSeek-R1, and o3-mini) on our puzzle suite. Within individual puzzle types, we observe the expected negative correlation: as compositional depth increases, model accuracy consistently decreases. However, across different puzzle types, this relation breaks. Models may struggle with puzzles of lower compositional depth while succeeding on different puzzles with higher compositional depth. . For instance, models achieve >50% accuracy on Tower of Hanoi instances requiring approximately \(10^2\) moves, yet consistently fail on River Crossing puzzles with substantially lower 
+compositional depth (\(∼10^1\) moves).
+-->
+</p>
+
+<h3>A.4 拡張された結果と分析</h3>
+<!--
+<h3>A.4 Extended Results and Analysis </h3>
+-->
+<p>
+<strong>失敗分析</strong>
+モデルが構成的推論ステップのどこで失敗するかを理解することで、2元的な成功指標を超えた洞察が得られます。精度評価には、手順全体を完璧に実行することが必要であり、1つの誤った動きでも失敗に終わります。失敗パターンをより詳細に調査するために、モデルが最初に誤った動きをする構成の深さを、問題の複雑さのレベルに応じて分析します。
+<!--
+
+<strong>Failure Analysis.</strong> 
+Understanding where models fail within the compositional reasoning steps provides insights beyond binary success metrics. Our accuracy evaluation requires perfect execution of entire move sequences—a single incorrect move results in failure. To examine failure patterns more granularly, we analyze the compositional depth at which models ﬁrst make incorrect moves 
+across varying problem complexity levels. 
+-->
+</p><p>
+図11は、解法シーケンスにおける失敗手IDと問題の複雑さ（\(N\)）の関係を示しています。上段は思考機能ありとなしのClaude-3.7-Sonnetを比較し、下段はDeepSeek-R1（思考あり）とDeepSeek-V3（非思考あり）を比較しています。これらの比較は、LRMの思考メカニズムがパズルの合成推論タスクにおける失敗パターンにどのように影響するかを示しています。分析から、直感に反するパターンがいくつか浮かび上がりました。まず、モデルは問題の複雑さに対して非単調な失敗挙動を示します。つまり、全体的な解法が長くなるにもかかわらず、N値が高いほどモデルが解法シーケンスの早い段階で失敗する例です。例えば、ハノイの塔では、モデルは\(N = 15\)では50手未満で失敗することがありますが、\(N = 8\)では100手以上で成功することがあります。これは、同じパズルに対する効果的なアルゴリズムの計画と実行は、解法の進行に対して一貫した失敗パターンを維持するという期待と矛盾しています。これは、モデル（LRMとそれらの非思考型標準LLMの両方）が学習した解法戦略を異なる問題スケールに適用する方法に根本的な矛盾があることを示唆しています。また、両方のモデルバリアントが完全に精度を崩壊させる高複雑度領域（例えば、\(N ≥ 15\)のハノイの塔と\(N ≥ 40\)のブロックワールド）では、非思考型モデルは時折、解法シーケンスのより深い段階までパフォーマンスを維持し、思考型バリアントよりも後の手で失敗する可能性があることが観察されています。これは、LLMにおける構成的推論の失敗が単にコンテキスト長や推論計算の不足によるものではなく、モデルが問題スケール全体でアルゴリズムの一貫性を維持する方法における根本的な限界を反映していることを示しており、興味深いものです。また、モデル推論の一貫性と信頼性を理解するために、失敗手の位置の分布特性も分析します。図12は、各パズル環境のすべての問題複雑度にわたって集計された失敗手の位置の密度分布を示しており、同じファミリー内の思考型モデルと非思考型モデルを比較しています。図を見ると、思考モデル（思考機能付きClaude-3.7-SonnetとDeepSeek-R1）は、すべてのパズルにおいて平均失敗位置が一貫して高いことが分かります。これは、一連の動きにおける最初の失敗の平均を示す破線の縦線で示されています。しかし、思考モデルの分布形状は、失敗パターンにおいて概ね高い分散を示しています。これは、これらのモデルが平均的には解のシーケンスをより深く理解できる一方で、推論プロセスがより不安定で、パフォーマンスに一貫性がない傾向があることを示唆しています。
+<!--
+
+Figure 11 shows the failure move ID versus problem complexity (\(N\)) within the solution sequence. The top row compares Claude-3.7-Sonnet with and without thinking capabilities, while the bottom row compares DeepSeek-R1 (thinking) with DeepSeek-V3 (non-thinking). These comparisons demonstrates how thinking mechanisms of LRMs inﬂuence failure patterns in compositional reasoning tasks of puzzles. Several counterintuitive patterns emerge from our analysis. First, models exhibit non-monotonic failure behavior with respect to problem complexity—instances where models fail earlier in the solution sequence for higher N values despite requiring longer overall solutions. For example, in Tower of Hanoi, models sometimes fail at below 50 moves for \(N = 15\) but succeed through more than 100 moves for \(N = 8\) , contradicting the expectation that effective algorithmic planning and execution for the same puzzle should maintain consistent failure patterns relative to solution progress. This suggests fundamental inconsistencies in how models (both LRMs and their non- thinking standard LLM counterparts) apply learned solution strategies across different problem scales. Also, we observe that in the high-complexity regimes where both model variants experience complete accuracy collapse, e.g., Tower of Hanoi with \(N ≥ 15\) and Blocks World with \(N ≥ 40\) , non-thinking models occasionally sustain performance deeper into the solution sequence and are able to fail at later moves than thinking-enabled variants. This is interesting as it shows that compositional reasoning failures in LLMs are not simply due to insufficient context length or inference compute, but rather reﬂect fundamental limitations in how models maintain algorithmic consistency across problem scales. We also analyze the distributional characteristics of failure moves to understand the consistency and reliability of model reasoning. Figure 12 presents the density distributions of failure move positions aggregated across all problem complexities for each puzzle environment, comparing thinking and non-thinking models within the same family. Based on the ﬁgure, thinking models (Claude-3.7-Sonnet with thinking and DeepSeek-R1) consistently show higher mean failure positions across all puzzles, as indicated by the dashed vertical lines showing mean of ﬁrst failure in sequence of moves. However, the distribution shape of thinking models mostly have higher variance in their failure patterns. This suggests that while these models can reach deeper into solution sequences on average, their reasoning processes are more instable and prone to inconsistent performance. 
+-->
+</p>
+<center><img src="images/fig11.png"></center>
+<p>
+図11: パズル環境における思考型モデルと非思考型モデルの最初の失敗手と問題の複雑さ（N）の比較。上：Claude-3.7-Sonnetとの比較。下：DeepSeek-R1とDeepSeek-V3。
+<!--
+
+Figure 11: The ﬁrst failure move versus problem complexity ( N) comparison for thinking and non-thinking models across puzzle environments. Top : Claude-3.7-Sonnet comparison; Bottom DeepSeek-R1 vs DeepSeek-V3. 
+-->
+</p>
+<center><img src="images/fig12.png"></center>
+<p>
+図12: パズル環境における思考型モデルと非思考型モデルの初回失敗手密度分布。上：Claude-3.7-Sonnetとの比較。下：DeepSeek-R1とDeepSeek-V3の比較。
+<!--
+Figure 12: Density distribution of ﬁrst failure moves for thinking and non-thinking models across puzzle environments. Top : Claude-3.7-Sonnet comparison; Bottom : DeepSeek-R1 vs DeepSeek-V3. 
+-->
+</p><p>
+<strong>推論努力のダイナミクス。</strong> 図 13 は、パズル環境全体での推論努力 (推論思考トークンで測定) と問題の複雑さの関係を示しています。緑の点は正しい解答、赤い十字は誤った解答を示し、青い線はさまざまなパズルと LRM における各複雑さのレベル (N) での思考トークンの平均使用量を追跡しています。3 つの推論モデル (DeepSeek-R1、Claude-3.7-Sonnet-thinking、o3-mini) すべてで一貫したパターンが見られ、思考トークンの使用、つまり推論努力は当初問題の複雑さとともに増加しますが、モデル固有のしきい値に達すると直感に反して減少します。これは、推論に関する LRM の思考プロセスにおける興味深く基本的なスケーリング限界を示唆しています。特定の複雑さのしきい値を超えると、モデルは問題を解決できないだけでなく、より困難な問題に直面し、コンテキストと世代の制限をはるかに下回っているにもかかわらず、直感に反して推論計算が減少します。
+<!--
+
+<strong>Reasoning Effort Dynamics.</strong> Figure 13 demonstrates the reasoning effort (measured by inference thinking tokens) versus problem complexity across our puzzle environments. Green dots indicate correct solutions, red crosses show incorrect ones, and blue lines track average thinking token usage at each complexity level ( N) across different puzzles and LRMs. We observe a consistent pattern across all three reasoning models (DeepSeek-R1, Claude-3.7-Sonnet-thinking, o3-mini) where thinking token usage, i.e. reasoning effort, initially scales with problem complexity but counterintuitively declines after reaching a model-speciﬁc threshold. This suggests an interesting and fundamental scaling limit in LRM thinking process for reasoning where beyond certain complexity thresholds, models not only fail to solve problems but counterintuitively reduce their inference compute despite facing more difficult problems and being well below the context and generation limits. 
+-->
+</p>
+<center><img src="images/fig13.png"></center>
+<p>
+図 13: 4 つのパズル環境における 3 つの LRM (DeepSeek-R1、思考機能付き Claude-3.7-Sonnet、o3-mini) の推論努力 (推論思考トークンで測定) と問題の複雑さ (N) の関係に関する詳細な結果。
+<!--
+Figure 13: Detailed results on reasoning effort (measured in inference thinking tokens) versus problem complexity (N) for three LRMs (DeepSeek-R1, Claude-3.7-Sonnet with thinking, and o3-mini) across four puzzle environments. 
+-->
+</p>
+    </body>
+</html>
