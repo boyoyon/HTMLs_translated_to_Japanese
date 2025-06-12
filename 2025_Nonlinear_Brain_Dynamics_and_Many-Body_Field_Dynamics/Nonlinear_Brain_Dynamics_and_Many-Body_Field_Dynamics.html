@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>非線形脳ダイナミクスと多体場ダイナミクス</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Nonlinear Brain Dynamics and Many-Body Field Dynamics </center>
+</h1>
+<center>非線形脳ダイナミクスと多体場ダイナミクス</center>
+<br>
+<center>Walter J. Freeman† and Giuseppe Vitiello†† </center>
+<br>
+<center>† Department of Molecular and Cell Biology </center>
+<center>University of California, Berkeley CA 94720-3206 USA </center>
+<center>http://sulcus.berkeley.edu </center>
+<center>†† Dipartimento di Fisica “E.R. Caianiello”, INFN & INFM </center>
+<center>Universit´a degli Studi di Salerno, Salerno, Italia </center>
+<center>http://www.sa.infn.it/giuseppe.vitiello/vitiello/ </center>
+
+<h2><center>要旨</center></h2> 
+<!--
+<h2><center>Abstract</center></h2> 
+-->
+<p class="margin-abstract">
+我々は、環境と交換行動を行っている被験者の脳活動の測定結果を報告する。被験者と環境との間の意味のある関係の発展に伴って急速に変化するニューロン集団の協調振動を特徴とする脳状態を観測した。この関係は能動的な知覚によって確立・維持されている。訓練された動物の感覚皮質において、条件刺激と条件反応の開始の間に見られる、情報量の多い神経活動の連続的な空間パターンは、映画のフレームに似ている。これらは、古典的な積分微分方程式やニューラルネットワークの行列代数では容易に記述できない。そのモデル化は、凝縮物質物理学の場の理論によって提供される。
+
+<!--
+
+We report measurements of the brain activity of subjects engaged in behavioral exchanges with their 
+environments. We observe brain states which are characterized by coordinated oscillation of populations 
+of neurons that are changing rapidly with the evolution of the meaningful relationship between the subject 
+and its environment, established and maintained by active perception. Sequential spatial patterns of 
+neural activity with high information content found in sensory cortices of trained animals between onsets 
+of conditioned stimuli and conditioned responses resemble cinematographic frames. They are not readily 
+amenable to description either with classical integrodi erential equations or with the matrix algebras of 
+neural networks. Their modeling is provided by field theory from condensed matter physics. 
+
+-->
+
+<br><br>
+Key 
+words: neocortex, neurodynamics, nonlinear brain dynamics, phase transitions, quantum field theory 
+</p><p>
+動物およびヒトにおける脳機能の研究には、脳活動の観察と測定、そして神経集団、軸索、樹状突起、グリア細胞、細胞体の観察される挙動を記述する動的モデルの定式化が必要です。古典物理学と統計力学が提供するツール、そして関連する代数的手法や連立微分方程式といった数学的機構を用いることで、脳機能をより高次のレベルで記述することができます。このようにして私たちが達成した成果により、脳の物理的状態、ニューロンのダイナミクス、ニューロンを構成する膜や細胞小器官の機能、そして脳機能の基本的な神経機構を構成する分子およびイオン成分を認識し、記録することが可能になりました。しかしながら、我々はまた、能動的な知覚によって確立・維持される、被験者と環境との間の意味のある関係の発展に伴って急速に変化するニューロン集団の協調振動を特徴とする脳状態も観測しており、これは古典的な積分微分方程式やニューラルネットワークの行列代数（Freeman, 2000; 2001; Vitiello, 2001）では容易に記述できない。
+本論文では、環境との行動的交流を行っている被験者の脳活動の測定結果を報告する。そのモデル化は、古典力学ではなく、凝縮物質物理学の場の理論によって提供される。
+
+<!--
+
+The study of the brain functions in animal and human subjects requires observations and measurements 
+of the brain activity and the formulation of dynamical models describing the observed behavior of neural 
+populations, axons, dendrites, glia and cell bodies. We can describe brain functions at higher levels by 
+using the tools provided by classical physics and statistical mechanics, with the associated mathematical 
+machinery of algebraic methods and of sets of coupled di erential equations. The achievements we have 
+thus reached have enabled us to recognize and document the physical states of brains; the dynamics of 
+neurons; the functions of membranes and organelles comprising their parts; and the molecular and ionic 
+ingredients that constitute the basic neural machinery of brain function. We also observe, however, brain 
+states which are characterized by coordinated oscillation of populations of neurons that are changing rapidly 
+with the evolution of the meaningful relationship between the subject and its environment, established 
+and maintained by active perception, which are not readily amenable to description either with classical 
+integrodi erential equations or the matrix algebras of neural networks (Freeman, 2000; 2001; Vitiello, 2001). 
+In this paper we report indeed our measurements of the brain activity of subjects engaged in behavioral 
+exchanges with their environments whose modeling is provided by field theory from condensed matter 
+physics rather than from classical dynamics. 
+
+-->
+
+</p><p>
+視覚、聴覚、体性感覚、嗅覚の条件刺激を弁別するように訓練されたウサギとネコの一次感覚野と嗅内皮質の軟膜表面に固定された8×8電極アレイから脳波（EEG）記録を収集した。ヒルベルト変換下でバンドパスフィルタリングされたEEG信号は、長距離相関に基づいて、ベータ（12～30Hz）およびガンマ（20～80Hz）帯域における空間的にコヒーレントな搬送波振動の振幅変調の空間パターンの断続的なフレームの証拠を示した。これらの事象は、各知覚行為中に連続して現れる複数の重なり合うフレームに似ており、まるで複数のスクリーン上の映画的表現のようであった（Freeman, Burke, et al., 2003a; Freeman, 2004a）。私たちはこれらのスクリーンを、ニューロンの埋め込み媒体である大脳新皮質ニューロパイルの領域と特定しています。その大きさ、急速な形成、細部の多様性、そして通常のフレームの感覚入力からの知覚的隔絶は、古典物理学の文脈では説明できないと考えられる相転移を必要とします。
+
+<!--
+
+Electroencephalographic (EEG) records were collected from 8x8 arrays of electrodes fixed on the pial 
+surfaces of primary sensory cortices and entorhinal cortex of rabbits and cats trained to discriminate 
+conditioned stimuli in the visual, auditory, somatic and olfactory modalities. The band pass filtered EEG 
+signals under the Hilbert transform gave evidence for intermittent frames of spatial patterns of amplitude 
+modulation of spatially coherent carrier oscillations in the beta (12-30 Hz) and gamma (20-80 Hz) ranges 
+based on long-range correlation. The events resembled multiple overlapping frames in sequences during 
+each act of perception, like cinematographic representations on multiple screens (Freeman, Burke, et al., 
+2003a; Freeman, 2004a). We identify these screens with regions in the embedding medium of the neurons, 
+the neocortical neuropil. The large size, rapid formation, variety of detail, and perceptual remoteness from 
+sensory input of normal frames requires a phase transition which we believe cannot be explained within 
+the context of classical physics. 
+
+-->
+
+</p>
+<h3>長距離相関の観測</h3>
+<!--
+<h3>Observations of long-range correlations </h3>
+-->
+<p>
+相転移による共有振動の形成と維持（Freeman, 2004a,b; 2005）は、ニューロン間の階層的な高次通信に依存している。樹状突起と軸索のループ電流は細胞内通信の主たる媒介であり、活動電位は脳の各部位から他のあらゆる部位への細胞間通信の主たる媒介である。この伝播波は、約1ミリメートルを超える大きさの多細胞生物が、遠隔通信に不可欠な技術としての拡散の限界を克服するメカニズムである。しかし、少数の軸索を除くすべての軸索の長さは、観測される長距離相関活動距離のわずか10分の1以下（Houk, 2001）に過ぎず、各中継ごとにシナプス更新が必要となる。長距離にわたって「シード」領域への高速ジャンプを可能にする、比較的まばらな長い軸索の存在でさえ、あらゆる伝送周波数における位相分散を伴う長距離空間コヒーレンスを説明することはできません。特に、固定周波数のないカオス振動の場合はなおさらです。
+
+<!--
+
+The formation and maintenance of shared oscillations by phase transition (Freeman, 2004a,b; 2005) 
+depends on rapid communication among the neurons at multiple hierarchical levels. The loop current of 
+dendrites and axons is the chief agent for intracellular communication, and the action potential is the chief 
+agent for intercellular communication from each part of the brain to every other part. This propagating 
+wave is the mechanism by which multicellular organisms greater in size than about a millimeter overcome 
+the limitations of di usion as an essential technique for distant communication. However, the length of all 
+but a few axons is a small fraction, only a tenth or less, (Houk, 2001) of the observed distance of long-range 
+correlated activity, with the requirement for synaptic renewal at each successive relay. Even the presence 
+of relatively sparse long axons, which provide for high velocity jumps to ’seed’ areas over long distances 
+cannot explain the long-distance spatial coherence with phase dispersion at every transmission frequency, 
+especially for chaotic oscillations without fixed frequencies. 
+
+-->
+
+</p><p>
+
+さらに、樹状突起電流には電場と磁場の両方が伴うものの、皮質内外の長距離にわたって協調情報を伝達するのに十分な電磁場（電波）は存在しない。これは、樹状突起シナプス電流場から生じる脳波の振動は周波数が低すぎる一方で波長が長すぎるためであり、電気透過率と磁気透過率は80:1の比率で異なる。細胞外力の強度は膜電位差よりも2～3桁小さい。EEGの電位勾配とクーロン力に頼ることは、観測されるコヒーレント活動の長距離性を説明するには不十分であることが示されており（Freeman and Baird, 1989）、これは主に、隣接するニューロンに浸透する細胞外樹状突起電流の割合を低下させるグリアのシャント作用によるものである。拡散電位の減衰と同様に、距離に伴う電位の低下は急激であり、クーロン力の強さは、位相転移の開始に伴うEEG位相の見かけ上の不連続性の急激さや、1～19cmの距離における3～7ミリ秒の観測時間窓内での再同期時の振動の引き込みを説明するには弱すぎる（Freeman, Ga´al, et al., 2003; Freeman, Burke, et al., 2003a; 2003b）。
+
+<!--
+
+Further, although both electric fields and magnetic fields accompany dendritic currents, there are no 
+significant electromagnetic fields (radio waves) to carry coordinating information over large intracortical 
+and intercortical distances, because the electroencephalographic oscillations deriving from fields of dendritic 
+synaptic current are too low in frequency and excessive in wavelength, and the electric and magnetic permeabilities 
+di er in the ratio of 80:1. Intensities of the extracellular forces are 2-3 orders of magnitude smaller 
+than the transmembrane potential di erences. Resorting to electric potential gradients and Coulomb forces 
+of the EEG has been shown (Freeman and Baird, 1989) to be inadequate to account for the long-range 
+of the observed coherent activity, largely owing to the shunting action of glia that reduce the fraction of 
+extracellular dendritic current penetrating adjacent neurons. Like the decay in di usion potential the fall of 
+electric potential with distance is too rapid, and the intensity of the Coulomb forces is too weak to explain 
+either the abruptness of apparent discontinuities in the EEG phase with the onset of a phase transition or 
+the entrainment of the oscillation on resynchronization within the observed time windows of 3-7 msec over 
+distances of 1 to 19 cm (Freeman, Ga´al, et al., 2003; Freeman, Burke, et al., 2003a; 2003b). 
+
+-->
+
+</p>
+<h3>多体場理論への依存</h3>
+<!--
+<h3>Our resort to many-body field theory </h3>
+-->
+<p>
+したがって、例えば古典的非線形力学や古典的統計力学といった古典的なツールでは不十分であるという結論に至る。そこで我々は、無数の共存し重なり合う基底状態（実状態と潜在状態）を持つ分散型非線形媒質における相転移を記述することを可能にする多体場の理論という数学的手法に目を向ける。実際、多体場の理論は、長距離相関の力学的起源、その迅速かつ効率的な形成、その安定性、共存し干渉しない基底状態の多様性、そのコヒーレンスと秩序の程度、そして我々が観察したような相転移の豊富なシーケンスを理解できる唯一の理論的ツールである。過去数十年にわたり、多体量子場理論が考案され構築されてきたのは、まさに、古典物理学の枠組みでは理解できなかった、脳のダイナミクスで観察されるものと同様の、凝縮物質物理学における秩序あるパターン形成や相転移といった特徴を理解するためであったことは事実である。
+
+<!--
+
+Thus, we are led to conclude that classical tools, such as, e.g., classical nonlinear dynamics and classical 
+statistical mechanics, do not suffice. We then turn to the mathematical machinery of many-body field 
+theory that enables us to describe phase transitions in distributed nonlinear media having innumerable 
+co-existing and overlapping ground states, actual and potential. Indeed, many-body field theory is the only 
+existing theoretical tool capable to understand the dynamical origin of long range correlations, their rapid 
+and efficient formation, their stability, the multiplicity of coexisting and non interfering ground states, their 
+degree of coherence and ordering, the rich sequence of phase transitions, as we observed. It is a fact that 
+many-body quantum field theory has been devised and constructed in the past decades exactly to face 
+the understanding of features like ordered pattern formation and phase transitions in condensed matter 
+physics, similar to the ones we observed in the brain dynamics, which could not be understood in the frame 
+of classical physics. 
+
+-->
+
+</p><p>
+これは、生化学、通常の神経生理学的分析、あるいはその他の古典的な研究ツールを放棄しなければならないという意味ではありません。むしろ、これらの伝統的な古典的ツールを用いた脳研究は、その根底にある微視的ダイナミクスの研究によってさらに強化され、観察される現象の豊かさを理解することが可能になる可能性があることを意味します。
+
+<!--
+
+This does not mean that the biochemistry, the usual neurophysiological analysis and/or any other 
+classical tool of investigation must be put apart. Rather, it means that the brain studies made by using these 
+traditional classical tools might be further boosted by the study of the underlying microscopic dynamics 
+which allows to understand the richness of the observed phenomenology. 
+
+-->
+
+</p><p>
+我々が依拠する場の理論モデルは、RicciardiとUmezawa (1967)によって最初に提案され、Stuart、Takahashiら (1978; 1979)、およびJibuとYasue (1992; 1995)によって発展させられた多体脳モデルの散逸ダイナミクスへの拡張(Vitiello, 1995; 2001)である。このようなモデルによれば、脳における長距離相関を伴う活動の生成は、自発的対称性の破れ(SBS)のメカニズムによって生じる(Umezawa, 1993)。物質基質におけるSBSの直接的な結果は、系の最小エネルギー状態(系の基底状態または真空)における、南部-ゴールドストーンボソン粒子、波、またはモードと呼ばれる量子の凝縮である。ここで考察する対称性は、電気双極子回転対称性である（Del Giudice, Doglia, et al., 1985; 1986; Del Giudice, Preparata, et al., 1988; Jibu and Yasue, 1992; 1995）。以下で論じるように、脳細胞成分に侵入する水マトリックスおよびあらゆる生体分子は特有の電気双極子モーメントを備えているため、この同じ経路を辿ることができると我々は考えている。環境から脳に入力される情報が、この対称性の崩壊の引き金となると想定されている。脳は常に環境に対して開かれているため、散逸が重要な役割を果たしている。散逸ダイナミクスは、それぞれが独自のボソン凝縮密度を持つ、多数の共存真空の発生に特に関与している（Vitiello, 1995）。
+
+<!--
+
+The field theoretic model to which we resort is the extension to dissipative dynamics (Vitiello, 1995; 
+2001) of the many-body brain model originally proposed by Ricciardi and Umezawa (1967) and developed 
+by Stuart, Takahashi, et al. (1978; 1979) and by Jibu and Yasue (1992; 1995). According to such a model 
+the production of activity with long-range correlation in the brain takes place through the mechanism 
+of spontaneous breakdown of symmetry (SBS) (Umezawa, 1993). The immediate consequence of SBS in 
+material substrates is the condensation of quanta, called the Nambu-Goldstone boson particles, or waves 
+or modes, in the least energy state of the system (the system ground state or vacuum). The symmetry 
+which is considered is the electrical dipole rotational symmetry (Del Giudice, Doglia, et al., 1985; 1986; 
+Del Giudice, Preparata, et al., 1988; Jibu and Yasue, 1992; 1995). As we discuss in what follows, we 
+believe we can follow this same path, since the water matrix and any of the biomolecules entering the brain 
+cellular components are endowed with a characteristic electric dipole moment. The input coming to the 
+brain from the environment is assumed to be the trigger of the breakdown of this symmetry. Dissipation 
+plays a crucial role since the brain is permanently open to its environment. The dissipative dynamics is 
+specifically responsible of the occurrence of a multiplicity of coexisting vacua, each one characterized by its 
+own density of boson condensate (Vitiello, 1995). 
+
+-->
+
+</p>
+<h3>非線形脳ダイナミクスへの架け橋</h3>
+<!--
+<h3>Our bridge to nonlinear brain dynamics </h3>
+-->
+<p>
+このような場の理論的アプローチを採用することで、大脳半球全体とその構成要素の階層を、原子レベルに至るまで完全に統合されたマクロな量子系としてモデル化することが可能になる。つまり、マクロな量子系とは、既存のすべての物質と同様に原子や分子などの量子構成要素によって構成されているという自明な意味での量子系ではなく、そのマクロな特性の一部は量子力学に頼らなければ記述できないという意味での量子系である。散逸多体系の利点の一つは、非線形カオス的ダイナミクスの古典性(Kozma, Freeman, 2002; Kozma, Puljic, et al., 2004; Skarda, Freeman, 1987; Tsuda, 2001)がそこから導出できることである(Pessa and Vitiello, 2003; 2004;)。 Atmanspacher (2004) が指摘したように、散逸量子場モデルは、ニューロンレベルに直接的に作用するというさらなる利点を備えています。他にも、主に量子力学の枠組みで定式化された「量子モデル」がありますが、これらは長距離相関や相転移を考慮に入れないだけでなく、古典スケールへの遷移も提供していません。
+
+<!--
+
+The adoption of such a field theoretic approach enables us to model the whole cerebral hemisphere and 
+its hierarchy of components down to the atomic level as a fully integrated macroscopic quantum system, 
+namely as a macroscopic system which is a quantum system not in the trivial sense that it is made, like 
+all existing matter, by quantum components such as atoms and molecules, but in the sense that some of 
+its macroscopic properties cannot be described without recourse to quantum dynamics. One of the merits 
+of the dissipative many-body model consists in the fact that the classicality of nonlinear, chaotic dynamics 
+(Kozma, Freeman, 2002; Kozma, Puljic, et al., 2004; Skarda, Freeman, 1987; Tsuda, 2001) is derivable 
+from it (Pessa and Vitiello, 2003; 2004;). As observed by Atmanspacher (2004), the dissipative quantum 
+field model presents the further advantage of directly addressing to the neuronal level. There are other 
+’quantum models’, mostly formulated in the Quantum Mechanics frame, which not only do not allow for 
+long range correlations and phase transitions, but also do not provide the transition to the classical scale. 
+
+-->
+
+</p><p>
+多体物理学を適用しようとする我々の試みにおける中心的な関心事は、次のような問いに集約される。微視的、原子的、分子的な単位と、我々が観察する巨視的な神経活動との間の「橋渡し」となるものは何か？ 典型的には、神経活動の単位は、活動電位、樹状突起のシナプス後電位、シナプス小胞内の化学パケット、あるいはギャップ結合やエファプシス内の電気演算子とされる。一方で、ニューロン、細胞体、シナプス、微小管、小胞、電気化学波形、その他の微視的構造や機能は、我々の解析においては量子対象とはみなされない。プランク定数hは、原子スケール以下では紛れもなく作用の単位であるが、ニューロン集団のレベルでは決定的な要因ではない。我々の実験から浮かび上がってきたのは、「波束」（Freeman, 1975/2004; 2000）であり、これは原子レベルの量子力学から古典細胞の微視的挙動、そしてニューロンの大規模集団の巨視的特性へと橋渡しする役割を果たしている。我々が言及する波束とは、測定可能な場の特性、すなわち持続性ニューロパイルの各点における位相と振幅、そしてそれらの空間的および時間的変化率（勾配）を持つ、メソスコピックな集団作用場である。我々の波束は、量子力学における確率振幅を記述する波束の概念と決して混同してはならないことを強調しておく（共通の呼称は単なる偶然である）。我々の場の理論的アプローチでは、波束は集団モードであり、無数の活動電位が神経活動場を維持する。この神経活動場は、かつて我々が「活動密度関数」（Freeman, 1975/2004）あるいは「K場」（Freeman, 2000）と呼んでいた。この集団モードは、マイクロ電極アレイから記録された活動電位と、EEGとしてメソ電極アレイから記録された樹状突起電位からなる、観測可能な振幅関数と位相関数の場を生み出す。我々の実験で観測された波束、すなわち集団モードは、散逸多体モデルにおけるボーズ・アインシュタイン凝縮体のいわゆる南部-ゴールドストーンボソン波またはモードと同一視できることが判明した（Vitiello, 1995; 2001）。
+
+<!--
+
+A central concern in our attempt to apply many-body physics is then expressed in the question: What 
+might be the ’bridge’ between microscopic, atomic and molecular, units and the macroscopic neural activity 
+as we observe it? Typically, the unit of neural activity is taken to be the action potential, the dendritic 
+postsynaptic potential, the chemical packet in the synaptic vesicle, or an electric operator in a gap junction 
+or an ephapsis. On the one hand, the neuron, cell body, synapse, microtubule, vesicle, electrochemical 
+waveform, and other microscopic structures and functions are not to be considered as quantum objects 
+in our analysis. The Planck constant, h, is undeniably the unit of action at the atomic scale and below, 
+but it is not the decisive factor at the level of neuronal populations. What appears to emerge from our 
+experiments is a ”wave packet” (Freeman, 1975/2004; 2000) acting as a bridge from quantum dynamics at 
+the atomic level through the microscopic behavior of classical cells to the macroscopic properties of large 
+populations of neurons. The wave packet we refer to is a mesoscopic collective field of action that has 
+measurable field properties: the phase and the amplitude and their spatial and temporal rates of change 
+(gradients) at each point in the sustaining neuropil. We stress that our wave packet is absolutely not to 
+be confused with the notion of wave packet describing probability amplitudes in Quantum Mechanics (the 
+common denomination is only accidental). In our field-theoretic approach, the wave packet is a collective 
+mode, in which a myriad of action potentials sustains a field of neural activity that we designated formerly 
+as an ”activity density function” (Freeman, 1975/2004), or as a ”K-field” (Freeman, 2000). It gives rise to 
+the observable fields of amplitude and phase functions, comprising action potentials recorded from arrays 
+of microelectrode and dendritic potentials recorded from arrays of mesoelectrodes as the EEG. The wave 
+packet or collective mode observed in our experiments turns out to be identifiable with the so-called Nambu-
+Goldstone boson wave or mode in Bose-Einstein condensates in the dissipative many-body model (Vitiello, 
+1995; 2001). 
+
+-->
+
+</p><p>
+本論文では、簡潔さを期すため、実験的観察の要点をごく簡潔にまとめるにとどめ、散逸脳モデルの数学的形式については、原著論文（Vitiello, 1995; Alfinito and Vitiello, 2000; Pessa and Vitiello, 2003; 2004）および、広範な定性的な記述についてはVitiello (2001)を参照する。本論文は、散逸多体系モデルに関する実験結果のより詳細な記述（Freeman and Vitiello, 2005）の拡張要約とも言える。
+
+<!--
+
+In this paper, for sake of shortness, we will only very briefly summarize the main points of our experimental 
+observations and for the mathematical formalism of the dissipative brain model we refer to the 
+original papers (Vitiello, 1995; Alfinito and Vitiello, 2000; Pessa and Vitiello, 2003; 2004) and to Vitiello 
+(2001) for its extensive qualitative description. The present paper can be considered in some sense as an 
+extended abstract of a more detailed description of the experimental results in relation with the dissipative 
+many-body model which will be presented elsewhere (Freeman and Vitiello, 2005). 
+
+-->
+
+</p>
+<h3>神経場活動の5つのレベル</h3>
+<!--
+<h3>Five levels of neural field activity </h3>
+-->
+<p>
+私たちの実験では、散逸多体場理論モデルによって記述される活動の以下の5つのレベルを特定しました。
+
+<!--
+
+In our experiments we have identified the following five levels of the activity that we describe by the 
+dissipative many-body field theory model: 
+
+-->
+
+</p><p>
+a) 対称性の基本状態。深い睡眠中の被験者において、空間的、時間的、スペクトル的なパターンが識別できない均一な変動場が時折出現することが観察されている。
+この状態を「対称性」と特徴付ける。この動的領域は、対称性の破綻を許容する範囲に属さないパラメータ値によって特徴付けられる。外部刺激（閾値以下であれば）が存在しても、システムはそれに反応できない（対称性の破綻は起こり得ない）。システムは「睡眠」状態にある。外部入力はせいぜい無関係な摂動を引き起こすだけである。これは、破綻しない対称性によって説明される、大脳新皮質の一時的な「真空」状態である。
+
+<!--
+
+a) A basal state of symmetry. In a human subject in deep sleep we have observed the occasional appearance 
+of a homogeneous field of fluctuations with no discernible spatial, temporal or spectral patterns. 
+We characterize this state as one of ”symmetry”. This dynamical regime is characterized by parameters 
+whose values do not belong to the windows of values that allow for the symmetry breakdown. Even in 
+the presence of an external stimulus (provided it is below a threshold) the system ”cannot” react to it 
+(symmetry breakdown is not possible). The system ”sleeps”. External inputs at most create uninteresting 
+perturbations. This is the transient ”vacuum” state of the neocortex that is described by unbroken 
+symmetry. 
+
+-->
+
+</p><p>
+b) 持続的な深い睡眠。深い徐波睡眠におけるこれらの一時的なエポックは、空間的な位相パターンの場の中に埋め込まれている。これらの変動は、主に視床を介して中継され、主に無関係な感覚受容器からの入力を含む、脳の他の部分から大脳新皮質の全領域への継続的な衝撃によって生じているように見える。なぜなら、皮質は慣れによってフィルターを確立し、このような避けられない衝撃が皮質に与える影響を軽減するからである。この継続的な摂動は、円錐状の位相勾配を特徴とする無数の局所的な位相遷移を引き起こし、これらの位相勾配は形成されるのと同じくらい急速に消滅するため、皮質全体を堅牢な準安定状態に維持する。重要なパラメーターは、ニューロンの平均発火率であり、これは閾値と不応期によってあらゆる場所で相互興奮によって恒常的に維持される。位相円錐には区別できない振幅パターンがないため、それらは極めて短寿命の秩序パラメータを持つSBSに関連していると推測されます。
+
+<!--
+
+b) Sustained deep sleep. These transient epochs in deep slow wave sleep are embedded in fields of 
+spatial patterns of phase. The fluctuations appear to result from continuous bombardment of all areas of 
+neocortex by other parts of the brain, including inputs from the sensory receptors relayed mainly through 
+the thalamus and mainly irrelevant, because it is the work of cortex by habituation to establish filters to 
+mitigate the impact of such unavoidable bombardment on cortices. The continual perturbation gives rise to 
+myriad local phase transitions characterized by the conic phase gradients, which are quenched as rapidly as 
+they are formed, thereby maintaining the entire cortex in a robust metastable state. The critical parameter 
+is the mean firing rate of neurons that is homeostatically maintained by mutual excitation everywhere by 
+thresholds and refractory periods. The phase cones have no indistinguishable amplitude patterns, so we 
+infer that they are related to SBS with a vanishingly short-lived order parameter. 
+
+-->
+
+</p><p>
+c) 環境から切り離された覚醒安静状態。高次SBSを許容するパラメータ範囲は、外部からの弱いが行動的に重要な刺激の影響下で潜在的にアクセス可能となる。
+時間的位相差は、協調分析的位相差（CAPD）のパターンとして現れる。CAPDでは、位相差が最小となる各プラトーは平均振幅のピークを伴うが、関与の欠如により、識別可能または再現可能な空間振幅変調パターンは見られない。
+
+<!--
+
+c) The awake rest state disengaged from the environment. The ranges of parameter allowing higher-order 
+SBS become potentially accessible under the influence of external weak but behaviorally significant stimuli. 
+The temporal phase di erences appear as patterns of coordinated analytical phase di erences (CAPD), in 
+which each plateau of minimal phase di erences is accompanied by a peak in mean amplitude, but without 
+discernible or reproducible spatial amplitude modulated patterns, owing to the lack of engagement. 
+
+-->
+
+</p><p>
+
+d) 覚醒を伴う関与状態。安静状態は、背景樹状突起電流の振動振幅の増大を伴う覚醒状態へと進展する。これは、脳と身体を含む外界との初期の関与を伴う。両立可能な状態の集合には暗黙の差別化があり、これは分類可能で、関連する刺激によって引き起こされるSBSから生じる振幅パターン（Freeman、Viana Di Prisco、1986）の明白な出現によってのみ実現される。我々は、静止画像の映画フレームに類似した長距離相関に基づき、ベータ領域とガンマ領域における空間的にコヒーレントなキャリア振動の振幅変調の空間パターンの断続的なフレームの証拠を発見した。観察されたパターンの再発は、一連の相転移を示している。多体系モデルの散逸ダイナミクスの重要な役割は、ここでは、異なる秩序パラメータの値でラベル付けされた多数の基底状態が、相互干渉なしに、あるいは相互干渉が低減された状態で、かつそれらの明確な自律性を維持したまま、同時に重なり合う可能性において現れる。この証拠は、それらが重なり合っていることを示唆するパターンの観察された繰り返しに見られるが、これは主に皮質集団のニューロンの自律性によるものである（Freeman, 2005）。これにより、ニューロンは、自身の活動の全分散のわずかな割合の共分散を、それらが寄与し、それに従って行動を適応させる秩序パラメータに寄与することで、複数の協調的またはコヒーレントな領域に同時に参加することが可能になる。
+
+<!--
+
+d) The engaged state with arousal. The rest state evolves into an aroused state with increased amplitude 
+of oscillations in the background dendritic current that accompanies incipient engagement of the brain 
+with the external world including the body. There is an implicit di erentiation of the set of compatible 
+states, which is only realized by the overt emergence of an amplitude pattern (Freeman, Viana Di Prisco, 
+1986) that is classifiable, and that arises from SBS triggered by a relevant stimulus. We find evidence for 
+intermittent frames of spatial patterns of amplitude modulation of spatially coherent carrier oscillations 
+in the beta and gamma ranges based on long-range correlation resembling cinematographic frames of 
+stationary images. The observed recurrence of patterns points to a sequence of phase transitions. The 
+relevant role of the dissipative dynamics of the many-body model manifests here in the possibility for the 
+simultaneous overlapping of a multitude of ground states labelled by di erent values of the order parameter 
+without, or with reduced, reciprocal interferences and preserving their distinct autonomy. Evidence for this 
+is found in the observed recurrence of patterns suggesting that they overlap, largely owing to the autonomy 
+of the neurons in the cortical populations (Freeman, 2005). This enables them to participate in multiple 
+coordinated or coherent domains simultaneously, by contributing the covariance of only a small percentage 
+of the total variance of their activity to the order parameter to which they contribute and in accordance 
+to which they adapt their behaviours. 
+
+-->
+
+</p><p>
+コヒーレント領域の形成に関する記述は、多体系モデルの特徴的な特徴である(Del Giudice et al., 1988; Alfinito et al., 2002)。多数の基底状態とコヒーレント領域の観察は、散逸多体系モデルを用いて非線形脳ダイナミクスの記述を探求する強い根拠となる。ボソンキャリアとボソン凝縮体の概念は、量子系を構成する無数のタンパク質、アミノ酸伝達物質、イオン、水分子の電気双極子に至るまで、動物とその環境との統合を媒介する脳パターンのマクロスコピック、メソスコピック、ミクロな組織化のあらゆるレベルを含む相転移の秩序立った包括的な記述を可能にする。この階層的システムは、原子から脳全体、そして外側へは主体と環境との関わりへと広がり、脳内の相互作用とその知識基盤を通じた個体発生的な意味の出現と維持にとって不可欠な基盤です。ここで改めて強調したいのは、神経細胞やその他の巨視的構造は、私たちの分析において決して量子的な対象とは見なされていないということです。この点に関して曖昧さが生じてはなりません。SBSは、微視的な量子ダイナミクスから古典的細胞とその構成物の巨視的な挙動への橋渡し、あるいはスケールの変化を提供します。関わりから休息、そして睡眠、そして最大の無秩序を伴う過渡状態に戻る際には、状態の順序が逆転します。
+
+<!--
+
+The description of the formation of coherent domains is a distinctive feature of the many-body model 
+(Del Giudice et al., 1988; Alfinito et al., 2002). The observation of the multitude of ground states and of 
+coherent domains provides a strong justification for exploring the description of nonlinear brain dynamics 
+in terms of the dissipative many-body model. The concept of the boson carrier and the boson condensate 
+enables an orderly and inclusive description of the phase transition that includes all levels of the macroscopic, 
+mesoscopic, and microscopic organization of the cerebral patterns that mediate the integration of the 
+animal with its environment, down to and including the electric dipoles of all the myriad proteins, amino 
+acid transmitters, ions, and water molecules that comprise the quantum system. This hierarchical system 
+extending from atoms to whole brain and outwardly into engagement of the subject with the environment is 
+the essential basis for the ontogenetic emergence and maintenance of meaning through successful interaction 
+and its knowledge base within the brain. We stress once more that neuronal cells and other macroscopic 
+structures are by no means considered quantum objects in our analysis. No ambiguity should be born on 
+this point. The SBS provides the bridge, or change of scale, from the microscopic quantum dynamics to 
+the macroscopic behavior of classical cells and their constructs. The sequence of states is reversed on the 
+return from engagement to rest, then to sleep and the transients with maximal disorder. 
+
+-->
+
+</p><p>
+e) 発作状態。この一連の発作から逸脱する現象は、3/sの棘波と「欠神」（意識喪失）および定型的な運動自動症を伴う複雑部分発作の発症に先立つ期間に観察されている（Freeman, Holmes, 2005; Freeman, Holmes et al., 2005）。この観察結果は、大脳皮質の正常な準安定性の維持には長距離相関が重要であることを証明している。この発作は、興奮性の不足と抑制性ニューロンの過剰な活動という再生的な正のフィードバックという条件下でシミュレートされている（Freeman, 1986）。
+
+<!--
+
+e) The seizure state. A departure from this sequence has been observed (Freeman, Holmes, 2005; 
+Freeman, Holmes et al., 2005) in the period preceding onset of a complex partial seizure consisting of 
+spikes at 3/s accompanied by ”absence” (loss of consciousness) and stereotypic motor automatisms. This 
+observation attests to the importance of long-range correlation for the maintenance of normal metastability 
+of the cerebral cortex. The seizure has been simulated (Freeman, 1986) under the conditions of a deficit of 
+excitation and an excess of activity of inhibitory neurons constituting regenerative, positive feedback. 
+
+-->
+
+</p>
+<h3>多体モデルによる多重基底状態の記述</h3>
+<!--
+<h3>Description of multiple ground states with the many-body model </h3>
+-->
+<p>
+一次受容野における樹状突起電流の空間パターンの測定により、パターンは感覚入力の履歴、文脈、重要性、つまり入力の意味（Freeman, 2003a; 2003b; Freeman, Rogers, 2003）に依存し、入力の特徴には依存しないことが繰り返し実証されました。私たちは現在、対称性と秩序性の異なるレベルの脳状態の階層構造と、相転移を引き起こす自発的な対称性の破れのメカニズムを捉えることができます。私たちは知覚行為を3つの段階に分けることができると考えています。1つは、複数のベイスンを持つアトラクターランドスケープとして以前に説明した基底状態の配列における仮説形成の注意段階です（Freeman, 2005）。これらの基底状態の中から1つのベイスンを入力することによって選択するテスト段階は、アトラクターを発現する複数の一次感覚野の神経網におけるガンマ波パケットの出現につながる。そして、アトラクターとそのベイスンを修正する学習によるシナプス修飾によって前脳半球に適応的なベータ波パケットが出現する同化段階である。
+
+<!--
+
+Our measurements of the spatial patterns of dendritic currents in the primary receiving areas have 
+repeatedly demonstrated dependence of the patterns on the history, context, and significance of sensory 
+inputs, in a word on the meanings of inputs (Freeman, 2003a; 2003b; Freeman, Rogers, 2003) and not on 
+their features. We are now able to conceive a hierarchy of brain states of varying levels of symmetry and 
+order, with the mechanisms of spontaneous symmetry breaking by which phase transitions occurs. We 
+see an act of perception as having three stages: the attentive stage of hypothesis formation in an array of 
+ground states that we have previously described as an attractor landscape with multiple basins (Freeman, 
+2005); the testing stage of selection by input of one of the basins among these ground states leading to 
+the emergence of gamma wave packets in the neuropil of multiple primary sensory areas that express the 
+attractor; and the assimilation stage with emergence of adaptive beta wave packets in the hemispheres of 
+the forebrain by synaptic modification with learning that modifies the attractor and its basin. 
+
+-->
+
+</p><p>
+知覚の本質は、環境の変化に自己が極めて迅速に同化しつつ、変化を通して歴史的アイデンティティを維持することです。こうした作用には、膨大な数のニューロンが、周囲と協調して急速に変化する空間的・時間的パターンにおいて協力することが必要です。試行錯誤を繰り返すことで、各脳は自らの周囲環境に対する理解を構築し、それが「分身」（Vitiello, 2001）と呼ばれる独自の世界を形成します。環境は自己に独立して、また反応的にも影響を与えるため、それは「能動的な」鏡です。自己と周囲が相互作用によって構築する関係は、相互作用中に交換される情報の流れの意味を構成します。この知覚理論を実験的に検証しようとする際の大きな困難は、膨大な数のニューロンのダイナミクスを、それらの固有のアイデンティティを統計に埋没させることなくモデル化することにあります。脳活動の大規模画像を、行動に関連する活動の本質的な構造を明らかにするのに十分な詳細さで記録・測定する技術が広く普及したのは、ここ20年ほどのことである。現在、フロンティアは理論にある。一方で、神経ネットワークの微視的指向は、個々のシナプスレベルにまでニューロンのダイナミクスを表現できるものの、知覚において協力する数百万、さらには数十億のニューロンにまでスケールアップすることはできない。他方、血行動態技術（fMRI、PET、SPECT）、統計力学、微分方程式、そして人工知能による表現の概念を用いた脳画像の巨視的アプローチは、脳機能の一致に必要な、驚くほど多様なニューロンの詳細を網羅することができない。膨大な数と複雑な詳細という相反する要求は、脳科学に特有のものではなく、過去半世紀にわたって科学の幅広い分野で満たされてきたことが明らかになっている。したがって、脳科学者と理論物理学者がリソースを共有し、共通の原因を見つけることは、脳のダイナミクスと量子場の理論の対応関係を記述する際に私たちが行ったように、有益です。
+
+<!--
+
+The essence of perception is the exceedingly rapid assimilation of the self to the changing conditions in 
+the environment while maintaining a historic identity across change. These operations require that massive 
+numbers of neurons cooperate in spatial and temporal patterns that shift rapidly in concert with the 
+surround. By repeated trial-and-error each brain constructs within itself an understanding of its surround, 
+which constitutes its own world that we describe as its ”double” (Vitiello, 2001). It is an ”active” mirror, 
+because the environment impacts onto the self independently as well as reactively. The relations that the 
+self and its surround construct by their interactions constitute the meanings of the flows of information 
+that are exchanged during the interactions. A major difficulty in seeking to verify this theory of perception 
+experimentally is to model the dynamics of very large numbers of neurons without submerging their unique 
+identities in statistics. Only in the past two decades has the technology become widely available for 
+recording and measuring large-scale images of brain activity with sufficient detail to reveal the intrinsic 
+structures of the activity relating to behavior. The frontier now resides in the theory. On the one hand, 
+the microscopic orientation of neural networks can express the dynamics of neurons even to the level of 
+individual synapses, but they do not scale up to the millions and even billions of neurons that cooperate in 
+perception. On the other hand, the macroscopic approach of brain imaging using hemodynamic techniques 
+(fMRI, PET, SPECT), statistical mechanics, di erential equations, and the concepts of representation from 
+artificial intelligence fail to encompass the incredible variety of neuronal detail that is required to match 
+brain functions. Now it turns out that the conflicting demands of massive numbers and intricate detail 
+are not unique to brain science, but have been met in a broad range of fields in science over the past half 
+century. It is expedient, therefore, for brain scientists and theoretical physicists to pool their resources 
+and find common cause, as we have done in describing the correspondences between brain dynamics and 
+quantum field theory. 
+
+-->
+
+</p>
+
+<h2>参考文献</h2><!--
+<h2>References </h2>
+-->
+<div class="styleRef">
+<ul><li>
+Alfinito, E., Vitiello, G. Formation and life-time of memory domains in the dissipative quantum model 
+of brain, Int. J. Mod. Phys., 2000, B14, 853-868. 
+
+</li><br><li>Alfinito, E., Vitiello, G., Domain formation in noninstantaneous symmetry-breaking phase transitions, 
+Phys. Rev., 2002, B 65, 054105. 
+
+</li><br><li>Atmanspacher H. Quantum theory and consciousness, Stanford Encyclopedia of Philosophy, 2004; 
+http://plato.stanford.edu/entries/qt-consciousness/ 
+
+</li><br><li>Del Giudice, E., Doglia, S., Milani, M., Vitiello, G. A quantum field theoretical approach to the collective 
+behavior of biological systems. Nucl. Phys., 1985, B251 (FS 13), 375-400. 
+
+</li><br><li>Del Giudice, E., Doglia, S., Dilani, M., Vitiello, G. Electromagnetic field and spontaneous symmetry 
+breakdown in biological matter. Nucl. Phys., 1986, B275 (FS 17), 185-199. 
+
+</li><br><li>Del Giudice, E., Preparata, G., Vitiello, G. Water as a free electron laser. Phys. Rev. Lett., 1986, 61, 
+1085-1088. 
+
+</li><br><li>Freeman, W.J. Mass Action in the Nervous System. New York, Academic Press, 1975/2004 
+
+</li><br><li>Freeman, W.J. Petit mal seizure spikes in olfactory bulb and cortex caused by runaway inhibition after 
+exhaustion of excitation. Brain Research Reviews, 1986, 11:259-284. 
+
+</li><br><li>Freeman, W.J. Neurodynamics. An Exploration of Mesoscopic Brain Dynamics. London UK: Springer-
+Verlag, 2000. 
+
+</li><br><li>Freeman, W.J. How Brains Make Up Their Minds. New York: Columbia University Press, 2001. 
+
+</li><br><li>Freeman, W.J. A neurobiological theory of meaning in perception. Part 1. Information and meaning in 
+nonconvergent and nonlocal brain dynamics. Int. J. Bifurc. Chaos, 2003a, 13: 2493-2511. 
+
+</li><br><li>Freeman, W.J. A neurobiological theory of meaning in perception. Part 2. Spatial patterns of phase 
+in gamma EEG from primary sensory cortices reveal the properties of mesoscopic wave packets. Int. J. 
+Bifurc. Chaos, 2003b, 13: 2513-2535. 
+
+</li><br><li>Freeman, W.J. Origin, structure, and role of background EEG activity. Part 1. Phase. Clin. Neurophysiol. 
+2004a, 115: 2077-2088. 
+
+</li><br><li>Freeman, W.J. Origin, structure, and role of background EEG activity. Part 2. Amplitude. Clin. 
+Neurophysiol., 2004b, 115: 2089-2107. 
+
+</li><br><li>Freeman, W.J. Origin, structure, and role of background EEG activity. Part 3. Neural frame classification. 
+Clin. Neurophysiol., 2005, 116: 1117-1129 
+
+</li><br><li>Freeman, W.J., Baird, B. E ects of applied electric current fields on cortical neural activity. In Schwartz, 
+
+E. ed. Computational Neuroscience. New York, Plenum Press. 1989, pp. 274-287. 
+Freeman, W.J., Burke, B.C., Holmes, M.D., Vanhatalo, S. Spatial spectra of scalp EEG and EMG from 
+awake humans. Clin. Neurophysiol., 2003a, 114: 1055-1060. 
+</li><br><li>Freeman, W.J., Burke, B.C., Holmes, M.D. Aperiodic phase re-setting in scalp EEG of beta-gamma 
+oscillations by state transitions at alpha-theta rates. Human Brain Mapping, 2003b, 19(4):248-272. 
+</li><br><li>Freeman, W.J., Ga´al, G., Jornten, R. A neurobiological theory of meaning in perception. Part 3. 
+Multiple cortical areas synchronize without loss of local autonomy. Int. J. Bifurc. Chaos, 2003, 13: 
+2845-2856. 
+
+</li><br><li>Freeman, W.J., Holmes, M.D. Metastability, instability, and state transition in neocortex. Neural 
+Networks, 2005, in press. 
+</li><br><li>Freeman, W.J., Holmes, M.D., West, G.A., Vanhatalo, S. Dynamics of human neocortex that optimize 
+its stability and flexibility. J. Intell. Syst., 2005, in press. 
+</li><br><li>Freeman, W.J., Rogers, L.J. A neurobiological theory of meaning in perception. Part 5. Multicortical 
+patterns of phase modulation in gamma EEG. Int. J. Bifurc. Chaos, 2003, 13: 2867-2887. 
+</li><br><li>Freeman, W.J., Viana Di Prisco, G., Relation of olfactory EEG to behavior: Time series analysis. 
+Behavioral Neurosciences, 1986, 100: 753-763. 
+</li><br><li>Freeman, W. J., Vitiello, G., Nonlinear brain dynamics as macroscopic manifestation of the underlying 
+many-body field dynamics, in preparation, 2005. 
+</li><br><li>Houk, J.C. Neurophysiology of frontal-subcortical loops. Ch. 4 In Lichter, D.G., Cummings, J.L. eds. 
+Frontal-Subcortical Circuits in Psychiatry and Neurology. New York, Guilford Publ., 2001, pp. 92-113. 
+</li><br><li>Jibu, M., Yasue, K. A physical picture of Umezawa’s quantum brain dynamics. In R. Trappl ed., 
+Cybernetics and System Research, Singapore, World Scientific, 1992, p.797-804. 
+
+</li><br><li>Jibu, M., Yasue, K. Quantum brain dynamics and consciousness. Amsterdam, John Benjamins, 1995 
+
+</li><br><li>Kozma R., Freeman, W.J. Classification of EEG patterns using nonlinear dynamics and identifying 
+chaotic phase transitions. Neurocomputing, 2002, 44: 1107-1112. 
+
+</li><br><li>Kozma, R, Puljic, M., Balister, P., Bollobs, B., Freeman, W.J. Emergence of collective dynamics in the 
+percolation model of neural populations: Mixed model with local and non-local interactions. Biol. Cybern., 
+2004, in press. 
+
+</li><br><li>Pessa, E., Vitiello, G. Quantum noise, entanglement and chaos in the quantum field theory of mind/brain 
+states. Mind and Matter, 2003, 1, 59-79. 
+
+</li><br><li>Pessa, E., Vitiello, G. Quantum noise induced entanglement and chaos in the dissipative quantum model 
+of brain. Int. J. Mod. Phys., 2004, B18, 841-858. 
+
+</li><br><li>Ricciardi, L. M., Umezawa, H. Brain and physics of many-body problems, Kybernetik, 1967, 4, 44-48. 
+Reprint in Globus, G. G., Pribram, K. H., Vitiello, G. eds. Brain and Being, Amsterdam, John Benjamins, 
+2005, pp. 255-266. 
+
+</li><br><li>Skarda, C.A., Freeman, W.J. How brains make chaos in order to make sense of the world. Behav. Brain 
+Sci., 1987, 10: 161-195. 
+
+</li><br><li>Stuart, C. I. J., Takahashi, Y. Umezawa, H. On the stability and non-local properties of memory, J. 
+Theor. Biol., 1978, 71, 605-618. 
+
+</li><br><li>Stuart, C. I. J., Takahashi, Y. Umezawa, H. Mixed system brain dynamics: neural memory as a macroscopic 
+ordered state, Found. Phys., 1979, 9, 301-327. 
+
+</li><br><li>Tsuda I. Towards an interpretation of dynamic neural activity in terms of chaotic dynamical systems. 
+Behav. Brain Sci., 2001, 24:793-810. 
+
+</li><br><li>Umezawa, H. Advanced field theory: micro, macro and thermal concepts. New York, American Institute 
+of Physics, 1993. 
+
+</li><br><li>Vitiello, G. Dissipation and memory capacity in the quantum brain model, Int. J. Mod. Phys., 1995, 
+B9, 973-989. 
+
+</li><br><li>Vitiello, G. My Double Unveiled. Amsterdam, John Benjamins, 2001. 
+</li></ul></div>
+
+</p>
+    </body>
+</html>
