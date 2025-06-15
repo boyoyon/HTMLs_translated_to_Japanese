@@ -13,8 +13,8 @@
         <p>
             AIが要約してくれるし、言語を選択すれば日本語で読める･･･<br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2504.07960">VisualCloze: ビジュアルインコンテキスト学習によるユニバーサル画像生成フレームワーク</a><br><br>
-            <a href="https://www.alphaxiv.org/ja/overview/1707.06347 ">近接方策最適化アルゴリズム：強化学習に革命をもたらす</a><br><br>
-            <a href="https://www.alphaxiv.org/ja/overview/2506.01716">自己挑戦型言語モデルエージェント</a>　2017年<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/1707.06347 ">近接方策最適化アルゴリズム：強化学習に革命をもたらす</a>　2017年<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.01716">自己挑戦型言語モデルエージェント</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2505.22954">Darwin Gödel Machine：コーディングのための自己改善型AIシステム</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2503.22430">MVSAnywhere: ゼロショット多視点ステレオ</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.09027">拡散と分散：表現正則化による画像生成</a> Kaiming Heさんの論文<br><br>
