@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>細胞骨格微小管における量子光コヒーレンス</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Quantum optical coherence in cytoskeletal microtubules:
+implications for brain function</center></h1>
+<center>細胞骨格微小管における量子光コヒーレンス：脳機能への影響</center><br>
+<br>
+<center>Mari Jibu <sup>ab</sup>, Scott Hagan <sup>c</sup>, Stuart R. Hameroff ,sup>d</sup>, Karl H. Pribram <sup>e</sup>, Kunio Yasue <sup>f</sup></center>
+<br>
+<center><sup>a</sup> Department af Anesthesiology, Okayama University Medical Scheel, Okayama 70, Japan</center>
+<center><sup>b</sup> Research Institute for informatics and Science, Netre Dume Seishin University, Okayama 70, Japar</center>
+<center><sup>c</sup> Department of Physics, McGul University, Montréal, Québec, H3A 27S Canada</center>
+<center><sup>d</sup> Department of Anesthesiviogy, College af Medicine, University of Arizona, Tucson, AZ 85724 USA</center>
+<center><sup>e</sup> Center for Brain Research and Informational Sciences, Radford University, Radford. VA 24142, USA</center>
+<center><sup>f</sup> Research institute for informatics and Science, Notre Dume Seishin University, Okayama 700, Japan</center>
+<br>
+<center>(Received 10 August 1993)</center>
+
+<h2>要旨</h2>
+<!--
+<h2>Abstract</h2>
+-->
+<p>
+
+<!--
+‘Laser-like,’ long-range coherent quantum phenomena may occur biologically within cytoskeletal microtubules. This
+paper presents a theoretical prediction of the occurrence in biological media of the phenomena which we term ‘superradiance’ and ‘self-induced transparency. Interactions between the electric dipole field of water molecules confined within the hollow core of microtubules and the quantized electromagnetic radiation held are considered, and microtubules are theorized to play the roles of non-linear coherent optical devices. Superradiance is a specific Quantum
+mechanical ordering phenomenon with characteristic times much shorter than those of thermal interaction. Consequently, optical signaling (and computation} in microtubules would be free from both thermal noise and loss. Superradiant optical computing in networks of microtubules and other cytoskeletal structures may provide a basis for biomolecular cognition and a substrate for consciousness.
+-->
+
+生物学的には, 細胞骨格の微小管内で「レーザーのような」長距離コヒーレント量子現象が発生する可能性がある。この論文では, 私たちが「超放射」および「自己誘導透明性」と呼ぶ現象が生物学的媒体で発生する理論的予測を提示する。微小管の中空コア内に閉じ込められた水分子の電気双極子場と保持されている量子化された電磁放射との相互作用を考慮し, 微小管が非線形コヒーレント光学デバイスの役割を果たすと理論化されている。超放射は, 熱相互作用の特性時間よりもはるかに短い特性時間を持つ特定の量子力学的秩序化現象である。したがって, 微小管内の光信号伝達(および計算)は, 熱雑音と損失の両方から解放される。微小管およびその他の細胞骨格構造のネットワークにおける超放射光計算は, 生体分子認識の基礎と意識の基質を提供する可能性がある。
+</p><p>
+Keywords: Quantum theory; Quantum coherence; Photon coherence; Neural holography, Microtubules; Spontaneous
+symmetry breaking; Water molecules; Photon signaling network; Consciousness
+</p>
+
+<h2>はじめに</h2>
+<!--
+<h2>Introduction</h2>
+-->
+<p>
+<!--
+Several features of brain activity have prompted connections to quantum physics. One feature is that the physical correlates of consciousness, presumably patterns composed of many states of many entities, are distributed throughout the brain. Despite this extension in space, consciousness has a ‘unity’ that is difficult to explain by classical means (Marshall, 1989). Non-local quantum coherence may provide the unity necessary to break the impasse known as the ‘binding problem’ in neurophysiological terms (Crick and Koch, 1990; Singer, 1993).
+-->
+
+脳活動のいくつかの特徴は, 量子物理学との関連を促してきました。1つの特徴は, 意識の物理的相関, つまり多くの実体の多くの状態から構成されるパターンが脳全体に分散していることです。この空間の拡張にもかかわらず, 意識には古典的な手段では説明が難しい「統一性」があります(Marshall, 1989)。非局所的な量子コヒーレンスは, 神経生理学用語で「結合問題」として知られる行き詰まりを打破するために必要な統一性を提供する可能性があります(Crick およびKoch, 1990, Singer, 1993)。
+</p><p>
+
+<!--
+Another feature, as argued by Penrose (1989), is that many brain functions are non-algorithmic and non-computational, and thus inexplicable by serial and/or parallel neural processing. Quantum coherence (in microtubules specifically, according to Penrose (1994)} can account for these functions. Other links between consciousness and quantum theory include probabilistic synaptic functions (Eccles, 1986; Beck and Eccles, 1992), holography (Pribram, 1966, 1971, 1991; Gabor, 1968), and general application of the uncertainty principle (Bohm, 1951; Bohr, 1958).
+-->
+
+Penrose(1989)が主張したもう1つの特徴は, 多くの脳機能が非アルゴリズム的かつ非計算的であるため, シリアルおよび/またはパラレルの神経処理では説明できないことです。量子コヒーレンス(ペンローズ(1994)によると, 特に微小管における)はこれらの機能を説明できます。意識と量子理論の他のつながりには, 確率的シナプス機能(エクルズ, 1986年, ベックとエクルズ, 1992年), ホログラフィー(プリブラム, 1966年, 1971年, 1991年, ガボール, 1968年), および不確定性原理の一般的な適用(ボーム, 1951年, ボーア, 1958年)などがあります。
+</p><p>
+
+<!--
+In the mid 1960s the advent of optical holography heralded a new departure in understanding the relationship between brain, memory and perception. The resistance of aspects of memory and of perception to relatively extensive brain damage indicated that memory storage and perceptual] processing are distributed procedures. Before the engineering instantiations of Gabor’s holographic equations were available, it was difficult to imagine what such a distributed procedure would be like.
+-->
+
+1960年代半ば, 光学ホログラフィーの出現は, 脳, 記憶, および知覚の関係を理解する上で新たな出発点となりました。記憶と知覚の側面が比較的広範囲の脳損傷に抵抗することは, 記憶の保存と知覚処理が分散手順であることを示していました。ガボールのホログラフィック方程式のエンジニアリングインスタンスが利用可能になる前は, そのような分散手順がどのようなものになるかを想像することは困難でした。
+</p><p>
+
+<!--
+Over the next decades computer programs inspired by holography were developed that reflected some of the associative characteristics of the parallel distributed processes that constitute the essence of holographic optical procedures, These ‘connectionist’, ‘neural network’ procedures made it possible to stimulate in vitro many perceptual and memory processes and to explore the extent and limitations of the simulations.
+-->
+
+その後数十年にわたって, コンピュータープログラムはホログラフィーに触発された, ホログラフィック光学手順の本質を構成する並列分散プロセスの連想特性の一部を反映した手法が開発されました。これらの「コネクショニスト」, 「ニューラル ネットワーク」手順により, 多くの知覚および記憶プロセスを in vitro で刺激し, シミュレーションの範囲と限界を調査することが可能になりました。
+</p><p>
+
+<!--
+Meanwhile, it was recognised that an unmodified holographic metaphor was an inappropriate model for brain processing because its spread function is unlimited (infinite). Data from neurophysiological experiments showed that the cortical] function modelled by holography is better represented by a sinusoid limited by a Gaussian envelope — a mathematical formulation put forward by Gabor (1946) to measure the maximum efficiency with which a telephone message could be sent across the Atlantic cable. Gabor (1948, 1968) used the same equations used by Heisenberg to describe units in microphysics and, therefore, called the unit of communication a ‘quantum of information’.
+-->
+
+一方, 修正されていないホログラフィックメタファーは, その拡散関数が無制限(無限)であるため, 脳の処理には不適切なモデルであることが認識されました。神経生理学的実験のデータから, ホログラフィーによってモデル化された皮質機能は, ガウスエンベロープによって制限された正弦波によってより適切に表現されることが示されました。これは, 電話メッセージを大西洋ケーブル経由で送信できる最大効率を測定するために Gabor (1946) によって提唱された数学的定式です。Gabor (1948, 1968) は, ミクロ物理学の単位を説明するためにハイゼンベルクが使用したのと同じ方程式を使用し, そのため, 通信の単位を「情報量子」と呼びました。
+</p><p>
+
+<!--
+A major interest confronting brain science is, therefore, to probe the possible mechanisms that lead to the processing of quanta of information by the brain.
+-->
+
+したがって, 脳科学が直面する大きな関心事は, 脳による量子情報の処理につながる可能性のあるメカニズムを調査することです。
+</p><p>
+
+<!--
+A specific quantum field theoretical approach was Originated by Ricciardi and Umezawa (1967). Without reference to the structural constituents of brain cells, they formulated a relationship between quantum physics and memory. They emphasized that each neuron specifies a spatially distributed system with quantum mechanical degrees of freedom whose physical properties can be understood by quantum field theory. Quantum field theory 1s a framework of quantum physics capable of describing fundamental processes of elementary particle physics as well as condensed matter physics (Umezawa, 1993). Ricciardi and (Umezawa (1967) suggested that memory is a quantum vacuum state that violates an original dynamical symmetry property of the full complement of the spatially-distributed quantum mechanical] degrees of freedom in each brain cell.
+-->
+
+特定の場の量子論的アプローチは, RicciardiとUmezawa(1967)によって考案されました。彼らは, 脳細胞の構造的構成要素を参照せずに, 量子物理学と記憶の関係を定式化しました。彼らは, 各ニューロンが量子力学的自由度を持つ空間的に分散したシステムを指定し, その物理的特性は場の量子論によって理解できることを強調しました。場の量子論は, 素粒子物理学と凝縮物質物理学の基本プロセスを記述できる量子物理学のフレームワークです(Umezawa, 1993)。RicciardiとUmezawa(1967) は, 記憶は各脳細胞内の空間的に分散した量子力学的自由度の完全な補完の元の動的対称性特性に違反する量子真空状態であると示唆しました。
+</p><p>
+
+<!--
+The introduction of quantum theory in brain science is perhaps analogous to the recent advent of the new field, quantum cosmology. The fundamental equations of cosmology, recast as quantum theoretical operator expressions acting on a‘wavefunction of the universe’ permit an interpretation in which the universe is born in Imaginary time. A quantum tunnelling process would then allow the universe to evolve into real lime, according to a proposal by Hawking. Similarly, the model advanced by Ricciardi and Umezawa (1967) relies on the quantum theoretical concept of a vacuum state which violates a dynamical symmetry property. While the marriage of quantum theory and cosmology 1s uneasy so long as quantum theory remains uninterpretable outside the context of a classical environment, the union of brain science with quantum concepts Is consistent with currently accepted interpretations. Memory of an external stimulus is imprinted as an ordering of the vacuum state (i.e. the lowest energy state or the ground state). If this ordered vacuum slate no longer manifests the original dynamical symmetry property, the Nambu-Goldstone theorem suggests creation of long-range correlation waves with zero energy requirement which participate in the system’s quantum dynamics (Ricciardi and Umezawa, 1967),
+-->
+
+脳科学における量子論の導入は, 量子宇宙論という新しい分野の最近の出現に似ているかもしれない。宇宙論の基本方程式を「宇宙の波動関数」に作用する量子論的演算子表現として書き直すと, 宇宙は虚数時間で誕生するという解釈が可能になる。ホーキングの提案によれば, 量子トンネル効果によって宇宙は実時間へと進化する。同様に, リッチャルディと梅沢 (1967) が提唱したモデルは, 動的対称性特性に反する真空状態の量子論的概念に依存している。量子論が古典的環境のコンテキスト外で解釈不可能である限り, 量子論と宇宙論の融合は難しいが, 脳科学と量子概念の融合は現在受け入れられている解釈と整合している。外部刺激の記憶は, 真空状態 (つまり, 最低エネルギー状態または基底状態) の順序として刻み込まれる。この秩序だった真空スレートがもはや元の動的対称性特性を示さない場合, 南部-ゴールドストーン定理は, システムの量子力学に参加するゼロエネルギー要件の長距離相関波の生成を示唆します(Ricciardi and Umezawa, 1967)。
+</p><p>
+
+<!--
+Such a long-range correlation wave can be seen as a Bose quantum (‘Goldstone beson’ or‘massiess boson’). Ricciardi and Umezawa were perhaps the first to suggest the existence of a spatially distributed system with the full range of quantum mechanical degrees of freedom in brain cells, and also introduced quantum ordering and spontaneous symmetry breaking as tools to investigate the biological system. Slightly later, Fr&ouml;hlich (!968} proposed a similar idea for biological cells in general but with more explicit materialistic formulation. Focusing on a thin layer just beneath the cell membrane, Frohhich theorized that energy can be stored without thermal] toss in this two-dimensional region in coherent, dipolar propagating waves, Biological molecules with dipolar vibrational activity adjacent to cell membranes may thus manifest a globally coherent mode of dynamics so that the thin layer could be seen as a biological superconducting medium or a biological plasma effectively isolated from thermal environments. Fr&ouml;hlich waves are predicted to appear in a frequency region between 1011 and 1012 s－1 called the Fr&ouml;hlich frequency. It can be concluded that energy supplied to biological cells with magnitude equal to the ‘Fr&ouml;hlich frequency’ times the Planck constant may not be completely thermalized but stored in a highly ordered fashion.
+-->
+
+このような長距離相関波は, ボーズ量子(「ゴールドストーン粒子」または「質量のある粒子」)として見ることができます。RicciardiとUmezawaは, 脳細胞に量子力学的自由度の全範囲を備えた空間的に分散したシステムの存在を示唆した最初の人物であり, また, 生物学的システムを調査するためのツールとして量子秩序と自発的な対称性の破れを導入しました。少し後に, Fr&ouml;hlich(1968)は, より明確な物質論的定式化で, 一般的な生物学的細胞に対して同様のアイデアを提案しました。細胞膜のすぐ下の薄い層に焦点を当てて, Fr&ouml;hlichは, この2次元領域に熱を放出することなくエネルギーを蓄えることができると理論化しました。コヒーレントな双極子伝播波, 細胞膜に隣接した双極子振動活性を持つ生物分子は, 全体的にコヒーレントな動力学モードを発現する可能性があるため, 薄い層は生物学的超伝導媒体, または熱環境から効果的に隔離された生物学的プラズマとして見ることができます。フレーリッヒ波は, フレーリッヒ周波数と呼ばれる1011～1012 s－1の周波数領域で出現すると予測されています。「フレーリッヒ周波数」×プランク定数に等しい大きさで生物細胞に供給されるエネルギーは, 完全に熱化されず, 高度に秩序化された方法で保存される可能性があると結論付けることができます。
+</p><p>
+
+<!--
+Experimental evidence for Fr&ouml;hlich excitations in biological systems include observation of GHz-range phonons in proteins (Genberg et al., 1991), sharp-resonant non-thermal! effects of microwave irradiation on living cells (Grundler and Keilmann, 1983), GHz-induced activation of microtubule pinocytosis in rat brain (Neubauer et al, 1990}, and resonance Raman detection of Fr&ouml;hlich frequency energy (Genzel et al, 1976: Webb et al., 1977; Webb and Stoneham, 1977: Webb, 1981).
+-->
+
+生物系におけるフレーリッヒ励起の実験的証拠には, タンパク質におけるGHz範囲のフォノンの観察(Genbergら, 1991年), 鋭い共鳴非熱的!マイクロ波照射による生体細胞への影響(Grundler and Keilmann, 1983), ラット脳におけるGHz誘導性微小管ピノサイトーシスの活性化(Neubauer et al, 1990), および共鳴ラマン法によるフレーリッヒ周波数エネルギーの検出(Genzel et al, 1976: Webb et al., 1977; Webb and Stoneham, 1977: Webb, 1981)。
+</p><p>
+
+<!--
+Fr&ouml;hlich waves need not be restricted to thin layers adjacent to cell membranes. Dipolar oscillations maintained by hydrogen bonds and non-localized electrons trapped in hydrophobic regions of protein molecules may manifest a collective mode considered as a Fr&ouml;hlich wave propagating in a one-dimensional medium. Davydov described dipolar solitary waves propagating along alpha-helices within proteins. This mode of solitary wave propagation, known in quantum field theory to carry energy and information without loss due to thermalization, is called the Davydov soliton or dipolar soliton (Davydov, 1979).
+-->
+
+フレーリッヒ波は, 細胞膜に隣接する薄い層に限定される必要はありません。タンパク質分子の疎水性領域に閉じ込められた水素結合と非局在電子によって維持される双極子振動は, 1 次元媒体を伝播するフロリッヒ波と見なされる集団モードを発現する場合があります。Davydov は, タンパク質内のアルファヘリックスに沿って伝播する双極子孤立波について説明しました。この孤立波伝播モードは、場の量子論では熱化による損失なしにエネルギーと情報を運ぶことが知られており、ダビドフソリトンまたは双極子ソリトンと呼ばれます(Davydov、1979)。
+</p><p>
+
+<!--
+About 10 years after the original idea of 1967, Umezawa together with two colleagues, Takahashi and Stuart, proposed a refined physical model of a spatially-distributed system with fully quantum mechanical degrees of freedom, not only within each brain cell but also among brain cells (Stuart et al., 1978, 1979). The system extended among brain cells is thought to be composed of two kinds of spatially distributed degrees of freedom subject to quantum dynamics. As a consequence of spontaneous symmetry breaking, these two modes are distinguished as the ‘corticon’ field and an exchange boson field which interact as a quantum dynamical system —- a theoretical model of non-local memory storage and recall processes. More recently, Jibu and Yasue presented a physically realistic picture of the system of corticon and exchange boson fields, and proposed to call the new quantum field theoretical framework ‘Quantum Brain Dynamics’ ((QBD’) (Jibu and Yasue, 1992a,b, 19934,b}. They describe corticon and exchange boson fields as dipolar vibrational fields distributed along protein filaments of the cytoskeleton and extracellular matrices and associated water fields. Marshall (1989) proposed that Fr&ouml;hlich’s ‘pumped phonons’ result in a Bose-Einstein condensate in brain which is the substrate for consciousness,
+-->
+
+1967年の最初のアイデアから約10年後, 梅沢は2人の同僚である高橋とスチュアートとともに, 各脳細胞内だけでなく脳細胞間でも完全に量子力学的自由度を持つ空間分散システムの洗練された物理モデルを提案しました(Stuartら, 1978, 1979)。脳細胞間に拡張されたシステムは, 量子力学に従う2種類の空間分散自由度で構成されていると考えられています。自発的な対称性の破れの結果として, これら2つのモードは「コルチコン」フィールドと交換ボソンフィールドとして区別され, 量子力学システムとして相互作用します。これは, 非局所的な記憶の保存と想起のプロセスの理論モデルです。最近では, 治部と保江は, コルチコンと交換ボソン場のシステムの物理的に現実的な図を提示し, 新しい場の量子論的枠組みを「量子脳ダイナミクス」(QBD)と呼ぶことを提案しました(Jibu and Yasue, 1992a, b, 19934, b)。彼らは, コルチコンと交換ボソン場を, 細胞骨格と細胞外マトリックスのタンパク質フィラメントと関連する水場に沿って分布する双極振動場として説明しています。マーシャル(1989)は, フレーリッヒの「ポンピングフォノン」が意識の基質である脳内のボーズアインシュタイン凝縮をもたらすと提案しました。
+</p><p>
+
+<!--
+Inspired by application of quantum theoretical methods to brain and other biological cells initiated by Ricciardi and Umezawa and by Fr&ouml;hlich in the 1960s, other scientists began to view brain functioning from the microscopic view of quantum physics during the 1980s. Several groups focused especially on networks of filamentous proteins which dynamically organize the interiors of living cells: the cytoskeleton {(Hameroff and Watt, 1982: Del Giudice et al., 1983). Among cytoskeletal filamentous polymers (actin, intermediate filaments, etc.), microtubules are the most central to cellular organization and information processing. Consisting of skewed hexagonal latices of subunit protein dimers called tubulin, microtubules self-assemble into hollow cylinders 25 nm across, adapt, transport and govern cellular activities, Their hollow geometry and periodic lattice structure have suggested several quantum field aspects. Hameroff (1987) applied Fr&ouml;hlich’s coherent excitations to tubulin subunits in microtubules as the basis of computational! cellular automata. Rasmussen et al. (1990) showed that networks of such microtubule automata are capable of learning. Considering the layer of ordered water outside and inside microtubules, Del Giudice et al. (1986) proposed that the formation of microtubules’ cylindrical structure from ‘tubulin’ subunits may be understood by the concept of self-focussing of electromagnetic energy by ordered water. Like the Meissner effect for super-conducting media, electromagnetic energy would be confined inside filamentous regions around which the tubulin subunits gather. Del Giudice et al. (1986) showed that this self-focussing should result in filamentous beams of radius 15 nm, precisely the inner diameter of microtubules (see Figs 1-4).
+-->
+
+1960年代にリッチャルディと梅沢, フレーリッヒによって始められた脳やその他の生物細胞への量子理論的手法の適用に触発され, 1980年代には他の科学者が量子物理学の微視的観点から脳の機能を捉え始めました。いくつかのグループは, 特に微小管は, 生きた細胞の内部を動的に組織化する糸状タンパク質, すなわち細胞骨格です(HameroffおよびWatt, 1982年: Del Giudice ら, 1983年)。細胞骨格の糸状ポリマー(アクチン, 中間径フィラメントなど)のうち, 微小管は細胞の組織化と情報処理において最も中心的な役割を果たします。微小管は, チューブリンと呼ばれるサブユニットタンパク質二量体の歪んだ六角形の格子で構成され, 直径25nmの中空のシリンダーに自己組織化し, 細胞の活動に適応, 輸送, 制御します。その中空の形状と周期的な格子構造は, いくつかの量子場の側面を示唆しています。Hameroff (1987年) は, 計算セルオートマトンの基礎として, Fr&ouml;hlichのコヒーレント励起を微小管のチューブリンサブユニットに適用しました。Rasmussenら(1990年)は, このような微小管オートマトンネットワークが学習可能であることを示しました。微小管の外側と内側にある整列した水の層を考慮して, Del Giudiceら(1986)は, 「チューブリン」サブユニットから微小管の円筒形構造が形成されることは, 整列した水による電磁エネルギーの自己集束という概念で理解できると提唱しました。超伝導媒体のマイスナー効果のように, 電磁エネルギーはチューブリンサブユニットが集まるフィラメント領域内に閉じ込められます。Del Giudiceら(1986)は, この自己集束により, 半径15 nmのフィラメントビーム(微小管の内径とまったく同じ)が形成されることを示しました(図1-4を参照)。
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+
+<!--
+Fig. 1. Electron micrograph of quick frozen, deep. etched neuronal microtubules (MTs) and neurofilaments polymerized with microtubule associated proteins (MAPs). Arrows point at neurofilaments; larger diameter structures are microtubules. Seale bar, 100 nm. (With permission from Hirokawa, 1991),
+-->
+
+</p><p>
+図1。急速凍結され, 深くエッチングされたニューロンの微小管(MT)と微小管関連タンパク質(MAP)で重合されたニューロン フィラメントの電子顕微鏡写真。矢印はニューロンフィラメントを指し, 直径が大きい構造は微小管です。シールバー, 100 nm。
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+
+<!--
+Fig. 2. Microtubule (MT) structure from X-ray crystallography (Amos and Klug, 1974). Tubulin subunits are 8-nm dimers comprised of α and β monomers.
+-->
+
+図2。X線結晶構造解析による微小管 (MT) 構造 (Amos および Klug, 1974 年)。チューブリン サブユニットは, α および β モノマーからなる 8 nm の二量体です。
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+
+<!--
+Fig. 3. The tubulin dimer protein has two states in which a quantum event {electron mobility, quasi-particle phonon) within a hydrophobic region couples to conformational change with 10－9－10－11 s transitions. Cylinders within protein are α-helical regions, (Original drawing by Djuro Koruga).
+-->
+
+図3。チューブリン二量体タンパク質には, 疎水性領域内の量子イベント(電子移動度, 準粒子フォノン)が 10－9－10－11 秒遷移を伴う構造変化と結合する2つの状態があります。タンパク質内の円筒はαヘリカル領域です
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+
+<!--
+Fig. 4. Schematic drawing of a synapse showing underlying cytoskeletal] structures. Right: axon terminal with MT-MAP network connecting with synapsin filaments involved in release of neurotransmitter vesicles (circles) into synaptic cleft. Left: ventrical dendrite with MT-MAP network, two dendritic spines with cytoskeletal structures connected lo receptors in synaptic membrane. (Adapted from Hirokawa, 1991}.
+-->
+
+図4。基礎となる細胞骨格構造を示すシナプスの模式図。右: MT-MAPネットワークを持つ軸索末端。シナプス間隙への神経伝達物質小胞(円)の放出に関与するシナプシンフィラメントと接続。左: MT-MAPネットワークを持つ心室樹状突起。細胞骨格構造を持つ2つの樹状突起棘がシナプス膜の受容体と接続。
+</p><p>
+
+<!--
+Another perspective was proposed by Hameroff (1974) in which microtubules were thought to act like ‘dielectric waveguides’ for photons, that is, quantum dynamical modes of an electromagnetic wave. Indeed, living tissue transmits light more readily than non-living material; in experiments with mammalian brains, temporal poles and hippocampus manifest the maximum light penetration (Hameroff, 1987). This evidence led Hameroff to consider mucrotubules as waveguides for photons. Furthermore, he proposed that cytoplasmic interference of coherent sources from and among multiple microtubules mav lead to a holographic information processing mechanisms. Holographic patterns stored in cytoplasmic sol-gel States may become ‘hardwired’ by calciuminduced assembly of finer components of the cytoskeleton such as actin, actin-binding proteins and the micro-trabecular lattice. Lechleiter et al. (1991) imaged coherent cytoplasmic spiral waves of calcium induced by acetylcholine binding to membrane receptors of living cells. Coherent sources of either charge carriers or conformational waves in microtubules suggest a revival of holographic brain theory of Pribram and others (Pribram, 1966, 1971, 1991; Gabor, 1968: Margenau, 1984: Eccles, 1986; Marshal, 1989). Our current view is that coherence manifests at the molecular, quantum level rather than (or in addition to) coherence at the level of neural firing (Singer, 1993).
+-->
+
+ハメロフ (1974) は別の観点を提唱し, 微小管が光子, つまり電磁波の量子力学的モードに対する「誘電体導波路」のように機能すると考えられました。実際, 生体組織は非生体物質よりも容易に光を透過します。哺乳類の脳の実験では, 側頭極と海馬で最大の光透過が見られます (Hameroff, 1987)。この証拠から, ハメロフは微小管を光子の導波路と見なしました。さらに, 彼は, 複数の微小管からの, または複数の微小管間のコヒーレント光源の細胞質干渉が, ホログラフィック情報処理メカニズムにつながる可能性があると提唱しました。細胞質ゾルゲル状態に保存されたホログラフィックパターンは, アクチン, アクチン結合タンパク質, 微小柱格子などの細胞骨格のより微細な構成要素のカルシウム誘導アセンブリによって「ハードワイヤード」になる可能性があります。Lechleiter ら(1991) は, 生きた細胞の膜受容体に結合するアセチルコリンによって誘発されるカルシウムのコヒーレントな細胞質螺旋波を画像化した。微小管内の電荷キャリアまたはコンフォメーション波のコヒーレントな発生源は, プリブラムらのホログラフィック脳理論の復活を示唆している (プリブラム, 1966, 1971, 1991, ガボール, 1968, マーゲナウ, 1984, エクルズ, 1986, マーシャル, 1989)。現在の私たちの見解は, コヒーレンスは神経発火レベルのコヒーレンスではなく (またはそれに加えて) 分子, 量子レベルで現れるというものである (シンガー, 1993)。
+</p><p>
+
+<!--
+Hameroff suggested in very general terms two key concepts in understanding cytoskeletal brain activity from the point of view of quantum physics: microtubules acting as waveguides for photons and as holographic information processors. Holography is an optical phenomenon related ta interference of coherent electromagnetic waves or photons, The microtubule may be seen as a waveguide for photons, and Fr&ouml;hlich’s theory suggests coherent excitations in microtubules. Further, the periodic lattice structure of microtubules may provide periodically arrayed ‘slits’ (spaces between dimers) through which photons may pass. No proof of coherent photon generation or emission necessary for optical holography has been found in microtubules or any microscopic biological structure. However, self-focused photons and self-trapped, non-thermalizing wave entities should be difficult to detect (see Section 4). In any case, no thorough theoretical investigation of these concepts has occurred from the standpoint of physics except the water laser (Del Giudice et al., 1988).
+-->
+
+ハメロフは, 量子物理学の観点から細胞骨格脳活動を理解するための 2 つの重要な概念を非常に一般的な言葉で提案した。それは, 光子の導波路として機能する微小管と, ホログラフィック情報プロセッサとして機能する微小管である。ホログラフィーは, コヒーレントな電磁波または光子の干渉に関連する光学現象です。微小管は光子の導波路とみなすことができ, フロリッヒの理論は微小管におけるコヒーレントな励起を示唆しています。さらに, 微小管の周期的な格子構造は, 光子が通過できる周期的に配列された「スリット」(二量体間の空間)を提供する可能性があります。光学ホログラフィーに必要なコヒーレントな光子の生成または放出の証拠は, 微小管または微視的な生物学的構造では見つかっていません。ただし, 自己収束光子および自己捕捉された非熱化波実体は検出が困難なはずです(セクション 4 を参照)。いずれにせよ, 水レーザー(Del Giudice 他, 1988 年)を除いて, 物理学の観点からこれらの概念の徹底的な理論的調査は行われていません。
+</p><p>
+
+<!--
+In the present paper, we propose a new quantum theoretical framework suggesting microtubules possess ordered and systematic properties yielding cooperative quantum dynamics called superradiance and self-induced transparency. Specifically, the quantum dynamical system of water molecules and the quantized electromagnetic field confined inside the hollow microtubule core can manifest a specific collective dynamic called superradiance by which the microtubule can transform any incoherent, thermal and disordered molecular, electromagnetic or atomic energy into coherent photons inside the microtubule. Furthermore, it will also be shown that such coherent photons created by superradiance penetrate perfectly along the internal hollow core of the microtubule as if the optical medium inside it were made ‘transparent’ by the propagating photons themselves. This is a quantum theoretical phenomenon called self-induced transparency.
+-->
+
+本論文では, 超放射および自己誘導透明性と呼ばれる協調的な量子ダイナミクスを生み出す秩序立った体系的な特性を微小管が備えていることを示唆する新しい量子理論的枠組みを提案します。具体的には, 水分子の量子力学システムと中空の微小管コア内に閉じ込められた量子化された電磁場は, 超放射と呼ばれる特定の集合的ダイナミクスを発現することができ, これにより微小管は, 非干渉性, 熱的, 無秩序な分子, 電磁気, または原子エネルギーを微小管内でコヒーレントな光子に変換することができます。さらに, 超放射によって生成されたこのようなコヒーレントな光子は, あたかもその中の光学媒体が伝播する光子自体によって「透明」になったかのように, 微小管の内部中空コアに沿って完全に浸透することも示されます。これは, 自己誘導透明性と呼ばれる量子理論現象です。
+</p><p>
+
+<!--
+Superradiance and self-induced transparency in cytoskeletal microtubules can lead to ‘optical’ neural holography. Neurons (and other cells) may contain microscopic coherent optical supercomputers with enormous capacity like the fictional but famous HAL 9000 of ‘2001: A Space Odyssey’ with holographic memory manipulation (Clarke, 1968),
+-->
+
+細胞骨格微小管の超放射と自己誘導透明性は, 「光学的」神経ホログラフィーにつながる可能性があります。ニューロン(および他の細胞)には, ホログラフィック記憶操作を備えた『2001年宇宙の旅』の架空だが有名なHAL 9000のような, 膨大な容量を持つ微小なコヒーレント光スーパーコンピュータが含まれている可能性があります(Clarke, 1968年)。
+</p><p>
+
+<!--
+This paper is a result of the long-range cooperaton among physicists and brain scientists providing several by-products:
+-->
+
+この論文は, 物理学者と脳科学者の長距離協力の結果であり, いくつかの副産物を生み出しています。
+</p><p>
+<div class="styleBullet">
+<ul><li>
+<!--
+	Superradiance and self-induced transparency of microtubules may be understood to predict theoretically the existence of a peculiar phenomenon: weak coherent photon emission from living matter.
+-->
+
+1. 微小管の超放射と自己誘導透明性は, 生体物質からの弱いコヒーレント光子放出という特異な現象の存在を理論的に予測するものと理解できます。
+</p><p>
+
+<!--
+	Quantum coherence among microtubules spaced hundreds of micrometers apart (which in turn can have quantum coherence with other microtubules hundreds of micrometers away, etc.) can solve the unity and binding problems which plague classical theories of consciousness.
+-->
+
+</li><br><li>2. 数百マイクロメートル離れた微小管間の量子コヒーレンス(これは, 数百マイクロメートル離れた他の微小管と量子コヒーレンスを持つことができます)は, 意識の古典的理論を悩ませている統一性と結合の問題を解決できます。
+</p><p>
+
+<!--
+	A source of coherence at the biomolecular level can lead to quantum Interference and holographic information representation at the sub-cellular level.
+-->
+
+</li><br><li>3. 生体分子レベルでのコヒーレンス源は, 細胞内レベルでの量子干渉とホログラフィック情報表現につながる可能性があります。
+</p><p>
+
+<!--
+	General anesthesia may be explained by blockade of quantum level events which affect collective cooperative macro-level events.
+-->
+
+</li><br><li>4. 全身麻酔は, 集団的な協力的なマクロレベルのイベントに影響を与える量子レベルのイベントの遮断によって説明できる可能性があります。
+</li></ul></div>
+</p>
+<h2>2. 微小管の超放射</h2>
+<!--
+<h2>2. Superradiance in microtubules 微小管の超放射</h2>
+-->
+<p>
+
+<!--
+Let us look at a typical microtubule in the cytoskeletal structure of brain cells or general biological cells. It is a hollow cylinder about 25 nm in diameter whose wall is a polymerized array of protein subunits (‘tubulins’). Its length may range from tens of nanometers to micrometers, and possibly further to meters in nerve axons of large animals, For the purpose of simplifying the physical formulation, we consider the microtubule as a hollow cylinder with radius rMT and length lMT. Their real values would be rMT≒12 and lMT≒102-103 in nanometers. We denote the spatial region inside the microtubule cylinder by V and restrict Our discussion to quantum mechanical dynamics taking place in this spatial region V.
+-->
+
+脳細胞や一般的な生物細胞の細胞骨格構造にある典型的な微小管を見てみましょう。これは直径約 25 nm の中空の円筒で, その壁はタンパク質サブユニット (「チューブリン」) の重合配列です。その長さは数十ナノメートルからマイクロメートルの範囲で, 大型動物の神経軸索ではさらに数メートルになることもあります。物理的な定式化を簡素化するために, 微小管を半径 \(r_{MT}\), 長さ \(l_{MT}\) の中空の円筒と見なします。実際の値は \(r_{MT}≒12, l_{MT}≒10^2-10^3\) (ナノメートル単位)になります。微小管シリンダー内の空間領域を \(V\) で表し, この空間領域 \(V\) で発生する量子力学ダイナミクスに議論を限定します。
+</p><p>
+
+<!--
+Let us introduce a Cartesian system of coordinates Oxyz with the xy-plane attached parallel to one of the two ends of the microtubule cylinder so that the origin O coincides with the centre of the end cap. The z-axis lies naturally along the longitudinal center axis of the microtubule cylinder. Then, any position in the region V can be labelled by giving its coordinates r = (x,y,z).
+-->
+
+原点 \(O\) がエンドキャップの中心と一致するように, 微小管シリンダーの2つの端の1つに平行に \(xy\) 平面が取り付けられた直交座標系 \(O_{xyz}\) を導入します。\(z\) 軸は, 微小管シリンダーの縦方向の中心軸に沿って自然に存在します。次に, 領域 \(V\) 内の任意の位置を, その座標 \(r = (x,y,z)\) を与えることでラベル付けできます。
+</p><p>
+
+<!--
+The spatial region V inside the microtubule is not empty, but is likely to be filled with water molecules. Of course, there may be other molecules, although their population is relatively small. We consider the ideal case in which the existence of molecules other than those of water can be neglected. However, below we will consider the more realistic case in which we have impurities among water molecules such as anesthetic molecules. It is most likely that the density of water confined inside the microtubule cylinder remains almost constant. Therefore, we may be allowed to fix the total number of water molecules inside the region V, say N.
+-->
+
+微小管内の空間領域Vは空ではありませんが, 水分子で満たされている可能性があります。もちろん, 他の分子が存在する可能性もありますが, その数は比較的少ないです。水以外の分子の存在を無視できる理想的なケースを検討します。ただし, 以下では, 麻酔分子などの水分子に不純物がある, より現実的なケースを検討します。おそらく, 微小管シリンダー内に閉じ込められた水の密度はほぼ一定のままです。したがって, 領域 \(V\) 内の水分子の総数を \(N\) と固定できます。
+</p><p>
+
+<!--
+Let us take a look at a typical water molecule, say the jth water molecule. Here, j running from 1 to N denotes the fictitious number labelling the V water molecules in question. Its position is given by coordinates rj = (xj, yj, zj), From a physical point of view, a water molecule has a constant electric dipole, and so it can be seen as a quantum mechanical spinning top with an electric dipole moment. The average moment of inertia and electric dipole moment of a water molecule are  estimated to be l = 2mpd2 with d≒0.82 A and μ= 2epP with P≒0.2 A, respectively. Here, mp denotes the proton mass and ep the proton charge.
+-->
+
+典型的な水分子, たとえば \(j\) 番目の水分子を見てみましょう。ここで, 1 から \(N\) までの \(j\) は, 問題の \(V\) 個の水分子に付けられた架空の番号を表します。その位置は, 座標 \(r_j = (x_j, y_j, z_j)\) で与えられます。物理的な観点から, 水分子は一定の電気双極子を持つため, 電気双極子モーメントを持つ量子力学的こまとして見ることができます。水分子の平均慣性モーメントと電気双極子モーメントは, それぞれ \(l = 2m_pd^2 (d \approx 0.82 Å), μ= 2e_pP (P \approx 0.2 Å)\) と推定されます。ここで, \(m_p\) は陽子の質量, \(e_p\) は陽子の電荷を表します。
+</p><p>
+
+<!--
+Due to the electric dipole moment μ, the water molecule interacts strongly with the quantized electromagnetic field in the spatial region V. Although the water molecule has many energy eigenstates as a quantum mechanical spinning top and so it can exchange energy between the quantized electromagnetic field in many different values, we restrict our discussion to the most likely case in which only the two principal energy eigenstates take part in the energy exchange. This coincides with the conventional] two-level approximation in describing the energy exchange between atoms and the quantized electromagnetic field in laser theory.
+-->
+
+電気双極子モーメント \(μ\) により, 水分子は空間領域 \(V\) の量子化電磁場と強く相互作用します。水分子は量子力学のこまとして多くのエネルギー固有状態を持ち, さまざまな値の量子化電磁場間でエネルギーを交換できますが, ここでは, 2 つの主要なエネルギー固有状態のみがエネルギー交換に参加する最も可能性の高いケースに限定して説明します。これは, レーザー理論で原子と量子化電磁場間のエネルギー交換を記述する際の従来の 2 レベル近似と一致します。
+</p><p>
+
+<!--
+Then, one sees immediately that the quantum dynamics of the jth water molecule can be well described by a spin variable sj = 1/2σ, where σ= (σx, σy, σz) and the σx are Paul spin matrices　denoting the three components of the angular momentum for spin 1/2. Let ε be the energy difference between the two principal energy eigenstates of the water molecule. Its real value is ε≒200 cm－1 (Franks, 1972). Then, the Hamiltonian governing the quantum dynamics of the jth water molecule is given by εsjz, and so the total Hamiltonian for NV water molecules becomes
+-->
+
+すると, \(j\) 番目の水分子の量子ダイナミクスは, スピン変数 \(s^j = 1/2σ\) で適切に記述できることがすぐにわかります。ここで, \(σ = (σ_x, σ_y, σ_z)\) であり, \(σ_x\) は, スピン 1/2 の角運動量の 3 つの成分を表すパウリスピン行列です。水分子の 2 つの主要なエネルギー固有状態間のエネルギー差を \(\epsilon\) とします。その実際の値は \(\epsilon \approx 200 cm^{-1}\) です (Franks, 1972)。次に, \(j\) 番目の水分子の量子力学を支配するハミルトニアンは \(\epsilon s_z^j\) で与えられ, \(NV\) 水分子の全ハミルトニアンは
+
+\[
+H_{WM}=\epsilon \sum_{j=1}^N s_z^j  \tag{1}
+\]
+
+<!--
+Two energy eigenvalues of the former Hamiltonian are －1/2ε and 1/2ε reflecting the fact that only the two principal energy eigenstates with energy difference « are taken into account.
+-->
+
+前者のハミルトニアンの 2 つのエネルギー固有値は, エネルギー差 \(\epsilon\) を持つ 2 つの主要なエネルギー固有状態のみが考慮されているという事実を反映して, \(-1/2\epsilon\) と \(1/2\epsilon\) です。
+</p><p>
+
+<!--
+Now, let us consider the quantized electro-magnetic field in the spatial region V. it is convenient to describe the quantized electromagnetic field in terms of an electric field operator E = E(r, t). Let us assume for simplicity that the electric field is linearly polarized, obtaining E = eE, where e is a constant vector of unit length pointing in the direction of linear polarization. Then, the quantized electromagnetic field in question comes to be well described by a scalar electric field E = E(r, t) governed by the usual Hamiltonian
+-->
+
+さて, 空間領域 \(V\) の量子化された電磁場を考えてみましょう。量子化された電磁場は, 電場演算子 \(\mathbf{E }= \mathbf{E}(\mathbf{r}, t)\) で記述すると便利です。簡単にするために, 電場が直線偏光していると仮定して, \(\mathbf{E} = \mathbf{e}E\) を得ます。ここで, \(\mathbf{e}\) は直線偏光の方向を指す単位長さの定数ベクトルです。すると, 問題の量子化された電磁場は, 通常のハミルトニアンによって支配されるスカラー電場 \(E = E(\mathbf{r}, t)\) によってうまく記述されるようになります。
+
+\[
+H_{EM}=\frac{1}{2} \int_V E^3d^3r  \tag{2}
+\]
+
+</p><p>
+
+<!--
+Next, we take the interaction between the quantized electromagnetic field and the totality of water molecules by which they can exchange energy in terms of creation and annihilation of photons. Let us divide the electric field operator into positive and negative frequency parts
+-->
+次に, 量子化された電磁場と水分子全体との間の相互作用を考えます。この相互作用によって, 水分子は光子の生成と消滅という形でエネルギーを交換できます。電場演算子を正と負の周波数部分に分けてみましょう
+
+\[
+E=E^+ + E^-  \tag{3}
+\]
+
+<!--
+Then, the interaction Hamiltonian of the quantized electromagnetic field and the totality of water molecules becomes
+-->
+
+すると, 量子化された電磁場と水分子全体の相互作用ハミルトニアンは
+
+\[
+H_I=-μ\sum_{j=1}^N [E^- (\mathbf{r}^j,t) s_-^j+s_+^j E^+(\mathbf{r}^j,t)]  \tag{4}
+\]
+
+ここで
+<!--
+where
+-->
+
+\[
+s_±^j=s_x^j±is_y^j  \tag{5}
+\]
+
+<!--
+The total Hamiltonian governing the quantum dynamics of the electromagnetic field, the dipolar vibrational field of water molecules, and their interaction is given by
+-->
+
+電磁場の量子力学, 水分子の双極子振動場, およびそれらの相互作用を支配する全ハミルトニアンは
+
+\[
+H=H_{EM}+H_{WM}+H_I  \tag{6}
+\]
+
+<!--
+Since the spatial region V inside the microtubule cylinder may be considered as a cavity for the electromagnetic wave, it is Convenient to introduce the normal mode expansion of the electric field operaior 
+-->
+
+微小管円筒内部の空間領域Vは電磁波の空洞とみなせるため、電界演算子 \(E = E^++E^-\) の通常モード展開を導入すると便利であり、
+
+\[
+E^±(\mathbf{r},t)=\sum_k E_k^± (t) e^{±i(\mathbf{k}\cdot \mathbf{r}-ω_k t)}  \tag{7}
+\]
+
+<!--
+Here, \(ω_k\) denotes the proper angular frequency of the normal made with wave vector \(\mathbf{k}\). We are mainly interested in the ordered collective behavior among the water molecules and the quantized electromagnetic field in the cavity region \(V\). Let us introduce hence collective dynamical variables 
+\(S_k^±(t)\) and \(S\) for water molecules by
+-->
+
+ここで, ωk は波動ベクトル \(\mathbf{k}\) で作成された法線の固有角周波数を表します。我々が主に関心があるのは, 水分子間の秩序だった集団的行動とキャビティ領域 \(V\) 内の量子化された電磁場です。そこで, 水分子の集団的動的変数 \(S_k^±(t)\) と \(S\) を
+
+\[
+S_k^±(t)=\sum_{j=1}^N s_±^j(t) e^{±i(\mathbf{k} \cdot \mathbf{r}^j-ω_k t)}  \tag{8}
+\]
+
+および
+<!--
+and
+-->
+
+\[
+S=\sum_{j=1}^N s_z^j  \tag{9}
+\]
+
+<!--
+Then, the total Hamiltonian (Eq. 6) becomes
+-->
+で導入します。すると, 全ハミルトニアン(式6) は
+
+\[
+H=H_{EM}+\epsilon S-μ \sum_{k} (E_k^- S_k^-+S_k^+ E_k^+)  \tag{10}
+\]
+
+</p><p>
+
+<!--
+It seems worthwhile to note here that this total Hamiltonian for the system of N water molecules and the quantized electromagnetic field in the region V inside the microtubule cylinder is essentially of the same form as not only Dicke’s Hamiltonian for the laser system but also that of Stuart et al. for Quantum Brain Dynamics (Dicke, 1954; Stuart et al., 1979). Therefore, it can be expected that each microtubule in the cytoskeletal structure of brain cells manifests not only the memory printing and recalling mechanism in QBD but also a laser-like coherent optical activity, The former seems not so surprising because Jibu and Yasue (1992a, 1993a,b} developed a physical picture of QBD in terms of water molecules and protein filaments. Hence, we will not discuss this in the present paper. On the other hand, the latter seems highly surprising because it may open a completely new picture of the fundamental process of brain functioning, drastically different from the conventional one. Namely, in addition to the usual pathway conduction of neural impulses in terms of transmembrane ionic diffusions among nerve cells, the brain system may possibly use another but much more microscopic and elaborated fundamental physical process in terms of coherent photon emission and transfer in the microtubule just like the optical computer with lasers, optical fibers and other optical devices. It is this very surprising possibility we are going toa discuss throughout the present paper.
+-->
+
+ここで注目すべきは, \(N\) 個の水分子と微小管シリンダー内の領域 \(V\) 内の量子化された電磁場のシステムに対するこの全ハミルトニアンは, レーザーシステムに対する Dicke のハミルトニアンだけでなく, 量子脳ダイナミクスに対する Stuart らのハミルトニアン (Dicke, 1954 年, Stuart ら, 1979年) と本質的に同じ形式であるということです。したがって, 脳細胞の細胞骨格構造内の各微小管は, QBD における記憶の書き込みと想起のメカニズムだけでなく, レーザーのようなコヒーレントな光学活性も示すことが期待できます。前者は, Jibu と Yasue (1992a, 1993a, b)が水分子とタンパク質フィラメントの観点から QBD の物理的描像を展開したため, それほど驚くべきことではありません。したがって, 本稿ではこれについては説明しません。一方, 後者は, 従来のものとは大幅に異なる, 脳機能の基本的プロセスのまったく新しい描像を開く可能性があるため, 非常に驚くべきようです。つまり, 神経細胞間の膜貫通イオン拡散の観点から神経インパルスの通常の経路伝導に加えて, 脳システムは, レーザー, 光ファイバー, その他の光学デバイスを使用した光コンピューターと同様に, 微小管内のコヒーレントな光子放出と転送の観点から, 別のはるかに微視的で精巧な基本的物理プロセスを使用している可能性があります。この驚くべき可能性について, 本論文ではずっと議論していきます。
+</p><p>
+
+<!--
+However, it is difficult co look for the possibility of realizing laser devices in brain cells even though the microtubule may manifest the same quantum dynamical behavior, in terms of water molecules and the electromagnetic field, as is governed by the Hamiltonian of a typical laser system. This 1s because we need initially to pump up the majority of water molecules to the higher energy eigenstate by certain incoherent but high intensity light. In actual artificial laser devices, for example, the initial pumping is due to xenon flash lamps. In other words, the laser system cannot emit coherent photons without some pumping mechanism. We can hardly expect the existence of such a pumping light in the brain. We are, therefore, forced to look for another possibility with the total Hamiltonian (Eq. 10) leading to a different mechanism of coherent photon emission without pumping light.
+-->
+
+しかし, たとえ微小管が水分子と電磁場に関して, 典型的なレーザーシステムのハミルトニアンによって支配されるのと同じ量子力学的挙動を示すとしても, 脳細胞内でレーザーデバイスを実現する可能性を探すのは困難です。これは, 最初に, 特定の非コヒーレントだが高強度の光によって, 大部分の水分子をより高いエネルギーの固有状態にポンピングする必要があるためです。たとえば, 実際の人工レーザーデバイスでは, 最初のポンピングはキセノンフラッシュランプによるものです。言い換えれば, レーザーシステムは, 何らかのポンピングメカニズムなしではコヒーレント光子を放出できません。脳内にそのようなポンピング光が存在することはほとんど期待できません。したがって, ポンピング光なしでコヒーレント光子放出の異なるメカニズムにつながる合計ハミルトニアン(式10)を持つ別の可能性を探さざるを得ません。
+</p><p>
+
+<!--
+Fortunately, a physical inspection of the form of the total Hamiltonian (Eq. 10) reveals that it manifests a dynamical symmetry property not evident in the ground state and so the resulting quantum dynamics is known to involve certain long-range order creating phenomena due to spontaneous symmetry breaking (Stuart et al., 1979). The spatial dimension of this long-range order, that is, the coherence length lc can be estimated to be inversely proportional to the energy difference e, obtaining lc ≒ hundreds of micrometers. Among those long-range order creating phenomena we may find a specific one in which the collective dynamics of the majority of water molecules inside the microtubule cylinder V can give rise to cooperative spontaneous emission of photons without any pumping light. Any incoherent and disordered energy distribution among the water molecules due to the macroscopic thermal dynamics of the polymerized array of protein subunits (i.e. tubulins} forming the wall of microtubule cylinder can be gathered collectively into coherent and ordered dynamics ready to emit coherent photons cooperatively. This laser-like process of coherent photon emission without pumping light was first introduced by Dicke (1954) and called superradiance,
+-->
+
+幸いなことに, 全ハミルトニアン(式10)の形式を物理的に検査すると, 基底状態では明らかではない動的対称性特性が表れることが明らかになり, その結果生じる量子ダイナミクスには, 自発的な対称性の破れによる特定の長距離秩序生成現象が含まれることが知られています(Stuartら, 1979)。この長距離秩序の空間次元, つまり, コヒーレンス長 \(l_c\) は, エネルギー差 \(e\) に反比例すると推定され, \(l_c \approx\) 数百マイクロメートルになります。これらの長距離秩序生成現象の中には, 微小管シリンダー \(V\) 内の大多数の水分子の集団ダイナミクスが, ポンピング光なしで光子の協調的な自発放出を引き起こす特定の現象が見つかるかもしれません。微小管シリンダーの壁を形成するタンパク質サブユニット(チューブリンなど)の重合配列のマクロな熱力学による水分子間の非コヒーレントで無秩序なエネルギー分布は, コヒーレントで秩序立ったダイナミクスに集合的に集められ, コヒーレント光子を協調的に放出する準備が整います。ポンピング光なしでコヒーレント光子を放出するこのレーザーのようなプロセスは, Dicke(1954) によって初めて導入され, 超放射と呼ばれました。
+</p><p>
+
+<!--
+Let us investigate the superradiance in the microtubule cylinder V starting from the total Hamiltonian (Eq. 10), We assume for simplicity that only one norma! mode with a specific wave vector, say k0, has a proper angular frequency ωk0 resonating to the energy difference ε between the two principal energy eigenstates. Namely we have
+-->
+
+微小管シリンダー \(V\) の超放射を全ハミルトニアン(式10)から調べましょう。簡単にするために, 特定の波数ベクトル(たとえば k0)を持つ1つの標準モードのみが, 2つの主要なエネルギー固有状態間のエネルギー差εに共鳴する適切な角周波数ωk0を持つと仮定します。つまり, 次のようになります。
+
+\[
+\epsilon = \hbar \omega_{k_0}  \tag{11}
+\]
+
+<!--
+and all the other normal modes are neglected. In the conventional laser theory, this is Known as a single mode laser. What we analyse below may hence be considered as a single mode superradiance in the microtubule,
+-->
+
+他のすべての標準モードは無視されます。従来のレーザー理論では, これはシングルモードレーザーとして知られています。以下で分析するものは, したがって, 微小管内の単一モードの超放射として考えることができます。
+
+<!--
+Since we have only one normal mode with wave vector k0, we May omit al] the wave vector indices of the dynamical variables. Then, the total Hamiltonian (Eq, 10) becomes
+-->
+
+波数ベクトルk0を持つ1つの通常モードしかないため, 動的変数の波数ベクトル インデックスをすべて省略できます。すると, 合計ハミルトニアン (式 10) は次のようになります。
+
+\[
+H=H_{EM}+\epsilon S-μ(E^- S^-+S^+ E^+)  \tag{12}
+\]
+
+<!--
+The corresponding Heisenberg equations of motion for the three collective dynamical variables, S and S±, for water molecules and the two variables, E±, for the quantized electromagnetic field are given by:
+-->
+
+水分子の 3 つの集団動的変数 \(S\) と \(S^±\), および量子化された電磁場の 2 つの変数 \(E^±\) に対応するハイゼンベルクの運動方程式は, 次の式で与えられます。
+
+\[
+\begin{align}
+\frac{dS}{dt} &=-i \frac{μ}{\hbar} (E^- S^--S^+ E^+)  \tag{13}  \\
+\\
+\frac{dS^±}{dt} &=±i \frac{2μ}{\hbar} SE^∓±i \frac{\epsilon}{\hbar}S^± \tag{14}
+\end{align}
+\]
+
+および
+<!--
+and
+-->
+
+\[
+\frac{dE^±}{dx} =±i \frac{2π\epsilon μ}{\hbar V} S^∓  \tag{15}
+\]
+
+
+<!--
+Because of the short length of the microtubule cylinder －lMT≒102－103 nm — the pulse mode propagating along the microtubule cylinder in the direction of the z-axis stays in the cavity region V only for a short transit time tMT＝lMT/c, where c stands for the speed of light. As this transit time of the pulse mode is much shorter than the characteristic time of thermal interaction due to the disordered environment, the system of water molecules and quantized electromagnetic field in this single mode superradiance is free from thermal loss and can be considered as a closed system well-described by the Heisenberg equations of motion (Eqs. 13-15). Furthermore, the time derivative of the dynamical variables E± of the quantized electromagnetic field can be approximated by E±/lMT in the case of a pulse mode propagating along the longitudinal axis of the microtubule. Eq. 15 then yields
+-->
+
+微小管シリンダーの長さが短いため (\(l_{MT} \approx 10^2-10^3 nm\)), \(z\) 軸方向に微小管シリンダーに沿って伝播するパルスモードは, キャビティ領域 \(V\) に, 短い通過時間 \(t_{MT}＝l_{MT}/c\) だけ留まります (\(c\) は光速を表します)。このパルスモードの通過時間は, 無秩序な環境による熱相互作用の特性時間よりもはるかに短いため, この単一モード超放射における水分子と量子化電磁場のシステムは熱損失がなく, ハイゼンベルクの運動方程式(式13-15)によってよく説明される閉鎖系と見なすことができます。さらに, 量子化電磁場の動的変数 \(E^±\) の時間微分は, 微小管の縦軸に沿って伝播するパルスモードの場合, \(E^±/l_{MT}\) で近似できます。式15から次の式が得られます
+
+\[
+E^±=±i \frac{2π\epsilon μl_{MT}}{\hbar V} S^∓  \tag{16}
+\]
+
+<!--
+This means that a pulse mode of the quantized electromagnetic field in the microtubule cylinder cavity follows the collective dynamics of water molecules inside the microtubule. In other words, once a collective mode with long-range order is created in the dynamics of water molecules due to spontaneous symmetry breaking, coherent emission of pulse modes of the quantized electro-magnetic field —- that is, photons — follows. This is the mechanism of superradiance.
+-->
+
+これは, 微小管シリンダーキャビティ内の量子化電磁場のパルスモードが, 微小管内の水分子の集団ダイナミクスに従うことを意味します。言い換えると, 自発的な対称性の破れにより水分子のダイナミクスに長距離秩序を持つ集団モードが生成されると, 量子化電磁場のパルスモード, つまり光子のコヒーレント放出が続きます。これが超放射のメカニズムです。
+</p><p>
+
+<!--
+The last question is whether such a collective mode can be realized in the dynamics of water molecules starting from incoherent and disordered initial conditions. Notice that such an incoherent and disordered initial dynamical configuration of water molecules is due to the interaction between water molecules and thermally disordered states of the conformational dynamics of tubulins. The onset of this collective mode can be seen by rewriting the three Heisenberg equations for the collective variables of water molecules (Eqs. 13 and 14) by substituting Eq. 16. Namely, we have
+-->
+
+最後の疑問は, このような集団モードが, 非コヒーレントで無秩序な初期条件から始まる水分子のダイナミクスで実現できるかどうかです。水分子のこのような非コヒーレントで無秩序な初期の動的構成は, 水分子とチューブリンの配座ダイナミクスの熱無秩序状態との相互作用によるものであることに注意してください。この集団モードの開始は, 水分子の集団変数に対する3つのハイゼンベルク方程式(式13と14)を式16に置き換えて書き直すことで確認できます。つまり, 次の式が得られます。
+
+\[
+\frac{dS^±}{dt} =βSS^±±i\epsilon S^±  \tag{17}
+\]
+
+および
+<!--
+and
+-->
+
+\[
+\frac{dS}{dt}=-βS^+ S^-  \tag{18}
+\]
+
+ここで
+<!--
+where
+-->
+
+\[
+β=\frac{4π\epsilon μ^2 l_{MT}}{\hbar^2 V} 
+\]
+
+<!--
+These are coupled non-linear differential equations for non-commuting operators S and S± subject to certain commutation relations, and it is not so easy to find their solutions. However, if we regard these equations as ordinary coupled nonlinear differential equations for classical (i.e. commuting) dynamical variables, we can find special solutions with respect to any incoherent and disordered initial conditions. They are known as semi-classical approximations of the quantum dynamical system of superradiance (Agarwal, 1971). A straightforward calculation yields that the intensity of coherent photon emission in the microtubule cylinder due to superradiance can be given in this approximation by
+-->
+
+これらは, 特定の交換関係に従う非交換演算子SとS±の結合非線形微分方程式であり, その解を見つけるのはそれほど簡単ではありません。しかし, これらの方程式を古典的(つまり可換な)動的変数に対する通常の結合非線形微分方程式とみなすと, 非コヒーレントで無秩序な初期条件に関して特別な解を見つけることができます。これらは, 超放射の量子力学系の半古典的近似として知られています(Agarwal, 1971)。簡単な計算により, 超放射による微小管シリンダー内のコヒーレント光子放出の強度は, この近似で次のように表すことができます
+
+\[
+I=\frac{\hbar^2}{4t_R μ)^2} sech^2 \frac{t-t_0}{2t_R}  \tag{19}
+\]
+
+ここで
+<!--
+where
+-->
+
+\[
+t_R=\frac{c\hbar^2 V}{4πμ^2 \epsilon Nl_{MT}}
+\]
+
+<!--
+and \(t_0= t_R\ln2N\) denotes the life time and delay of the superradiance, respectively. Notice that the intensity of superradiance is proportional to N2 and its delay time is inversely proportional to N. These facts are characteristic to the long-range order creating process involving N water molecules (see Fig. 5).
+-->
+
+および \(t_0 = t_R\ln2N\) は, それぞれ超放射の寿命と遅延を表します。超放射の強度は \(N^2\) に比例し, 遅延時間は \(N\) に反比例することに注目してください。これらの事実は, \(N\) 水分子を含む長距離秩序生成プロセスの特徴です (図 5 を参照)。
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+
+<!--
+Fig. 5. A schematic representation of the process of superradiance in a microtubule. Each oval without an arrow stands for water molecule in the lowest rotational energy state. Each oval with an arrow stands for a water molecule in the first excited rotational energy state. The process is cyclic (a → b → c → d → a → b), and so on. (a) Initial state of the system of water molecules in a microtubule. Energy gain due to the thermal! fluctuation of tubulins increases the number of water molecules in the first excited rotational energy state. (b) A collective mode of the system of water molecules in rotationally excited states. A long-range coherence is achieved inside a microtubule by means of spontaneous symmetry breaking. (c) A collective mode of the system of water molecules in rotationally excited states loses its energy collectively, and creates coherent photons in the quantized electromagnetic field inside a microtubule. (d) Water molecules, having lost their first excited rotational energies by superradiance. start again to gain energy from the thermal fluctuation of tubulins, and the system of water molecules recover the initial state (a).
+-->
+
+図 5。微小管における超放射プロセスの概略図。矢印のない楕円は, 最低回転エネルギー状態にある水分子を表します。矢印のある楕円は, 最初の励起回転エネルギー状態にある水分子を表します。プロセスは循環的です (a → b → c → d → a → b)。 (a) 微小管内の水分子システムの初期状態。チューブリンの熱変動によるエネルギー増加により, 最初の励起回転エネルギー状態にある水分子の数が増加します。 (b) 回転励起状態にある水分子システムの集団モード。長距離コヒーレンスは, 自発的な対称性の破れによって微小管内で達成されます。(c) 回転励起状態にある水分子のシステムの集団モードは, 集団的にエネルギーを失い, 微小管内の量子化された電磁場にコヒーレント光子を生成します。(d) 超放射によって最初の励起回転エネルギーを失った水分子は, チューブリンの熱変動から再びエネルギーを獲得し始め, 水分子システムは初期状態 (a) を回復します。
+</p><p>
+
+<!--
+We have found that the quantum collective dynamics of water molecules and a quantized electromagnetic field inside the microtubule cylinder manifests the long-range cooperative phenomenon of superradiance in which collective excitation of water molecules can be induced by incoherent and disordered perturbations due to the macroscopic thermal dynamics of protein molecules forming the wall of the microtubule cylinder. This fact ensures that each microtubule in the cytoskeletal structure of brain cells, that is, neurons and astrocytes, may play an important role in the optical information processing regimen of brain function as a superradiant device which converts the macroscopic disordered dynamics of water molecules and protein molecules into the long-range ordered dynamics of water molecules and a quantized electromagnetic field involving a pulse mode emission of coherent photons. In other words, each microtubule is a coherent optical encoder in a dense microscopic optical computing network in the cytoplasm of each brain cell, if such a network is realized in actual cytoplasmic structure. This last point is far from evident and deserves to be discussed in the following section.
+-->
+
+私たちは, 水分子の量子集団ダイナミクスと微小管シリンダー内の量子化された電磁場が, 超放射の長距離協力現象を発現することを発見しました。この現象では, 微小管シリンダーの壁を形成するタンパク質分子のマクロな熱ダイナミクスによる非コヒーレントで無秩序な摂動によって, 水分子の集団励起が誘発される可能性があります。この事実は, 脳細胞, すなわちニューロンとアストロサイトの細胞骨格構造における各微小管が, 水分子とタンパク質分子のマクロな無秩序なダイナミクスを, 水分子の長距離秩序のあるダイナミクスと, コヒーレント光子のパルスモード放出を伴う量子化された電磁場に変換する超放射デバイスとして, 脳機能の光情報処理レジメンにおいて重要な役割を果たす可能性があることを保証します。言い換えれば, 各微小管は, 各脳細胞の細胞質内の高密度の微視的光コンピューティングネットワーク内のコヒーレント光エンコーダです(そのようなネットワークが実際の細胞質構造で実現されている場合)。この最後の点はまったく明らかではなく, 次のセクションで議論する価値があります。
+</p>
+<h2>3. 微小管の自己誘導透明性</h2>
+<!--
+<h2>3. Self-induced transparency in microtubules 微小管の自己誘導透明性</h2>
+-->
+<p>
+
+<!--
+We have shown the possibility of a completely new mechanism of fundamental brain functioning  in terms of coherent photon emission by superradiance in microtubules. Unlike a laser, superradiance is a specific quantum mechanical ordering process with a characteristic time much shorter than that of thermal interaction. Therefore, microtubules may be thought of as ideal optical encoders providing a physical interface between (1) the conventional macroscopic system of classical, disordered and incoherent neural dynamics in terms of transmembrane ionic diffusions as well as thermally perturbed molecular vibrations and (2) the as yet unknown microscopic optical computing network system of ordered and coherent quantum dynamics free from thermal noise and loss. As Feynman (1985) proposed, the optical computing network is the most realizable quantum mechanical computer among many possibilities such as 4 superconducting computer. However, it is not clear whether the pulse mode coherent photons created in the microtubule cylinder by superradiance can be safely transmitted, preserving its long-range coherence. It seems most likely that even coherent photons emitted by superradiance will lose immediately their coherence and long-range order due to the noisy thermal environment. In any case, we absolutely require some quantum dynamical mechanism to maintain the coherent transmission of photons in the as yet unknown microscopic optical computing network in brain cells. In this section, we will show that it is again the microtubule in the cytoskeletal structure of brain cells which provides us with such a mechanism.
+-->
+
+微小管の超放射によるコヒーレント光子放出の観点から, 基本的な脳機能のまったく新しいメカニズムの可能性を示しました。レーザーとは異なり, 超放射は, 熱相互作用よりはるかに短い特性時間を持つ特定の量子力学的秩序化プロセスです。したがって, 微小管は, (1) 膜貫通イオン拡散と熱的に摂動された分子振動の観点から見た古典的で無秩序で非コヒーレントな神経ダイナミクスの従来のマクロシステムと, (2) 熱雑音と損失のない秩序立ったコヒーレントな量子ダイナミクスのこれまで知られていないミクロな光コンピューティングネットワークシステムとの間の物理的インターフェイスを提供する理想的な光エンコーダーであると考えられます。Feynman (1985) が提案したように, 光コンピューティングネットワークは, 超伝導コンピュータなどの多くの可能性の中で最も実現可能な量子力学的コンピュータです。ただし, 超放射によって微小管シリンダー内に生成されたパルスモードのコヒーレント光子が, その長距離コヒーレンスを維持したまま安全に伝送できるかどうかは明らかではありません。超放射によって放出されたコヒーレント光子でさえ, ノイズの多い熱環境のために, コヒーレンスと長距離秩序をすぐに失う可能性が高いと思われます。いずれにせよ, 脳細胞内のまだ知られていない微視的光コンピューティング ネットワークで光子のコヒーレント伝送を維持するには, 何らかの量子力学的メカニズムが絶対に必要です。このセクションでは, 脳細胞の細胞骨格構造内の微小管が, このようなメカニズムを提供するものであることを示します。
+</p><p>
+
+<!--
+Let us suppose that the pulse mode coherent photons are created in a small segment of the microtubule cylinder by superradiance. Then, those photons propagate along the longitudinal axis of the microtubule cylinder, that is, the z-axis. If the region V inside the microtubule cylinder were maintained at vacuum, they would transmit through the region just as they da along a waveguide. However, the region is filled up with water molecules, and it is not evident at all whether the pulse mode coherent photons can be safely transmitted through the region without absorption or loss of coherence. 
+-->
+
+パルスモードコヒーレント光子が超放射によって微小管円筒の小さなセグメントに生成されたと仮定します。次に, それらの光子は微小管円筒の縦軸, つまり z 軸に沿って伝播します。微小管円筒内の領域Vが真空に維持されている場合, 光子は導波管に沿って移動するのと同じようにその領域を通過します。ただし, その領域は水分子で満たされており, パルスモードコヒーレント光子が吸収やコヒーレンスの損失なしにその領域を安全に透過できるかどうかはまったく明らかではありません。
+</p><p>
+
+<!--
+For the purpose of describing the transmission of pulse mode coherent photons along the region inside the microtubule cylinder, it seems convenient to work with a semi-classical approximation in which the long-range ordered dynamics of water molecules is described by quantum mechanics but the electromagnetic field 1s described classically. This approximation becomes reliable when the intensity of the pulse mode coherent photons is large, and this 1s indeed the case for superradiance emission (Feynman et al., 1957).
+-->
+
+パルスモードコヒーレント光子が微小管円筒内の領域に沿って透過することを説明するためには, 水分子の長距離秩序ダイナミクスが量子力学によって記述され, 電磁場が古典的に記述される半古典的近似で作業するのが便利と思われます。この近似は, パルスモードのコヒーレント光子の強度が大きい場合に信頼性が高くなり, これは超放射放射の場合に実際に当てはまります (Feynman ら, 1957)。
+</p><p>
+
+<!--
+Let us consider the Maxwell equation for the scalar electric field E = E(z, t), standing for the pulse mode coherent photons propagating along the z-axis coupled to the collective dynamical variables S± of water molecules inside the microtubule cylinder,
+-->
+
+スカラー電場 \(E= E(z, t)\) の Maxwell 方程式を考えてみましょう。これは, 微小管シリンダー内の水分子の集団的動的変数 \(S^±\) と結合した \(z\) 軸に沿って伝播するパルスモードのコヒーレント光子を表します。
+
+\[
+\frac{∂E^±}{∂z}+\frac{∂E^±}{∂t}=∓i \frac{2π\epsilon μ}{\hbar V} S^∓  \tag{20}
+\]
+
+<!--
+This equation is valid under the condition that the collective dynamical! variables S± are slowly varying, that is,
+-->
+
+この方程式は, 集団的動的変数が変数 \(S^±\) はゆっくりと変化します。つまり, 
+
+\[
+\frac{∂S^±}{∂t} \ll iωS^±  \tag{21}
+\]
+
+<!--
+Then, taking the expectation of those quantum mechanical variables in this Maxwell equation and the Heisenberg equations of motion (Eqs. 13 and 14), eliminating all the expectation values of those variables referring to water molecules, and introducing new variables for the scalar electric field by
+-->
+
+次に, このマクスウェル方程式とハイゼンベルクの運動方程式(式13と14)における量子力学的変数の期待値を取り, 水分子に関する変数の期待値をすべて消去し, スカラー電場の新しい変数を導入して, 
+
+\[
+θ^±(z,t)=\frac{2μ}{\hbar} \int_{-\infty}^t E^± (z,u)du  \tag{22}
+\]
+
+<!--
+we can obtain dynamical equations for the electromagnetic field in the region V inside the microtubule cylinder
+-->
+
+によって導入すると, 微小管シリンダー内の領域 \(V\) の電磁場の動的方程式が得られます
+
+\[
+\frac{∂^2 θ^±}{∂τ∂ζ}=-\sin θ^±  \tag{23}
+\]
+
+ここで
+<!--
+Here,
+-->
+ 
+\[
+τ=\sqrt{\frac{2π\epsilon μ^2 N}{\hbar^2 V}}\left(t-\frac{z}{c}\right) 
+\]
+
+および
+<!--
+and
+-->
+
+\[
+ζ=\sqrt{\frac{2π\epsilon μ^2 N}{\hbar^2 V}}\frac{z}{c}
+\]
+
+<!--
+This is a typical non-linear partial differential equation called the Sine—Gordon equation, and several exact solutions are obtained by means of the inverse scattering method of soliton equations (Ablowitz et al., 1974).
+-->
+
+これは, サインゴードン方程式と呼ばれる典型的な非線形偏微分方程式であり, ソリトン方程式の逆散乱法によっていくつかの正確な解が得られます(Ablowitzら, 1974)。
+</p><p>
+
+<!--
+The most interesting solution of the Sine-Gordon equation (Eq. 23) gives rise to an explicit form of the time evolution of the scalar electric field E in the region V inside the microtubule cylinder
+-->
+
+サインゴードン方程式 (式 23) の最も興味深い解は, 領域 \(V\) のスカラー電場Eの時間発展の明示的な形式を生み出します微小管シリンダー内部
+
+\[
+E=\sqrt{\frac{2π\epsilon Nv_0}{V(c-v_0)}} sech\sqrt{\frac{2π\epsilon μ^2 Nv_0}{\hbar^2 V(c-v_0)}}\left(t-\frac{z}{v_0}\right)  \tag{24}
+\]
+
+<!--
+This is nothing but a soliton solution and tells us that the pulse mode photons propagate along the dielectric waveguide of the microtubule cylinder filled up with water molecules with a certain constant speed v0 less than the speed of light in vacuum c. It is important to see that the pulse form of the soliton solution is kept unchanged due to the non-linearity of the Sine—Gordon equation.
+-->
+
+これはソリトン解に他ならず, パルスモード光子が, 真空中の光速 \(c\) より遅い一定の速度 \(v_0\) で水分子で満たされた微小管シリンダーの誘電体導波路に沿って伝播することを示しています。ソリトン解のパルス形状は, サインゴードン方程式の非線形性により変化しないことを確認することが重要です。
+</p><p>
+<!--
+We have found that microtubules play the role of dielectric waveguides and that pulse mode coherent photons propagate through them as if they were perfectly transparent. This phenomenon is termed self-induced transparency and known to be a typical non-linear effect in quantum optics (McCall and Hahn, 1967). The microtubule may be an ideal microscopic optical device for use as a perfectly transparent pathway for pulse mode photons, free from thermal noise and loss. Combined with superradiance, this self-induced transparency of the microtubule allows us to conclude that the brain is essentially a dense assembly of microscopic and elaborated optical computing networks of microtubules in the cytoskeletal structure of brain cells. Coherent photon emission and transfer in each microtubule are ensured by superradiance and self-induced transparency characteristic to long-range ordering phenomena in quantum dynamics.
+-->
+
+微小管は誘電体導波路の役割を果たしており, パルスモードのコヒーレント光子は, 完全に透明であるかのように微小管を伝播することがわかっています。この現象は自己誘導透明性と呼ばれ, 量子光学における典型的な非線形効果として知られています(McCall and Hahn, 1967)。微小管は, 熱雑音や損失のない, パルスモード光子の完全に透明な経路として使用するのに最適な微視的光学デバイスである可能性があります。超放射と組み合わせると, この微小管の自己誘導透明性から, 脳は本質的に, 脳細胞の細胞骨格構造にある微小管の微細で精巧な光コンピューティングネットワークの密集した集合体であると結論付けることができます。各微小管におけるコヒーレントな光子の放出と転送は, 量子力学における長距離秩序化現象に特徴的な超放射と自己誘導透明性によって保証されます。
+</p><p>
+
+<!--
+Both superradiance and self-induced transparency may be essential to cooperative physical activity of multiple microtubules in cytoskeletal structure in single cells and among many cells. Thus biological systems in genera] and the brain in particular may utilise a quantum level holographic information system (Hameroff, 1987; Pribram, 1991).
+-->
+
+超放射と自己誘導透明性はどちらも, 単一細胞内および多数の細胞間の細胞骨格構造における複数の微小管の協調的な物理的活動に不可欠である可能性があります。したがって, 一般的な生物システム, 特に脳は, 量子レベルのホログラフィック情報システムを利用している可能性があります(Hameroff, 1987年, Pribram, 1991年)。
+</p>
+<h2>4. 脳機能への影響</h2>
+<!--
+<h2>4. Implications of brain function 脳機能への影響</h2>
+-->
+<p>
+<!--
+We have developed a theoretical framework for the occurrence of quantum coherence of photons in microtubules and their associated water. Fundamental involvement of microtubules and the cytoskeleton in orchestration and control of ‘real time’ cell functions suggests that such quantum coherence, if it exists, could play a major role in cellular communication, signaling and information processing (Conrad, 1988).
+-->
+
+私たちは, 微小管とそれに関連する水における光子の量子コヒーレンスの発生に関する理論的枠組みを開発しました。微小管と細胞骨格が「リアルタイム」の細胞機能の編成と制御に根本的に関与していることは, そのような量子コヒーレンスが存在する場合, 細胞通信, シグナル伝達, 情報処理において重要な役割を果たす可能性があることを示唆しています (Conrad, 1988)。
+</p><p>
+
+<!--
+Several] aspects of quantum coherence in microtubules may be considered:
+-->
+微小管における量子コヒーレンスには, いくつかの側面が考えられます。
+</p><p>
+
+<!--
+	Superradiance and self-induced transparency occurring in ordered water within the hollow core of cylindrical microtubules behaving as waveguides will result in coherent photons. This coherence, estimated to be capable of superposition of states among microtubules spatially distributed over hundreds of micrometers, which in turn are in superposition with other microtubules hundreds of micrometers away in other directions and so on, could account for a coupling of microtubule dynamics over wide areas. This in turn could account for a unity of thought and consciousness. For example, Insinna (1992) has attributed to quantum coherence in microtubules the phenomenon of Jungian synchronicity.
+-->
+
+導波管として働く円筒形微小管の中空コア内の整列した水で発生する超放射と自己誘導透過性は, コヒーレント光子をもたらす。このコヒーレンスは, 数百マイクロメートルにわたって空間的に分布する微小管間の状態の重ね合わせが可能と推定され, さらに, 他の方向に数百マイクロメートル離れた他の微小管と重ね合わせられるなど, 広範囲にわたる微小管ダイナミクスの結合を説明できる可能性がある。これは, 思考と意識の統一を説明できる可能性がある。たとえば, Insinna (1992) は, ユングのシンクロニシティ現象を微小管の量子コヒーレンスに起因するものとしている。
+</p><p>
+
+<!--
+	Coherent interference leading to holographic information representation would result from quantum optical effects. At the cytoskeletal level, this could occur via calcium induced solgel variations causing polymerization of actin or other cytoskeletal filaments resulting in a holographic representation of short-term memory (Hameroff, 1987). The holographic paradigm suggests coherence and holographic interference across multiple scales (Pribram, 1991). At a more ‘macro’ level, coherence of neuronal firing among widely dispersed neurons in the 40-Hz range may be related to quantum coherence of microtubules within coherently firing neurons (Singer, 1993).
+-->
+
+ホログラフィック情報表現につながるコヒーレント干渉は, 量子光学効果から生じる。細胞骨格レベルでは, カルシウム誘導ゾルゲル変化によってアクチンやその他の細胞骨格フィラメントの重合が起こり, 短期記憶のホログラフィック表現が生じる可能性がある(Hameroff, 1987)。ホログラフィックパラダイムは, 複数のスケールにわたるコヒーレンスとホログラフィック干渉を示唆している(Pribram, 1991)。より「マクロ」レベルでは, 40 Hzの範囲で広く分散したニューロン間のニューロン発火のコヒーレンスは, コヒーレントに発火するニューロン内の微小管の量子コヒーレンスに関連している可能性がある(Singer, 1993)。
+</p><p>
+
+<!--
+	Sequelae of quantum events in individual microtubule subunits, acoustoconformational vibrations could propagate as signals through cytoskeletal networks and membranes and extracellular matrices. Such proposed signals (in the context of the cellular automata theory) have been shown theoretically capable of learning, logic and adaptation (Rasmussen et al., 1990; Lahoz-Beltra et al., 1993).
+-->
+
+個々の微小管サブユニットにおける量子イベントの結果として, 音響コンフォメーション振動が細胞骨格ネットワーク, 膜, 細胞外マトリックスを介して信号として伝播する可能性がある。このような提案された信号(セルオートマトン理論の文脈で)は, 理論的には学習, 論理, 適応が可能であることが示されています(Rasmussen et al., 1990; Lahoz-Beltra et al., 1993)。
+</p><p>
+
+<!--
+We have described a complex energy/information field originating in cytoskeleton and associated water and cooperatively pervading other biostructures. ‘Unifying field theories’ have a long and unsuccessful history in biology and biophysics and connote a derisive term: ‘vitalism’. We introduce a neo-vitalistic, quantum coherent holographic field based on  microtubule-derived Goldstone bosons as a medium of biological information, communication and representation of external world. In its largest “brain-wide’ scale, this should constitute consciousness.
+-->
+
+私たちは, 細胞骨格とそれに関連する水に由来し, 他の生体構造に協力的に浸透する複雑なエネルギー/情報フィールドについて説明しました。「統一場理論」は生物学と生物物理学において長く失敗した歴史があり, 「生気論」という軽蔑的な用語を暗示しています。私たちは, 生物学的情報, コミュニケーション, および外部世界の表現の媒体として, 微小管由来のゴールドストーン粒子に基づく新生気論的量子コヒーレントホログラフィックフィールドを導入します。最大の「脳全体」スケールでは, これが意識を構成するはずです。
+</p><p>
+
+<!--
+Fueled by biochemical energy from ATP and GTP hydrolysis and protein phosphorylation, microtubule quantum coherence and self-focussing should be sensitive to general anesthesia. Anesthetic gas molecules reversibly inhibit consciousness by weak, van der Waals binding in hydrophobic regions of proteins (Franks and Lieb, 1982). If quantum optical coherence in microtubules is essential for consciousness, anesthetics must somehow inhibit it. One possible way is by membrane inhibition which could disconnect and isolate cytoskeletal dynamics from the external milieu. Alternatively, anesthetics may directly alter cytoskeletal quantum coherence. General anesthetics do bind to microtubules and at high enough concentrations cause depolymerization (Allison and Nunn, 1968). At concentrations of anesthesia just sufficient for ablation of consciousness, inhibition of tubulin conformational dynamics could have profound effects. Wulf and Featherstone (1957) showed that anesthetic binding within protein hydrophobic regions altered protein-water binding at the protein surface. Thus, slight anesthetic effects on tubulin conformational dynamics and cooperative water binding would have significant effects on quantum coherence. Anesthesia is also known to be reversed by pressure (Halsey, 1976). By condensing a non-linear optical medium, pressure increases quantum cooperative coherent phenomena, Thus our model is consistent with the mechanism of general anesthesia.
+-->
+
+ATPとGTPの加水分解とタンパク質のリン酸化による生化学的エネルギーによって駆動される微小管の量子コヒーレンスと自己フォーカスは, 全身麻酔に敏感であるはずです。麻酔ガス分子は, タンパク質の疎水性領域での弱いファンデルワールス結合によって意識を可逆的に抑制します(FranksとLieb, 1982)。微小管の量子光学コヒーレンスが意識に不可欠である場合, 麻酔薬は何らかの方法でそれを阻害する必要があります。考えられる方法の 1 つは, 細胞骨格のダイナミクスを外部環境から切り離して隔離できる膜阻害です。あるいは, 麻酔薬が細胞骨格の量子コヒーレンスを直接変更する可能性があります。全身麻酔薬は微小管に結合し, 十分な濃度になると脱重合を引き起こします(Allison と Nunn, 1968)。意識を消失させるのに十分な麻酔濃度では, チューブリンのコンフォメーション ダイナミクスの阻害が大きな影響を及ぼす可能性があります。Wulfと Featherstone(1957)は, タンパク質の疎水性領域内での麻酔薬の結合が, タンパク質表面でのタンパク質と水の結合を変化させることを示した。したがって, チューブリンの立体配座ダイナミクスと協同的な水結合に対するわずかな麻酔効果は, 量子コヒーレンスに重大な影響を及ぼす。麻酔は圧力によって解除されることも知られている(Halsey, 1976)。非線形光学媒体を凝縮することにより, 圧力は量子協同コヒーレンス現象を増加させる。したがって, 私たちのモデルは全身麻酔のメカニズムと一致している。
+</p>
+<h2>5. まとめ</h2>
+<!--
+<h2>5. Summary 要約</h2>
+-->
+<p>
+
+<!--
+This paper presents a theoretical framework for quantum optical coherence in cytoskeletal microtubules. Specifically, the quantum dynamical system of water molecules and the quantized electromagnetic field confined inside the hollow microtubule core manifests a specific collective dynamics called superradiance by which coherent photons are created inside the microtubule. Furthermore, such coherent photons created by superradiance penetrate perfectly along the internal hollow core of the microtubule as if the optical medium inside it were made transparent by the propagating. photons themselves. This quantum effect is called -self-induced transparency. Such effects can account for cellular signaling, holographic information processing and unity of consciousness.
+-->
+
+この論文では, 細胞骨格微小管における量子光コヒーレンスの理論的枠組みを提示する。具体的には, 水分子の量子力学システムと中空微小管コア内に閉じ込められた量子化された電磁場は, 超放射と呼ばれる特定の集団ダイナミクスを示し, それによって微小管内でコヒーレント光子が生成される。さらに, 超放射によって生成されたこのようなコヒーレント光子は, あたかもその内部の光学媒体が伝播する光子自体によって透明になったかのように, 微小管の内部中空コアに沿って完全に浸透します。この量子効果は, 自己誘導透明性と呼ばれます。このような効果は, 細胞シグナル伝達, ホログラフィック情報処理, 意識の統一を説明することができます。
+</p>
+<h2>6. 謝辞</h2>
+<!--
+<h2>6. Acknowledgements</h2>
+-->
+<p>
+
+<!--
+The authors wish to thank Professors H. Umezawa, Y. Takahashi, L.M. Ricciardi and C.I.J.M. Stuart for providing us with a quantum theoretical framework for living matter. It 1s sad to hear of the death of C.I.J.M. Stuart. We owe him a lot and deeply mourn him. Stuart R. Hameroff is partially supported by NSF Grant No. DMS-9114503.
+-->
+
+著者一同、H. 梅沢教授、Y. 高橋教授、L. M. Ricciardi 教授、C.I.J.M.Stuart教授に、生体物質の量子論的枠組みを提供してくださったことに感謝申し上げます。C.I.J.M.Stuart 教授のご逝去を知り、大変悲しく思っております。私たちは彼に多大な恩義を感じており、深く哀悼の意を表します。Stuart R・Hameroff 研究は、NSF助成金番号DMS-9114503の助成を受けています。
+
+</p>
+<h2>7. 参考文献</h2>
+<!--
+<h2>7. References</h2>
+-->
+<p>
+<div class="styleRef">
+<ul><li>
+Ablowiz, M.J., Kaup, D_J.. Newell, A.C. and Segur, H., 1974, The inverse scattering transform —- Fourier analysis for nonhnear problems. Stud. Appl. Math, 53, 249-315,
+</li><br><li>Agarwal, G.S.. 1971, Master-cquation approach to spantaneous emission [1]: many-body aspects of emission from two-level atoms and the effect of inhomogeneous broadening. Phys, Rev. Ad, 179]-1801,
+</li><br><li>Alison, A.C. and Nunn, J.F.. (968, Effects of general anaesthetics On microtubules: a possible mechanism of anaesthesia. Lancet ii, 1326-1329.
+</li><br><li>Amos, L.A. and Klug, A., 1974, Arrangements of subunits in flagellar microtubules. J. Cell Sei, 14, 523-550,
+</li><br><li>Bohm, B., (931, Quantum Theory (Prentice-Hall, New York).
+</li><br><li>Bohr, N., 1958, Atomic Physics and Human Knowledge (Wiley, New York).
+</li><br><li>Clarke, A.C., 1968, 2001: A Space Odyssey (Polaris Productions, [nc.}.
+</li><br><li>Conrad, M., 1988, Proton supermobility: a mechanism for coherent dynamic computing. J. Mol. Electron. 4, 57-65.
+</li><br><li>Crick, F. and Koch, C., 1990, Towards a neurobiological theory of consciousness. Semun, Neurosci. 2, 263-275,
+</li><br><li>Davydov, AS. 1979, Solitons in molecular systems. Phys. Scripta 20, 387-394.
+</li><br><li>Del Gindice, E., Doglia, §.. Milani, M. and Vitiello, G., 1983, Electromagnetic field and spontaneous symmetry breaking in biological matter. Nuci. Phys. 8275 (FS {7], 185-199.
+</li><br><li>Del Giudice, E., Preparata, G. and Vitiello, G., 1988, Water as a free electric dipole laser. Phys. Rev. Lett. 61, 1G85—1088.
+</li><br><li>Dicke, R.H., 1954, Coherence in spontaneous radiation processes. Phys. Rev. 93, 99-110.
+</li><br><li>Eccles, F.C., 1986, Do mental events cause neural events analogously 10 the probability fields of quantum mechanics? Proc. R, Soc. Lond. B227, 411-428.
+</li><br><li>Feynman, R.P.. 1985, Quantum mechanical computers. Optics News 11, 11-20.
+</li><br><li>Feynman, R.P.. Vernon, F.L. Jr. and Hellwarth, R.W., 1957, Geometrical representation of the Schrédinger equation for solving maser problems. J. Appl. Phys. 28, 49-42.
+</li><br><li>Franks, N.P. and Lieb, W.R., 1982, Molecular mechanisms of general anesthesia. Nalure 300, 487-493.
+</li><br><li>Franks, F.. 1972, Water: A Comprehensive Treatise (Plenum, New York).
+</li><br><li>Fr&ouml;hlich, H. 1968, Long-range coherence and energy storage in biological systems. [nt. J. Quantum Chem. 2, 641-649.
+</li><br><li>Gabor, D.. 1946, Theary of communication. J. Inst. Elect. Eng. 93, 429-441,
+</li><br><li>Gabor, D.. 1948, A new microscopic principle. Nature 161, 777-778
+</li><br><li>Gabor, D., i968, Improved holographic model of temporal recall. Nature 217, 1288-1289,
+</li><br><li>Genberg, L., Richard, L.. McLendon, G. and Dwayne-Miller, R.V., 1991, Direct observation of global protein motion in hemoglobin and mycglobin on picosecond time scales. Science 751, 1051-1054,
+</li><br><li>Genzel, L.. Kremer, F., Poglitsch, A. and Bechtold, G., 1976, Relaxation processes on a picosecond time scale in hemoglobin and poly observed by millimeter-wave spectroscopy. Biopolymers 22, 1715-1729.
+</li><br><li>Grundler, W. and Keilmann. F., 1983, Sharp resonances in yeast growth nonthermal sensitivity to microwaves. Phys. Rev. Lett. 51, 12)4-1216.
+</li><br><li>Halsey, M.J.. 1976, Mechanisms of general anesthesia, in: Anesthesia Uptake and Action, E.[. Eger (ed.) (Williams and Wilkins, Baltimere}.
+</li><br><li>Hameroff, S.R., 1974, Chi: a neural hologram? Am. J. Chin. Med. 2, 163-170.
+</li><br><li>Hameroff, S.R., L987, Ultimate Computing: Biomolecular Consciousness and Nano Technology (North-Holland, Amsterdam}.
+</li><br><li>Hameroff, S.R. and Watt, R.C., 1982, Information processing in microtubules, J. Theor. Biol. 98, 549-561.
+</li><br><li>Hirokawa, N., 1961, Molecular architecture and dynamics of the neuronal cytoskeleton, in: The Neuronal Cytoskeleton, R.D. Burgoyne (ed.} (Wiley, Liss), pp. 4-74.
+</li><br><li>Insinna, E.M., 1992, Synchromicity and coherent excitations in microtubules. Nanobiology |, 191-208.
+</li><br><li>Jibu, M. and Yasue. K., [992a, A physical picture of Umezawa’s quantum brain dynamics, in: Cybernetics and Systems Research 92, R. Trappl (ed.) (World Scientific, Singapore).
+</li><br><li>Jibu. M. and Yasue, K., (992b, The basics of quantum brain dynamics, in: Proceedings of the First Appalachian Conference on Behavioral Neurodynamics, K.H. Pribram (ed.) (Center for Brain Research and Informational Sciences, Radford University, Radford, September 17-20).
+</li><br><li>Jibu, M. and Yasue, K., 1993a, Intracellular quantum signal transfer in Umezawa's quantum brain dynarmes. Cybern. Sysl. Int. J. 24, 1-7.
+</li><br><li>Jibu. M. and Yasuc, K., 1993b, Introduction to quantum brain dynamics, in; Naturc, Cognition and System HI, E. Carvallo (ed.5 (Kluwer Academic, London).
+</li><br><li>Lahez-Beltra, R.. Hameroff, §.R. and Dayhoff, J.E.. 1993, Cytoskeletal logic: a model for molecular computation via Boolean operations in microtubules and microtubule associated proteins. BioSystems 29, 1-23.
+</li><br><li>Lechleiter, J., Girard, S., Peralta, E. and Clapham, D., 1991, Spiral waves: spiral calclum wave propagation and antihilalion in Yenapus faevis oocytes. Science 252, 123-126.
+</li><br><li>Margenau, H., 1984, The Miracle of Existence (Oxbow Press, Woodbridge).
+</li><br><li>Marshall, I.N., 1989, Conscicusness and Bose-Eistem condensates. New Ideas Psychol. 7, 73-83.
+</li><br><li>McCall, S.L. and Hahn, E.L., 1967, Self-induced transparency by pulsed coherent light. Phys. Rev. Lett. 18, 908-911.
+</li><br><li>Neubauer, C., Phelan, A.M., Keus H. and Lange, D.G., 1990, Microwave irradiation of rats at 2.45 GHz activates pimocylotic-loke uptake of tracer by capillary endothelial cells of cerebral cortex. Bioelectromagnetics 11, 261-268.
+</li><br><li>Penrose, R., 1989, The Emperor's New Mind (Oxford University Press, London).
+</li><br><li>Penrose, R., 1994, Shadows of the Mind {Oxford University Press, London).
+</li><br><li>Pribram, K.H., 1966, Some dimensions of remembering: steps toward a neuropsychological model of memory, in Macromolecules and Behavior, J. Gano (ed.) (Academic Press, New York).
+</li><br><li>Pribram, K.H., 1971, Languages of the Brain {Entlewood Cliffs. New Jersey).
+</li><br><li>Pribram, K.H., 1991, Brain and Perception (Lawerence Erlbaum, New Jersey}.
+</li><br><li>Rasmussen, S., Karampurwala, H., Vaidyanath, R., Jensen, K.5. and Hameroff, 5.R., 1990, Computational connectionism within neurons: a model of cytoskelelal automata subserving neural networks. Physica D42, 428-449,
+</li><br><li>Ricciardi, L.M. and Umezawa, H., 1967, Brain and physics of many-body problems. Kybernetik 4, 44-48. Singer, W., 1993, Synchronization of cortical activity and its putative role in informanhion processing and learning. Annu. Rev, Physiol. $5, 349-374.
+</li><br><li>Stuart, C.[J.M., Takahashi, Y. and Umezawa, H., 1978, On the stability and non-local properties of memory. J. Thear. Biol. 71, 605-618.
+</li><br><li>Stuart, C.LJ.M., Takahashi, ¥. and Umezawa, H., 1979, Mixed-system brain dynamics: neural memory as a macroscopic ordered stale. Found. Phys. 9, 301-327,
+</li><br><li>Umezawa, H., 1993, Advanced Field Theory: Micro, Macra, and Thermal Physics (American Institute of Physics, New York).
+</li><br><li>Webb, S.J, 1980, Laser Raman spectroscopy of living cells. Phys. Rep. 60, 201-224.
+</li><br><li>Webb, S.J. and Stoneham, M.E., 1977, Resonances between 1011 and 1012 Hz in active bacterial cells as seen by laser Raman spectroscopy. Phys, Lett. A6é0, 267-268. Webb, 3.]., Stoneham, M.E. and Préhhch, H., 1977, Evidence for coherent excitation in biological system. Phys. Lett. AG63, 407-408.
+</li><br><li>Wulf, RJ. and Featherstone, R.M., 1957, A correlation of Van der Waals constants with anesthetic potency. Anesthestalogy 18, 97-i085.
+</li></ul></div>
+</p>
+    </body>
+</html>
