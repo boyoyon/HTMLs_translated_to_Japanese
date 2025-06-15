@@ -12,6 +12,14 @@
         <h2>その他</h2>
         <p>
             AIが要約してくれるし、言語を選択すれば日本語で読める･･･<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2504.07960">VisualCloze: ビジュアルインコンテキスト学習によるユニバーサル画像生成フレームワーク</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/1707.06347 ">近接方策最適化アルゴリズム：強化学習に革命をもたらす</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.01716">自己挑戦型言語モデルエージェント</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2505.22954">Darwin Gödel Machine：コーディングのための自己改善型AIシステム</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2503.22430">MVSAnywhere: ゼロショット多視点ステレオ</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.09027">拡散と分散：表現正則化による画像生成</a> Kaiming Heさんの論文<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.07527">ReLIFT: LLM推論のための交互オンラインファインチューニング</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2412.10209">GAF：マルチビュー拡散による単眼ビデオからのガウスアバター再構築</a><br><br>
         <a href="https://www.alphaxiv.org/ja/overview/2406.09756">MASt3Rによる3D画像マッチングの基礎固め：包括的な概要</a><br>
             画像マッチングはコンピュータビジョンにおいて長い歴史を持ち、SIFTやSURFのような手作業で作成された特徴記述子から、SuperGlueやLoFTRのような深層学習アプローチへと進化してきました。
 <br><br>
