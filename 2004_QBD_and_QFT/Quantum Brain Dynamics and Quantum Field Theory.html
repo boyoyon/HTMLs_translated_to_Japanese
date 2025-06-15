@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>QBD and QFT</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Quantum Brain Dynamics and Quantum Field Theory</center></h1>
+<center>量子脳ダイナミクスと場の量子論</center><br>
+<br>
+
+</p><p style="text-align: right;">
+Kunio Yasue<br>
+Research Institute for Informatics and Science<br>
+Notre Dame Seishin University<br>
+Okayama 700-8516, Japan<br>
+</p>
+<h2><center>要旨</center></h2>
+<!--
+<h2>ABSTRACT</h2>
+-->
+<p class="margin-abstract">
+<!--
+An introductory exposition of Quantum Brain Dynamics (QBD) is presented in which the fundamental physical process of the brain can be described within the realm of quantum field theory. QBD is nothing else but Quantum Electrodynamics (QED) of the electric dipole field of dipolar solitons and water molecules with a symmetry property under the dipole rotation. The highly systematized functioning of the brain is found to be realized by the spontaneous symmetry breaking phenomena. Memory printing, recall and decay processes are represented by the fundamental physical processes standing for the phase transition process, the symmetry restoring process and the quantum tunneling process, respectively.
+-->
+
+量子脳ダイナミクス(QBD)の入門的解説は, 脳の基本的な物理プロセスを場の量子論の領域で記述します。QBDは, 双極子回転下で対称性を持つ双極子ソリトンと水分子の電気双極子場の量子電気力学(QED)に他なりません。脳の高度に体系化された機能は, 自発的な対称性の破れ現象によって実現されることがわかっています。記憶の書き込み, 想起, 減衰プロセスは, それぞれ相転移プロセス, 対称性回復プロセス, 量子トンネルプロセスを表す基本的な物理プロセスによって表されます。
+</p>
+<h2>1. モチベーション</h2>
+<!--
+<h2>1. Motivation</h2>
+-->
+<p>
+<!--
+The problem of understanding the mechanism of memory in terms of fundamental physical processes providing the brain tissue with a highly systematized functioning (i.e., cybernetics) has been of particular interest from both physical and physiological points of view. Since only a restricted number of modern physicists have been interested in the problem, the conventional approach to it has remained of phenomenological and macroscopic nature. Indeed, the usual way for physicists and physiologists to understand the memory mechanism has been at most to consider the so-called neuronal network dynamics of transmembrane ionic transfer phenomena. Waldeyer-Sherrington neuron doctrine has been believed widely without recourse to any further deep consideration. There, emphasis has been put on a belief that pathway conduction of neural impulses is the sole basis for signal transfer and information processing in the brain. Neural impulses are macroscopic membrane potential differences arising from the transmembrane ionic transfer phenomena.
+-->
+
+脳組織に高度に体系化された機能を提供する基本的な物理的プロセス(サイバネティクス)の観点から記憶のメカニズムを理解するという問題は, 物理的および生理学的観点から特に興味深い問題である。この問題に興味を持つ現代の物理学者は限られた数しかいないため, 従来のアプローチは現象論的かつマクロ的な性質のままであった。実際, 物理学者や生理学者が記憶のメカニズムを理解するための通常の方法は, せいぜい膜貫通イオン移動現象のいわゆるニューロンネットワークダイナミクスを考慮することであった。ワルダイアー・シェリントンニューロン理論は, それ以上深く検討することなく広く信じられてきた。そこでは, 神経インパルスの経路伝導が脳内の信号伝達および情報処理の唯一の基礎であるという信念が強調されてきた。神経インパルスは, 膜貫通イオン移動現象から生じるマクロな膜電位差である。
+</p><p>
+
+<!--
+Such a macroscopic and phenomenological approach to the problem has been shown increasingly to fail in several directions, and a further theoretical approach form a microscopic point of view has been expected. In a series of papers Umezawa and coworkers (Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979) proposed a completely new framework of brain dynamics within the realm of quantum field theory. They considered the brain as a mixed physical system composed of the macroscopic neuron system and an additional microscopic system. The former consists of pathway conduction of neural impulses. The latter is assumed to be a quantum mechanical many-body system interacting with the macroscopic neuron system. There, they emphasized the importance to notice a fact that the long-range correlation of Goldstone mode type plays an essential role in making brain dynamics much ordered or
+systematized. Indeed, they developed a quantum field theoretical model of unlocalized memory in the brain in which a memory storage is nothing but a vacuum state of spontaneous symmetry breaking type. Such a vacuum state is realized as a spatial domain in which all the ingredients manifest a strongly correlated homogeneous configuration up to the quantum fluctuation. In other words, a memory is stored in an unlocalized domain of quantum field theoretical vacuum state just as the Bose-Einstein condensate in the superconducting media. It manifests, therefore, long-range correlation and long-term stability. These very characteristics of the quantum vacuum sate well explain both nonlocal presence and long-term stability of the memory.
+-->
+
+この問題に対するこのような巨視的かつ現象論的なアプローチは, さまざまな方向でますます失敗していることが示されており, 微視的観点からのさらなる理論的アプローチが期待されている。一連の論文で, 梅澤と同僚ら(Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979)は, 場の量子論の領域内で脳のダイナミクスのまったく新しい枠組みを提案した。彼らは, 脳を, 巨視的なニューロンシステムと追加の微視的なシステムで構成される混合物理システムとみなした。前者は, 神経インパルスの経路伝導からなる。後者は, 巨視的なニューロンシステムと相互作用する量子力学的多体系であると想定されている。そこで彼らは, ゴールドストーンモード型の長距離相関が, 脳のダイナミクスをより秩序立てて体系化する上で重要な役割を果たしているという事実に注目することの重要性を強調した。実際, 彼らは脳内の非局在記憶の場の量子論モデルを開発した。このモデルでは, 記憶の保存は自発的対称性の破れ型の真空状態に他ならない。このような真空状態は, 量子ゆらぎに至るまですべての要素が強く相関した均質な構成を示す空間領域として実現される。言い換えれば, 記憶は超伝導媒体のボーズ・アインシュタイン凝縮体のように, 場の量子論の真空状態の非局在領域に保存される。したがって, それは長距離相関と長期安定性を示す。量子真空状態のこれらの特性は, 記憶の非局所的存在と長期安定性の両方をよく説明する。
+</p><p>
+
+<!--
+The theory of mixed physical system proposed by Umezawa and coworkers seems to be the first approach to develop a physical framework describing the fundamental process of the brain information processing on the basis of conventional physical principles in quantum field theory. Therefore, it may be allowed to call the theory“Quantum Brain Dynamics” and abbreviate it by “QBD”.
+-->
+
+梅澤らが提案した混合物理システムの理論は, 場の量子論の従来の物理原理に基づいて脳情報処理の基本プロセスを記述する物理的枠組みを開発する最初のアプローチであると思われる。したがって, この理論を「量子脳ダイナミクス」と呼び, 「QBD」と略してもいいかもしれない。
+</p><p>
+
+<!--
+QBD is nothing but a quantum dynamics of a macroscopic many-body system of two different types of ingredients interacting with the macroscopic neuron system. The first ingredient is called a corticon and assumed to be the fundamental dynamical element of the microscopic system. Corticons are not spatially confined within each neuron. They are distributing both inside and outside of neuronal membrane and constitute rather a fuzzy region of dynamical exchange points. In other words, corticons manifest a global distribution in the whole cell assembly of the brain tissue. The second ingredient is an exchange boson. Corticons show a global distribution in the whole cell assembly of the brain tissue
+-->
+
+QBDは, マクロなニューロンシステムと相互作用する 2 つの異なるタイプの成分からなるマクロな多体系の量子力学に他なりません。最初の成分はコルチコンと呼ばれ, ミクロなシステムの基本的な動的要素であると想定されています。コルチコンは, 各ニューロン内に空間的に閉じ込められていません。それらはニューロン膜の内側と外側の両方に分布しており, むしろ動的交換ポイントのあいまいな領域を構成しています。言い換えれば, コルチコンは脳組織の細胞集合体全体にグローバルな分布を示します。2番目の成分は交換ボソンです。コルチコンは脳組織の細胞集合体全体にグローバルな分布を示します
+</p><p>
+
+<!--
+Umezawa and coworkers have presented an interesting model of memory printing and recalling processes in terms of a long-range ordered vacuum state of the microscopic system of corticons and exchange bosons. Roughly speaking, the memory printing process is nothing but a phase transition process of the QBD vacuum state which is assumed to be of spontaneous symmetry breaking type. The recalling process is, then, merely a creation process of Goldstone mode (or equivalently Goldstone bosons), that is, long-range correlation waves with zero energy requirement.
+-->
+
+梅澤と同僚は, コルチコンと交換ボソンのミクロなシステムの長距離秩序真空状態の観点から, 記憶の書き込みと想起のプロセスの興味深いモデルを提示しました。大まかに言えば, 記憶の書き込みプロセスは, 自発的な対称性の破れ型であると想定されるQBD真空状態の相転移プロセスに他なりません。したがって, 想起のプロセスは, ゴールドストーンモード(または同等のゴールドストーンボソン), つまりエネルギー要件がゼロの長距離相関波の作成プロセスにすぎません。
+</p><p>
+
+<!--
+Within the realm of QBD, it is also shown that the memory stored as a vacuum state of spontaneous symmetry breaking type is rendered unstable due to the quantum tunnel effect. The decay process of the memory is then described by the notion of instanton just as the recall process is by that of Goldstone boson.
+-->
+
+QBDの領域では, 自発的対称性の破れタイプの真空状態として保存されたメモリが量子トンネル効果によって不安定になることも示されています。メモリの減衰プロセスは, 想起プロセスがゴールドストーンボソンの概念によって記述されるのと同様に, インスタントンの概念によって記述されます。
+</p><p>
+
+<!--
+The purpose of the present article is to provide the researcher in medical, biological and computer sciences with an introductory exposition of QBD. We avoid, therefore, the use of mathematical notations and equations, and try to make the conceptual aspect of QBD clearer.
+-->
+
+本記事の目的は, 医学, 生物学, およびコンピューター科学の研究者に QBD の入門的な説明を提供することです。したがって, 数学的表記法や方程式の使用を避け, QBD の概念的側面をより明確にします。
+</p>
+<h2>2. なぜ場の量子論なのか？</h2>
+<!--
+<h2>2. Why Quantum Field Theory? なぜ場の量子論なのか？</h2>
+-->
+<p>
+
+<!--
+Any matter in macroscopic scale is made of as many atomic ingredients as Avogadro’s number. It is, therefore, difficult to perform straightforward physical analyses starting from the most fundamental principle of dynamics for atomic ingredients, that 1s, quantum mechanics. Simpler systems like the harmonic oscillator, the hydrogen atom and the helium plus ion can be solved completely by means of the direct use of quantum mechanics. However, complex systems with more atomic ingredients cannot be solved. Of course, this does not mean incompleteness of quantum mechanics any more. Rather, it is our problem that we cannot find a proper mathematical way to solve the fundamental equation of quantum mechanics, that is, Schrodinger equation or Dirac equation for complex systems.
+-->
+
+マクロスケールの物質は, アボガドロ数と同じ数の原子成分からできています。したがって, 原子成分の動力学の最も基本的な原理である量子力学から始めて, 直接的な物理解析を行うことは困難です。調和振動子, 水素原子, ヘリウムプラスイオンなどのより単純なシステムは, 量子力学を直接使用することで完全に解くことができます。しかし, より多くの原子成分を持つ複雑なシステムは解くことができません。もちろん, これはもはや量子力学の不完全性を意味するものではありません。むしろ, 量子力学の基本方程式, つまり複雑なシステムに対するシュレーディンガー方程式またはディラック方程式を解く適切な数学的方法を見つけられないことが私たちの問題です。
+</p><p>
+
+<!--
+This difficulty in question has enforced physicists to find appropriate approximations so that certain physical aspect of macroscopic matter may be well understood qualitatively. Knowing or guessing a typical physical aspect of macroscopic matter, physicists look for an approximative way to solve the fundamental equation of quantum mechanics or to describe the typical physical aspect of macroscopic matter by certain phenomenological or heuristic equations easy to handle with. For example, most of the non-living matter in macroscopic scale have a common physical aspect to be described phenomenologically by good old thermodynamics. This typical physical aspect is said to be thermal equilibrium. Then, a systematic approximation adequate for describing or analyzing complex systems of atomic ingredients in thermal equilibrium has been obtained. It is called quantum statistical mechanics or equilibrium quantum statistical mechanics. Most of the theoretical results on physical analyses of non-living matter in macroscopic scale are given within the realm of quantum statistical mechanics. In other words, quantum statistical mechanics got much success in understanding the typical physical aspect of non-living matter in macroscopic scale.
+-->
+
+この問題の難しさにより, 物理学者はマクロスケールの物質の特定の物理的側面を定性的に十分に理解できるように適切な近似値を見つけることを余儀なくされました。物理学者は, マクロな物質の典型的な物理的側面を知ったり推測したりしながら, 量子力学の基本方程式を解く近似的な方法, または扱いやすい特定の現象論的または経験的方程式でマクロな物質の典型的な物理的側面を記述する方法を模索しています。たとえば, マクロなスケールの無生物のほとんどは, 古き良き熱力学によって現象論的に記述される共通の物理的側面を持っています。この典型的な物理的側面は熱平衡と言われています。そして, 熱平衡にある原子成分の複雑なシステムを記述または分析するのに適した体系的な近似が得られました。それは量子統計力学または平衡量子統計力学と呼ばれています。マクロなスケールの無生物の物理的分析に関する理論的結果のほとんどは, 量子統計力学の領域内で与えられています。言い換えれば, 量子統計力学は, マクロなスケールの無生物の典型的な物理的側面を理解するのに大いに成功しました。
+</p><p>
+
+<!--
+It seems important to notice here what the success of quantum statistical mechanics means. The basic assumption of quantum statistical mechanics is to incorporate an approximative viewpoint that typical physical characteristics of macroscopic matter in thermal equilibrium are same as those of less complex systems of ideal disordered atomic ingredients without mutual correlation. The fact that quantum statistical mechanics sot much success in understanding the typical physical aspect of non-living matter in macroscopic scale claims simply the absence of mutual correlation in such matter in actual circumstance. In other words, macroscopic matter in thermal equilibrium can be thought as a complex system of atomic ingredients manifesting completely disordered (i.e., uncorrelated or thermalized) dynamics
+so that quantum statistical mechanics happens to give appropriate approximations.
+-->
+
+ここで, 量子統計力学の成功が何を意味するかに注目することが重要と思われます。量子統計力学の基本的な仮定は, 熱平衡状態にあるマクロ物質の典型的な物理的特性は, 相互相関のない理想的な無秩序な原子成分のより複雑でないシステムのそれと同じであるという近似的な観点を取り入れることである。量子統計力学がマクロスケールの非生物物質の典型的な物理的側面を理解するのにそれほど成功していないという事実は, 実際の状況ではそのような物質に相互相関がないことを単に主張しているに過ぎない。言い換えれば, 熱平衡状態にあるマクロ物質は, 完全に無秩序な(つまり, 無相関または熱平衡化された)ダイナミクスを示す原子成分の複雑なシステムと考えることができるため, 量子統計力学は適切な近似を与える。
+</p><p>
+
+<!--
+Encouraged by the success, quantum statistical mechanics has been a little enlarged so that it may cover complex systems out of but near thermal equilibrium. Then, chemical and biochemical reactions of atomic ingredients have become to fall into the competition of modern physical analysis from which recent molecular biology has been developed extensively. Namely, nowadays medical and_ biological sciences find their physical and theoretical foundation in quantum statistical mechanics, and provide us with detailed microscopic understanding of certain biochemical processes taking part in living matter. Since few physicists mention explicitly that quantum statistical mechanics is an approximative framework limiting its validity to complex systems of atomic ingredients without mutual correlation, the researcher in medical and biological sciences believes it as the most fundamental physical law also reliable in the analysis of living matter from the microscopic point of view of quantum mechanics.
+-->
+
+この成功に勇気づけられ, 量子統計力学は熱平衡から外れた複雑なシステムもカバーできるように少し拡張されました。そして, 原子成分の化学反応と生化学反応は, 最近の分子生物学が広範囲に発展した現代物理分析の競争に陥るようになりました。つまり, 今日では医学と生物科学は量子統計力学に物理的および理論的基礎を見出し, 生物に関与する特定の生化学プロセスの詳細な微視的理解を提供しています。量子統計力学は, 相互相関のない原子成分の複雑なシステムにその有効性を制限する近似的な枠組みであると明示的に言及する物理学者はほとんどいないため, 医学と生物科学の研究者は, 量子力学の微視的観点から生物の分析にも信頼できる最も基本的な物理法則であると信じています。
+</p><p>
+
+<!--
+When famous mathematician von Neumann saw scientists investigating dynamics of water by using the Euler equation for perfect fluid without viscosity, he laughed and said it as dynamics of “dry” water. Similarly, we should keep it in mind that the picture of living matter investigated by molecular biology and biochemistry in terms of quantum statistical mechanics is not a real one but that of “dry” living matter. The meaning of this warning is that living matter is not a complex system of atomic ingredients without mutual correlation but those with strong mutual correlation. As it has been pointed out by Schrodinger in his famous monumental lecture, (Schrodinger 1944) living matter is characterized to produce negentropy without recourse to incoming information gain. In other words, living matter decreases entropy and increases order even under the supply of energy in completely thermalized and disordered form, whereas non-living matter in thermal equilibrium is with maximum entropy (i.e., disorder). To investigate the correct physical aspect of living matter, therefore, another approximative framework is needed in which complex systems of atomic ingredients with strong mutual correlation can be well described from the fundamental point of view of quantum mechanics. It may be opposite, in a sense, to quantum statistical mechanics in which mutual correlation of atomic ingredients is completely neglected.
+-->
+
+有名な数学者フォン・ノイマンは, 粘性のない完全な流体のオイラー方程式を使用して科学者が水のダイナミクスを調査しているのを見て, それを「乾いた」水のダイナミクスだと笑いながら言いました。同様に, 分子生物学や生化学が量子統計力学の観点から研究している生物の図は, 実際のものではなく, 「乾燥した」生物の図であることを心に留めておく必要があります。この警告の意味は, 生物は相互に相関のない原子成分の複雑なシステムではなく, 相互に強い相関があるということです。シュレーディンガーが有名な記念碑的な講義 (Schrodinger 1944) で指摘したように, 生物は入ってくる情報ゲインに頼らずにネゲントロピーを生み出すという特徴があります。言い換えれば, 生物は完全に熱化され無秩序な形でエネルギーが供給され
+てもエントロピーを減らし, 秩序を増やしますが, 熱平衡にある非生物は最大エントロピー (つまり無秩序) です。したがって, 生物の正しい物理的側面を調査するには, 量子力学の基本的な観点から, 相互に強い相関のある原子成分の複雑なシステムをうまく記述できる別の近似的な枠組みが必要です。ある意味では, 原子成分の相互相関が完全に無視される量子統計力学とは正反対かもしれません。
+</p><p>
+
+<!--
+The above quite important fact was first emphasized by a physicist H. Umezawa in the early 1960's. He clamed the necessity of emergence of quantum field theory in describing and investigating the typical physical aspect of living matter, because complex systems of atomic ingredients with strong mutual correlation like living matter can not be treated by quantum statistical mechanics but only by quantum field theory. In 1967 he published a monumental paper with one of his Italian colleagues, L. M. Ricciardi in Kybernetik. (Ricciardi and Umezawa 1967) There, focusing on the highly systematized functioning of the brain tissue as the most elaborated example of typical aspects of living matter, emphasis is put on the role of collective mode and Goldstone mode in quantum field theory of complex systems of atomic ingredients with strong mutual correlation. Just as the thermal equilibrium is the key concept in approximative physical analyses of complex systems of atomic ingredients with vanishing mutual correlation by means of quantum statistical mechanics, collective mode and Goldstone mode are the key concepts in those with strong mutual correlation.
+-->
+
+上記の非常に重要な事実は, 1960年代初頭に物理学者梅澤博臣によって最初に強調されました。彼は, 生物物質の典型的な物理的側面を記述および調査するには場の量子論の出現が必要であると主張しました。なぜなら, 生物物質のように相互相関が強い原子成分の複雑なシステムは, 量子統計力学では扱えず, 場の量子論でしか扱えないからです。1967年, 彼はイタリア人の同僚のL. M. Ricciardiとともに, Kybernetikで記念碑的な論文を発表しました(Ricciardi and Umezawa 1967)。そこでは, 生物物質の典型的な側面の最も精緻な例として, 脳組織の高度に体系化された機能に焦点を当て, 相互相関が強い原子成分の複雑なシステムの場の量子論における集団モードとゴールドストーンモードの役割に重点が置かれています。量子統計力学による, 相関が消える原子成分の複雑なシステムの近似的な物理解析において熱平衡が重要な概念であるのと同様に, 強い相関を持つシステムでは集団モードとゴールドストーンモードが重要な概念です。
+</p>
+<h2>3. QBD の簡単な歴史</h2>
+
+<!--
+<h2>3. A Brief History of QBD QBD の簡単な歴史</h2>
+-->
+<p>
+
+<!--
+Before proceeding to the conceptual exposition of QBD in the succeeding sections, we give here a little bit of history after the original proposal of Umezawa (Ricciardi and Umezawa 1967). Slightly later, another physicist H. Froehlich pointed out also that collective mode or long-range coherent dynamics of atomic ingredients in macroscopic scale may play an essential role in energy storage of biological systems. (Froehlich 1968) Coherent dipolar wave propagation is shown to exist in cytoskeletal structure of the biological cell and exchange energy with the external electromagnetic field. Such a coherent dipolar wave propagation is nothing but a collective mode of many dipolar oscillations maintained by nonlocalized electrons trapped in the one-dimensional chains of protein molecules as well as hydrogen bonds recurring therein. Due to Froehlich’s estimation, the coherent dipolar wave propagation realizes a branch of longitudinal electric modes in a frequency region between 1011 and 1012 sec－1, called Froehlich frequency. Then, it is concluded that energy larger than Froehlich frequency times Planck’s constant supplied to the cytoskeletal structure of biological cells is not completely thermalized but stored in a highly ordered fashion. Notice that thermalized energy or heat is the form of energy characteristic to complex systems of atomic ingredients with vanishing mutual correlation.
+-->
+
+後続のセクションで QBD の概念的説明に進む前に, ここで梅澤の最初の提案(Ricciardi and Umezawa 1967)の後の歴史を少し紹介します。少し後に, 別の物理学者H. Froehlichも, マクロスケールの原子成分の集団モードまたは長距離コヒーレントダイナミクスが, 生物システムのエネルギー貯蔵に重要な役割を果たす可能性があると指摘しました(Froehlich 1968)。コヒーレント双極子波伝搬は, 生物細胞の細胞骨格構造に存在し, 外部の電磁場とエネルギーを交換することが示されています。このようなコヒーレント双極子波伝搬は, タンパク質分子の1次元鎖に捕捉された非局在電子とその中で繰り返される水素結合によって維持される多数の双極子振動の集団モードに他なりません。Froehlichの推定により, コヒーレント双極子波伝搬は, フレーリッヒ周波数と呼ばれる1011 から1012 sec－1の周波数領域で縦方向電気モードの分岐を実現します。そして, 生物細胞の細胞骨格構造に供給されるフレーリッヒ周波数×プランク定数より大きいエネルギーは完全に熱化されるのではなく, 高度に秩序だった形で蓄えられると結論付けられる。熱化されたエネルギーまたは熱は, 相互相関が消える原子成分の複雑なシステムに特有のエネルギーの形態であることに注意してください。
+</p><p>
+
+<!--
+In 1970’s, Umezawa proceeded to developing his original idea to describe the typical physical aspect of lhving matter in terms of collective mode and Goldstone mode in quantum field theory so that the memory printing and recalling process in the brain can be well investigated with the use of known facts in quantum field theory. In two succeeding papers with his colleagues, C.I.J.M.Stuart and Y. Takahashi, he presented an interesting physical picture of fundamental processes of memory printing and recalling: (Stuart et al. 1978; 1979)
+-->
+
+1970年代, 梅澤は, 場の量子論の集団モードとゴールドストーンモードの観点から, 生きている物質の典型的な物理的側面を説明する独自のアイデアを展開し, 場の量子論の既知の事実を使用して, 脳内の記憶の書き込みと想起のプロセスをうまく調査できるようにしました。彼は, 同僚の C.I.J.M.Stuart および Y. Takahashi と共同で発表した2つの論文で, 記憶の書き込みと想起の基本プロセスの興味深い物理的図式を提示しました(Stuart ら 1978; 1979)。
+</p><p>
+
+<!--
+Memory printing is maintained by a physical process of phase transition from disordered dynamics to ordered one of the brain tissue (i.e., cortex) seen as a complex system of atomic ingredients called corticons. Memory recalling is maintained by a physical process of symmetry restoring typical in the ordered dynamics which can be considered as a creation process of Goldstone mode or Goldstone boson. Phase transition from disordered dynamics to ordered one as well as the symmetry restoring process are both central concepts to understand the collective mode and Goldstone mode in quantum field theory.
+-->
+
+記憶の書き込みは, 脳組織(皮質)の無秩序なダイナミクスから秩序のあるダイナミクスへの相転移という物理的プロセスによって維持されます。これは, 皮質と呼ばれる原子成分の複雑なシステムとして見られます。記憶の想起は, 秩序のあるダイナミクスに典型的な対称性の回復という物理的プロセスによって維持されます。これは, ゴールドストーンモードまたはゴールドストーンボソンの生成プロセスと見なすことができます。無秩序なダイナミクスから秩序のあるダイナミクスへの相転移と対称性の回復プロセスは, 場の量子論における集団モードとゴールドストーンモードを理解するための中心的な概念です。
+</p><p>
+
+<!--
+Much inspired by those results of incorporating quantum field theoretical method of physical analysis into the investigation of living matter initiated by Umezawa and Froehlich in 1960's, several physicists have begun to consider in 1980’s biological systems of living matter as complex systems of atomic ingredients with strong mutual correlation in which energy transfer does not suffer from Maxwell’s demon, that is, thermalization. They have continued to apply quantum field theory to physical analyses of various fundamental processes taking part in biological systems of living matter and ensured Umezawa’s and Froehlich’s original ideas. (Davydov 1982; Del Giudice et al. 1982; 1985; 1986; 1988: 1992: Sivakami and Srinivasan 1983; Jibu and Yasue 1993; 1995; 1997a; 1997b) Thanks to those extensive research activities, we are nowadays in the best position to understand various typical physical aspects of hving matter from the very fundamental point of view of quantum field theory. QBD is one of many examples of understanding such aspects.
+-->
+
+1960年代に梅澤とフレーリッヒが始めた場の量子論による物理分析法を生体物質の研究に取り入れた結果に大いに刺激され, 1980年代には多くの物理学者が生体物質の生物学的システムを, エネルギー移動がマクスウェルの悪魔, つまり熱化の影響を受けない, 強い相互相関を持つ原子成分の複雑なシステムとして考え始めました。彼らは, 生体物質の生物学的システムに関与するさまざまな基本プロセスの物理的分析に場の量子論を適用し続け, 梅澤とフレーリッヒの独自のアイデアを確証しました(Davydov 1982; Del Giudice et al. 1982; 1985; 1986; 1988: 1992: Sivakami and Srinivasan 1983; Jibu and Yasue 1993; 1995; 1997a; 1997b)。これらの広範な研究活動のおかげで, 私たちは今日, 量子場の理論という非常に基本的な観点から, 物質のさまざまな典型的な物理的側面を理解するのに最適な立場にあります。QBD は, そのような側面を理解する多くの例の1つです。
+</p><p>
+
+<!--
+The secondary aim of the present article is, henceforth, to sow in the field of medical and biological sciences the seed of this physicists’ new picture of living matter in terms of collective mode and Goldstone mode characteristic to complex systems of atomic ingredients with strong mutual correlation and highly systematized order.
+-->
+
+本稿の第二の目的は, 今後, 医学および生物科学の分野に, 強い相互相関と高度に体系化された秩序を持つ原子成分の複雑なシステムに特徴的な集団モードとゴールドストーンモードの観点から, この物理学者の新しい生物物質像の種を蒔くことです。
+</p>
+<h2>4. 生物物質の基本システムと代謝システム</h2>
+<!--
+<h2>4. Fundamental and Metabolizing Systems of Living Matter 生物物質の基本システムと代謝システム</h2>
+-->
+<p>
+
+<!--
+Most of the living matter are known to manifest a specific form of existence, that is, biological cell. It may be understood as the most fundamental element of biological systems. In other words, most of the biological systems
+including of course the human body are made of biological cells. For the purpose of making our discussion as general as possible, we will consider a typical form of biological system as a macroscopic assembly of biological cells and call it a cell assembly. A biological cell is also a macroscopic structure of living matter which can be considered as a complex system of quite a large number (i.e., Avogadro’s number) of atomic ingredients with strong mutual correlation.
+-->
+
+生物物質のほとんどは, 特定の存在形態, つまり生物細胞を呈することが知られています。これは, 生物システムの最も基本的な要素として理解できます。言い換えれば, もちろん人体を含むほとんどの生物システムは, 生物細胞で構成されています。議論を可能な限り一般的なものにするために, 生物システムの典型的な形態を生物細胞のマクロな集合体と見なし, それを細胞集合体と呼びます。生物細胞は, 生物物質のマクロな構造でもあり, 強い相互相関を持つ非常に多数の(つまりアボガドロ数)原子成分の複雑なシステムと見なすことができます。
+</p><p>
+
+<!--
+From a macroscopic point of view, the biological cell can be regarded essentially as a living matter called cytoplasm confined within a spatial region of macroscopic scale by another living matter called cell membrane. Of course, there exist other macroscopic structures embedded in cytoplasm such as cell nucleus, Golgi apparatus and mitochondria. However, they may be thought as other biological cells cooperating inside the biological cell in question. From a microscopic point of view, cytoplasm is a complex system of water molecules and protein molecules, and cell membrane is that of liquid molecules and protein molecules. The former manifests a dense and dynamical three-dimensional network structure of protein filaments (i.e., one-dimensional chain of protein molecules) called cytoskeletal structure surrounded by water molecules, and the latter a double layered two-dimensional surface structure of lipid molecules patched from both inside and outside by a dynamical two-dimensional network structure of protein filaments. There are many protein molecules embedded in the lipid bilayer of cell membrane which plays the role of active gates for the ionic metabolism of the biological cell. The functioning of those protein gates has been investigated intensively in molecular biology. Nowadays, they are known to control the diffusion process of various ions between inside and outside of the biological cell.
+-->
+
+マクロ的な視点から見ると, 生物細胞は本質的には細胞質と呼ばれる生物物質が細胞膜と呼ばれる別の生物物質によってマクロスケールの空間領域内に閉じ込められていると考えることができます。もちろん, 細胞質には細胞核, ゴルジ体, ミトコンドリアなどの他のマクロな構造が埋め込まれていますが, それらは問題の生物細胞内で協力している他の生物細胞と考えることができます。ミクロ的な視点から見ると, 細胞質は水分子とタンパク質分子の複雑なシステムであり, 細胞膜は液体分子とタンパク質分子のシステムです。前者は, 水分子に囲まれた細胞骨格構造と呼ばれるタンパク質フィラメント(つまり, タンパク質分子の1次元鎖)の密で動的な3次元ネットワーク構造を示し, 後者は, タンパク質フィラメントの動的な2次元ネットワーク構造によって内側と外側の両方からパッチされた脂質分子の2層2次元表面構造を示します。細胞膜の脂質二重層には, 生物細胞のイオン代謝の能動ゲートの役割を果たすタンパク質分子が多数埋め込まれています。これらのタンパク質ゲートの機能は, 分子生物学で集中的に研究されてきました。現在では, これらのゲートが生物細胞の内外間のさまざまなイオンの拡散プロセスを制御することが知られています。
+</p><p>
+
+<!--
+Such a diffusion process of ions is a typical example of completely thermalized (i.e., disordered or incoherent) dynamics of atomic ingredients well described by quantum statistical mechanics. It has been supposed, therefore, to be the most fundamental physical process of living matter in medical and biological sciences. This may be the limit of conventional analyses of biochemistry and molecular biology. For further investigation of the typical physical aspect of living matteruch as the cell assembly, the truly most fundamental physical process should be considered from the fundamental point of view of quantum mechanics.
+-->
+
+このようなイオンの拡散過程は, 量子統計力学によってよく説明される, 完全に熱化された(つまり, 無秩序または非一貫性な)原子成分のダイナミクスの典型的な例です。したがって, 医学および生物学では, これが生物の最も基本的な物理過程であると考えられてきました。これは, 生化学および分子生物学の従来の分析の限界である可能性があります。細胞アセンブリなどの生物の典型的な物理的側面をさらに調査するには, 真に最も基本的な物理過程を量子力学の基本的な観点から検討する必要があります。
+</p><p>
+
+<!--
+Since we are not interested in completely thermalized dynamics of the ionic diffusion process as the fundamental physical process of living matter, we look for another possibility starting from the original ideas of Umezawa and Froehlich. Let us neglect all the atomic ingredients taking part in the completely thermalized dynamics of cell assembly, that is, the lipid bilayer of cell membrane and protein molecules embedded therein. Then, a living matteruch as the cell
+assembly becomes to manifest rather simpler microscopic structure of a huge and dense three-dimensional network of protein filaments surrounded by and interacting with water molecules. We call this structure as the fundamental system of living matter. Comparatively, we call the molecular biologically well-known structure maintaining the completely thermalized dynamics of cell assembly as the metabolizing system of living matter. Thus, the living matter is a mixed system composed of the fundamental system and the metabolizing system. The latter manifests completely thermalized (i.e., disordered and incoherent) dynamics of atomic ingredients playing the role of heat engine to supply energy such as the ATP cyclic process, and well described by quantum statistical mechanics. The former manifests conversely non-thermalized (i.e., ordered and coherent) dynamics of atomic ingredients with strong and long-range mutual correlation the role and characteristic of which is the scope of quantum field theory. The idea that the living matter is from a fundamental point of view of physics a mixed system of coherent dynamics and incoherent dynamics is due to Umezawa. (Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979) There, the fundamental system of the brain tissue as a typical living matter is called the microscopic system, and the metabolizing system is called the macroscopic (physiologically nonclassical) neuron system.
+-->
+
+生物の基本的な物理過程としてのイオン拡散過程の完全に熱化されたダイナミクスには興味がないため, 梅澤とフレーリッヒの元のアイデアから出発して別の可能性を探ります。細胞アセンブリの完全に熱化されたダイナミクスに関与するすべての原子成分, つまり細胞膜の脂質二重層とそこに埋め込まれたタンパク質分子を無視します。そうすると, 細胞集団のような生物は, 水分子に囲まれ相互作用する巨大で密な三次元タンパク質繊維ネットワークという, かなり単純な微視的構造を呈するようになる。この構造を生物の基本システムと呼ぶ。これに対して, 細胞集団の完全に熱化されたダイナミクスを維持する分子生物学的によく知られた構造を生物の代謝システムと呼ぶ。つまり, 生物は基本システムと代謝システムからなる混合システムである。後者は, ATP循環過程のようなエネルギーを供給する熱機関の役割を果たす原子成分の完全に熱化された(すなわち無秩序で非整合な)ダイナミクスを呈し, 量子統計力学によってよく記述される。前者は逆に, 強い長距離相互相関を持つ原子成分の非熱化された(すなわち秩序があり整合した)ダイナミクスを呈し, その役割と特徴は量子場の理論の適用範囲である。生命体は物理学の基本的な観点から, コヒーレントダイナミクスとインコヒーレントダイナミクスの混合システムであるという考えは, 梅澤によるものです(Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979)。そこでは, 典型的な生命体としての脳組織の基本システムはミクロシステムと呼ばれ, 代謝システムはマクロ(生理学的に非古典的)ニューロンシステムと呼ばれています。
+</p><p>
+
+<!--
+It seems worthwhile to notice here again that both fundamental and metabolizing systems of living matter are made of as many atomic ingredients as Avogadro’s number. In this sense, they are both macroscopic systems of extremely many microscopic (i.e., atomic) ingredients. The difference between them appears only in their dynamical characteristics. Namely, the fundamental system manifests ordered dynamics of atomic ingredients with strong and long-range mutual correlation which may be well described by quantum field theory. The metabolizing system manifests disordered dynamics of atomic ingredients with vanishing mutual correlation such as ionic diffusions which has been well investigated by quantum statistical mechanics.
+-->
+
+ここで再び注目する価値があるのは, 生命体の基本システムと代謝システムはどちらもアボガドロ数と同じ数の原子成分でできているということです。この意味で, これらは両方とも非常に多くのミクロ(つまり原子)成分からなるマクロシステムです。それらの違いは, その動的特性にのみ現れます。つまり, 基本システムは, 場の量子論によってうまく記述できる, 強力で長距離の相互相関を持つ原子成分の秩序立ったダイナミクスを示します。代謝システムは, イオン拡散などの相互相関が消えた原子成分の無秩序なダイナミクスを呈示し, これは量子統計力学によって十分に調査されてきました。
+</p>
+<h2>5. 生物の基本システムの物理的図</h2>
+<!--
+<h2>5. Physical Picture of the Fundamental System of Living Matter 生物の基本システムの物理的図</h2>
+-->
+<p>
+<!--
+Let us investigate the essential characteristic of the fundamental system of living matter. First, we visualize relevant degrees of freedom of the fundamental system of living matter, that is, a huge and dense three-dimensional network of protein filaments surrounded by and interacting with water molecules. Although the network of protein filaments changes its form and connectivity due to spatial motion of protein filaments, such degrees of freedom belong no longer to the fundamental system. This is simply because such a dynamical change of the network structure is driven by disordered dynamics of protein filaments and belongs to the metabolizing system of living matter. Indeed, the dynamical change of the network structure of protein filaments (i.e., cytoskeletal structure) results in protoplasmic streaming. We may be allowed, therefore, to regard dynamics of the fundamental system. Thus, the first degree of
+freedom we are looking for in the fundamental system of living matter may be found as an internal degree of freedom of the background three-dimensional network structure of protein filaments free from thermalization (i.e., Maxwell’s demon).
+-->
+
+生命体の基本システムの本質的な特徴について考察してみよう。まず, 生命体の基本システム, すなわち, 水分子に囲まれ相互作用する巨大で密なタンパク質繊維の3次元ネットワークの関連する自由度を視覚化する。タンパク質繊維のネットワークは, タンパク質繊維の空間運動によりその形状と接続性を変化させるが, そのような自由度はもはや基本システムには属さない。これは, ネットワーク構造のそのような動的変化がタンパク質繊維の無秩序なダイナミクスによって駆動され, 生命体の代謝システムに属するからである。実際, タンパク質繊維のネットワーク構造(つまり, 細胞骨格構造)の動的変化は, 原形質流動をもたらす。したがって, 基本システムのダイナミクスと見なすことができる。したがって, 私たちが生命体の基本システムで探している最初の自由度は, 熱化のないタンパク質フィラメントの背景の3次元ネットワーク構造の内部自由度(つまり, マクスウェルの悪魔)として見つかるかもしれません。
+</p><p>
+
+<!--
+In 1979 such a degree of freedom was found by Davydov as a coherent dipolar solitary wave propagation along the one-dimensional chain of protein molecules such as the protein filament. (Davydov 1979) In quantum field theory, a coherent solitary wave propagation is considered as a localized degree of freedom maintaining and carrying energy without loss due to thermalization, and it is called Davydov soliton or dipolar soliton. Namely, energy incoming from the metabolizing system of living matter through the ATP cyclic process to the fundamental system of living matter induces first dipolar solitons localized in each protein filament. As a specific character of soliton in quantum field theory, energy stored in soliton form is kept free from thermalization and belongs to the fundamental system of living matter, though creation of soliton is triggered by incoherent and disordered interaction with the metabolizing system. In other words, the creation and annihilation process of dipolar solitons plays the role of a gateway between metabolizing and fundamental systems. The dipolar soliton is a collective mode of many dipolar oscillations maintained by nonlocalized electrons trapped in the one-dimensional chain of protein molecules and may be regarded as the first degree of freedom of the fundamental system of living matter. It is a quantum mechanical degree of freedom representing electric dipole moment localized in each background protein filament. In the case of brain tissue, Stuart et al. (1978; 1979) called it corticon. In the general case of cell assembly, we call it simply dipolar soliton. Thus the first degree of freedom of the fundamental system of living matter is found to be the dipolar soliton localized in each protein filament of the background three-dimensional network structure. It may be well visualized from physical point of view by a quantum mechanical variable representing nonvanishing electric dipole moment localized in each protein filament.
+-->
+
+1979年に, そのような自由度は, タンパク質フィラメントなどのタンパク質分子の1次元鎖に沿ったコヒーレント双極孤立波伝播としてダビドフによって発見されました(Davydov 1979)。場の量子論では, コヒーレント孤立波伝播は, 熱化による損失なしにエネルギーを維持し運ぶ局所的な自由度と考えられており, ダビドフソリトンまたは双極ソリトンと呼ばれています。つまり, 生命体の代謝システムからATP循環プロセスを介して生命体の基本システムに入るエネルギーは, 各タンパク質フィラメントに局在する最初の双極ソリトンを誘発します。場の量子論におけるソリトンの特殊な性質として, ソリトンの形で蓄えられたエネルギーは熱化から解放され, 生体の基本システムに属するが, ソリトンの生成は代謝システムとの非コヒーレントで無秩序な相互作用によって引き起こされる。言い換えれば, 双極子ソリトンの生成と消滅の過程は, 代謝システムと基本システムの間のゲートウェイの役割を果たす。双極子ソリトンは, タンパク質分子の1次元鎖に捕捉された非局在電子によって維持される多数の双極子振動の集合モードであり, 生体の基本システムの第1自由度と見なすことができる。これは, 背景の各タンパク質フィラメントに局在する電気双極子モーメントを表す量子力学的自由度である。脳組織の場合, Stuart et al. (1978; 1979)はこれをコルチコンと呼んだ。一般的な細胞集合の場合, これを単に双極子ソリトンと呼ぶ。こうして, 生物の基本システムの第1の自由度は, 背景の3次元ネットワーク構造の各タンパク質フィラメントに局在する双極子ソリトンであることがわかりました。これは, 各タンパク質フィラメントに局在する非ゼロの電気双極子モーメントを表す量子力学的変数によって, 物理的観点からよく視覚化できます。
+</p><p>
+
+<!--
+Let us look for the second degree of freedom of the fundamental system of living matter. From materialistic point of view, the fundamental system of living matter is composed of a huge and dense three-dimensional network of protein filaments and enormously large number (i.e., Avogadro’s number) of water molecules surrounding it. The former has been thought of as a mere background structure for the fundamental system and plays the role of supporting the existence of the first quantum mechanical degree of freedom, that is, dipolar solitons. The latter is of purely quantum
+mechanical nature and an enormously large number of atomic ingredients, that is, water molecules, enforces us to rely on quantum field theory. Water molecule, H2O, is a typical molecule simple in its form but rich in its physical characteristic. The origin of richness can be found, however, in simpleness of its form. Namely, due to the spatial geometric configuration of two hydrogen atoms relative to one oxygen atom, the water molecule manifests nonvanishing electric dipole moment. Thus, the totality of enormously large number of water molecules can be well described from a physical point of view by a quantum mechanical degree of freedom of electric dipole moment moving and rotating freely. This is the second degree of freedom of the fundamental system of living matter. We call it the water dipole moment.
+-->
+
+生物の基本システムの第2の自由度を見てみましょう。物質的観点から, 生物の基本システムは, タンパク質フィラメントの巨大で密な3次元ネットワークと, それを取り囲む膨大な数(つまり, アボガドロ数)の水分子で構成されています。前者は, 基本システムの単なる背景構造であると考えられており, 第1の量子力学的自由度, つまり双極子ソリトンの存在をサポートする役割を果たしています。後者は純粋に量子力学的性質のものであり, 膨大な数の原子成分, つまり水分子は, 場の量子論に頼ることを余儀なくさせます。水分子H2Oは, 形は単純だが物理的特性が豊富な典型的な分子です。しかし, その豊かさの起源は, その形の単純さにあります。つまり, 1つの酸素原子に対する2つの水素原子の空間的幾何学的配置により, 水分子は消えない電気双極子モーメントを示します。したがって, 膨大な数の水分子の全体は, 自由に移動および回転する電気双極子モーメントの量子力学的自由度によって物理的観点から十分に説明できます。これは, 生物の基本システムの 2 番目の自由度です。これを水双極子モーメントと呼びます。
+</p><p>
+
+<!--
+Finally, we have obtained a physical picture of the fundamental system of living matter. It is essentially a quantum mechanical many-body system described by two different degrees of freedom interacting with each other, that is, dipolar solitons localized in the background three-dimensional network structure of protein filaments and water dipole moments surrounding them.
+-->
+
+ついに, 生物の基本システムの物理的イメージが得られました。これは本質的に, 相互作用する2つの異なる自由度, つまりタンパク質フィラメントの3次元ネットワーク構造の背景に局在する双極子ソリトンと, それを取り囲む水双極子モーメントによって説明される量子力学的多体系です。
+</p>
+<h2>6. 量子脳ダイナミクスとは?</h2>
+<!--
+<h2>6. What is Quantum Brain Dynamics? 量子脳ダイナミクスとは?</h2>
+-->
+<p>
+
+<!--
+Having obtained a physical picture of the fundamental system of living matter, we are now in the best position to make a conceptual exposition of quantum brain dynamics, QBD. Identifying the corticon in Umezawa’s original viewpoint with the dipolar soliton of the fundamental system of brain tissue as a typical living matter, we may visualize the most fundamental physical process providing the brain tissue with a highly systematized functioning within the realm of quantum field theory. Thus, QBD is a completely new theoretical framework to describe the fundamental physical process of the brain dynamics that makes man human on the basis of quantum field theoretical analysis of the fundamental system of brain tissue.
+-->
+
+生命体の基本システムの物理的イメージを得たことで, 量子脳ダイナミクス, QBDの概念的説明を行うのに最適な立場に立つことができました。梅澤の当初の見解における皮質を, 典型的な生命体としての脳組織の基本システムの双極子ソリトンと同一視することで, 場の量子論の領域内で脳組織に高度に体系化された機能を提供する最も基本的な物理的プロセスを視覚化することができます。したがって, QBDは, 脳組織の基本システムの場の量子論分析に基づいて, 人間を人間にする脳ダイナミクスの基本的な物理的プロセスを記述するまったく新しい理論的枠組みです。
+</p><p>
+
+<!--
+Let us start from the physical picture of the fundamental system of brain tissue with two different degrees of freedom standing for dipolar solitons localized in the background three-dimensional network structure of protein filaments and dipole moments of surrounding water molecules. The first degree of freedom, that is, the dipolar soliton arises from a coherent solitary wave propagation of nonlocalized electron along each protein filament. The dipolar soliton is created at the end of each protein filament by energy gain from the metabolizing system through, for example, the ATP cyclic process.
+-->
+
+タンパク質フィラメントの3次元ネットワーク構造の背景に局在する双極子ソリトンと周囲の水分子の双極子モーメントを表す2つの異なる自由度を持つ脳組織の基本システムの物理的イメージから始めましょう。最初の自由度, つまり双極子ソリトンは, 各タンパク質フィラメントに沿った非局在電子のコヒーレント孤立波伝播から生じます。双極子ソリトンは, 例えばATP
+循環プロセスによる代謝システムからのエネルギー獲得によって, 各タンパク質フィラメントの末端に生成される。
+</p><p>
+
+<!--
+If we focus on the mere electric dipole moment of the dipolar soliton, we may consider an electric dipole field confined on each protein filament. Once created, such a confined electric dipole field is kept conserved there as long as there exists no other electric dipole moments nearby. However, in the fundamental system of brain tissue, we have the second degree of freedom, that is, electric dipole moments of water molecules surrounding the protein filaments. Then, it is most likely that the electric dipole field on each protein filament is no longer kept conserved and confined thereon but propagate into the spatial region occupied by water molecules. This suggests us the following fact:
+-->
+
+双極子ソリトンの単なる電気双極子モーメントに着目すると, 各タンパク質フィラメント上に閉じ込められた電気双極子場を考えることができる。いったん生成されると, そのような閉じ込められた電気双極子場は, 近くに他の電気双極子モーメントが存在しない限り, そこに保存されたままになる。しかし, 脳組織の基本システムでは, 第2の自由度, つまりタンパク質フィラメントを取り囲む水分子の電気双極子モーメントが存在する。そのため, 各タンパク質フィラメント上の電気双極子場は, もはやそこに保存され閉じ込められたままではなく, 水分子が占める空間領域に伝播する可能性が最も高い。これは次の事実を示唆しています:
+</p><p>
+
+<!--
+As long as we look at the fundamental system of the brain tissue in terms of the electric dipole field, both dipolar solitons and water dipole moments can no longer be different degrees of freedom. In other words, the fundamental system of brain tissue can be well described by a single degree of freedom of electric dipole field spanning the spatial volume of the brain tissue.
+-->
+
+脳組織の基本システムを電気双極子場の観点から見る限り, 双極子ソリトンと水双極子モーメントは, もはや異なる自由度ではあり得ません。言い換えれば, 脳組織の基本システムは, 脳組織の空間体積に広がる電気双極子場の単一の自由度によってうまく記述できます。
+</p><p>
+
+<!--
+Astonishingly, QBD is now translated into QED (i.e., quantum electrodynamics) of the electric dipole field which may be easily supposed to fall into the competition of quantum field theory.
+-->
+
+驚くべきことに, QBDは現在, 場の量子論の競合に陥ると容易に考えられる電気双極子場のQED(つまり量子電気力学)に変換されています。
+</p><p>
+
+<!--
+It is found that the principal degree of freedom of QBD, that is, corticon is not merely the dipolar soliton as was expected at first sight but also the water dipole moment surrounding the protein filaments. The corticon in QBD is now fully described by the electric dipole field (of both dipolar solitons and water dipole moments) spanning the spatial volume of the brain tissue. In this sense, we may call the fundamental system of brain tissue simply as the system of corticons, hereafter. Considering the physical background of the electric dipole field as those of dipolar solitons and water dipole moments, we may assume that the electric dipole field manifests symmetry under rotation. Namely, even if the electric dipole field on each position is rotated by any spatial angle, the total energy of the system of corticons is kept invariant. In quantum field theory, the total energy of the system of any field quantity plays an important role in specifying dynamics of the field, and it is usually called Hamiltonian. So, we call the total energy of the system of corticons as the Hamiltonian of the system of corticons or equivalently the Hamiltonian of QBD. Then, we obtain the following invariant or symmetry property:
+-->
+
+QBDの主自由度, すなわちコルチコンは, 一見予想されたように単に双極子ソリトンだけではなく, タンパク質フィラメントを取り囲む水双極子モーメントでもあることがわかった。QBDのコルチコンは, 脳組織の空間体積に広がる電気双極子場(双極子ソリトンと水双極子モーメントの両方)によって完全に記述されるようになった。この意味で, 脳組織の基本システムを, 以下では単にコルチコン システムと呼ぶことにする。電気双極子場の物理的背景を双極子ソリトンと水双極子モーメントの物理的背景と見なすと, 電気双極子場は回転に対して対称性を示すと仮定できる。つまり, 各位置の電気双極子場が任意の空間角度で回転しても, コルチコン システムの全エネルギーは不変に保たれる。場の量子論では, 任意の場量のシステムの全エネルギーは場のダイナミクスを指定する上で重要な役割を果たし, 通常ハミルトニアンと呼ばれる。そこで, 皮質系の全エネルギーを皮質系のハミルトニアン, または同等にQBDのハミルトニアンと呼びます。すると, 次の不変または対称性特性が得られます。
+</p><p>
+
+<!--
+The system of corticons in QBD manifests a symmetry under the rotation of the electric dipole field in a sense that the
+Hamiltonian of QBD is invariant.
+-->
+
+QBDの皮質系は, QBDのハミルトニアンが不変であるという意味で, 電気双極子場の回転に対して対称性を示します。
+</p><p>
+
+<!--
+At this point it seems easy to answer the question “What is QBD?” tentatively. QBD is nothing but QED of the electric dipole field with symmetry under the dipole rotation.
+-->
+
+この時点で, 「QBD とは何か?」という質問に暫定的に答えるのは簡単そうです。QBDは, 双極子回転に対して対称性を持つ電気双極子場のQEDに他なりません。
+</p>
+<h2>7. 集団モードとゴールドストーンモード</h2>
+<!--
+<h2>7. Collective Mode and Goldstone Mode 集団モードとゴールドストーンモード</h2>
+-->
+<p>
+
+<!--
+This section is devoted to an exposition of two basic concepts in quantum field theory, that is, the collective mode and the Goldstone mode which play the most important roles in understanding the fundamental physical process of QBD providing the brain tissue with the highly systematized functioning.
+-->
+
+このセクションでは, 場の量子論の 2 つの基本概念, つまり, 脳組織に高度に体系化された機能を提供する QBD の基本的な物理プロセスを理解する上で最も重要な役割を果たす集団モードとゴールドストーンモードについて説明します。
+</p><p>
+
+<!--
+Let us consider the system of corticons in QBD. Recall that it is nothing else but the totality of as many atomic ingredients with electric dipole moments as Avogadro’s number. Then, a naive question may arise naturally:
+-->
+
+QBDの皮質系について考えてみましょう。それは, アボガドロ数と同じ数の電気双極子モーメントを持つ原子成分の総体に他ならないことを思い出してください。すると, 素朴な疑問が自然に湧いてきます。
+</p><p>
+
+<!--
+We may have certainly a non-living matter made of as many atomic ingredients with electric dipole moments as Avogadro’s number. It is essentially living and thinking about the beginning of our universe?
+-->
+
+アボガドロ数と同じ数の電気双極子モーメントを持つ原子成分でできた無生物物質があるかもしれません。それは本質的に, 私たちの宇宙の始まりについて考えながら生きているということでしょうか？
+</p><p>
+
+<!--
+The answer is, of course, negative. It is neither living nor thinking about. As we have emphasized in the preceding section 2, the living matteruch as the brain tissue is the totality of atomic ingredients with strong mutual correlation, whereas the non-living matter is that with vanishing mutual correlation. In other words, the non-living matter made of as many atomic ingredients with electric dipole moments as Avogadro’s number has a typical physical aspect that it manifests disordered dynamics well described by quantum statistical mechanics. There, each atomic ingredient with electric dipole moment manifests a time evolution irrespective to the precise time evolutions of neighboring ones but only respective to the energy transfer between them. Thus, the neighboringa electric dipole moments cancel out mutually, obtaining no net electric dipole field any more. Conversely, the living matter made of as many atomic ingredients with electric dipole moments as Avogadro’s number has a different typical physical aspect that it manifests ordered dynamics well described by quantum field theory. There, each atomic ingredient with electric dipole moment manifests a time evolution strongly correlated to the precise time evolutions of neighboring ones. In such a peculiar situation, the neighboring electric dipole moments no longer cancel out, but accumulate to their collective value. Such a collective value of strongly correlated neighboring electric dipole moments given in each position provides us with the electric dipole field which is nothing but the principal degree of freedom of the system of corticons in QBD. This is the very reason why we should rely on quantum field theory to understand the fundamental physical process taking part in the fundamental system of living matteruch as the system of corticons.
+-->
+
+答えはもちろん否です。それは生きているわけでも, 考えているわけでもありません。前のセクション2で強調したように, 脳組織などの生物は強い相互相関を持つ原子成分の総体であり, 一方, 無生物は相互相関が消える原子成分の総体です。言い換えれば, アボガドロ数と同じ数の電気双極子モーメントを持つ原子成分から構成される無生物は, 量子統計力学によってよく記述される無秩序なダイナミクスを呈するという典型的な物理的側面を持っています。そこでは, 電気双極子モーメントを持つ各原子成分は, 隣接するものの正確な時間発展とは無関係に, それらの間のエネルギー移動に関してのみ時間発展を呈します。したがって, 隣接する電気双極子モーメントは相互に打ち消し合い, 正味の電気双極子場はもはや得られません。逆に, アボガドロ数と同じ数の電気双極子モーメントを持つ原子成分から構成される生物は, 場の量子論によってよく記述される秩序だったダイナミクスを呈するという別の典型的な物理的側面を持っています。そこでは, 電気双極子モーメントを持つ各原子
+成分は, 隣接するものの正確な時間発展と強く相関した時間発展を示す。このような特殊な状況では, 隣接する電気双極子モーメントはもはや打ち消されず, それらの集合値に蓄積される。各位置で与えられた強く相関した隣接する電気双極子モーメントのこのような集合値は, QBDにおけるコルチコン系の主要な自由度に他ならない電気双極子場を提供する。これが, コルチコン系のような生物物質の基本システムに関与する基本的な物理プロセスを理解するために場の量子論に頼るべき理由である。
+</p><p>
+
+<!--
+Let us investigate the fundamental physical process of the system of corticons by means of the electric dipole field arising from the ordered collective dynamics of atomic ingredients with electric dipole moments within the genera! framework of quantum field theory. We refer to Stuart et al. (1979) and Del Giudice et al. (1985), though the essential framework had been originally developed by Ricciardi and Umezawa (1967).
+-->
+
+場の量子論の一般的な枠組みの中で, 電気双極子モーメントを持つ原子成分の秩序だった集団ダイナミクスから生じる電気双極子場を用いて, コルチコン系の基本物理プロセスを調べてみよう。基本的な枠組みはもともとRicciardiとUmezawa(1967)によって開発されていましたが, Stuartら(1979)およびDel Giudiceら(1985)を参照します。
+</p><p>
+
+<!--
+In quantum field theory, the simplest way to describe the electric dipole field is given by a spinor field. It is a two-component complex field usually described by a two by one matrix form. The spinor field itself does not correspond directly to the collective value of electric dipole moments. In the spinor representation, dynamical variables providing us with the electric dipole moment are the Pauli spin matrices. The electric dipole moment of the electric dipole field is then given by first multiplying the spinor field by the Pauli spin matrices and then multiplying the result by the conjugate spinor field. Thus the spinor field does not stand for the electric dipole moment, but it represents physically the field of molecular vibrations of protein filaments and water molecules in the brain tissue from which the electric dipole field arises. (Del Giudice et al. 1985) Therefore, the spinor field of molecular vibrational! field is more essential than the electric dipole moment itself.
+-->
+
+場の量子論では, 電気双極子場を記述する最も簡単な方法はスピノル場です。スピノル場は, 通常2行1列の行列形式で記述される 2 成分の複素場です。スピノル場自体は, 電気双極子モーメントの集合値に直接対応しません。スピノル表現では, 電気双極子モーメントを提供する動的変数はパウリ スピン行列です。電気双極子場の電気双極子モーメントは, まずスピノル場にパウリスピン行列を掛け, 次にその結果に共役スピノル場を掛けることで得られます。したがって, スピノル場は電気双極子モーメントを表すのではなく, 電気双極子場が発生する脳組織内のタンパク質フィラメントと水分子の分子振動場を物理的に表します(Del Giudice 他 1985)。したがって, 分子振動場のスピノル場は, 電気双極子モーメント自体よりも重要です。
+</p><p>
+
+<!--
+The corticon in QBD described by the electric dipole field of both dipolar solitons and water dipole moments is thus found to be essentially described by the spinor field of molecular vibrations of both protein filaments and water molecules spanning the spatial volume of the brain tissue. Therefore, we may be allowed to call the spinor field the corticon field. Recall that any physical quantity such as the electric dipole moment is given by an expectation of certain function of field variables over possible field configurations characterized by a ceratin proper value of the Hamiltonian (i.e., the total energy function) in quantum field theory. In the present case of the corticon field, the electric dipole moment is the expectation of a quantity given by first multiplying the spinor field by the Paull spin matrices and then multiplying the result by the conjugate spinor field. Then, the invariant or symmetry property of the system of corticons in QBD under the rotation of the electric dipole field may be translated into that of the corticon field. For this aim, we present in what follows the quantum field theoretical framework of the system of corticons in terms of the corticon field.
+-->
+
+QBDのコルチコンは, 双極子ソリトンと水双極子モーメントの両方の電気双極子場によって記述され, 脳組織の空間体積に広がるタンパク質フィラメントと水分子の両方の分子振動のスピノル場によって本質的に記述されることがわかります。したがって, スピノル場をコルチコン場と呼ぶことができます。電気双極子モーメントなどの物理量は, 場の量子論のハミルトニアン (つまり, 全エネルギー関数) の特定の固有値によって特徴付けられる可能な場構成に対する場変数の特定の関数の期待値によって与えられることを思い出してください。コルチコン場の現在のケースでは, 電気双極子モーメントは, 最初にスピノル場にポールスピン行列を乗算し, 次にその結果に共役スピノル場を乗算することによって与えられる量の期待値です。次に, 電気双極子場の回転下でのQBDのコルチコン システムの不変または対称性特性を, コルチコン場の不変または対称性特性に変換できます。この目的のために, 我々は, コルチコン場の観点から, コルチコン系の場の量子論の枠組みを以下に提示する。
+</p><p>
+
+<!--
+The system of corticons in QBD is represented by the corticon field. The Hamiltonian, that is, the total energy of the system of corticons is then given by a certain functional of the corticon field, possibly depending on its both spatial and temporal derivative. The symmetry property of the system of corticons in QBD implies that the Hamiltonian is Invariant under the group of dipole rotation. In terms of the corticon field, such a rotation group can be well represented by the SU(2) group of complex two by two unitary matrices with determinants equal to unity. Since we are mainly interested in the symmetry structure of the system of corticons in QBD, we will not specify the explicit form of the Hamiltonian as a functional of the corticon field, but concentrate on its invariant property under the SU(2) group. In other words, the present investigation of QBD remains general and independent of the details of the dynamics. Those who are interested in the explicit form of the Hamiltonian are invited to see the appendices of Stuart et al. (1979).
+-->
+
+QBDにおけるコルチコン系は, コルチコン場によって表される。ハミルトニアン, すなわちコルチコン系の全エネルギーは, おそらくその空間的および時間的導関数の両方に依存する, コルチコン場の特定の関数によって与えられる。QBDにおけるコルチコン系の対称性特性は, ハミルトニアンが双極子回転の群の下で不変であることを意味する。コルチコン場の観点から, そのような回転群は, 行列式が1に等しい複素2行2列のユニタリ行列のSU(2)群によって適切に表すことができる。我々は主に QBDにおけるコルチコン系の対称構造に興味があるので, コルチコン場の関数としてのハミルトニアンの明示的な形式を指定せず, SU(2)群の下でのその不変特性に集中する。言い換えれば, QBDの現在の調査は一般的なものであり, ダイナミクスの詳細とは無関係です。ハミルトニアンの明示的な形式に興味のある方は, Stuartら(1979)の付録を参照してください。
+</p><p>
+
+<!--
+Let us see the typical physical aspect of the system of corticons in QBD which may explain the highly systematized functioning of the brain tissue. For this aim, we focus on the dynamics of corticons corresponding to the minimum proper value of the Hamiltonian. Dynamics of corticons with larger proper value of the Hamiltonian will be easily investigated on the basis of that with the minimum one. In quantum field theory, such a dynamical state of the system is said to be the lowest energy state or the vacuum state. The vacuum state of the system of corticons (i.e., the corticon field) in QBD_ violates its original dynamical symmetry structure under the SU(2) group of dipole rotations. Such a vacuum state is said to be of spontaneous symmetry breaking type. There, corticons are all fallen into a uniform configuration of their electric dipole moments up to the quantum fluctuation, and so the original dynamical symmetry under dipole rotations is broken.
+-->
+
+QBDにおける皮質システムの典型的な物理的側面を見てみましょう。これは, 脳組織の高度に体系化された機能を説明するかもしれません。この目的のために, ハミルトニアンの最小固有値に対応する皮質のダイナミクスに焦点を当てます。ハミルトニアンのより大きな固有値を持つ皮質のダイナミクスは, 最小の固有値を持つものに基づいて簡単に調査できます。場の量子論では, システムのこのような動的状態は, 最低エネルギー状態または真空状態と呼ばれます。QBDにおける皮質システム (つまり, 皮質場) の真空状態は, SU(2)群の双極子回転の下での元の動的対称構造に違反します。このような真空状態は, 自発的対称性破れ型であると言われています。そこでは, 皮質はすべて, 量子ゆらぎまで電気双極子モーメントの均一な構成に陥り, 双極子回転の下での元の動的対称性が破れます。
+</p><p>
+
+<!--
+The vacuum state of the corticon field may be well characterized by the presence of nonvanishing uniform electric dipole moment. We call this uniform electric dipole moment characteristic to the vacuum state of the corticon field the vacuum polarization. It represents the mean value of the uniform electric dipole moment of every dipolar soliton and water molecule aligned along one and the same direction. In this sense, the system of corticons in the vacuum state of spontaneous symmetry breaking type manifests a typical physical aspect that it creates a long-range (i.e., large-scale) order in its dynamics. Namely, there exists a long-range order so that the corticon field is systematized globally to realize the uniform configuration of electric dipole moment. Umezawa and coworkers used the expression “macroscopic ordered state” to refer to large-scale phenomena of order creation whose occurrence cannot be explained without recourse to the action of specific quantum field theoretical mechanisms responsible for the spontaneous rearrangement of the symmetry attributes of the system. Thus, the vacuum state of the corticon field in QBD is a typical macroscopic ordered state.
+-->
+
+コルチコン場の真空状態は, 消えない均一な電気双極子モーメントの存在によってよく特徴付けられる。コルチコン場の真空状態に特徴的なこの均一な電気双極子モーメントを真空分極と呼ぶ。これは, 同じ方向に整列したすべての双極子ソリトンと水分子の均一な電気双極子モーメントの平均値を表す。この意味で, 自発的対称性の破れ型の真空状態にあるコルチコンのシステムは, そのダイナミクスに長距離(つまり, 大規模)秩序を生み出すという典型的な物理的側面を示す。つまり, 長距離秩序が存在するため, コルチコン場は電気双極子モーメントの均一な構成を実現するためにグローバルに体系化されている。梅澤
+らは, 「マクロ的秩序状態」という表現を使用して, システムの対称属性の自発的な再配置の原因となる特定の場の量子論メカニズムの作用に頼らなければ発生を説明できない大規模な秩序創造現象を指した。このように, QBD におけるコルチコン場の真空状態は, 典型的なマクロ的秩序状態である。
+</p><p>
+
+<!--
+It is known from the Goldstone theorem in quantum field theory that in any macroscopic ordered state, cooperative excitations of the symmetry attributes appear as long-range correlation waves and behave as bosons (i.e., quanta obeying the Bose-Einstein statistics) whose minimum energy is zero. They are called Goldstone bosons or Goldstone modes. Since the Goldstone boson manifests a continuous energy spectrum above zero, it is also called a gapless mode because there exists no energy gap in the spectrum. It is nothing else but the action of the corticon field in the vacuum state accounting for the rearrangement of symmetry attributes leading to the creation of a macroscopic order with long-term stability and nonlocal presence.
+-->
+
+場の量子論におけるゴールドストーン定理から, マクロ的秩序状態においては, 対称属性の協調励起が長距離相関波として現れ, 最小エネルギーがゼロであるボソン(すなわち, ボーズ-アインシュタイン統計に従う量子)として振舞うことが知られている。これらはゴールドストーンボソンまたはゴールドストーンモードと呼ばれる。ゴールドストーンボソンはゼロ以上の連続エネルギースペクトルを示すため, スペクトルにエネルギーギャップが存在しないことからギャップレスモードとも呼ばれる。これは, 真空状態におけるコルチコン場の作用に他ならず, 対称属性の再配置によって, 長期安定性と非局所的存在を伴うマクロ的秩序が生み出される。
+</p><p>
+
+<!--
+Dynamics of the corticon field in the vacuum state of spontaneous symmetry breaking type is a typical example of peculiar physical aspect called the collective mode in quantum field theory. Namely, the corticon field manifests highly ordered dynamics as aligning all the electric dipole moments of corticons along one and the same direction up to the quantum fluctuation. It is a static collective mode of the corticon field which does not change in time. In general, the collective mode of a certain field stands for a cooperative dynamics of the field variable which is highly systematized and synchronized. The collective mode provides us with an appropriate approximative framework to describe the typical physical aspect of a complex system of atomic ingredients with strong mutual correlation such as living matter. Thus, the collective mode of the corticon field is a_ typical dynamical aspect of the system of corticons with strong mutual correlation in which every corticon manifests one and the same dynamical configuration. If we translate by analogy this quantum field theoretical concept of the collective mode into our familiar concept, it may be compared with the synchronized swimming. Just as you find a collective movement of a team of synchronized swimmers as a single large-scale ordered state of the team, the collective mode of the corticon field behaves as a distinct physical entity and the precise dynamical factors of the atomic ingredients on which its existence depends can be neglected.
+-->
+
+自発的対称性破れ型の真空状態におけるコルチコン場のダイナミクスは, 場の量子論における集団モードと呼ばれる特異な物理的側面の典型的な例である。つまり, コルチコン場は, 量子ゆらぎに至るまで, コルチコンの電気双極子モーメントをすべて同じ方向に揃えるという, 高度に秩序立ったダイナミクスを呈する。これは, 時間とともに変化しない, コルチコン場の静的な集団モードである。一般に, ある場の集団モードは, 高度に体系化され同期化された場変数の協調的なダイナミクスを表す。集団モードは, 生体物質などの相互に強い相関関係を持つ原子成分の複雑なシステムの典型的な物理的側面を記述するための適切な近似フレームワークを提供する。したがって, コルチコン場の集団モードは, すべてのコルチコンが1つの同じ動的構成を呈する, 相互に強い相関関係を持つコルチコンのシステムの典型的な動的側面である。この量子場の理論的集団モードの概念を類推して私たちの身近な概念に翻訳すると, シンクロナイズドスイミングに例えることができる。シンクロナイズドスイミングの選手たちの集団運動がチームの単一の大規模秩序状態として見られるのと同じように, コルチコン場の集団モードは明確な物理的実体として振る舞い, その存在が依存する原子成分の正確な動的要因は無視できます。
+</p><p>
+
+<!--
+More adequate analogy to understand the typical aspect of the vacuum state of spontaneous symmetry breaking type in QBD may be found in physics of magnetized matter as well as superconducting matter. For example, spontaneously magnetized matter is a complex system of as many atomic ingredients as Avogadro’s number in which magnetic dipole moment of each atomic ingredient is aligned spontaneously along one and the same direction.
+-->
+
+QBD における自発的対称性の破れ型の真空状態の典型的な側面を理解するためのより適切な類推は, 超伝導物質だけでなく磁化物質の物理学にも見出すことができます。たとえば, 自発的に磁化された物質は, アボガドロの数と同じ数の原子成分の複雑なシステムであり, 各原子成分の磁気双極子モーメントは, 同じ方向に自発的に整列しています。
+</p><p>
+
+<!--
+In QBD the vacuum state of the corticon field violating the original SU(2) symmetry of the dipole rotation appears as a macroscopic ordered state and behaves itself as a distinct physical entity. It may be seen as a macroscopic spatial domain of the brain tissue in which nonvanishing electric dipole moment distributes uniformly up to the quantum fluctuation. Such a domain of the vacuum state cannot be arbitrary small because a considerable number of atomic ingredients must take part in forming the macroscopic ordered state. Any collective mode requires the strong mutual correlation of a large number of atomic ingredients, and it cannot appear when the domain of organization is too small. The minimum linear dimension (i.e., size) of the domain for realizing the macroscopic ordered state such as the vacuum state is called the coherence length. It seems worthwhile to notice that consequently the vacuum state of QBD can only appear in a spatial domain with linear dimension larger than the coherence length. Umezawa emphasized this fact as saying that the order is intrinsically diffused. In other words, the fundamental system of the brain tissue manifests a macroscopic dynamical structure made of nonoverlapping large-scale spatial domains in which the nonvanishing vacuum polarizations exist. Therefore, the fundamental physical process of the fundamental system of the brain tissue may be well investigated by taking the dynamical action of the vacuum state of the corticon field against the energy supply into account. This is the very reason why the concept of Goldstone mode becomes so important in QBD. The Goldstone mode is nothing but a wave of defects of the corticon field from the vacuum polarization created by any amount of the energy supply from the metabolizing system of the brain tissue. It appears as a new degree of freedom carrying the original symmetry property of the corticon field with respect to the SU(2) group of dipolar rotations. Thus, taking the symmetry property of Goldstone modes, the system of corticons in QBD ensures again the original symmetry even though its vacuum state remains of spontaneous symmetry breaking type. The broken symmetry is now restored by the creation of Goldstone bosons.
+-->
+
+QBDでは, 双極子回転の本来のSU(2)対称性を破る皮質場の真空状態がマクロな秩序状態として現れ, 明確な物理的実体として振る舞う。これは, 量子ゆらぎまで電気双極子モーメントが一様に分布する脳組織のマクロな空間領域とみなすことができる。このような真空状態の領域は, マクロな秩序状態の形成に相当数の原子成分が関与する必要があるため, 任意に小さくすることはできない。いかなる集団モードも多数の原子成分の強い相互相関を必要とし, 組織化領域が小さすぎると出現できない。真空状態のようなマクロな秩序状態を実現するための領域の最小線形次元(つまりサイズ)は, コヒーレンス長と呼ばれる。したがって, QBDの真空状態は, コヒーレンス長よりも大きい線形次元を持つ空間領域にのみ出現できることは注目に値すると思われる。梅澤はこの事実を強調して, 秩序は本質的に拡散していると述べた。言い換えれば, 脳組織の基本システムは, 非ゼロの真空分極が存在する, 重なり合わない大規模な空間領域からなるマクロな動的構造を呈している。したがって, 脳組織の基本システムの基本物理プロセスは, エネルギー供給に対する皮質場の真空状態の動的作用を考慮することによって, 十分に調査できる。これが, ゴールドストーンモードの概念がQBDで非常に重要になる理由である。ゴールドストーンモードは, 脳組織の代謝システムからのエネルギー供給の任意の量によって生成される真空分極による皮質場の欠陥の波に他ならない。これは, SU(2) 双極子回転群に関して皮質場の本来の対称性特性を運ぶ新しい自由度として現れる。したがって, ゴールドストーンモードの対称性特性を考慮すると, QBD の皮質システムは, その真空状態が自発的対称性破れ型のままであっても, 元の対称性を再び保証する。破れた対称性は, ゴールドストーンボソンの生成によって回復しました。
+</p>
+<h2>8. 皮質システムの真空状態としての記憶</h2>
+<!--
+<h2>8. Memory as Vacuum State of the Corticon System 皮質システムの真空状態としての記憶</h2>
+-->
+<p>
+<!--
+Having seen the two basic concepts in quantum field theory, that is, the collective mode and the Goldstone mode, we proceed to investigating the fundamental physical process of QBD which provides the brain tissue with the highly systematized functioning. More precisely, we introduce an interesting scheme of the information processing of the brain in terms of the phase transition from a disordered state to an ordered one of the system of corticons in QBD.
+-->
+
+場の量子論の 2 つの基本概念, つまり集団モードとゴールドストーンモードを理解したので, 脳組織に高度に体系化された機能を提供するQBDの基本的な物理プロセスの調査に進みます。より正確には, QBDの皮質システムの無秩序な状態から秩序立った状態への相転移の観点から, 脳の情報処理の興味深いスキームを紹介します。
+</p><p>
+
+<!--
+Let us start by recalling the essential framework of QBD explained in the preceding sections:
+-->
+
+まず, 前のセクションで説明したQBD の基本的なフレームワークを思い出してみましょう。
+</p><p>
+
+<!--
+The brain tissue is a mixed physical system composed of the fundamental system and the metabolizing system interacting with each other. The latter is the molecular biologically well-known structure maintaining the completely
+thermalized dynamics of the brain tissue which plays the role of input and output interface between the fundamental system and the external world of the human body. It is the neuronal network associated with the disordered electrochemical processes such as transmembrane ionic diffusions, and represents the communication mode in which stimuli from and responses to the external world are transmitted in a macroscopically organized fashion. The fundamental system manifests a quantum interaction among corticons from which macroscopic ordered states are realized as collective modes in quantum field theory accounting for the creation of memory with long-term stability and nonlocal presence. Those macroscopic ordered states are vacuum states of spontaneous symmetry breaking type maintained by the Goldstone boson. There, dynamics of macroscopic ordered states arising from the cooperative quantum interaction among corticons is directly responsible for the fundamental physical process from which emerge the highly systematized functioning of the brain.
+-->
+
+脳組織は, 相互に作用する基礎システムと代謝システムからなる混合物理システムです。後者は, 脳組織の完全に熱化されたダイナミクスを維持する分子生物学的によく知られた構造であり, 基礎システムと人体の外界との間の入出力インターフェースの役割を果たします。これは, 膜貫通イオン拡散などの無秩序な電気化学プロセスに関連する神経ネットワークであり, 外界からの刺激と外界への応答がマクロ的に組織化された方法で伝達される通信モードを表します。基礎システムは, 皮質間の量子相互作用を明示し, そこからマクロ的に秩序立った状態が, 長期安定性と非局所的存在を伴う記憶の作成を説明する場の量子論の集団モードとして実現されます。これらのマクロ的に秩序立った状態は, ゴールドストーンボソンによって維持される自発的対称性破れタイプの真空状態です。そこでは, 皮質間の協力的な量子相互作用から生じるマクロ的に秩序立った状態のダイナミクスが, 脳の高度に体系化された機能を生み出す基本的な物理プロセスに直接関与しています。
+</p><p>
+
+<!--
+A new mechanism for memory has been presented by Umezawa and coworkers in which the two systems are necessarily coupled in order to achieve memory printing and recall. (Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979) The coupling is given in QBD by the creation of dipolar solitons in the microscopic protein filaments triggered by the energy supply from the ATP cyclic process which protect memory in stable form against excitations with the communication mode.
+-->
+
+梅澤らは, 記憶の書き込みと想起を実現するために 2 つのシステムが必然的に結合されるという新しい記憶メカニズムを提示しました(Ricciardi and Umezawa 1967; Stuart et al. 1978; 1979)。QBDでは, ATP循環プロセスからのエネルギー供給によって引き起こされる微小なタンパク質フィラメント内の双極子ソリトンの生成によって結合が実現され, 通信モードによる励起に対して安定した形で記憶が保護されます。
+</p><p>
+
+<!--
+We consider in what follows how the mechanism proposed by Umezawa can account for the highly systematized functioning of the brain associated with memory:
+-->
+
+以下では, 梅澤が提案したメカニズムが, 記憶に関連する脳の高度に体系化された機能をどのように説明できるかを検討します。
+</p><p>
+
+<!--
+Let us start with the fundamental system of the brain, that is, the system of corticons where memory of a specific stimulus from the external world is yet to be printed. The brain tissue is here exposed to stray signals including unattached perception of external events as well as activity associated with general physiological events such as motor activity and the like. Those stray signals are organized and transmitted to the system of corticons through the metabolizing system (i.e., the neuronal network). Namely, they can create corticons indirectly in the fundamental system, and various spatial domains of the macroscopic ordered states are formed provided that the created corticons manifest a long-range correlation whose spatial extent is larger than the coherence length. Thus, there exist apparent thresholds for the incoming energy from the metabolizing system to the fundamental one to create ordered domains. The stray signals to the brain tissue transmitted with energy slightly exceeding the threshold value are all tacitly coded in the dynamical domain structure of macroscopic ordered states in the small domains. Notice that in such a dynamical structure the direction of electric dipole moments of the corticon field can randomly vary from domain to domain and there exists no hierarchy among the coded signals.
+-->
+
+まず, 脳の基本システム, つまり, 外界からの特定の刺激の記憶がまだ書き込みされていない皮質システムから始めましょう。ここで, 脳組織は, 外部イベントの非付随的な知覚や, 運動活動などの一般的な生理学的イベントに関連する活動などの迷走信号にさらされます。これらの迷走信号は, 代謝システム(つまり, ニューロンネットワーク)を通じて組織化され, 皮質系に伝達されます。つまり, それらは基礎系で間接的に皮質を生成し, 生成された皮質がコヒーレンス長よりも空間的範囲が大きい
+長距離相関を示す場合, マクロ的秩序状態のさまざまな空間領域が形成されます。したがって, 代謝システムから基礎系に流入するエネルギーには, 秩序領域を生成するための明らかな閾値が存在します。閾値をわずかに超えるエネルギーで伝達される脳組織への迷走信号はすべて, 小さな領域内のマクロ的秩序状態の動的領域構造に暗黙的にコード化されています。このような動的構造では, 皮質フィールドの電気双極子モーメントの方向が領域ごとにランダムに変化し, コード化された信号間に階層が存在しないことに注意してください。
+</p><p>
+
+<!--
+The learning process can be identified with the phase transition of the system of corticons from the less ordered state of many but small ordered domains to the more ordered state of a few but large ordered domains. Such a phase transition is induced by an external stimulus which supplies the system of corticons with enough energy to break domain boundaries of many small ordered domains, thus aligning the electric dipole moments of the corticon field in much larger domains. Of course, the notion of external stimulus denotes an energy flow organized and transmitted through the metabolizing system. We obtained quite an interesting point of view of the fundamental physical process of QBD that may be understood as the learning process of a typical signal from the external world. It seems worthwhile to notice here that the phase transition requires the onset of the aligning process of the electric dipole moments which goes through an interaction between the external stimulus and the Goldstone boson. This implies a fact that the external stimulus can induce the phase transition from the less ordered state to the more ordered one only when it can interact with the Goldstone bosons and the interaction energy is sufficiently large to break the domain boundaries. .In other words, there exists a filter such as the selection rule for the coupling of transmitted signals to the system of corticons in which stray signals have been coded in the domain structure. Stuart et al. (1978) saw there inherent limitations on learnability for the brain tissue.
+-->
+
+学習プロセスは, 多数の小さな秩序あるドメインの秩序の低い状態から, 少数の大きな秩序あるドメインの秩序の高い状態へのコルチコンシステムの相転移と同一視できます。このような相転移は, コルチコンシステムに多数の小さな秩序あるドメインのドメイン境界を破壊するのに十分なエネルギーを供給する外部刺激によって引き起こされ, その結果, コルチコンフィールドの電気双極子モーメントがはるかに大きなドメインに整列します。もちろん, 外部刺激の概念は, 代謝システムを通じて組織化され伝達されるエネルギーフローを意味します。私たちは, 外界からの典型的な信号の学習プロセスとして理解できる, QBDの基本的な物理プロセスに関する非常に興味深い視点を得ました。ここで, 相転移には, 外部刺激とゴールドストーンボソンとの相互作用を経る電気双極子モーメントの整列プロセスの開始が必要であることに注目する価値があるようです。これは, 外部刺激がゴールドストーン粒子と相互作用し, 相互作用エネルギーがドメイン境界を破壊するのに十分大きい場合にのみ, より秩序の低い状態からより秩序の高い状態への相転移を誘発できるという事実を意味します。言い換えれば, ドメイン構造に迷い信号がコード化されている皮質システムへの送信信号の結合に対する選択規則などのフィルターが存在するということです。Stuart et al. (1978) は, 脳組織の学習可能性に固有の制限があることに気づきました。
+</p><p>
+
+<!--
+By such a learning process, a typical external stimulus can be printed in the system of corticons of the fundamental system as a stable macroscopic ordered state. There, the external stimulus is coded into the vacuum state of the corticon field manifesting a large-scale uniform alignment of the electric dipole moments along one and the same direction. The stability of printed memory comes from the very fact that it is coded into the vacuum state of the corticon field the stability of which is a consequence of quantum field’ theory. Apparently, printed memory manifests nonlocal (i.e., diffused) existence.
+-->
+
+このような学習プロセスにより, 典型的な外部刺激は, 基本システムの皮質系に安定したマクロ的秩序状態として書き込みできます。そこで, 外部刺激は皮質フィールドの真空状態にコード化され, 電気双極子モーメントが 1 つの方向に沿って大規模に均一に整列します。書き込みされたメモリの安定性は, それが皮質フィールドの真空状態にコード化されるという事実に由来し, その安定性は場の量子論の結果です。明らかに, 書き込みされたメモリは非局所的(つまり, 拡散した)存在を示します。
+</p><p>
+
+<!--
+Once memory of a typical external stimulus is printed in the macroscopic ordered state of the system of corticons, it can be recalled quite easily thanks to the Goldstone bosons. Namely, when the system of corticons receive even a weak signal of a nature similar to that used in the learning process, it can excite the gapless Goldstone mode of the vacuum state corresponding to printed memory. The recalling process is nothing but a creation process of Goldstone bosons (i.e., long-range correlation waves) with almost no energy requirement. They play the role of a replication signal of the original external signal. In this way, the existence of printed memory can be taken into account by consciousness. Consciousness in QBD means the quantum field theoretical dynamics of the system of corticons itself. Thus, any weak
+external signal can recall printed memory, and it take part in consciousness. It is implicit to this view that recall involves the stimulation of those parts of the metabolizing system of the brain that were once excited to organize and transmit external signals during the original learning process. It seems also worthwhile to point out that a weak external stimulus might interact with two or more kinds of Goldstone bosons, the recalling more than one stored code. This may explain the association in the recall process.
+-->
+
+典型的な外部刺激のメモリが皮質系のマクロ的秩序状態に書き込みされると, ゴールドストーン ボソンのおかげで非常に簡単に呼び出すことができます。つまり, 皮質系が学習プロセスで使用されるものと同様の性質の弱い信号を受信すると, 書き込みされたメモリに対応する真空状態のギャップレス ゴールドストーン モードを励起できます。想起プロセスは, ほとんどエネルギーを必要としないゴールドストーンボソン(つまち長距離相関波)の生成プロセスに他なりません。ゴールドストーンボソンは, 元の外部信号の複製信号の役割を果たします。このように, 書き込みされた記憶の存在は意識によって考慮されます。QBD における意識とは, 皮質システム自体の場の量子論ダイナミクスを意味します。したがって, 弱い外部信号は書き込みされた記憶を想起することができ, 意識に参加します。この見解には, 想起には, 元の学習プロセス中に外部信号を組織化して送信するためにかつて興奮していた脳の代謝システムの部分の刺激が関与することが暗黙的に含まれています。弱い外部刺激が 2 種類以上のゴールドストーンボソンと相互作用し, 複数の保存されたコードを想起する可能性があることも指摘しておく価値があるようです。これは, 想起プロセスにおける関連性を説明するかもしれません。
+</p>
+<h2>9. 記憶の量子崩壊過程</h2>
+<!--
+<h2>9. Quantum Decay Process of Memory 記憶の量子崩壊過程</h2>
+-->
+<p>
+
+<!--
+The most important concept in QBD is the vacuum state of spontaneous symmetry breaking type as we have seen in the preceding section. In quantum field theory, a system with the Hamiltonian which is invariant under some continuous transformation group like the system of corticons is known to have infinitely many vacuum - states. Furthermore, those vacuum states are not the true vacuum state which must be the unique proper state of the Hamiltonian with the lowest proper value of energy. Each of them is an approximative vacuum state of the system in which the field variable manifests the smallest deviation from a classical minimum energy solution. In the terminology of quantum field theory, they are coherent states around classical field configurations corresponding to different energy minima. Each vacuum state can be transformed into another by the symmetry transformation. Therefore, those vacuum states are in general not invariant under the original symmetry transformation of the Hamiltonian. They are of spontaneous symmetry breaking type.
+-->
+
+QBD で最も重要な概念は, 前のセクションで見たように, 自発的対称性の破れ型の真空状態です。場の量子論では, コルチコンのシステムのように, 連続変換群の下で不変なハミルトニアンを持つシステムは, 無限に多くの真空状態を持つことが知られています。さらに, それらの真空状態は, エネルギーの最小固有値を持つハミルトニアンの唯一の固有状態であるはずの真の真空状態ではありません。それらのそれぞれは, フィールド変数が古典的な最小エネルギー解からの最小偏差を示すシステムの近似真空状態です。場の量子論の用語では, それらは異なるエネルギー最小値に対応する古典的なフィールド構成の周りのコヒーレント状態です。各真空状態は, 対称変換によって別の真空状態に変換できます。したがって, それらの真空状態は, 一般に, ハミルトニアンの元の対称変換の下で不変ではありません。それらは自発的対称性の破れ型です。
+</p><p>
+
+
+<!--
+As Umezawa and coworkers have shown, each vacuum state of the system of corticons plays the role of memory storage in QBD. It is important to see the fact that the vacuum state of spontaneous symmetry breaking type is capable of creating Goldstone bosons with zero energy requirement. This means that the stored memory code can be easily excited during the recall process and it contributes to other fundamental physical processes of the fundamental system of the brain tissue by means of Goldstone bosons. In this way the existence of a memory can be “consciously” taken into account in the information processing of the brain. The fact that the system of corticons in QBD has infinitely many vacuum states of spontaneous symmetry breaking type implies an infinite capacity of memory coded and stored in the brain. The whole fundamental system of the brain tissue is divided into extremely many ordered domains of vacuum states, and Goldstone bosons corresponding to those vacuum sates take part in the quantum field theoretical dynamics of the corticon field, that is, consciousness. ‘Thus memory coded in the vacuum state affects always the further development of consciousness because of its long-term stability. It may be concluded, therefore, that the memory codes stored in the vacuum sates of the system of corticons will never be lost, which seems not the case in the actual functioning of the brain. However, the symmetry property of the system of corticons in Q@BD does provide us with a more realistic feature of the memory codes as being rendered unstable due to the quantum tunnel effect. The
+memory code is no longer stable completely if we take the vacuum tunneling phenomena of the corticon field into account. Let us see this by restricting our discussion to a typical spatial domain of the vacuum state.
+-->
+
+梅澤らが示したように, 皮質系の各真空状態はQBDにおける記憶ストレージの役割を果たしている。自発的対称性破れ型の真空状態は, エネルギー要件ゼロでゴールドストーンボソンを生成できるという事実に注目することは重要である。これは, 保存された記憶コードが想起プロセス中に容易に励起され, ゴールドストーンボソンを介して脳組織の基本システムの他の基本的な物理プロセスに寄与することを意味する。このようにして, 記憶の存在は脳の情報処理において「意識的に」考慮されることができる。QBDの皮質系が自発的対称性破れ型の真空状態を無限に持つという事実は, 脳にコード化され保存された記憶の容量が無限であることを意味する。脳組織の基本システム全体は, 非常に多くの秩序だった真空状態のドメインに分割されており, それらの真空状態に対応するゴールドストーンボソンは, 皮質フィールド, つまり意識の場の量子論ダイナミクスに関与している。 「このように真空状態でコード化された記憶は, その長期安定性のため, 常に意識のさらなる発達に影響を及ぼします。したがって, 皮質システムの真空状態に保存された記憶コードは決して失われないという結論に達するかもしれませんが, これは実際の脳の機能では当てはまらないようです。しかし, QBD の皮質システムの対称性特性は, 量子トンネル効果により不安定になるという記憶コードのより現実的な特徴を私たちに提供します。皮質フィールドの真空トンネル現象を考慮すると, 記憶コードはもはや完全に安定ではありません。議論を真空状態の典型的な空間領域に限定してこれを見てみましょう。
+</p><p>
+
+<!--
+Suppose that after a ceratin learning process the system of corticons in this domain has fallen into a vacuum state, say vacuum state A, that breaks the original symmetry of the system spontaneously. It 1s a memory code which can be easily recalled by the creation process of Goldstone bosons. As we have mentioned before, it is not a true vacuum state of the corticon field from the strict point of view of quantum field theory, but an approximative one standing for a classical field configuration with minimum energy. This means that the vacuum state A is no longer invariant under the time evolution of the system of corticons driven by the Hamiltonian. As the time passes, the vacuum state A is put into another state, say state B, which differs from the vacuum state A. Only the exact vacuum state remains always the same vacuum state as the time passes. Then, the probability that the actual state B of the system of corticons is found to be in another vacuum state, say vacuum state C, is given by the absolute square of the inner product of the state B and the vacuum state C in quantum field theory. Since the actual state B is not the vacuum state, the inner product in question does not vanish. Namely, the system of corticons in this domain may happen to be in another vacuum state C with nonvanishing probability. This is the quantum tunnel effect. It is also a decay process of a vacuum state storing a memory code into another which stores a meaningless code having nothing to do common with the original memory code. In quantum field theory, such a quantum decay process of vacuum state due to the quantum tunnel effect can be thought of as the onset of a new quantum field theoretical mode called instanton. We may conclude in QBD that the memory codes stored in the ordered domain structure of vacuum states of the system of corticons are rendered unstable due to the tunnel effect and the decay process of printed memory is described by the creation process of instantons just as the recall process is by that of Goldstone bosons.
+-->
+
+特定の学習プロセスの後, このドメインのコルチコン システムが真空状態, たとえば真空状態Aに陥り, システムの元の対称性が自発的に破れたとします。これは, ゴールドストーン ボソンの生成プロセスによって簡単に呼び出すことができるメモリ コードです。前に述べたように, 場の量子論の厳密な観点からは, これはコルチコン フィールドの真の真空状態ではなく, 最小エネルギーの古典的なフィールド構成を表す近似状態です。これは, 真空状態Aが, ハミルトニアンによって駆動されるコルチコン システムの時間発展の下で不変ではなくなったことを意味します。時間が経過するにつれて, 真空状態 A は, 真空状態Aとは異なる別の状態, たとえば状態Bになります。正確な真空状態だけが, 時間が経過しても常に同じ真空状態のままです。そして, コルティコン系の実際の状態Bが別の真空状態, たとえば真空状態 C にある確率は, 場の量子論では状態 B と真空状態Cの内積の絶対値の2乗で与えられる。実際の状態 B は真空状態ではないので, 問題の内積はゼロにならない。つまり, この領域のコルティコン系は, ゼロにならない確率で別の真空状態 C にある可能性がある。これが量子トンネル効果である。これは, メモリ コードを格納する真空状態が, 元のメモリ コードとは何の関係もない無意味なコードを格納する別の真空状態への減衰プロセスでもある。場の量子論では, 量子トンネル効果によるこのような真空状態の量子減衰プロセスは, インスタントンと呼ばれる新しい場の量子論モードの始まりと考えることができる。QBDでは, コルチコン系の真空状態の整列したドメイン構造に格納されたメモリ コードはトンネル効果によって不安定になり, 書き込みされたメモリの減衰プロセスはインスタントンの生成プロセスによって記述され, 想起プロセスはゴールドストーン ボソンのプロセスによって記述されるという結論に達することができます。
+</p><p>
+
+
+<!--
+It may be of certain interest, though speculative at this moment, to interpret the virtual dynamics of instantons as the fundamental physical process corresponding to the dream. A dream is a virtual action of consciousness based on the actual memory codes but resulting in irrelevant memory codes which cannot be reached by the norma! action of consciousness. The dream is not a causal event at all. This empirical fact on the typical aspect of the dream may be compared with that of virtual dynamics of instantons. Namely, dynamics of instantons is a virtual physical process starting from the actual vacuum state but ending with an irrelevant vacuum state by the quantum tunnel effect which cannot be transformed by the normal and causal physical process of QBD. In this sense, the quantum decay process of the vacuum state is said to be a virtual physical process. The virtual dynamics of instantons triggered by the quantum tunnel effect is not a causal event at all.
+-->
+
+現時点では推測的ではありますが, インスタントンの仮想ダイナミクスを夢に対応する基本的な物理プロセスとして解釈することは, ある程度興味深いかもしれません。夢は, 実際のメモリコードに基づく意識の仮想アクションですが, 通常の意識アクションでは到達できない無関係なメモリコードをもたらします。夢はまったく因果的なイベントではありません。夢の典型的な側面に関するこの経験的事実は, インスタントンの仮想ダイナミクスの事実と比較できます。つまり, インスタントンのダイナミクスは, 実際の真空状態から始まり, 量子トンネル効果によって無関係な真空状態で終わる仮想物理プロセスであり, QBDの通常の因果的な物理プロセスでは変換できません。この意味で, 真空状態の量子崩壊過程は仮想物理過程であると言われている。量子トンネル効果によって引き起こされるインスタントンの仮想ダイナミクスは, 因果関係のあるイベントではない。
+</p><p>
+
+<h2>10. QBDを超えて</h2>
+<!--
+10. Beyond QBD QBDを超えて
+-->
+<p>
+<!--
+So far we have restricted our discussion mainly to the fundamental physical process of QBD which provides the brain tissue with a highly systematized functioning. However, the concept of macroscopic ordered state of the atomic ingredients can be equally taken into serious consideration in investigating the typical physical aspect of the fundamental system of living matter other than the brain tissue. Indeed, the original idea of Umezawa was aimed to incorporate the quantum field theoretical framework to the investigation of living matter emphasizing the fact that they are systems of as many atomic ingredients as Avogadro’s number with strong and long-range mutual correlation. Ordered collective dynamics of such systems cannot be well described by the framework of conventional quantum statistical mechanics but only by that of quantum field theory. It was pointed out also by Froehlich that collective mode or long-range coherent dynamics of atomic ingredients in macroscopic scale may play an essential role in energy storage of biological systems. (Froehlich 1968) There, emphasis has been put on certain macroscopic physical characteristics of living matter arising from the interaction between the collective mode of the fundamental system of living matter and that of the external electromagnetic field. As such a collective mode appears as a domain structure of macroscopic ordered states it can be coupled only with a long-range coherent wave mode of the external electromagnetic field. Incoherent and _ disordered excitations of the electromagnetic field cannot interact with the collective mode of the fundamental system of hving matter. In other words, they are stray electromagnetic waves which cannot penetrate into the domain of a macroscopic ordered state. This is an effect similar to the Meissner effect of the superconducting matter in which the stray electromagnetic field cannot penetrate into the superconducting matter.
+-->
+
+これまで, 私たちは主に, 脳組織に高度に体系化された機能を提供するQBDの基本的な物理過程に限定して議論してきた。しかし, 原子成分のマクロ的な秩序状態の概念は, 脳組織以外の生物物質の基本システムの典型的な物理的側面を調査する際にも同様に真剣に考慮することができる。実際, 梅澤の当初のアイデアは, 生物物質がアボガドロ数と同じ数の原子成分のシステムであり, 強い長距離相互相関があるという事実を強調して, 量子場の理論的枠組みを生物物質の研究に取り入れることを目指していた。そのようなシステムの秩序立った集団ダイナミクスは, 従来の量子統計力学の枠組みではうまく説明できず, 量子場の理論の枠組みでのみ説明できる。フレーリッヒもまた, マクロスケールの原子成分の集団モードまたは長距離コヒーレントダイナミクスが生物システムのエネルギー貯蔵に重要な役割を果たす可能性があることを指摘しました。(フレーリッヒ 1968) そこでは, 生物の基本システムの集団モードと外部電磁場の集団モードとの相互作用から生じる生物の特定のマクロな物理的特性に重点が置かれています。このような集団モードはマクロな秩序状態のドメイン構造として現れるため, 外部電磁場の長距離コヒーレント波モードとのみ結合できます。電磁場の非コヒーレントで無秩序な励起は, 生物の基本システムの集団モードと相互作用できません。言い換えれば, それらはマクロな秩序状態のドメインに浸透できない迷い電磁波です。これは, 迷い電磁場が超伝導物質に浸透できない超伝導物質のマイスナー効果に似た効果です。
+</p><p>
+
+<!--
+The non-living matter can manifest the collective coherent dynamics only when the disordered and incoherent dynamics of atomic ingredients disappear by annihilating the thermalized (i.e., disordered) energy as lowering the temperature to the absolute zero degree. Superconducting matter is a typical example. However, living matter is capable of maintaining the collective coherent dynamics of the atomic ingredients even in the higher temperature environment. Living matter has a two-fold structure of as many atomic ingredients as Avogadro’s number, that is, the fundamental and metabolizing systems. The latter manifests the disordered and incoherent dynamics, while the former the ordered coherent one. The stray electromagnetic waves can interact only with the metabolizing system, thus providing the living matter with the thermalized energy. The fundamental system of living matter couples with only collective and long-range coherent modes of the electromagnetic field which are nothing but coherent photons like those emitted from the LASER device. This implies that the living matter may interact with each other by emitting and absorbing coherent photons even though they are separated by a macroscopic spatial distance. Such phenomena are nowadays known as biophotons or ultraweak photon emissions. More interestingly, the meridian flow of Qi (vital energy /pneuma), which is the central dogma of the Chinese and Japanese traditional medicine, is reported to emit a weak but coherent electromagnetic wave in the infrared frequency region and affect other person’s meridian flow of Qi at a distance. Such a photon emission by the meridian flow of Qi is considered as a physical basis of the yunqi therapy in the Chinese and Japanese traditional medicine:
+-->
+
+無生物が集団コヒーレントダイナミクスを発揮できるのは, 絶対零度まで温度を下げることで熱化(無秩序化)エネルギーを消滅させ, 原子成分の無秩序で非コヒーレントなダイナミクスが消えたときだけである。超伝導物質はその典型である。しかし, 生物はより高温の環境下でも原子成分の集団コヒーレントダイナミクスを維持することができる。生物は, アボガドロ数個の原子成分, すなわち基本システムと代謝システムの二重構造を持っている。後者は無秩序で非コヒーレントなダイナミクスを発揮し, 前者は秩序だったコヒーレントなダイナミクスを発揮する。迷走電磁波は代謝システムとのみ相互作用し, 生物に熱化エネルギーを与える。生物の基本システムは, レーザー装置から放射されるコヒーレント光子に他ならない電磁場の集団的かつ長距離のコヒーレントモードとのみ結合する。これは, 生体物質が, たとえマクロ的な空間距離で隔てられていたとしても, コヒーレントな光子を放出したり吸収したりすることで相互作用する可能性があることを意味します。このような現象は, 現在ではバイオフォトンまたは極微弱光子放出として知られています。さらに興味深いことに, 中国と日本の伝統医学の中心的な教義である気の経絡は, 赤外線周波数領域で弱いがコヒーレントな電磁波を放出し, 遠くにいる他の人の気の経絡に影響を及ぼすことが報告されています。気の経絡によるこのような光子放出は, 中国と日本の伝統医学における雲気療法の物理的基礎と考えられています。
+</p><p>
+
+<!--
+The yungi therapy is the curing of disorders through the passing of Qi from a person of much oder (doctor) to another of disorder (patient) without bodily contact.
+雲気療法は, 身体接触なしで, 病気の人(医師)から病気の人(患者)に気を渡すことによって病気を治すものです。
+Although some remarkable experimental results on the phenomena caused by the meridian flow of Qi have been obtained and reported, most of researchers in medical and biological sciences are still in doubt about the existence of meridian flow of Qi in human body or any other biological systems. The reason is clear:
+-->
+
+気の経絡流によって引き起こされる現象に関するいくつかの注目すべき実験結果が得られ, 報告されているにもかかわらず, 医学および生物科学の研究者のほとんどは, 人体または他の生物系における気の経絡流の存在について依然として疑問を抱いています。その理由は明らかです。
+</p><p>
+
+<!--
+There seems to be no room for the Qi flow in our modern scientific languages from the molecular biological point of view. The reported experimental results are of phenomenological and macroscopic nature and do not give any impact to the conventional realm of modern medical and biological sciences fully based on nowadays physical knowledge about the microscopic molecular picture of biochemical processes of metabolism.
+-->
+
+分子生物学の観点から見ると, 現代の科学用語には気の流れの余地がないようです。報告された実験結果は現象論的かつマクロ的な性質のものであり, 代謝の生化学的プロセスの微視的分子図に関する今日の物理的知識に完全に基づいた現代の医学および生物科学の従来の領域に何の影響も与えません。
+</p><p>
+
+<!--
+It is our opinion that the quantum field theoretical investigation of collective modes of the fundamental system of living matter introduced in the present article focussing mainly on the brain may well provide us with a reliable and
+concrete physical foundation of the meridian flow of Qi. It will open a new field of research in medica! and biological sciences from which we could derive a better understanding of the question. “What is life?” This field, though yet to be developed, deserves to be called “Quantum Biodynamics” and abbreviated again as “QBD.”
+-->
+
+本稿で紹介した, 主に脳に焦点を当てた生体物質の基本システムの集団モードの場の量子論による調査は, 気の経絡流の信頼できる具体的な物理的基礎を提供する可能性があると私たちは考えています。それは医学および生物科学の新しい研究分野を開き, 「生命とは何か」という疑問に対するよりよい理解を引き出すことができるでしょう。この分野はまだ発展途上ですが, 「量子バイオダイナミクス」と名付けられ, 再び「QBD」と略されるに値します。
+</p>
+<h2>11. 展望</h2>
+<!--
+<h2>11. Outlook 展望</h2>
+-->
+<p>
+<!--
+It seems of much importance now to let the neuro- and cognitive scientists know the truth: it is needed to rely on quantum theory even if physical phenomena of matter and light in the macroscopic scale are concerned. Of course, the brain is not the exception, and intensive researches from the very fundamental point of view of quantum theory will be respectable. (Pribram 1991; Jibu and Yasue 1999; Jibu et al. 1996; 1997) It has been widely believed in neuro- and cognitive sciences that the brain can be understood as a macroscopic object governed not by quantum physics but by classical physics or at most by molecular and chemical biologies.
+-->
+
+神経科学者や認知科学者に真実を知らせることは, 今や非常に重要であるように思われる。マクロスケールの物質や光の物理現象に関わる場合であっても, 量子論に頼る必要がある。もちろん, 脳も例外ではなく, 量子論の非常に基本的な観点からの徹底的な研究は尊敬に値するだろう。(Pribram 1991; Jibu and Yasue 1999; Jibu et al. 1996; 1997)神経科学や認知科学では, 脳は量子物理学ではなく古典物理学, あるいはせいぜい分子生物学や化学生物学によって支配されるマクロな対象として理解できると広く信じられてきた。
+</p><p>
+
+<!--
+Recently, several ambitious theories are proposed which aim at explaining such basic features of consciousness as “unity (binding problem),” “qualia,” “non-algorithmic processing,” “synchrony” and “free will” in terms of quantum theoretical concepts. (Penrose 1989; 1994; Hameroff 1987; Eccles 1986) In most cases, quantum theoretical concepts are quoted from quantum mechanics, and the famous conceptual difficulties of quantum mechanics such as “nonlocality,” “superposition of states,” “uncertainty principle,” “reduction or collapse of wave function (state),” “EPR-paradox,” “non-separability,” “Bell’s theorem” and “measurement by abstract ego” are put into heavy use.
+-->
+
+最近, 量子理論の概念で「統一性(結合問題)」「クオリア」「非アルゴリズム的処理」「同期性」「自由意志」などの意識の基本的な特徴を説明することを目指す野心的な理論がいくつか提案されている(Penrose 1989; 1994; Hameroff 1987; Eccles 1986)。 ほとんどの場合, 量子理論の概念は量子力学から引用されており, 「非局所性」, 「状態の重ね合わせ」, 「不確定性原理」, 「波動関数 (状態) の縮小または崩壊」, 「EPR パラドックス」, 「非分離性」, 「ベルの定理」, 「抽象的自我による測定」などの量子力学の有名な概念上の難しさが多用されています。
+</p><p>
+
+<!--
+However, it must be warned strongly that quantum mechanical concepts are necessarily restricted to the highly idealistic cases of microscopic objects imperceptible directly by our consciousness. As most of neuro- and cognitive scientists believe, the brain is a macroscopic object open to its noisy thermal surroundings, and a naive application of those quantum mechanical concepts to the brain might be hardly accepted. Nevertheless, in the present paper, it is emphasized that incorporation of quantum theory into the investigation of brain functioning is an inevitable turning point of the consciousness research. Here, unlike those recent ambitious theories, quantum theory means not quantum mechanics but quantum field theory that provides us with the first principle of modern physics. (Umezawa 1993; Jibu and Yasue 1995; Vitiello 2001)
+-->
+
+しかし, 量子力学の概念は, 意識によって直接知覚できない微視的な物体という非常に理想的なケースに必然的に限られていることを強く警告する必要があります。ほとんどの神経科学者や認知科学者が信じているように, 脳はノイズの多い熱的環境にさらされた巨視的な物体であり, これらの量子力学の概念を脳に単純に適用することはほとんど受け入れられない可能性があります。しかしながら, 本論文では, 脳機能の研究に量子論を取り入れることは意識研究の避けられない転換点であると強調する。ここで, 量子論とは, 最近の野心的な理論とは異なり, 量子力学ではなく, 現代物理学の第一原理を提供する場の量子論を意味する(Umezawa 1993; Jibu and Yasue 1995; Vitiello 2001)。
+</p><p>
+
+<!--
+It may be true that consciousness would not fall yet into the competition of modern scientific activity because of
+difficulty to elucidate any defining aspects. Among a few defining aspects of consciousness frequently focused on in neuro- and cognitive sciences, we may restrict our discussion to “unity” or “binding problem.” This is because unity is the most consistently identified defining aspect of consciousness capable of approaching from the fundamental scientific framework of theoretical physics. The long-standing difficulty of understanding the origin and mechanism of unity of consciousness (as a unified self) has been called the binding problem in neurophysiology: What is it that controls and unifies all the physico-chemical processes taking part in the stratified society of brain cells?
+-->
+
+意識は定義的側面を明らかにするのが難しいため, 現代の科学活動の競争にはまだ参加していないというのは本当かもしれない。神経科学や認知科学で頻繁に注目される意識の定義的側面のうち, 私たちは「統一性」または「結合問題」に議論を限定することができる。これは, 統一性が, 理論物理学の基本的な科学的枠組みからアプローチできる, 意識の定義的側面として最も一貫して特定されているからである。意識の統一(統一された自己として)の起源とメカニズムを理解することの長年の難しさは, 神経生理学における結合問題と呼ばれてきました。脳細胞の階層社会に関与するすべての物理化学プロセスを制御し, 統合するものは何でしょうか？
+</p><p>
+<!--
+We may suppose in QBD that quantum electromagnetic phenomena play essential roles in realizing unity of the stratified society of brain cells spanning hierarchically from molecular biology of neural networks to chemical biology of cytoskeletal networks and extracellular matrices. The binding problem must be solved not by introducing the idealistic quantum mechanical nonlocality but by investigating the usually neglected quantum electromagnetic phenomena taking place in the dynamically ordered regions (i.e., perimembranous regions) of intracellular and extracellular water. There, each brain cell is enfolded within a common field of macroscopic condensation of evanescent photons and all the physico-chemical processes taking part in the stratified society of brain cells are subject to the control and unification by quantum electrodynamics. Unity of consciousness thus arises from the existence of the global field of condensed evanescent photons overlapping the whole brain tissue in the cranium. The origin and mechanism of EEG (ie., electroencephalogram, brain wave) may be explained within the same quantum electrodynamical framework of QBD. (Jibu et al. 1997)
+-->
+
+QBDでは, 神経ネットワークの分子生物学から細胞骨格ネットワークと細胞外マトリックスの化学生物学まで階層的に広がる脳細胞の階層社会の統一を実現する上で, 量子電磁力現象が重要な役割を果たしていると想定できます。結合問題は, 理想的な量子力学的非局所性を導入するのではなく, 細胞内および細胞外水の動的に秩序立った領域(つまり膜周囲領域)で発生する, 通常は無視されている量子電磁力現象を調査することによって解決する必要があります。そこでは, 各脳細胞は, エバネッセント光子のマクロ的な凝縮の共通フィールド内に包まれており, 脳細胞の階層社会に関与するすべての物理化学プロセスは, 量子電磁力学による制御と統合の対象となります。意識の統一は, 頭蓋骨内の脳組織全体に重なり合う凝縮したエバネッセント光子のグローバルフィールドの存在から生じます。EEG(すなわち, 脳波)の起源とメカニズムは, QBDと同じ量子電気力学フレームワーク内で説明できます(Jibu et al. 1997)。
+</p>
+
+<h2>References</h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Davydov A. 8S. (1979). Solitons in molecular systems. Physica Scripta 20, 387-394.
+</li><br><li>Del Giudice, E., Doglia, S. and Milani, M. (1982). A collective dynamics in metabolically active cells. Physics Letters, 9OA, 104-106.
+</li><br><li>Del Giudice, E., Doglia, S., Milani, M. and Vitiello, G. (1985). A quantum field theoretical approach to the collective behaviour of biological systems. Nuclear Physics, B25I, 375-400.
+</li><br><li>Del Giudice, E., Dogha, S , Milani, M. and Vitiello, G. (1986). Electromagnetic and spontaneous symmetry breaking in biological matter. Nuclear Physics, B275, 185-199.
+</li><br><li>Del Giudice, E., Preparata, E. and Vitiello, G.. (1988). Water as a free electric dipole laser. Physical Review Letters, 61, 1085-1088.
+</li><br><li>Del Giudice, E., Doglia, S., Milani, M. and Vitiello, G. (1992). A dynamical mechanism for cytoskeleton structures. In
+M. Bender (Editor), Interfacial phenomena in biological systems. New York: Marcel Dekker.
+</li><br><li>Eccles, J. C. (1986). Do mental events cause neural events analogously to the probability fields of quantum mechanics? Proceedings of the Royal Society of London, B277, 411-428.
+</li><br><li>Froehlich, H. (1968). Long-range coherence and energy storage in biological systems. International Journal of Quantum Chemistry, 2, 641-649.
+</li><br><li>Hameroff, S. R. (1987). Ultimate computing: Biomolecular Consciousness and NanoTechnology. Amsterdam: North Holland.
+</li><br><li>Jibu, M. and Yasue, K. (1993). Intracellular quantum signal transfer in Umezawa’s quantum brain dynamics. Cybernetics and Systems: An International Journal, 24, 1-7.
+</li><br><li>Jibu, M. and Yasue, K. (1995). Quantum brain dynamics - An introduction. Amsterdam: John Benjamins.
+</li><br><li>Jibu, M. and Yasue, K. (1997a). What is mind? --- Quantum field theory of evanescent photons in brain as quantum theory of consciousness. Informatica, 21, 471-490.
+</li><br><li>Jibu M. and Yasue, K. (1997b). Magic without magic: Meaning of quantum brain dynamics. Journal of Mind and Behavior, 18, 205-228.
+</li><br><li>Jibu, M., Hagan, 8., Hameroff, S. R., Pribram, K. H. and Yasue, K. (1994). Quantum optical coherence in cytoskeletal microtubules: Implications for brain function. BioSystems, 32, 195-209.
+</li><br><li>Jibu, M., Pribram, K. H. and Yasue, K. (1996). From conscious experience to memory storage and retrieval: the role of quantum brain dynamics and evanescent boson condensation of photons. International Journal of Modern Physics, B10, 1745-1754.
+</li><br><li>Jibu, M., Yasue, K. and Hagan, 8. (1997). Evanescent (tunneling) photon and cellular ‘vision’. BioSystems, 42, 65-73.
+</li><br><li>Penrose, R. (1989). The Emperer’s new mind. London: Oxford University Press.
+</li><br><li>Penrose, R. (1994). Shadows of the mind. London: Oxford University Press.
+</li><br><li>Pribram, K. H. (1991). Brain and perception. New Jersey: Lawrence Erlbaum.
+</li><br><li>Ricciardi, L. M. and Umezawa, H. (1967). Brain and physics of many-body problem. Kybernetik, 4, 44.
+</li><br><li>Schrodinger, E. (1944). What is _ life? Cambridge: Cambridge University Press.
+</li><br><li>Sivakami S. and Srinivasan V. (1983). A model for memory. Journal of Theoretical Biology, 102, 287-294.
+</li><br><li>Stuart, C. I. J. M., Takahashi, Y. and Umezawa, H. (1978). On the stability and non-local properties of memory. Journal of Theoretical Biology, 71, 605-618.
+</li><br><li>Stuart, C. I. J. M., Takahashi, Y. and Umezawa, H. (1979). Mixed-system brain dynamics: neural memory as a macroscopic ordered state. Foundation of Physics, 9, 301-327.
+</li><br><li>Umezawa, H. (1993). Advanced field theory: micro, macro and thermal physics. New York: American Institute of
+Physics.
+</li><br><li>Vitiello G. (2001). My double unveiled. Amsterdam: John Benjamins.
+</li></ul></div>
+</p>
+    </body>
+</html>
