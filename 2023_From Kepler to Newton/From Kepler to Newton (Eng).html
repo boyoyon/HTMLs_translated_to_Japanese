@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>From Kepler to Newton</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>From Kepler to Newton: Explainable AI for Science </center></h1>
+<center>Zelong Li　Jianchao Ji　Yongfeng Zhang </center>
+<h2><center>Abstract </center></h2>
+<p class="margin-abstract">
+
+The Observation — Hypothesis — Prediction — 
+Experimentation loop paradigm for scientific research
+ has been practiced by researchers for years 
+towards scientific discoveries. However, with data 
+explosion in both mega-scale and milli-scale research,
+ it has been sometimes very difficult to 
+manually analyze the data and propose new hypotheses
+ to drive the cycle for scientific discovery. 
+</p><p>
+
+In this paper, we discuss the role of Explainable 
+AI in scientific discovery process by demonstrating
+ an Explainable AI-based paradigm for science 
+discovery. The key is to use Explainable AI to 
+help derive data or model interpretations, hypotheses,
+ as well as scientific discoveries or insights. 
+We show how computational and data-intensive 
+methodology—together with experimental and 
+theoretical methodology—can be seamlessly integrated
+ for scientific research. To demonstrate 
+the AI-based science discovery process, and to 
+pay our respect to some of the greatest minds in 
+human history, we show how Kepler’s laws of 
+planetary motion and Newton’s law of universal 
+gravitation can be rediscovered by (Explainable) 
+AI based on Tycho Brahe’s astronomical observation
+ data, whose works were leading the scientific 
+revolution in the 16-17th century. This work also 
+highlights the important role of Explainable AI 
+(as compared to Blackbox AI) in science discovery
+ to help humans prevent or better prepare for 
+the possible technological singularity that may 
+happen in the future, since science is not only 
+about the know how, but also the know why. 
+</p>
+<h2>1. Introduction</h2>
+<p> 
+A frequently used paradigm for scientific research is the 
+Hypothetico-Deductive paradigm (Figure 1(a)), which has 
+been practiced by researchers for years [1, 2, 3]. In this 
+paradigm, researchers first make observations which is usually
+ a data collection process, and then raise a question. To 
+get answers to the question, researchers will then propose a 
+hypothesis as a possible explanation to the observation, usually
+ through an abductive reasoning process. The hypothesis 
+may come in the form of a theory, a model, an equation, 
+an algorithm, or any other form depending on the research 
+problem and research area. The hypothesis is used to make 
+verifiable predictions, and then experimental tests or data 
+analyses are conducted to verify or falsify the hypothesis. 
+The above process may repeat as a loop, i.e., if the hypothesis
+ is falsified, we may need to make new observations, 
+propose new hypotheses, and even ask a new question. 
+</p><p>
+
+An excellent example of science discovery is the works of 
+Tycho Brahe, Johannes Kepler and Isaac Newton (Figure 
+2), who are some of the greatest minds in human history 
+and their work were leading the scientific revolution in the 
+16-17th century. Tycho Brahe was an astronomer known for 
+his accurate and comprehensive astronomical observations. 
+During his career in the 16th century, though as a naked-eye 
+astronomer, his observations of the planets orbiting the Sun 
+were so accurate that it became possible for later researchers 
+to build insightful discoveries based on his observational 
+data. One notable name, of course, is Johannes Kepler, who 
+discovered what was later known as the Kepler’s laws of 
+planetary motion. During the science discovery process, Kepler
+ hypothesized that the orbit of a planet is an ellipse with 
+the Sun at one of the two foci, and he was able to fit the orbital
+ equation of Mars based on Tycho’s observational data. 
+Finally, the equation turns out to be surprisingly accurate 
+in predicting the future position of planets, which verifies 
+his first law of planetary motion. Later, Kepler further discovered
+ the second and third laws through his insightful 
+analyses of the data. Isaac Newton, one of the most notable 
+figures in the human history of science, was not only interested
+ in how planets orbit the Sun, but also why they orbit 
+in such a way, which means that his goal is to explain the 
+underlying mechanism of planetary motions. In conquest 
+of this goal, he made several innovate discoveries which are 
+later known as the Newton’s law of universal gravitation 
+and the Newton’s laws of motion. 
+</p><p>
+
+It is very interesting to see that Tycho, Kepler and Newton— 
+though their works span over a hundred years of history— 
+actually play different but closely related roles in the science 
+discovery process, which are observation, analyzation, and 
+explanation. Tycho’s key contribution is on observation and 
+his accurate data lays foundation for insightful analyses and 
+innovative discoveries in the future. Kepler analyzed the 
+data and discovered meaningful patterns hidden in the data. 
+Finally, Newton examined the underlying mechanism of 
+such patterns and provided insightful explanations to show 
+why planets move in such patterns rather than other patterns. 
+Using more computer science language, Tycho’s work is 
+on data collection, Kepler’s work is on model learning, i.e., 
+he manually (instead of using modern computers) fit the 
+data and learned predictive models based on the data, and 
+finally, Newton’s work is on model interpretation, i.e., he 
+(also manually) provided conceptual and mathematical explanations
+ for Kepler’s results and Kepler’s laws can be 
+naturally derived from Newton’s laws. 
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+
+Figure 1. The Hypothetico-Deductive paradigm for science discovery
+ and the Explainable AI-based (hypothesis-free) paradigm 
+for science discovery. The new paradigm uses Explainable AI to 
+generate verifiable hypothesis. 
+</p><p>
+
+
+In modern scientific research, with the help of various mechanical,
+ electrical and biological equipment, many components
+ of the research pipeline have been automated. The 
+most notable component is observation and data collection— 
+modern equipment such as telescopes, sensors and colliders 
+automatically and continuously collect data to support research
+ and discoveries, and such observational data usually 
+comes in massive scale. For example, the Hubble Space 
+Telescope (HST) generates up to 150 GB of spatial data per 
+week [4], and the Large Hadron Collider (LHC) experiments 
+produce about 90 PB of data per year [5]. Such abundant 
+and accurate observational data helps to push the frontier of 
+scientific research, but it also brings great challenges to process
+ the data and build insightful hypotheses from the data. 
+However, building insightful hypotheses is vitally important 
+to drive the research cycle for new scientific discoveries. 
+</p><p>
+
+To indicate how the above challenges can be alleviated with 
+the help of modern AI and machine learning technologies, 
+we show an Explainable AI-based hypothesis-free paradigm 
+for science discovery (Figure 1(b)). The key is to replace 
+manual hypothesis development with an AI-driven model 
+learning and model interpretation process. More specifically, 
+the model learning component adopts black-box AI tools 
+such as deep learning for data analysis, data augmentation 
+and building accurate prediction models, while the model 
+interpretation component adopts Explainable AI tools such 
+as symbolic regression to translate the black-box model into 
+human-understandable forms for understanding the scientific
+ meanings and deriving scientific insights. Working 
+together, the two components turn manual hypothesis development
+ into automatic hypothesis development, saving 
+efforts of building insightful hypotheses from data. 
+</p><p>
+
+As a demonstration to the Explainable AI-based paradigm, 
+we show how the Kepler’s laws of planetary motion and the 
+Newton’s law of universal gravitation can be rediscovered by 
+explainable AI based on Tycho’s astronomical observation 
+data. At Kepler’s time, there were three main hypotheses 
+on planetary motion—the Tychonic system, the Ptolemaic 
+system and the Copernican system. These three hypotheses 
+can give good predictions in the short term, but diverge from 
+the observational data in the long term. Kepler spent several 
+years on calculations and finally rejected the three models. 
+Meanwhile, he proposed his elliptical orbit hypothesis and 
+verified that it had better predictions than previous models. 
+This process follows the observation–hypothesis–prediction 
+paradigm of science discovery. Our experiments imagine 
+that AI and machine learning techniques existed in Kepler’s 
+time and show how Kepler would have been able to derive 
+his first and second laws using Explainable AI-based science 
+discovery based on the observational data of Mars, without 
+manually making hypotheses. Besides, Explainable AI not 
+only helps to find the first and second laws of planetary 
+motion, but also helps the discovery process of Kepler’s 
+third law: the ratio between the square of a planet’s orbital 
+period and the cube of the length of the semi-major axis of 
+its orbit, is a constant for all planets. It seems impossible 
+to find the third law since that needs the observational data 
+of other planets, but our experiment will show that by only 
+using Mars data, Explainable AI is able to find the numerical 
+relationship between the angular speed and the distance 
+from the Sun with very high accuracy, which provides a 
+clear direction towards the discovery of the third law. 
+</p><p>
+
+Throughout Kepler’s research career in the first 30 years of 
+the 17th century, especially after his three laws of planetary 
+motion have been discovered, Kepler has been constantly 
+seeking for a kinetic explanation for the laws. He tried 
+to explain the laws based on magnetic force, which from 
+modern perspective turned out to be incorrect [6]. However, 
+it demonstrates humans’ eager for explanations so as to not 
+only know how but also know why. This is also the reason 
+why we emphasize the importance of Explainable AI in the 
+science discovery process. 
+</p><p>
+
+History assigned the duty of finding the explanation to Issac 
+Newton. If we would like to dig out the secret behind 
+the motion of planets, we need to leverage the concepts 
+of force and acceleration. During Kepler’s time, scientists 
+have established the concept of force, but they still do not 
+know the exact function of force. They thought force was 
+proportional to distance and thus speed. Newton’s greatness 
+lies in that he creatively linked the relationship between 
+force and acceleration (instead of speed) and proposed the 
+inverse square law of force and thus acceleration. Based 
+on these concepts, Kepler’s laws can be naturally derived 
+from Newton’s laws based on mathematical deviations, thus 
+providing an explanation for the underlying mechanism of 
+Kepler’s laws of planetary motion [7]. 
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+
+Figure 2. Tycho Brahe, Johannes Kepler, Isaac Newton and their 
+roles in the science discovery process. 
+</p><p>
+
+
+On the other hand, as Newton stated in his groundbreaking 
+work the Principia, he considered forces from a mathematical
+ point of view, not a physical view, and thus taking an 
+instrumentalist view of his methods [7]. As a result, it is 
+the job of the readers to assign “meanings” to the many 
+variables such as the force in his mathematical framework. 
+Though contemporary scientists believe that Newton must 
+have his own insightful understanding of the meanings of 
+the variables, and his statement was just making room for 
+flexibility to accommodate different views of his readers, 
+his cautiousness inspires us to think about what is the exact 
+role of (Explainable) AI in science discovery. In the context 
+of Explainable AI-based science discovery, the AI machines 
+could indeed be able to learn black-box neural models for 
+prediction and learn symbolic equations to explain the predictions,
+ however, machines do not possess “meaning” of 
+the variables or the combination of variables in the equations.
+ For machines, the variables are just symbols used for 
+data exploration, data fitting and prediction, while it is the 
+job of humans to assign meanings to the variables and to 
+build understandings of the universe based on the discoveries
+ made by AI machines<sup>1</sup>. The role of (Explainable) AI in 
+the science discovery process is to produce valid hypotheses 
+or to narrow down the search space of hypotheses so as to 
+speed up the discovery, but the role of assigning “meanings” 
+to the discoveries is the job of humans (especially domain 
+experts) which cannot be replaced by AI. In the experiments, 
+we will demonstrate the importance of human during science
+ discovery by showing how the representation of force 
+is discovered by AI when explaining the elliptical orbit and 
+how human needs to intervene so as to assign an appropriate 
+meaning to force. 
+
+</p><p class="margin-large">
+
+<sup>1</sup>In this discuss we limit ourselves to the sense of “meaning” in 
+terms of human’s perspective. It is possible that machines would 
+build their own internal “meaning” of the variables and calculations 
+that is not understandable to humans, but that is beyond the scope 
+of discussion in this work. 
+
+</p><p>
+This work also highlights the importance of Explainable 
+AI (as compared to black-box AI) in science discovery. In 
+particular, Explainable AI helps human beings to prevent 
+or better prepare for the possible technological singularity 
+(or simply singularity) that may happen in the future. The 
+possibility of technology advancements leading to a singularity
+ has been discussed by public figures from many fields 
+such as John von Neumann [8], Irving John Good [9] and 
+Stephen Hawking [10]. For example, I. J. Good speculated 
+in 1965 that the advancement of artificial intelligence may 
+bring about an intelligence explosion, where intelligent machines
+ can solve problems and even build new machines 
+using incomprehensible ways for humans and thus the intelligence
+ of human would be left far behind [11]. Under the 
+context of science discovery, if we develop and allow black-
+box AI to make discoveries and represent such discoveries 
+using black-box models such as complex neural networks 
+that are incomprehensible for humans (though these models 
+may indeed provide accurate predictions), it may lead to the 
+situation that machines will accumulate knowledge that are 
+more and more incomprehensible for humans and eventually 
+the human knowledge will be left far behind by machine’s 
+knowledge, leading to the singularity and even making machines
+ out of control for humans. As a result, we need to 
+make sure that AI explains its model and discoveries to humans
+ using human understandable methods, so that humans 
+can always keep track of the new discoveries and knowledge 
+created by machines during the science discovery process. 
+</p><p>
+
+In the following part of this paper, we first introduce some 
+related work in Section 2, and then we will use Kepler’s and 
+Newton’s works as examples to demonstrate the Explainable 
+AI-based science discovery process. More specifically, in 
+Section 3, we will first introduce the data and Explainable AI 
+models to be used in this work, and then we will rediscover 
+Kepler’s and Newton’s laws under the Explainable AI-based 
+paradigm in Section 4 and Section 5, respectively. We 
+conclude the work together with discussions and future 
+directions in Section 6. 
+</p>
+
+<h2>2. Related Work</h2> 
+<h3>2.1. Explainable AI</h3>
+<p> 
+Explainability has been an important perspective to consider 
+in many AI systems, leading to the research on Explainable 
+AI (XAI). For example, recommender system needs to explain
+ its recommendations or decisions to users so as to gain 
+trust and help users make informed decisions, leading to 
+the research on explainable recommendation [12, 13, 14]; 
+many prediction or classification algorithms need to provide
+ explanations for the model designers to help them 
+understand how the model works for better debugging and 
+detecting potential bias in models [15, 16, 17]. Explainable 
+AI methods can be generally classified to model-intrinsic 
+methods and model-agnostic methods [12]. For model-
+intrinsic methods, the decision and explanation are both 
+produced by the same model, which means that the working
+ mechanism of the model itself is transparent so that 
+any decision produced by the model are naturally accompanied
+ with explanations. The decision and explanation are 
+usually produced concurrently in model-intrinsic methods. 
+Notable examples of model-intrinsic methods include linear 
+regression [18], decision tree [19, 20] and attention mechanism
+ [13, 21, 22, 23], whose explanations are regression 
+coefficients, decision paths and attention weights, respectively.
+ For model-agnostic methods, the decision model and 
+explanation model are usually two separate models. The 
+decision model is responsible for prediction and decision 
+making, while the explanation model is responsible for explaining
+ the results produced by the decision model. In 
+model-agnostic methods, the explanations are usually produced
+ in a post-hoc manner, i.e., the model decisions are 
+produced first and then explanations are generated for the 
+decisions. Notable examples for model-agnostic methods 
+include counterfactual explanations [14], local approximations
+ [16], and Shapley values [15, 17]. 
+</p><p>
+
+It is worth noting that there exist explanation methods that 
+may not be simply classified as either model-agnostic or 
+model-intrinsic but actually in between agnostic and intrinsic
+ because they can be implemented in either way. One 
+such example is symbolic regression [24, 25]. Symbolic 
+regression is a type of regression analysis to find a function \(f(x_1,x_2, \cdots,x_n)= 
+y\) consisting of designated base functions
+ that best fits the given dataset [24]. The base functions 
+could be basic number operations such as addition, subtraction,
+ multiplication, division, exponentiation, logarithm, 
+etc., or trigonometric functions such as sine, cosine, tangent, 
+etc., or any other designated base functions. Symbolic regression
+ can be done in an intrinsic way by directly learning 
+the symbolic function that best regresses the data, or can be 
+done in an agnostic/post-hoc way by first learning a black-
+box model such as neural network to fit the data and then 
+using symbolic function to regress the black-box model. 
+Symbolic regression is an NP-hard optimization problem 
+[25, 26], but some effective and efficient heuristic methods
+ have been developed, including genetic programming 
+[27, 28], Bayesian methods [29], and continuous optimization
+ methods [30, 31]. Besides, due to the high demand 
+of solving symbolic regression problems in industry and 
+research, many packages and tool-kits have been developed, 
+such as Eureqa [32] which is based on genetic programming 
+and TuringBot [33] which is based on simulated annealing. 
+</p><p>
+
+<h3>2.2. AI for Science Discovery</h3>
+<p> 
+AI for science discovery has been an important direction 
+and is especially trending in recent years. For example, 
+many efforts have been devoted to explore machine learning 
+for drug discovery [34, 35, 36], material design [37], and 
+chemistry or physics problems [38, 39, 40], though many of 
+the works are conducted on synthesized data such as particle 
+interaction rather than real observational data. A notable 
+recent advance on AI for molecular biology is AlphaFold 
+[41], which develops deep learning models to predict the 
+folding structure of proteins. Most existing research on AI 
+for science discovery focus on the AI utility instead of the 
+AI explainability, i.e., they focus on developing advanced 
+AI models for more accurate prediction, classification or 
+regression of scientific data, but less effort is put on explaining
+ the AI models or the AI-based discoveries. However, 
+we believe that enabling AI to provide insightful explanations
+ for science discovery is critically important, since it 
+helps researchers to better understand the underlying mechanism
+ of the AI models and better understand the scientific 
+insight implied by the AI models, which is important to 
+enhance human-beings’ understanding of the AI-discovered 
+knowledge and advance science progress in the community. 
+</p>
+
+<h2>3. Research Setting and Background</h2> 
+<h3>3.1. Research Data </h3>
+<p>
+Modern research facilities such as advanced telescopes have 
+been able to collect very accurate and abundant data for 
+planets orbiting the Sun. However, to fully restore the research
+ situation at Kepler’s and Newton’s time, and to show 
+how Kepler’s and Newton’s laws can be rediscovered by 
+Explainable AI based on the (limited) data and knowledge at 
+their time, we do not use any of the modern data of planetary 
+motion. Instead, throughout the research, we only use the 
+data and knowledge that were available to and used by Kepler,
+ which was mostly collected by Tycho Brahe and partly 
+collected or refined by Kepler 400 years ago. In particular, 
+we use the observation data of Mars orbiting the Sun by 
+Tycho and Kepler as summarized in Table 1, which comes 
+from Kepler’s epoch-making book Astronomia Nova [6]. 
+</p><p>
+
+In Table 1, the date is written in old style used by Kepler<sup>2</sup>. 
+To obtain Gregorian style dates, we just need to add 10 days 
+on top of Kepler’s dates [6]. The “Mars’ Angular Position” 
+from Sun is the Mars’ longitudes in heliocentric ecliptic 
+coordinates computed by Kepler. The “Sun-Mars Distance” 
+is in units of Astronomical Unit (AU). A note here is that 
+at Kepler’s time, humans were still unable to measure the 
+distance between planets in miles [44, 45]. Instead, they 
+recorded distances in the ratio of Sun-Earth distance, and set 
+the average of Sun-Earth distance as 100, 
+000, similar to the 
+definition of AU. Thus, we use AU as the unit<sup>3</sup>. “Difference” 
+is the difference between the computed and the observed 
+Mars’ positions in geocentric ecliptic longitudes. Since the 
+average measurement error of Tycho’s observations is just 
+several arc-minutes and the largest difference is less than 
+six arc-minutes, thus, we take the data as the top-accurate 
+data at Tycho’s and Kepler’s time. 
+
+</p><p class="margin-large">
+<sup>2</sup> This old style is based on Julian calendar which was used by 
+Kepler. To fix the calendar drift of spring equinox due to the excess 
+leap days introduced by the Julian algorithm, a calendar reform 
+was introduced in 1582 which slightly adjusted the number of days 
+per year and advanced the date by 10 days: October 4, 1582 was 
+followed by October 15, 1582 [42, 43], leading to what is now 
+known as the Gregorian calendar. 
+<br><br>
+
+<sup>3</sup> Actually, computing Mars’ position and distance relative to 
+Sun is one of Kepler’s most genius innovations. He smartly used 
+the fact that the Mars’ period is 687 days, and thus should appear 
+at the same position in universe once every 687 days. This makes 
+it possible to compute the Sun-Mars distance and direction relative 
+to the Sun-Earth distance (which is 1 AU) based on trigonometric 
+calculations [6]. 
+
+</p>
+
+<h3>3.2. AI and Explainable AI Models </h3>
+<p>
+In this research, we aim to show what AI is able and unable 
+to do in science discovery. In particular, we will highlight 
+that learning black-box models could indeed give us accurate
+ predictions of the physical phenomena, but may not help 
+in advancing human understandings of the nature and universe.
+ To really transform data into knowledge rather than 
+just prediction tools, we not only need black-box prediction 
+models learned from data, but also need explanation models 
+that can reveal the physical insights underlying the data and 
+model in human understandable ways, so that human beings 
+can keep up with the pace of AI’s discoveries. 
+</p><p>
+
+Our experiments involve two types of models. One is 
+a black-box model implemented as neural network (NN) 
+which is learned from observational data. The black-box 
+model is responsible for making accurate predictions such 
+as predicting the position of Mars at certain time, as well 
+as data augmentation to turn limited observational data into 
+large scale data for science discovery. The black-box model 
+would have already been very helpful to human-beings, for 
+example, it may help to develop calendars and to guide 
+agricultural production by making accurate predictions of 
+the future, but its black-box nature makes it difficult for humans
+ to understand the underlying physical mechanism of 
+such predictions. As a result, we involve the second type of 
+model for explanation, which is implemented based on symbolic
+ regression that transforms the black-box model into a 
+symbolic function to express the interpretable physical rules. 
+The symbolic regression process also discovers meaningful 
+physical variables to inspire insightful understandings of the 
+underlying physical mechanism behind the data. 
+</p><p>
+
+For the implementation details, we use three layers of multilayer
+ perceptron (MLP) as the NN model with the hidden 
+size as 100. As a black-box, we will not change the internal 
+structure of NN throughout the experiments, i.e., we will not 
+purposely design unique NN structures to fit different data, 
+instead, we always use the same and simple three-layer MLP 
+as the black-box and we only designate the input and output 
+data for the black-box to learn different prediction models. 
+We use TuringBot [33] for model explanation based on symbolic
+ regression, which is a widely used symbolic regression 
+algorithm based on simulated annealing and performed well 
+on a variety of physics-inspired learning problems [46]. 
+</p>
+
+<h2>4. Rediscover Kepler’s Laws based on Explainable AI </h2>
+<p>
+Let us first review the process of Kepler’s discovery of his 
+first law. In Kepler’s time, there were three models of planetary
+ motion: the Ptolemaic, Copernican and Tychonic systems.
+ In his book Astronomia Nova [6], Kepler mentioned 
+that these three systems all had high prediction accuracy in 
+the near term, but diverged and failed to fit historical and 
+future observations in the long term. The first step of his research
+ was to check the accuracy of the observation data. If 
+a theory is based on inaccurate observations, then the theory 
+could be misleading. Therefore, Kepler went through the 
+calculation with at least seventy rounds of verification, at a 
+very great loss of time [47]. Nowadays, data collection and 
+inspection are still important and necessary but are relatively 
+mature, and most part of them can be done automatically 
+with minimal manual intervention. 
+</p><p>
+
+After multiple rounds of recalculation, Kepler chose to believe
+ the observation data from Tycho. However, he was not 
+satisfied with the measurement error of the existing planetary
+ motion models [48], which led him to propose a new 
+hypothesis that the orbit of a planet is an ellipse with the 
+Sun at one of the two foci, which is known as Kepler’s first 
+law of planetary motion, and then he used the observation 
+data to verify his hypothesis. This process practiced the 
+traditional Hypothetico-Deductive paradigm of science discovery,
+ where a hypothesis is first manually proposed and 
+then experiments are conducted to verify or falsify the hypothesis.
+ In the following, we will show the hypothesis-free 
+science discovery process based on (Explainable) AI which 
+directly starts from data to rediscover the Kepler’s laws. 
+</p>
+
+<h3>4.1. Black-box Model for Prediction and Data Augmentation </h3>
+<p>
+First, we use the neural network model as a black-box model 
+for data fitting, prediction, and data augmentation. An advantage
+ of deep neural network is its ability to smoothly fit 
+the data so as to augment the small amount of observation 
+data into large amount of data samples to facilitate AI-based 
+science discovery. We plot the observation data points in 
+Table 1 as Figure 3. Since the amount of original observa
+tion data is small, we only use three samples for validation 
+and use the remaining 25 samples for training. We set the 
+number of training epochs as 200,000 for \(NN\)-based data 
+fitting to learn a regression function \(r=NN(\theta)\), where \(NN\) 
+is the learned neural network function, \(r\) 
+is the Sun-Mars 
+distance and \(θ\) 
+is the Mars’ angular position relative to the 
+Sun (column 2 and column 3 of Table 1). The final mean 
+square loss (MSE) of the \(NN\) on the training data and validation
+ data is \(4\times 10^{-11}\) and \(7\times 10^{-8}\), respectively, which 
+means the neural network function is able to provide quite 
+accurate predictions. For data augmentation, we uniformly 
+sample 1,000 random numbers between 0 and 1 as input to 
+the \(NN\), which is in the same input number range of the \(NN\) 
+model. We then use the sampled inputs and the corresponding
+ outputs of the NN model to generate augmented data 
+samples and to approximate the function. The augmented 
+data samples are shown as the Figure 4. 
+</p>
+
+<h3>4.2. White-box Model for Explanation </h3>
+<p>
+Our next step is to interpret the neural network function 
+\(r = NN(\theta)\) into a human understandable symbolic function 
+based on symbolic regression so as to gain physical insights 
+from the black-box model. From Figure 4, we can see 
+that the NN model has a good ability of smooth function 
+approximation and we can see the periodicity of data from 
+the figure. However, even though our 3-layer MLP model is 
+very simple from the AI perspective, it is still a very complex 
+non-linear nested matrix multiplication formula, which is 
+difficult to understand its physical insights. This is why we 
+use symbolic regression as Explainable AI to transform the 
+black-box model into simple and intuitive physical rules. 
+In particular, we hope to turn the neural network function 
+\(r=NN(\theta)\) into an explicit symbolic function \(r=f(\theta)\). We 
+use the cosine function (cos) due to periodicity alongside 
+with three other basic operations for symbolic regression: 
+addition (+), multiplication (\(\cdot\)) and division (/) (subtraction 
+can be expressed by adding a negative sign). The symbolic 
+regression results are shown in Table 2. 
+</p><p>
+
+In Table 2, the error means the root mean square error
+ (RMSE) between the output of the black-box model 
+and the output of the white-box model, i.e., \(RMSE =\sqrt{\sum_\theta 
+(NN(\theta)−f(\theta))^2}\). The size stands for the complexity 
+of the generated function, which is calculated by adding up 
+the size of each base function used by the generated function,
+ and the size of each base function is shown in Table 
+3. The symbolic regression process selects the simple and 
+effective functions, i.e., if a simpler (smaller size) function 
+is more accurate (smaller error) than a complex (larger size) 
+function, then the complex function will be eliminated from 
+the results. We plot the relation between the function size 
+and the negative log error in Figure 5, which shows that 
+the size 14 candidate function has the sharpest increase in 
+accuracy (in terms of negative log error) while maintaining 
+a smaller size, which indicates that this function has the best 
+chance to achieve a good balance between accuracy and 
+complexity to reveal the physical rule behind the data [30]. 
+We write down and simplify this function as Eq.(1): 
+
+\[
+\begin{align}
+r=f(\theta) &= \frac{1.51977}{ 1.00625+0.0932972·\cos(θ+0.544536)} \\
+\\ 
+&=\frac{1.51033}{1+0.0927177·\cos(θ+0.544536)} 
+\tag{1}
+\end{align}
+\] 
+
+If we have basic knowledge of elliptic equations, we know 
+Eq.(1) implies a standard elliptical orbit, which can be represented
+ as the following function in polar coordinates: 
+
+\[
+r=f(\theta)=\frac{l}{1+ε·\cos(\theta)}  \tag{2}
+\] 
+
+
+where \(r\) stands for the distance between the Sun and Mars, 
+and \(θ\) is Mars’ longitude in heliocentric ecliptic coordinate. 
+This clearly shows that the orbit of Mars is an ellipse with 
+Sun at the focus, leading to Kepler’s first law. We will 
+further interpret the meaning of the numbers in Eq.(1) in the 
+following subsection. 
+</p>
+
+<h3>4.3. Physical Interpretation of the Results</h3>
+<p>
+ 
+Besides the elliptical orbit, we can obtain more insightful information
+ from Eq.(1). In Kepler’s book Astronomia Nova 
+
+[6] (Chapter 41, Page 321), he calculated the eccentricity 
+of Mars as 0.09264 
+based on complex and meticulously 
+designed geometric calculations. By comparing the two 
+equations, Eq.(1) and Eq.(2), we can directly learn that the 
+Mars eccentricity \(ε=0.0927177\), which tends to be consistent
+ with Kepler’s result with relative error less than 0:1%. If 
+we compare our Explainable AI-based result with the Mars 
+eccentricity from modern science observations (as shown in 
+Table 4), we can see the relative error is about 0:7%, which 
+is larger than that comparing with Kepler’s result, most 
+likely due to the observational errors in Tycho and Kepler’s 
+data that was collected 400 years ago, but the relative error 
+is still small and the result is reasonable because we used 
+the same data as Kepler did, and thus no surprisingly our 
+result would be closer to Kepler’s. 
+</p><p>
+
+Another difference between Eq.(1) and the standard oval 
+equation is the declination in the cosine function. For standard
+ oval equation, \(r_{min}= f(θ=0)\), while in our equation, \(r_{min}
+=f[θ=-0.544536(about −31.2^\circ)]\). This is consistent
+ with and can be explained by the series of closest Mars 
+Oppositions in history. Mars Oppositions are phenomena 
+when Earth passes in between Sun and Mars. Table 5 (from 
+[49]) shows all of the closest Mars Oppositions with distance
+ between Mars and Earth less than 0:375 
+AU from the 
+1500s (Kepler’s time) to nowadays. We see that all of these 
+closest Mars Oppositions happen around August, which is 
+about one month before the fall equinox (around September 
+23)—the time when Sun reaches the celestial longitude of \(180^\circ\), i.e., \(\theta_{Earth}=0\). Since the orbit of Earth is very close 
+to a circle (scientists at Kepler’s time knew this according 
+to their observations [6][p.271-272]), therefore, the distance 
+between Mars and Earth on Mars Oppositions is mainly 
+decided by the position of Mars, and Mars is most likely at 
+perihelion around August according to the historical observations
+ of closest Mars Oppositions (e.g., Table 5). This is 
+consistent with the results shown by Explainable-AI model, 
+since Eq.(1) also shows August as the Mars perihelion when \(\theta_{Earth}
+=\theta_{Mars}=-0.544536\approx -31.2^\circ\), which is about 
+\(\frac{31.2}{360}×365≈32\) days ahead of the fall equinox, i.e., in
+August. In the following, we will also show how Kepler’s 
+other laws can be discovered in the process of pursuing for 
+Newton’s laws based on Explainable AI. 
+</p>
+
+<h2>5. Rediscover Newton’s Laws based on Explainable AI</h2>
+<p>
+ 
+We have shown how Kepler’s first law and certain attributes 
+of Mars can be extracted by Explainable AI from data. But 
+one may not be satisfied with this, because one may naturally
+ want to know why Mars orbits in oval and what “power” 
+drives this elliptical orbit. In history, with limited information
+ and tools, Kepler thought that the variable distance 
+between Sun and Mars was due to the magnetic attraction 
+and repulsion of Mars by Sun [50], which was inspired from 
+the proposal that Earth is a magnet by English physician 
+and physicist William Gilbert in his groundbreaking book 
+De Magnete published in early 1600s [51]. Though we now 
+know that this explanation is not the true reason, we cannot 
+help imaging whether Explainable AI can help to answer 
+this question based on ancient data that Kepler used. 
+</p>
+
+<h3>5.1. Black-box Model for Time-Sensitive Prediction and Data Augmentation </h3>
+<p>
+Eq.(1) describes the position of Mars relative to Sun as 
+\(r=f(\theta)\). An intuitive and interesting idea is to construct 
+the relationship between the Mars position and time, since 
+we have not used the time information in Table 1. More 
+specifically, we naturally hope to have the \(\theta-as-t\) 
+relationship 
+\(θ= g(t)\), so that combined with the \(r=f(\theta)\) 
+function, we 
+will be able to predict the Mars position for any given time in 
+the future, which was an important problem for astronomy 
+and calendar development at Kepler and Newton’s time, 
+and making accurate future predictions is also important to 
+verify if a theory is correct. Kepler and his contemporary 
+scientists knew that the orbital period of Mars is about 687 
+days, and the time span of the data in Table 1 is much 
+longer than that, so we shift all data points into one orbital 
+period and normalize the time to the range of [0,1] for 
+better visualization. We show the normalized time \(t\) 
+and Mars’ longitude \(θ\) in Figure 6. We can see that the \(\theta-t\) 
+relationship is close to linear but with certain non-linearity, 
+which implies small changes of Mars’ speed when orbiting 
+the Sun. 
+</p><p>
+
+Similar to previous experiments, we first feed the data to 
+a neural network model for black-box prediction and data 
+augmentation. We use a simple three-layer multi-layer perceptron
+ (MLP) network to train the predictor \(θ=NN(t)\), 
+where the input is the normalized time \(t\) 
+and the output is 
+Mars’ longitude \(θ\) 
+in radian. After 200,000 epochs of training,
+ the mean square loss (MSE) on training and validation 
+data is \(7\times 10^{-8}\) and \(1.5\times 10^{-5}\), respectively. After training, 
+we uniformly sample \(2T\) points between 0 and 1 as input 
+for data augmentation, where \(T=687\)  
+is the orbital period 
+of Mars, and we plot the augmented data points based on 
+the trained neural predictor \(θ=NN(t)\) in Figure 7. 
+</p><p>
+
+Actually, the above simple experiment which adopts machine
+ learning to learn a black-box neural predictor \(θ=NN(t)\)  
+implies a significant role of machine learning (especially
+ deep learning based on neural networks) in science 
+discovery. Nowadays, based on advanced mathematical 
+tools and deeper understandings of planetary motion, we 
+are able to know that the relationship between \(t\) 
+and \(θ\) 
+can 
+be expressed as the following Eq.(3) [52], 
+
+\[
+\frac{2\pi}{T}t=2\tan^{-1}\left(\sqrt{\frac{1-\epsilon}{1+\epsilon}}\tan\left(\frac{\theta}{2}\right)\right)-
+\frac{\epsilon\sqrt{1-\epsilon^2}\sin(\theta)}{1+\epsilon\cos(\theta)}
+\tag{3}
+\]
+
+
+where \(T\) and \(\epsilon\) are constant parameters of Mars. This means 
+that we can express \(t\) 
+as a function of \(\theta\), i.e., \(t=h(\theta)\), 
+however, we can hardly find a function to express \(θ\) 
+as \(t\), i.e., \(θ=g(t)\), since Eq.(3) is a transcendental equation. As a 
+result, suppose we did not know Eq.(3), then we possibly 
+will spend efforts trying to find the \(\theta-t\) 
+relationship, however, 
+any attempt to find a \(\theta-t\) function \(θ=g(t)\) 
+would fail no 
+matter based on manual efforts or automatic tools such as 
+symbolic regression, which incurs a waste of time. Nevertheless,
+ sometimes we do need a \(\theta-as-t\) 
+function because 
+we may want to analyze some important features of Mars 
+motion such as the angular velocity and acceleration. Deep 
+learning and neural network models provide a solution to 
+this problem, because according to the universal approximation
+ theorem [53, 54, 55], neural networks—when the 
+structure and weights are properly designed and learned— 
+are able to approximate a wide scope of functions based 
+on training data. As a result, even though the functional 
+form of \(θ=g(t)\)  
+is difficult (if at all possible) to find, we 
+can still learn a fairly good \(\theta-t\) function as a neural network 
+\(θ=NN(t)\), and because \(NN\) is differentiable, we can conduct
+ mathematical analysis for the \(\theta-t\) 
+relationship, such as angular velocity \(ω=\frac{dNN(t)}{dt}\) and angular acceleration 
+\(a=\frac{d^2NN(t)}{dt^2}\) . This will enable us to discover the possible 
+physical relationship between many physical variables that 
+are otherwise difficult to calculate. We will further illustrate 
+on this point in the following subsections. 
+</p>
+
+<h3>5.2. White-box Model for Explanation </h3>
+<p>
+
+At Kepler’s time, calculus has not been invented yet, but 
+scientists have already established the concept of velocity. 
+As a result, we should not use differentials to derive the 
+angular velocity, but we can calculate the angular velocity 
+\(ω\) 
+by calculating the change of angle \(θ\) 
+within a certain time 
+interval based on the black-box neural network prediction 
+model \(θ=NN(t)\)  
+that we have learned in the above subsection.
+ To show the generalization ability of the neural 
+network model, we randomly sample the same number (28) 
+of data points from \(θ=NN(t)\)  
+by using different values 
+between 0.1 and 0.9 as the time in one orbital period of 
+Mars, denoted as \(t_i (i=1, 2,\cdots, 28)\). For each \(t_i\), we use 
+the neural model to obtain the angle of Mars \(\theta_i = NN(t_i)\). 
+Then, we set the time interval \(\delta_t = \frac{1}{32}\) day (about 45 minutes), and for each time \(t_i\), we calculate the corresponding angular velocity \(\omega_i
+=\frac{NN(t_i+\delta_t)-NN(t_i-\delta_t)}{2\delta_t}\). Besides, based 
+on Eq.(1), we can also obtain the corresponding Sun-Mars 
+distance at time \(t_i\) which is \(r_i=f(\theta_i)=f(NN(t_i))\). 
+</p><p>
+
+Now, with the augmented data points \((t_i, \theta_i, r_i, \omega_i)\), we 
+would like to find the interpretable symbolic physical relationship
+ among some or all of these physical variables. 
+Though nowadays even a high school student knows their 
+relationship, we should assume that we have no knowledge 
+about the underlying physical rule when using Explainable 
+AI such as symbolic regression to find their relationship, because
+ to demonstrate the role and ability of Explainable AI 
+in this task, we should avoid from introducing prior knowledge
+ into the discovery process. As a result, we augment 
+as many variables as we can imagine from the existing variables
+ and then totally rely on symbolic regression to find the 
+potential relationship underlying some or all of the variables, 
+including both existing variables and augmented variables. 
+</p><p>
+
+As a demonstration to this process, we try to find the relationship
+ between \(r\) and \(ω\) (we can apply the same process 
+on other pairs of variables if we want), and to reduce the 
+complexity of the power operation, we create some aug
+mented variables including \(r_2=r^2, r_3=r^3\) and \(\omega_2
+=\omega^2, \omega_3=\omega^3\). Finally, we use \(r_1
+=r, r_2=r^2, r_3=r^3\) as 
+the input variables to symbolic regress \(\omega_1=\omega, \omega_2 
+=\omega^2\) and \(\omega_3=\omega^3\), respectively, and then, we repeat the process 
+the other way around, i.e., use \(\omega_1=\omega, \omega_2=\omega^2, \omega_3=
+\omega^3\) as the input variables to symbolic regress \(r_1=r, r_2=r^2\), and \(r_3
+=r^3\), respectively. We still use four basic operations 
+cosine (cos), addition (+), multiplication (\(\cdot\)) and division (/) 
+for symbolic regression, same as previous experiments. In 
+this process, the symbolic regression results when finding 
+function for \(\omega_2 = F(r_1, r_2, r_3)\) are shown as Table 6, and 
+the relationship between function size and regression error 
+(in terms of negative log RMSE) is in Figure 8. 
+</p><p>
+
+From Figure 8 we can see that the function with size 4 
+has the sharpest increase in accuracy, which indicates that 
+this function has the best chance to achieve a good balance 
+between accuracy and complexity to reveal the physical rule 
+behind data [30]. We write down the function as follows 
+(recall that \(\omega_2=\omega^2, r_3=r^3\)):
+
+\[ 
+\omega^2=\frac{0.000298491}{r^3}　or　r^3\omega^3 = c =0.000298491AU^3day^{-2}  \tag{4}
+\]
+ 
+Based on modern scientific knowledge, we know that 
+\(r^3\omega^2=GM\), where \(G=6.674×10^{-11}m^3kg^{-1}s^{-2}\) is the gravitational constant and \(M=1.989×10^{30}kg\) is the mass of Sun. Besides, our unit for distance is \(1AU=1.496×10^{11}m\), so we have \(r^3\omega^2=GM
+=2.96×10^{-4}AU^3day^{-2}\), and this number is very close to 
+the constant in Eq.(4), with relative error of about 0:8%, 
+which is small and reasonable considering that we only used 
+the ancient data that was collected 400 years ago. This 
+shows the nice ability of Explainable AI such as symbolic 
+regression in discovering the physical rules underlying data. 
+</p>
+
+<h3>5.3. Physical Interpretation of the Results </h3>
+<p>
+Though we have shown that (Explainable) AI is able to 
+make accurate predictions and generate explainable equations,
+ we still want to emphasize that AI algorithms and 
+machines do not “understand” or produce “meaning” for the 
+physical variables or rules that emerge in the science discovery
+ process<sup>4</sup>. From the AI and machines’ perspective, the 
+variables and rules are just symbols and equations, and AI 
+algorithms are only responsible for data analyses so as to extract
+ possibly inspiring variables and rules, while it is human 
+being’s role to understand them and give meanings to the 
+extracted variables and rules. For example, AI algorithms 
+may discover a new combination of variables that as a whole 
+is particularly useful for predicting and explaining the data 
+(we will discuss with more details in the following). In this 
+case, human experts may try to interpret the physical meaning
+ of this combination of variables and leverage it to gain 
+better understandings of the problem. Sometimes, human 
+experts may also need to innovatively create new physical 
+concepts up front or with the assistance of AI during the discovery
+ process so as to better interpret the results, enabling 
+a human-AI collaborative science discovery process. 
+
+</p><p class="margin-large">
+
+<sup>4</sup> We acknowledge that there exist debates over whether machines
+ have their own internal “meanings” that are unknown or 
+not understandable to humans, however, this is not a focus of this 
+paper since we aim at science discovery for human beings. 
+
+</p><p>
+In the above experiment, once Explainable AI has generated 
+the equation \(r^3\omega^2=c\) (\(c\) is a constant), we first need to 
+realize that \(a=r\omega^2\) means the centripetal acceleration in 
+circular motion. The deduction of centripetal acceleration 
+\(a\) does not need calculus, but acceleration was still a new 
+concept at Kepler’s time that needs to be created. With this 
+new concept, \(r^3\omega^2=c\) can be reorganized into \(ar^2=c\), 
+i.e., \(a ∝ \frac{1}{r^2}\), which is the centripetal acceleration equation. 
+The centripetal acceleration equation \(a ∝ \frac{1}{r^2}\) can explain 
+why the orbit of Mars is elliptical, but to really know what 
+causes the elliptical orbit, we still need to know what causes 
+the centripetal acceleration a, i.e., what is the underlying 
+“force” that drives the Mars orbiting in such a way. 
+</p><p>
+
+At Kepler’s time, scientists already had the concept of force, 
+but they did not know the correct function of force, since 
+they thought force was proportional to distance and thus 
+speed. It was Newton’s greatness to realize that force is 
+not the reason of speed but actually the reason of acceleration,
+ and he innovatively connected force with acceleration 
+by \(F=ma\). Based on this, suppose \(M\) is the mass of Sun, \(ar^2
+=c\) can be reorganized as \(Mar^2=Mc\), thus \(Fr^2=Mc\), and 
+\(F ∝ \frac{1}{r^2}\), leading to Newton’s inverse-square law of universal gravitation. One can see that in 
+this interpretation process, humans still need to play an important
+ role in understanding or creating physical concepts. 
+This is partly because at Kepler and Newton’s time, measuring
+ the force is almost impossible, and thus the observational 
+data does not include force \(F\) 
+as one of the variables. If 
+force \(F\)  
+were one of the variables with observed values, 
+just like time \(t\) and angle \(\theta\), then (Explainable) AI methods 
+might be able to extract the symbolic equation for \(F\) 
+from 
+data, just as we did in the above for other variables, which 
+can save efforts for human exploration, intervention, interpretation
+ and creation in the discovery process. However, 
+even if we have observed \(F\) 
+values, like in many modern 
+scientific datasets, we can never fully exclude the possibility 
+that human experts need to innovatively create other new 
+concepts that do not yet exist in the observational data. 
+</p>
+
+<h3>5.4. Relation with Kepler’s Third Law </h3>
+<p>
+The discovered rule \(r^3\omega^2=c\) in Eq.(4) could be mis-
+interpreted as the Kepler’s Third Law \(\frac{\bar{r}^3}{T^2}=c^\prime\) 
+if one applies \(\bar{\omega}=\frac{2\pi}{T}\) for circular motion. Actually, Eq.(4) should not
+be interpreted as the Kepler’s Third Law, because Kepler’s 
+Third Law talks about a universal rule for all planets circulating
+ Sun, while Eq.(4) only talks about a rule for Mars 
+since this rule is solely derived from Mars data. More specifically,
+ Eq.(4) is saying that at any time \(t\), the Mars’ angular 
+velocity \(ω\) 
+and its corresponding distance to Sun \(r\) 
+satisfy a constant rule, while Kepler’s Third Law is saying that for 
+all planets circulating Sun, their mean distance to Sun and 
+circulating period satisfy a constant rule. To really discovery
+ and justify Kepler’s Third Law, we need to include the 
+data of more planets. Actually, Kepler himself studied six 
+planets: Mercury, Venus, Earth, Mars, Jupiter and Saturn. 
+This example shows that we need to be extremely careful 
+when trying to interpret the Explainable AI discovered rules 
+and avoid from over-generalizing the results. 
+</p><p>
+
+However, Eq.(4) is still useful and may inspire us towards 
+Kepler’s Third Law. If we look at this equation from a 
+macro perspective, the period \(T\) 
+can be considered as an 
+integrated effect of the angular velocity \(\omega\), which may lead 
+us to consider whether \(T\) and \(r\) also exhibit similar rules. 
+Even though we know that the Kepler’s Third Law \(\frac{\bar{r}^3}{T^2}=c^\prime\) 
+needs information of other planets to justify, Eq.(4) which 
+is solely derived from the Mars data may point to the right 
+direction and speed up the discovery process. Actually, 
+if we take \(\bar{\omega}=\frac{2\pi}{T}\) into Eq.(4), we have \(\frac{\bar{r}^3}{T^2}=\frac{c}{4\pi^3}=7.56086×10^{-6}AU^3day^{-2}\overset{\cdot}{=}c^\prime\), which is close Kepler’s result (\(7.5\times 10^{-6}AU^3day^{-2}\), error within 0.82%) and modern
+ science result (\(7.495×10^{-6}AU^3day^{-2}\), error within 
+0.88%). The ability of associating macro and micro perspectives
+ by intuition is uniquely owned by humans instead 
+of current AI, and this is one of the reasons why humans 
+still play an indispensable role in modern science discovery 
+process. 
+</p>
+
+<h2>6. Conclusions and Future Work </h2>
+<p>
+In this paper, we highlight the role of Explainable AI in science
+ discovery by demonstrating an Explainable AI-based 
+paradigm for science discovery. To demonstrate the idea, we 
+show how Kepler’s laws of planetary motion and Newton’s 
+law of universal gravitation can be rediscovered with the 
+assistance of Explainable AI based on a small amount of 
+Tycho Brahe’s astronomical observation data, whose works 
+were leading the scientific revolution in the 16-17th century. 
+Technically, we use black-box models such as deep neural
+ networks for prediction and data augmentation, and use 
+white-box models such as symbolic regression for model 
+explanation. Insightful discoveries and conclusions can be 
+derived by interpreting the results under the assistance of 
+Explainable AI. We also demonstrate the indispensable role 
+of human beings in the science discovery process on creating
+ new concepts, assigning meanings to the discovered 
+variables and rules, and providing insightful intuitions to 
+supervise the AI-based discovery process. 
+</p><p>
+
+In the future, we will further refine the Explainable AI-based 
+paradigm for science discovery by considering a wider scope 
+of black-box and white-box models as well as applying them 
+to various different scientific fields. We will also use the 
+framework for more state-of-the-art scientific problems such 
+as dark matters based on modern astronomical observation 
+data and particle physics based on the data collected from 
+Large Hadron Colliders for discovering new knowledge 
+that is unknown to human. And probably one day, we can 
+even improve the performance of Explainable AI through 
+the knowledge discovered by AI itself while maintaining 
+complete control of the process by demanding explanations 
+from AI, since we always stand on the shoulder of giants. 
+</p>
+
+<h2>References </h2>
+<p>
+<div class="styleRef">
+<ul><li>
+[1] Peter Godfrey-Smith. Theory and reality. University 
+of Chicago Press, 2009. 
+</li><br><li>[2] Robert Nola and Howard Sankey. Theories of scientific 
+method: an introduction. Routledge, 2014. 
+</li><br><li>[3] Anthony JG Hey, Stewart Tansley, Kristin Michele 
+Tolle, et al. The fourth paradigm: data-intensive scientific
+ discovery, volume 1. Microsoft research Redmond,
+ WA, 2009. 
+</li><br><li>[4] Ahmed Eldawy and Mohamed F Mokbel. The era 
+of big spatial data: a survey. Information and Media 
+Technologies, 10(2):305–316, 2015. 
+</li><br><li>[5] Kamran Naim, Maria Grazia Pia, Alex Kohls, Tullio
+ Basaglia, Stephanie Van De Sandt, Pamfilos 
+Fokianos, Jose Gonzalez Lopez, Javier Serrano, Jelena
+ Brankovic, Lars Holm Nielsen, et al. Pushing the 
+boundaries of open science at cern: Submission to the 
+unesco open science consultation. Technical report, 
+2020. 
+</li><br><li>[6] Johannes Kepler. Astronomia Nova. Translated by 
+William H. Donahue, Green Lion Press, 2015. 
+</li><br><li>[7] Isaac Newton. Principia. University of California 
+Press, 2020. 
+</li><br><li>[8] Stanislaw Ulam. Tribute to john von neumann. Bulletin
+ of the American mathematical society, 64(3):1– 
+49, 1958. 
+</li><br><li>[9] Vernor Vinge. The coming technological singularity: 
+How to survive in the post-human era. Science Fiction 
+Criticism: An Anthology of Essential Writings, pages 
+352–363, 1993. 
+</li><br><li>[10] Matthew Sparkes. Top scientists call for caution over 
+artificial intelligence. The Times (UK), 24, 2015. 
+</li><br><li>[11] Irving John Good. Speculations concerning the first 
+ultraintelligent machine. In Advances in computers. 
+1966. 
+</li><br><li>[12] Yongfeng Zhang and Xu Chen. Explainable recommendation:
+ A survey and new perspectives. Foundations
+ and Trends in Information Retrieval, 2020. 
+</li><br><li>[13] Yongfeng Zhang, Guokun Lai, Min Zhang, Yi Zhang, 
+Yiqun Liu, and Shaoping Ma. Explicit factor models 
+for explainable recommendation based on phrase-level 
+sentiment analysis. In SIGIR, pages 83–92, 2014. 
+</li><br><li>[14] Juntao Tan, Shuyuan Xu, Yingqiang Ge, Yunqi Li, 
+Xu Chen, and Yongfeng Zhang. Counterfactual explainable
+ recommendation. CIKM, 2021. 
+</li><br><li>[15] Lloyd S Shapley. A value for n-person games. In 
+Contributions to the Theory of Games, pages 307–317, 
+1953. 
+</li><br><li>[16] Marco Tulio Ribeiro, Sameer Singh, and Carlos 
+Guestrin. " why should i trust you?" explaining the predictions
+ of any classifier. In Proceedings of the 22nd 
+ACM SIGKDD international conference on knowledge 
+discovery and data mining, pages 1135–1144, 2016. 
+</li><br><li>[17] Mukund Sundararajan and Amir Najmi. The many 
+shapley values for model explanation. In International 
+Conference on Machine Learning, pages 9269–9278. 
+PMLR, 2020. 
+</li><br><li>[18] George AF Seber and Alan J Lee. Linear regression 
+analysis, volume 329. John Wiley & Sons, 2012. 
+</li><br><li>[19] J. Ross Quinlan. Induction of decision trees. Machine 
+learning, 1(1):81–106, 1986. 
+</li><br><li>[20] J Ross Quinlan. C4.5: programs for machine learning. 
+Elsevier, 2014. 
+</li><br><li>[21] Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio.
+ Neural machine translation by jointly learning to 
+align and translate. ICLR, 2015. 
+</li><br><li>[22] Sarah Wiegreffe and Yuval Pinter. Attention is not not 
+explanation. In EMNLP, pages 11–20, 2019. 
+</li><br><li>[23] Sarthak Jain and Byron C Wallace. Attention is not 
+explanation. In NAACL, pages 3543–3556, 2019. 
+</li><br><li>[24] John R Koza and John R Koza. Genetic programming: 
+on the programming of computers by means of natural 
+selection, volume 1. MIT press, 1992. 
+</li><br><li>[25] Qiang Lu, Jun Ren, and Zhiguang Wang. Using genetic
+ programming with prior formula knowledge to 
+solve symbolic regression problem. Computational 
+intelligence and neuroscience, 2016, 2016. 
+</li><br><li>[26] Sohrab Towfighi. Symbolic regression by uniform 
+random global search. SN Applied Sciences, 2(1):1– 
+11, 2020. 
+</li><br><li>[27] Douglas Adriano Augusto and Helio JC Barbosa. Symbolic
+ regression via genetic programming. In Proceedings.
+ Vol. 1. Sixth Brazilian Symposium on Neural 
+Networks, pages 173–178. IEEE, 2000. 
+</li><br><li>[28] Steven Gustafson, Edmund K Burke, and Natalio 
+Krasnogor. On improving genetic programming for 
+symbolic regression. In 2005 IEEE Congress on Evolutionary
+ Computation, volume 1, pages 912–919. IEEE, 
+2005. 
+
+</li><br><li>[29] Ying Jin, Weilin Fu, Jian Kang, Jiadong Guo, and Jian 
+Guo. Bayesian symbolic regression. arXiv preprint 
+arXiv:1910.08892, 2019. 
+</li><br><li>[30] Silviu-Marian Udrescu and Max Tegmark. Ai feynman:
+ A physics-inspired method for symbolic regression.
+ Science Advances, 6(16):eaay2631, 2020. 
+</li><br><li>[31] Silviu-Marian Udrescu, Andrew Tan, Jiahai Feng, 
+Orisvaldo Neto, Tailin Wu, and Max Tegmark. 
+Ai feynman 2.0: Pareto-optimal symbolic regression
+ exploiting graph modularity. arXiv preprint 
+arXiv:2006.10782, 2020. 
+</li><br><li>[32] Michael Schmidt and Hod Lipson. Distilling free-form 
+natural laws from experimental data. science, 2009. 
+</li><br><li>[33] Turingbot: Symbolic regression software, 2020. 
+</li><br><li>[34] Eric Smalley. Ai-powered drug discovery captures 
+pharma interest, 2017. 
+</li><br><li>[35] Justin S Smith, Adrian E Roitberg, and Olexandr 
+Isayev. Transforming computational drug discovery 
+with machine learning and ai, 2018. 
+</li><br><li>[36] HC Stephen Chan, Hanbin Shan, Thamani Dahoun, 
+Horst Vogel, and Shuguang Yuan. Advancing drug 
+discovery via artificial intelligence. Trends in pharmacological
+ sciences, 40(8):592–604, 2019. 
+</li><br><li>[37] Carla P Gomes, Bart Selman, and John M Gregoire. 
+Artificial intelligence for materials discovery. MRS 
+Bulletin, 44(7):538–544, 2019. 
+</li><br><li>[38] Ehsan Haghighat, Maziar Raissi, Adrian Moure, Hector
+ Gomez, and Ruben Juanes. A deep learning framework
+ for solution and discovery in solid mechanics. 
+arXiv preprint arXiv:2003.02751, 2020. 
+</li><br><li>[39] Miles Cranmer, Alvaro Sanchez-Gonzalez, Peter 
+Battaglia, Rui Xu, Kyle Cranmer, David Spergel, 
+and Shirley Ho. Discovering symbolic models from 
+deep learning with inductive biases. arXiv preprint 
+arXiv:2006.11287, 2020. 
+</li><br><li>[40] Minoru Kusaba, Chang Liu, Yukinori Koyama, Kiyoyuki
+ Terakura, and Ryo Yoshida. Recreation of the 
+periodic table with an unsupervised machine learning 
+algorithm. Scientific reports, 11(1):1–10, 2021. 
+</li><br><li>[41] John Jumper, Richard Evans, Alexander Pritzel, 
+Tim Green, Michael Figurnov, Olaf Ronneberger, 
+Kathryn Tunyasuvunakool, Russ Bates, Augustin 
+Žídek, Anna Potapenko, Alex Bridgland, Clemens 
+Meyer, Simon A. A. Kohl, Andrew J. Ballard, Andrew
+ Cowie, Bernardino Romera-Paredes, Stanislav 
+Nikolov, Rishub Jain, Jonas Adler, Trevor Back, Stig 
+Petersen, David Reiman, Ellen Clancy, Michal Zielinski,
+ Martin Steinegger, Michalina Pacholska, Tamas 
+Berghammer, Sebastian Bodenstein, David Silver, 
+Oriol Vinyals, Andrew W. Senior, Koray Kavukcuoglu, 
+Pushmeet Kohli, and Demis Hassabis. Highly accurate 
+protein structure prediction with alphafold. Nature, 
+596(7873):583–589, 2021. 
+
+</li><br><li>[42] Bill Spencer (translator). Inter Gravissimas. 2002. 
+</li><br><li>[43] Edward L Cohen. Adoption and reform of the gregorian
+ calendar. Math Horizons, 7(3):5–11, 2000. 
+</li><br><li>[44] A Eremenko. How Kepler discovered his laws, 2016. 
+</li><br><li>[45] Curtis Wilson. How did kepler discover his first two 
+laws? Scientific American, 226(3):92–107, 1972. 
+</li><br><li>[46] Dhananjay Ashok, Joseph Scott, Sebastian Wetzel, 
+Maysum Panju, and Vijay Ganesh. Logic guided genetic
+ algorithms. arXiv preprint arXiv:2010.11328, 
+2020. 
+</li><br><li>[47] Arthur Koestler. The sleepwalkers: A history of man’s 
+changing vision of the universe. Penguin UK, 2017. 
+</li><br><li>[48] Max Caspar. Kepler. Courier Corporation, 2012. 
+</li><br><li>[49] Jean Meeus. When was mars last this close? Planetarian,
+ 2003. 
+</li><br><li>[50] Curtis Wilson. Kepler’s derivation of the elliptical 
+path. Isis, 59(1):4–25, 1968. 
+</li><br><li>[51] William Gilbert. De magnete. Courier Corporation, 
+1958 [1600]. 
+</li><br><li>[52] Howard D Curtis. Orbital mechanics for engineering 
+students. Butterworth-Heinemann, 2013. 
+</li><br><li>[53] George Cybenko. Approximation by superpositions of 
+a sigmoidal function. Mathematics of control, signals 
+and systems, 2(4):303–314, 1989. 
+</li><br><li>[54] Kurt Hornik. Approximation capabilities of multilayer 
+feedforward networks. Neural networks, 4(2), 1991. 
+</li><br><li>[55] Balázs Csanád Csáji et al. Approximation with artificial
+ neural networks. Faculty of Sciences, Etvs Lornd 
+University, Hungary, 24(48):7, 2001. 
+</li></ul></div></p>
+
+<h2>7. Appendix</h2>
+<p>
+ In this section, we present all of the tables and figures referenced in the paper. 
+</p>
+<center><img src="images/table1.png"></center>
+<p>
+<center>Table 1. Position of Mars when orbiting the Sun </center>
+</p>
+<center><img src="images/table2.png"></center>
+<p>
+<center>Table 2. Symbolic Regression Results</center> 
+</p>
+<center><img src="images/table3.png"></center>
+<p>
+
+<center>Table 3. Based Functions for Symbolic Regression and their Size</center> 
+
+</p>
+<center><img src="images/table4.png"></center>
+<p>
+
+<center>Table 4. Orbital Parameters of Mars based on Modern Science </center>
+
+</p>
+<center><img src="images/table5.png"></center>
+<p>
+
+<center>Table 5. Closest Approaches of Mars Oppositions in History </center>
+
+</p>
+<center><img src="images/table6.png"></center>
+<p>
+
+<center>Table 6. Symbolic Regression Result for \(r\) and \(ω\) </center>
+
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+
+<center>Figure 3. Data Visualization before Training </center>
+
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+
+<center>Figure 4. Data Visualization after Training </center>
+
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+
+<center>Figure 5. Size and Negative log Error </center>
+
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+
+<center>Figure 6. Data Visualization before Training </center>
+
+</p>
+<center><img src="images/fig7.png"></center>
+<p>
+
+<center>Figure 7. Data Visualization after Training </center>
+
+</p>
+<center><img src="images/fig8.png"></center>
+<p>
+
+<center>Figure 8. Size and Negative log Error for \(r\) and \(\omega\) </center>
+
+</p>
+    </body>
+</html>
