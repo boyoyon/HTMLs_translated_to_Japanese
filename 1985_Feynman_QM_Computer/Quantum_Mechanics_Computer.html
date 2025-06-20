@@ -1,0 +1,2131 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>量子力学コンピューター</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+http://www.quantum-dynamic.eu/doc/feynman85_qmc_optics_letters.pdf
+        <h1><center>Quantum Mechanical Computers</center></h1>
+<center>量子力学コンピューター</center>
+<br>
+<p class="margin-abstract">
+By Richard P. Feynman<br>
+<img src="images/fig00.png"><br>
+リチャード・P・ファインマンは、カリフォルニア工科大学の理論物理学教授です。<be>
+この記事は、1984年に開催されたCLEO/IQEC会議における彼の基調講演に基づいています。
+<!--
+Richard P. Feynman is a proferssor 
+of theoretical physics at California Institute of Technology.<br>
+This ariticle is based on his plenary talk presented at CLEO/IQEC Meeting in 1984
+-->
+<br><br>
+<h2>はじめに</h2>
+<!--
+<h2>INTRODUCTION</h2>
+-->
+<p>
+<!--
+This work is a part of an effort to
+analyze the physical limitations
+of computers due to the laws of
+physics. For example, Bennett<sup>1</sup> has
+made a careful study of the free energy
+dissipation that must accompany com-
+putation. He found it to be virtually
+zero. He suggested to me the question
+of the limitations due to quantum me-
+chanics and the uncertainty principle. I 
+ have found that, aside from the obvious
+limitation to size if the working parts
+are to be made of atoms, there is no
+fundamental limit from these sources
+either.
+-->
+この研究は、物理法則によるコンピュータの物理的限界を分析する取り組みの一環です。例えば、ベネット<sup>1</sup>は、計算に伴う自由エネルギーの散逸について綿密な研究を行い、それが実質的にゼロであることを発見しました。彼は私に、量子力学と不確定性原理による限界という問題を提示しました。私は、動作部品が原子で作られる場合の明らかなサイズ制限を除けば、これらの要因による根本的な限界は存在しないことを発見しました。
+</p><p>
+<!--
+We are here considering ideal ma-
+chines; the effects of small imperfec-
+tions will be considered later. This study
+is one of principle; our aim is to exhibit
+some Hamiltonian for a system which
+could serve as a computer. We are not
+concerned with whether we have the
+most efficient system, nor how we
+could best implement it.
+-->
+
+ここでは理想的な機械について考察します。小さな欠陥の影響については後ほど考察します。本研究は原理的な研究であり、コンピュータとして機能しうるシステムのハミルトニアンを示すことを目的としています。最も効率的なシステムであるかどうか、あるいはそれをどのように実装するのが最適かといったことは、本研究の関心事ではありません。
+</p><p>
+<!--
+Since the laws of quantum physics
+are reversible in time, we shall have to
+consider computing engines which
+obey such reversible laws. This prob-
+lem already occurred to Bennett<sup>1</sup>, and
+to Fredkin and Toffoli<sup>2</sup>, and a great deal
+of thought has been given to it. Since it
+may not be familiar to you here, I shall
+review this, and in doing so, take the
+opportunity to review, very briefly, the
+conclusions of Bennett<sup>2(3?)</sup>, for we shall
+confirm them all when we analyze our
+quanium system.
+-->
+量子物理学の法則は時間的に可逆であるため、そのような可逆法則に従う計算エンジンを検討する必要があります。この問題は、すでに Benett<sup>1</sup>、そして Fredkin と Toffoli<sup>2</sup> によって提起され、多くの考察がなされてきました。ここでは馴染みがないかもしれませんので、ここでこの点について概説し、その際に Benett<sup>2(3?)</sup>の結論についても簡単に概説しておきます。なぜなら、我々の量子システムを解析する際に、これらの結論をすべて確認することになるからです。
+</p><p>
+<!--
+It is a result of computer science that
+a universal computer can be made by a
+suitably complex network of intercon-
+nected primitive elements. Following
+the usual classical analysis we can imag-
+ine the interconnections to be ideal
+wires carrying one of two standard volt-
+ages representing the local 1 and 0. We
+can take the primitive elements to be
+just two, NOT and AND (actually just
+the one element NAND = NOT AND
+suffices, for if one input is set at 1 the
+output is the NOT of the other input).
+They are symbolized in Fig. 1, with the
+logical values resulting on the outgoing
+wires, resulting from different com-
+binations of input wires.
+-->
+コンピュータサイエンスの成果として、相互接続された基本素子の適切な複雑さのネットワークによって汎用コンピュータを構成できるというものがあります。通常の古典的な分析に従えば、相互接続は、局所的な1と0を表す2つの標準電圧のいずれかを伝送する理想的な配線であると想像できます。基本素子はNOTとANDの2つだけです（実際には、NAND = NOT ANDの1つの要素だけで十分です。なぜなら、一方の入力を1に設定すると、出力はもう一方の入力のNOTとなるからです）。これらは図1に記号化されており、出力配線には、入力配線のさまざまな組み合わせに応じた論理値が出力されます。
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<!--
+<center>﻿Fig. 1. Primitive elements.</center>
+-->
+<center>図 1. プリミティブ要素</center>
+</p><p>
+<!--
+From a logical point of view, we must
+consider the wires in detail, for in other
+systems, and our quantum system in
+particular, we may not have wires as
+such. We see we really have two more
+logical primitives, FAN OUT when two
+wires are connected to one, and EXCHANGE, when wires are crossed. In the usual computer the NOT and NAND
+primitives are implemented by transistors, possibly as in Fig. 2.
+-->
+論理的な観点から見ると、配線を詳細に検討する必要があります。なぜなら、他のシステム、特に量子システムでは、配線そのものが存在しない可能性があるからです。実際には、2本の配線が1本に接続されている場合のFAN OUTと、配線が交差している場合のEXCHANGEという、さらに2つの論理プリミティブがあることがわかります。通常のコンピュータでは、NOTプリミティブとNANDプリミティブはトランジスタによって実装されており、おそらく図2のようになります。
+
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+<!--
+<center>Fig. 2. Transistor circuits for NOT and NAND.</center>
+-->
+<center>図2. NOTおよびNANDのトランジスタ回路</center>
+</p><p>
+<!--
+What is the minimum free energy that
+must be expended to operate an ideal
+computer made of such primitives?
+Since, for example, when the AND operates the output line, c’is being determined to be one of two values no matter
+what it was before the entropy change is
+\(\ln(2)\) units. This represents a heat gen-
+eration of \(kT\ln(2)\) at temperature \(T\). For
+many years it was thought that this rep-
+resented an absolute minimum to the
+quantity of heat per primitive step that
+had to be dissipated in making a cal-
+culation. 
+-->
+このようなプリミティブで構成された理想的なコンピュータを動作させるために必要な最小の自由エネルギーはいくらでしょうか？
+例えば、AND 回路が出力ラインを操作する場合、エントロピー変化が \(\ln(2)\) 単位になる前の値に関わらず、\(c^\prime\) は 2 つの値のいずれかに決定されます。これは、温度 \(T\) で \(kT\ln(2)\) の熱発生を表します。長年にわたり、これは計算を行う際に消費されなければならないプリミティブステップごとの熱量の絶対的な最小値を表すと考えられてきました。
+</p><p>
+<!--
+The question is academic at this time.
+In actual machines we are quite con-
+cerned with the heat dissipation ques-
+tion, but the transistor system used ac-
+tually dissipates about \(10^{10}kT\)! As
+Bennett<sup>3</sup> has pointed out, this arises
+because to change a wire’s voltage we
+dump it to ground through a resistance;
+and to build it up again we feed charge,
+again through a resistance, to the wire.
+It could be greatly reduced if energy
+could be stored in an inductance, or
+other reactive element.
+-->
+この問題は現時点では学問的な問題です。
+実際の機械では、熱放散の問題がかなり懸念されますが、実際に使用されているトランジスタシステムは、約 \(10^{10}kT\) の熱を放散します。
+Bennett<sup>3</sup> が指摘したように、これは、電線の電圧を変化させるには、抵抗を通して接地に電圧を放出し、再び電圧を上げるには、再び抵抗を通して電線に電荷を供給する必要があるためです。
+エネルギーをインダクタンスなどのリアクタンス素子に蓄えることができれば、この熱放散は大幅に低減できます。
+</p><p>
+<!--
+However, it is apparently very difficult to make inductive elements on silicon wafers with present techniques.
+Even Nature, in her DNA copying ma-
+chine, dissipates about 100 \(kT\) per bit
+copied. Being, at present, so very far
+from this \(kT\ln(2)\) figure, it seems ridic-
+ulous to argue that even this is too high
+and the minimum is really essentially
+zero. But, we are going to be even more
+ridiculous later and consider bits writ-
+ten on one atom instead of the present
+\(10^{11}\) atoms. Such nonsense is very en-
+tertaining to professors like me. I hope
+you will find it interesting and enter-
+taining also.
+-->
+しかし、現在の技術ではシリコンウェハ上に誘導素子を作るのは非常に難しいようです。
+自然界の DNA 複製機でさえ、複製されたビットあたり約100 \(kT\) のエネルギーを消費しています。現状ではこの \(kT\ln(2)\) という数値から非常に遠いため、この値でさえ高すぎる、最小値は実質的にゼロであると主張するのはばかげているように思えます。しかし、後ほどさらにばかげたことを言って、現在の \(10^{11}\) 個の原子ではなく、1個の原子に書き込まれたビットを考えてみましょう。このようなナンセンスは、私のような教授にとっては非常に面白いものです。皆さんにも、興味深く、楽しんでいただければ幸いです。
+</p><p>
+<!--
+What Bennett pointed out was that
+this former limit was wrong because it
+is not necessary to use irreversible
+primitives. Calculations can be done
+with reversible machines containing
+only reversible primitives. If this is done
+the minimum free energy required is
+independent of the complexity or num-
+ber of logical steps in the calculation. If
+anything, it is \(kT\) per bit of the output
+answer.
+-->
+Benett が指摘したのは、この以前の制限は、不可逆なプリミティブを使用する必要がないため誤りであるということです。計算は、可逆なプリミティブのみを含む可逆マシンで行うことができます。そうすれば、必要な最小自由エネルギーは、計算の複雑さや論理ステップの数とは無関係になります。どちらかといえば、出力解のビットあたり \(kT\) です。
+</p><p>
+<!--
+But even this, which might be consid-
+ered the free energy needed to clear the
+computer for further use, might also be 
+considered as part of what you are going to do with the answer—the information in the result if you transmit it to
+another point. This is a limit only
+achieved ideally if you compute with a
+reversible computer at infinitesimal
+speed.
+-->
+しかし、これはコンピュータをクリアしてさらに使用できるようにするために必要な自由エネルギーと考えられるかもしれませんが、答えを使って何をするか、つまり結果を別の地点に送信した場合の結果に含まれる情報の一部とも考えられるかもしれません。これは、可逆コンピュータで無限小速度で計算する場合にのみ理想的に達成される限界です。
+</p>
+<!--
+<h2>Computation with a reversible machine</h2>
+-->
+<h2>可逆マシンによる計算</h2>
+<p>
+<!--
+We will now describe three reversible
+primitives that could be used to make a
+universal machine (Toffoli<sup>4</sup>). The first is
+the NOT which evidently loses no in-
+formation, and is reversible, being re-
+versed by acting again with NOT. Be-
+cause the conventional symbol is not
+symmetrical we shall use an \(X\) on the
+wire instead (see Fig. 3a).
+-->
+ここでは、汎用機械 (Toffoli<sup>4</sup>) を作るために使用できる3つの可逆プリミティブについて説明します。1つ目はNOTです。これは明らかに情報を失わず、可逆であり、再度NOTを実行することで反転します。従来の記号は対称ではないため、代わりにワイヤ上に×を使用します（図3aを参照）。
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+<!--
+<center>Fig. 3. Reversible primitives.</center>
+-->
+<center>図3. 可逆プリミティブ</center>
+
+</p><p>
+<!--
+Next is what we shall call the CONTROLLED NOT (see Fig. 3b). There are
+two entering lines, \(a\) and \(b\) and two
+exiting lines, \(a^\prime\) and \(b^\prime\). The \(a^\prime\) is always
+the same as \(a\), which is the control line.
+If the control is activated \(a = 1\) then the
+out \(b^\prime\) is the NOT of \(b\). Otherwise \(b\) is
+unchanged, \(b^\prime = b\). The table of values for input and output is given in Fig. 3.
+The action is reversed by simply repeating it.
+-->
+次は、CONTROLLED NOT(制御されたNOT）と呼ぶものです（図3b参照）。2つの入力線 \(a\) と \(b\)、そして2つの出力線 \(a^\prime\) と \(b^\prime\) があります。\(a^\prime\) は常に \(a\) と同じで、制御線です。制御がアクティブ化された場合 \(a = 1\)、出力される \(b^\prime\) は \(b\) の否定になります。それ以外の場合、\(b\) は変化せず、\(b^\prime = b\) となります。入力と出力の値の表を図3に示します。
+この動作は、単に繰り返すことで反転されます。
+</p><p>
+<!--
+The quantity \(b^\prime\) is really a symmetric 
+function of \(a\) and \(b\) called XOR, the
+exclusive or; \(a\) or \(b\) but not both. It is
+likewise the sum modulo two of \(a\) and \(b\),
+and can be used to compare \(a\) and \(b\),
+giving a 1 as a signal that they are different. Please notice that this function XOR is itself not reversible. For example, if the value is zero we cannot tell
+whether it came from \((a, b) = (0,0)\) or
+from \((1,1)\) but we keep the other line
+\(a^\prime = a\) to resolve the ambiguity.
+-->
+量 \(b^\prime\) は実際には \(a\) と \(b\) の対称関数で、XOR（排他的論理和）と呼ばれます。つまり、\(a\) または \(b\) で、いずれか一方のみです。同様に、これは \(a\) と \(b\) の 2 を法とする和でもあり、\(a\) と \(b\) を比較するために使用できます。比較の結果、異なる値であることを示す信号として 1 が返されます。この関数 XOR 自体は可逆ではないことに注意してください。例えば、値が 0 の場合、それが \((a, b) = (0,0)\) から来たのか、それとも \((1,1)\) から来たのかはわかりませんが、あいまいさを解決するために、もう一方の線 \(a^\prime = a\) を保持します。
+</p><p>
+<!--
+We will represent the CONTROLLED
+NOT by putting a 0 on the control wire,
+connected with a vertical line to an \(X\) on
+the wire which is controlled.
+-->
+CONTROLLED NOTを表すには、制御線に○を置き、制御される側の線に×を垂直線で接続します。
+</p><p>
+<!--
+This element can also supply us with
+FAN OUT, for if \(b = 0\) we see that \(a\) is
+copied onto line \(b^\prime\). This COPY function
+will be important later on. It also supplies us with EXCHANGE, for three of
+them used successively on a pair of
+lines, but with alternate choice for con-
+tro! line, accomplishes an exchange of
+the information on the lines (Fig. 3b).
+-->
+この要素は FAN OUT も提供します。\(b = 0\) の場合、\(a\) が行 \(b^\prime\) にコピーされることがわかります。この COPY 機能は後で重要になります。また、EXCHANGE も提供します。3 回の CONTROLLED NOT を 2 つの行で連続して使用し、制御行を交互に選択することで、行間の情報の交換を実現します（図3b）。
+</p><p>
+<!--
+It turns out that combinations of just
+these two elements alone are insufh-
+cient to accomplish arbitrary logical
+functions. Some element involving
+three lines is necessary. We have chosen
+what we can call the CONTROLLED
+CONTROLLED NOT. Here (see Fig. 3c)
+we have two control lines \(a,b\), which
+appear unchanged in the output and
+which change the third line \(c\) to NOT \(c\)
+only if both lines are activated (\(a = 1\)
+and \(b = 1\)). Otherwise \(c^\prime = c\). If the third
+line input \(c\) is set to 0, then evidently it
+becomes 1 (\(c^\prime= 1\)) only if both \(a\) and \(b\)
+are 1 and therefore supplies us with the
+AND function (see Table 1).
+-->
+これらの 2 つの要素の組み合わせだけでは、任意の論理関数を実現するには不十分であることがわかります。3 つの線を含む要素が必要です。ここでは、CONTROLLED CONTROLLED NOT と呼ばれるものを選択しました。ここでは（図3cを参照）、2 つの制御線 \(a,b\) があり、出力には変化せず、両方の線がアクティブ（\(a = 1\) かつ \(b = 1\)）の場合にのみ、3 番目の線 \(c\) を NOT \(c\) に変更します。それ以外の場合は \(c^\prime = c\) です。3番目の線の入力 \(c\) が 0 に設定されている場合、明らかに \(a\) と \(b\) が両方とも 1 の場合にのみ 1（\(c^\prime= 1\)）になり、AND 関数が提供されます（表1を参照）。
+</p><p>
+<!--
+Three combinations for \((a,b)\), namely
+\((0,0), (0,1),\) and \((1,0)\) all give the same
+value, 0, to the AND \((a,b)\) function so
+the ambiguity requires two bits to re-
+solve it. These are kept in the lines a,b in
+the output so the function can be re-
+versed (by itself, in fact). The AND func-
+tion is the carry bit for the sum of \(a\) and
+\(b\).
+-->
+\((a,b)\) の 3 つの組み合わせ、すなわち \((0,0), (0,1),\) \((1,0)\) はすべて AND \((a,b)\) 関数に同じ値 0 を与えるため、この曖昧さを解決するには 2 ビットが必要です。これらのビットは出力の行 \(a, b\) に保持されるため、関数は（実際には関数自体によって）反転できます。AND 関数は、\(a\) と \(b\) の合計の繰り上がりビットです。
+</p><p>
+<!--
+From these elements it is known that.
+any logical circuit can be put together
+by using them in combination, and in
+fact, computer science shows that a uni-
+versal computer can be made. We will
+illustrate this by a little example. First,
+of course, as you see in Fig. 4, we can
+make an adder, by first using the CON
+TROLLED CONTROLLED NOT and
+then the CONTROLLED NOT in succes-
+sion, to produce from \(a\) and \(b\) and 0, as
+input lines, the original \(a\) on one line,
+the sum on the second line and the
+carry on the third.
+-->
+これらの要素から、次のようなことが分かっています。
+これらを組み合わせることで、あらゆる論理回路を組み立てることができます。実際、コンピュータサイエンスは、汎用コンピュータを作成できることを示しています。これを小さな例で説明しましょう。まず、図4に示すように、CONTROLLED CONTROLLED NOT、次にCONTROLLED NOTを順に使用して加算器を作成できます。入力行として \(a\)、\(b\)、および 0 から、1 行目に元の \(a\)、2 行目に合計、3 行目に繰り上がりを生成します。
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+<!--
+<center>Fig. 4. Adder.</center>
+-->
+<center>図4. 加算器</center>
+</p><p>
+<!--
+A more elaborate circuit is a full
+adder, (see Fig. 5), which takes a carry,
+c, (from some previous addition), and
+adds it to the two lines \(a\) and \(b\) and has
+an additional line, \(d\), with a 0 input. It
+requires four primitive elements to be
+put together. Besides this total sum, the
+total of the three, \(a,b,\) and \(c\) and the
+carry, we obtain on the other two lines,
+two pieces of information, One is the \(a\)
+that we started with, and the other is,
+some intermediary quantity that we cal-
+culated on route.
+-->
+より複雑な回路は全加算器です（図5参照）。これは、（以前の加算からの）キャリー \(c\) を 2 つのライン \(a\) と \(b\) に加え、さらに 0 入力のライン \(d\) を持ちます。この回路では 4 つの基本要素を組み合わせる必要があります。この合計、つまり 3 つの \(a,b,\) と \(c\) の合計とキャリーに加えて、他の2つのラインから 2 つの情報が得られます。1 つは元の \(a\) であり、もう 1 つは経路上で計算された中間値です。
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+<!--
+<center>Fig. 5. Full adder.</center>
+-->
+<center>図5. 全加算器</center>
+</p><p>
+<!--
+This is typical of these reversible sys-
+tems, they produce not only what you
+want in output, but also a certain
+amount of garbage. In this particular
+case, and as it turns out in all cases, the -
+garbage can be arranged to be, in fact,
+just the input, if we would just add the
+extra CONTROLLED NOT on the first
+two lines, as indicated by the dotted
+lines in Fig. 5, we see that the garbage
+would become a and b, which were the
+inputs of at least two of the lines. (We
+know this circuit can be simplified but
+we do it this way for illustrative pur-
+poses.)
+-->
+これは可逆システムの特徴で、出力として必要な値だけでなく、ある程度の不要な値も生成します。この特定のケース、そしてすべてのケースで言えることですが、不要な値を入力値そのものにすることができます。図5の点線で示されているように、最初の 2 行にCONTROLLED NOT を追加するだけで、不要な値は \(a\) と \(b\) になり、少なくとも2 行の入力値になります。（この回路は簡略化できますが、説明のためにこのようにしています。）
+</p><p>
+<!--
+In this way, we can by various com-
+binations produce a general logic unit
+that transforms \(n\) bits to \(n\) bits in a
+reversible manner. If the problem you
+are trying to do is itself reversible, then
+there might be no extra garbage, but in
+general, there are some extra lines
+needed to store up the information
+which you would need to be able to
+reverse the operation. In other words,
+we can make any function that the con-
+ventional system can, plus garbage. The
+garbage contains the information you
+need to reverse the process. 
+-->
+このように、様々な組み合わせによって、\(n\) ビットを \(n\) ビットに可逆的に変換する汎用論理ユニットを作成できます。解こうとしている問題自体が可逆的であれば、余分なガベージは発生しないかもしれませんが、一般的には、操作を逆順にするために必要な情報を保存するために、いくつかの余分な行が必要になります。言い換えれば、従来のシステムで可能なあらゆる関数に加えて、ガベージも作成できるということです。このガベージには、プロセスを反転するために必要な情報が含まれています。
+</p><p>
+<!--
+And how much garbage? It turns out
+in general, that if the output data that
+you’re looking for has k bits, then start-
+ing with an input and k bits containing
+0, we can produce, as a result, just the
+input and the output and no further
+garbage. This is reversible because
+knowing the output and the input, per-
+mits you of course, to undo everything.
+This proposition is always reversible.
+The argument for this is illustrated in
+Fig. 6.
+-->
+では、ゴミはどれくらいになるのでしょうか？一般に、求めている出力データが \(k\) ビットの場合、入力と \(k\) ビットの 0 から始めて、結果として入力と出力だけを生成でき、それ以上のゴミは生成されません。これは可逆的です。なぜなら、出力と入力が分かれば、もちろんすべてを元に戻すことができるからです。この命題は常に可逆的です。この根拠は図6に示されています。
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+<!--
+<center>Fig. 6. Clearing garbage.</center>
+-->
+<center>図6. ゴミの除去</center>
+</p><p>
+<!--
+Suppose we began with a machine M,
+which, starting with an input, and some
+large number of 0’s, produces the de-
+sired output plus a certain amount of
+extra data which we call garbage. Now
+we've seen that the copy operation
+which can be done by a sequence of
+CONTROLLED NOT's is possible, so if
+we have originally an empty register,
+with the & bits ready for the output, we
+can, after the processor \(M\) has operated,
+copy the output from the \(M\) onto this
+new register. 
+-->
+マシン \(M\) があると仮定します。マシン \(M\) は、入力と多数の 0 から始めて、目的の出力に加えて、ある程度の余分なデータ（いわゆるガベージ）を生成します。ここで、CONTROLLED NOT のシーケンスによって実行できるコピー操作が可能であることを確認しました。したがって、元々空のレジスタがあり、出力用の&ビットが用意されている場合、プロセッサ \(M\) が動作した後、\(M\) からの出力をこの新しいレジスタにコピーできます。
+
+</p><p>
+<!--
+After that, we can build the opposite
+machine, the \(M\) in reverse, the reverse
+machine, which would take this output
+of \(M\) and garbage and turn it into the
+input and 0’s. Thus, seen as an overall
+machine, we would have started with
+the \(k\) 0’s of the register for the output,
+and the input, and ended up with those
+\(k\) 0’s occupied by the output data, and
+repeat the input data as a final product.
+The number of 0’s that was originally
+needed in the M machine in order to
+hold the garbage, is restored again to 0,
+and can be considered as internal wires
+inside the new complete machine (M, M
+and copy).
+-->
+その後、反対のマシン、つまり逆の \(M\)、つまり リバースマシン を構築することができます。このマシンは、\(M\) の出力とゴミを、入力と 0 に変換します。したがって、マシン全体として見ると、出力用レジスタの \(k\) 個の 0 と入力から始まり、最終的にそれらの \(k\) 個の 0 が出力データで占められ、入力データが最終製品として繰り返されます。\(M\) マシンでゴミを保持するために元々必要だった 0 の数は、再び 0 に復元され、新しい完全なマシン（\(M\)、\(M\)、コピー）内の内部配線と見なすことができます。
+</p><p>
+<!--
+Overall, then, we have accomplished
+what we set out to do, and therefore
+garbage need never be any greater than
+a repetition of the input data.
+-->
+全体として、私たちは目指していたことを達成しました。したがって、ゴミは入力データの繰り返しよりも大きくなる必要はありません。
+</p>
+<h2>量子力学コンピュータ</h2>
+<!--
+<h2>A quantum mechanical computer</h2>
+-->
+<p>
+<!--
+We now go on to consider how such a
+computer can also be built using the
+laws of quantum mechanics. We are
+going to write a Hamiltonian, for a sys-
+tem of interacting parts, which will be-
+have in the same way as a large system
+in serving as a universal computer. Of
+course the large system also obeys
+quantum mechanics, but it is in interac-
+tion with the heat baths and other things
+that could make it effectively irreversible.
+-->
+次に、量子力学の法則を用いて、このようなコンピュータをどのように構築できるかを考えてみましょう。相互作用する部品からなるシステムのハミルトニアンを記述します。このシステムは、汎用コンピュータとして機能する大規模システムと同じように動作します。もちろん、大規模システムも量子力学に従いますが、熱浴などとの相互作用によって、事実上不可逆になる可能性があります。
+</p><p>
+<!--
+What we would like to do is make the
+computer as small and as simple as
+possible. Our Hamiltonian will describe
+in detail all the internal computing ac-
+tions, but not of course, those interac-
+tions with the exterior involved in en-
+tering the input (preparing the initial
+state) and reading the output.
+-->
+私たちが目指すのは、コンピュータを可能な限り小型でシンプルなものにすることです。ハミルトニアンは、内部のあらゆる計算動作を詳細に記述しますが、もちろん、入力の入力（初期状態の準備）や出力の読み取りに関わる外部とのやり取りは記述しません。
+</p><p>
+<!--
+How small can such a computer be?
+How small, for instance, can a number
+be? Of course a number can be repre-
+sented by bits of 1’s and 0’s. What we're
+going to do is imagine that we have two-
+state systems, which we will call “at-
+oms.” An \(n\) bit number is then repre-
+sented by a state of a “‘register;” a set of
+\(n\) two-state systems. ,
+-->
+そのようなコンピュータはどれほど小さくできるでしょうか？
+例えば、数字はどれほど小さくできるでしょうか？
+もちろん、数字は 1 と 0 のビットで表すことができます。ここで考えたいのは、2状態システム、つまり「アトム」があると仮定することです。すると、\(n\) ビットの数字は「レジスタ」の状態、つまり \(n\) 個の 2 状態システムの集合で表されます。
+</p><p>
+<!--
+Depending upon whether.or not each
+atom is in one or another of its two
+states, which we call |l> and l0>, we
+can of course, represent any number.
+And the number can be read out of such
+a register by determining, or measur-
+ing, in which state each of the atoms are
+at a given moment. Therefore one bit
+will be represented by a single atom
+being in one of two states, the states we
+will call \(| 1 \rangle\) and \(| 0 \rangle\).
+-->
+各原子が 2 つの状態 （\(| 1 \rangle\) と \(| 0 \rangle\) と呼ぶ）のどちらかにあるかどうかによって、もちろん任意の数を表すことができます。そして、その数は、各原子が特定の瞬間にどの状態にあるかを判定（測定）することによって、そのようなレジスタから読み取ることができます。したがって、1ビットは、単一の原子が2つの状態 （\(| 1 \rangle\) と \(| 0 \rangle\) と呼ぶ状態）のいずれかにあることによって表されます。
+</p><p>
+<!--
+What we will have to do then can be
+understood by considering an example;
+the example of a CONTROLLED CON-
+TROLLED NOT. Let G be some sort of
+an operation on three atoms \(a, b\) and \(c\),
+which converts the original state of \(a,b,\)
+and \(c\) into a new appropriate state,
+\(a^\prime, b^\prime, c^\prime,\) so that the connection between
+\(a^\prime, b^\prime,\) and \(c^\prime\) and \(a,b,c,\) are just what we
+would have expected if \(a,b,\) and \(c\) repre-
+sented wires, and the \(a^\prime, b^\prime\) and \(c^\prime\) were
+the output wires of a CONTROLLED
+CONTROLLED NOT.
+-->
+その時私たちが何をしなければならないかは、例を考えれば理解できます。
+CONTROLLED CONTROLLED NOTの例です。 G を、3 つの原子 \(a, b\) と \(c\) に対する何らかの操作とします。この操作は、\(a, b,\) と \(c\) の元の状態を新しい適切な状態 \(a^\prime, b^\prime, c^\prime,\) に変換します。これにより、\(a^\prime, b^\prime,\) と \(c^\prime\) と \(a, b,c,\) 間の接続は、\(a, b,\) と \(c\) がワイヤを表し、\(a^\prime, b^\prime\) と \(c^\prime\) が CONTROLLED
+CONTROLLED NOT の出力ワイヤである場合に予想されるとおりになります。
+</p><p>
+<!--
+It must be appreciated here, that at
+the moment we are not trying to move
+the data from one position to another,
+we are just going to change it. Unlike
+the situation in the actual wired computer in which the voltages on one wire
+then go over to voltages on another,
+what we’re specifically making is some-
+thing simpler, that the three atoms are
+in some particular state, and that an
+operation is performed, which changes
+the state to new values, \(a^\prime, b^\prime, c^\prime\).
+-->
+ここで理解していただきたいのは、現時点ではデータをある位置から別の位置に移動させようとしているのではなく、単に変更しようとしているということです。実際の有線コンピュータでは、ある配線の電圧が別の配線の電圧に切り替わりますが、ここで具体的に行っているのはより単純なことです。つまり、3 つの原子が特定の状態にあり、ある操作が実行されてその状態が新しい値 (\(a^\prime, b^\prime, c^\prime\)) に変化するというものです。
+</p><p>
+<!--
+What we would have then is that the
+state, in the mathematical form
+\(| a^\prime, b^\prime, c^\prime\rangle\) is simply some operation G
+operating on \(| a, b, c\rangle\). In quantum me-
+chanics, state changing operators are
+linear operators, and so we'll suppose
+that G is linear. Therefore, \(G\) is a matrix,
+and the matrix elements of \(G,\) \(G_{a^\prime, b^\prime, c^\prime, a, b, c}\) are all 0 except those in the following
+table, which are of course 1.
+-->
+そうすると、数学的な形式\(| a^\prime, b^\prime, c^\prime\rangle\) における状態は、単に \(| a, b, c\rangle\) に作用する何らかの演算 G となります。量子力学では、状態変化演算子は線形演算子であるため、G は線形であると仮定します。したがって、\(G\) は行列であり、\(G,\) の行列要素 \(G_{a^\prime, b^\prime, c^\prime, a, b, c}\) は、表１にある要素を除いてすべて 0 です。表１にある要素は当然 1 です。
+
+</p>
+<center><img src="images/table.png"></center>
+</p>
+<!--
+<center>TABLE 1</center>
+-->
+<p>
+<center>表1</center>
+
+
+</p><p>
+<!--
+This table is the same table that repre-
+sents the truth value table for the CON-
+TROLLED CONTROLLED NOT. It is ap-
+parent that the operation is reversible,
+and that can be represented by saying
+that \(G^*G = 1\), where the * means Hermi-
+tian adjoint. That is to say \(G\) is a unitary
+matrix. (In fact \(G\) is also a real matrix \(G^*
+= G\), but that’s only a special case.) To
+be more specific, we’re going to write
+\(A_{ab,c}\). for this special \(G\). We shall use the
+same matrix A with different numbers
+of subscripts to represent the other
+primitive elements.
+-->
+表１は、CONTROLLED CONTROLLED NOT の真理値表を表す表と同じです。この演算は可逆であることは明らかで、\(G^*G = 1\) と表すことができます。ここで、* はエルミート随伴行列を意味します。つまり、\(G\) はユニタリ行列です。(実際には、\(G\) は実行列 \(G^* = G\) でもありますが、これは特殊なケースです。) より具体的には、この特殊な \(G\) を \(A_{ab,c}\) と書きます。他の原始要素を表すには、添字の数が異なる同じ行列 A を使用します。
+</p><p>
+<!--
+To take a simple example, the NOT,
+which would be represented by \(A_a\) is the
+simple matrix
+-->
+簡単な例を挙げると、NOTは\(A_a\)で表され、
+単純行列
+
+\[
+\begin{bmatrix}
+0 & 1 \\
+1 & 0
+\end{bmatrix}
+\]
+
+<!--
+This is a 2 X 2 matrix and can be repre-
+sented in many ways, in different nota-
+tions, but the particular one we will use
+to define these is by the method of cre-
+ation and annihilation operators. Con-
+sider operating in this case, on a single
+line a. In order to save alphabets, let us
+﻿call a the matrix
+-->
+これは2行2列の行列で、様々な方法で表現できます。様々な表記法がありますが、ここでは生成消滅演算子を用いて定義します。この場合、1 行の \(a\) 上で演算することを考えます。アルファベットを節約するため、\(a\) を行列と呼ぶことにします。
+
+\[
+a=
+\begin{bmatrix}
+0 & 1 \\
+0 & 0
+\end{bmatrix}
+\]
+
+<!--
+which annihilates the 1 on atom a and
+converts it to 0; \(a\) is an operator which
+converts the state \(| 1\rangle\) to \(| 0\rangle\). But, if the
+state of the atom were originally \(| 0\rangle\),
+the operator \(a\) produces the number 0.
+That is, it doesn’t change the state, it
+simply produces the numerical value
+zero when operating on that state. The
+conjugate of this thing, of course, is:
+-->
+これは原子 \(a\) の 1 を消滅させて 0 に変換します。\(a\)は、状態 \(| 1\rangle\) を \(| 0\rangle\) に変換する演算子です。しかし、原子の状態が元々 \(| 0\rangle\) であった場合、演算子 \(a\) は数値 0 を生成します。つまり、状態を変えるのではなく、その状態に作用して数値 0 を生成するだけです。もちろん、このものの共役は以下です。
+
+\[
+a^*=
+\begin{bmatrix}
+0 & 0 \\
+1 & 0
+\end{bmatrix}
+\]
+
+<!--
+which creates, in the sense that operat-
+ing on the 0 state, it turns it to the 1
+state. In other words, it moves from \(| 0\rangle\)
+to \(| 1\rangle\). When operating on the \(| 1\rangle\) state,
+there is no further state above that that
+you can creale, and therefore it gives it
+the number zero. Every other operator
+2×2 matrix can be represented in
+terms of these \(a\) and \(a^*\). For example,
+the product a*a is equal to the matrix
+-->
+これは、0 の状態を操作することで、それを 1 の状態に変換するという意味で、作成します。言い換えると、\(| 0\rangle\) から \(| 1\rangle\) に移動します。\(| 1\rangle\) 状態を操作する場合、それより上の状態は作成できないため、数値 0 が与えられます。他のすべての演算子
+2×2行列は、これらの \(a\) と \(a^*\) で表すことができます。例えば、積\(a^*a\) は行列
+
+\[
+a^*a=
+\begin{bmatrix}
+1 & 0 \\
+0 & 0
+\end{bmatrix}
+\]
+
+<!--
+which you might call \(N_a\). Itis 1 when the
+state is \(| 1\rangle\) and 0 when the state is \(| 0\rangle\).
+It gives the number that the state of the
+atom represents. Likewise the product
+-->
+
+これを \(N_a\) と呼ぶこともできます。状態が \(| 1\rangle\) のときは 1、状態が \(| 0\rangle\) のときは 0 です。
+これは原子の状態が表す数値です。同様に、積
+
+\[
+aa^*=
+\begin{bmatrix}
+0 & 0 \\
+0 & 1
+\end{bmatrix}
+\]
+
+<!--
+is \(1-N_a\), and gives 0 for the up-state and
+1 for the down-state. We’ll use 1 to
+represent the diagonal matrix,
+-->
+\(1-N_a\) であり、アップ状態の場合は 0、ダウン状態の場合は 1 となります。1 を
+対角行列を表すために使用します。
+
+\[
+\begin{bmatrix}
+1 & 0 \\
+0 & 1
+\end{bmatrix}
+\]
+
+<!--
+As a consequence of all this, \(aa^* + a^*a = 1\).
+-->
+このすべての結果として、\(aa^* + a^*a = 1\) となります。
+
+</p><p>
+<!--
+It is evident then that our matrix for
+NOT, the operator that produces NOT,
+is \(A_a = a + a^*\) and further of course,
+that’s reversible, \(A_a^*A_a = 1, A_a\) is unitary.
+-->
+したがって、NOT を生成する演算子 NOT の行列は、\(A_a = a + a^*\) であり、さらにもちろん、\(A_a^*A_a = 1, A_a\) は可逆であり、ユニタリ行列であることがわかります。
+
+</p><p>
+<!--
+In the same way the matrix \(A_{a,b}\) for the
+CONTROLLED NOT can be worked
+out. If you look at the table of values for
+CONTROLLED NOT you see that it can
+be written this way:
+-->
+同様に、CONTROLLED NOTの行列\(A_{a,b}\)も計算できます。CONTROLLED NOTの値の表を見ると、次のように書けることがわかります。
+
+\[
+a^*a (b + b^*) + aa^*
+\]
+
+<!--
+In the first term, the \(a^*a\) selects the
+condition that the line \(a = 1\) in which
+case we want \(b + b^*\) the NOT to apply to
+\(b\). The second term selects the condi-
+tion that the line \(a\) is 0, in which case we
+want nothing to happen to \(b\) and the
+unit matrix on the operators of b is
+implied. This can also be written as \(1 +
+a^*a (b + b^* -1)\), the 1 representing all
+the lines coming through directly, but
+in the case that \(a\) is 1, we would like to
+correct that by putting in a NOT instead
+of leaving the line b unchanged.
+-->
+最初の項では、\(a^*a\) は直線 \(a = 1\) という条件を選択します。この場合、\(b + b^*\) を \(b\) に適用します。2 番目の項は直線 \(a\) が 0 であるという条件を選択します。この場合、\(b\) には何も起こらず、b の演算子に関する単位行列が暗黙的に適用されます。これは \(1 + a^*a (b + b^* -1)\) と書くこともできます。1 は直接通過するすべての直線を表しますが、\(a\) が 1 の場合、直線 b を変更せずに NOT を挿入することでこれを修正します。
+
+</p><p>
+<!--
+The matrix for the CONTROLLED
+CONTROLLED NOT is:
+-->
+CONTROLLED CONTROLLED NOTのマトリックスは次のとおりです。
+
+\[
+A_{ab,c} = 1 + a^* ab^*b (c+c^*-1)
+\]
+
+<!--
+as perhaps, you may be able to see.
+-->
+おそらく、あなたも見ることができるでしょう。
+
+</p><p>
+<!--
+The next question is what the matrix
+is for a general logic unit which consists
+of a sequence of these. As an example,
+we'll study the case of the full adder
+which we described before (see Fig. 5).
+Now we'll have, in the general case,
+four wires represented by \(a,b,c\) and \(d\);
+we don’t necessarily have to have \(d\) as 0
+in all cases, and we would like to de-
+scribe how the object operates in gen-
+eral (if \(d\) is changed to 1 \(d^\prime\) is changed to
+its NOT). It produces new numbers \(a^\prime, 
+b^\prime, c^\prime\) and \(d^\prime\), and we could imagine with
+our system that there are four atoms
+labeled \(a,b,c,d\) in a state labeled
+\(| a,b,c,d\rangle\) and that a matrix \(M\) operates
+which changes these same four atoms
+so that they appear to be in the state
+\(| a^\prime, b^\prime, c^\prime, d^\prime\rangle\) which is appropriate for
+this logic unit. That is, if \(|\psi_{IN}\rangle\) repre-
+sents the incoming state of the four bits
+\(M\) isa matrix which generates an outgo-
+ing State \(| \psi_{OUT}\rangle = M | \psi_{IN}\rangle\) for the four
+bits. 
+-->
+次の問題は、これらのシーケンスからなる一般的な論理ユニットの行列はどのようなものかということです。例として、前に説明した全加算器の場合を考えてみましょう（図5を参照）。一般的なケースでは、\(a,b,c\) と \(d\) で表される4本の配線があります。\(d\) が常に 0 である必要はなく、オブジェクトが一般的にどのように動作するかを説明します（\(d\)が1に変更された場合、\(d^\prime\) がその NOT に変更されます）。これは新しい数値 \(a^\prime, b^\prime, c^\prime\) と \(d^\prime\) を生成し、このシステムでは、\(a, b, c, d\) とラベル付けされた4つの原子が \(| a, b, c, d\rangle\) とラベル付けされた状態にあると想像できます。そして、行列 \(M\) が動作して、これらの同じ4つの原子が、この論理ユニットに適切な状態 \(| a^\prime, b^\prime, c^\prime, d^\prime\rangle\) にあるように見えるように変化させます。つまり、\(|\psi_{IN}\rangle\) が4ビットの入力状態を表す場合、\(M\) は4ビットの出力状態 \(| \psi_{OUT}\rangle = M | \psi_{IN}\rangle\) を生成する行列です。
+
+</p><p>
+<!--
+For example, if the input state were
+the state \(| 1, 0, 1, 0\rangle\) then, as we know, the
+output state should be \(| 1, 0, 0, 1\rangle\); the
+first two \(a^\prime, b^\prime\) should be 1,0 for those two
+first lines come straight through, and
+the last two \(c^\prime, d^\prime\) should be 0,1 because
+that represents the sum and carry of the
+first three, \(a, b, c,\) bits in the first input,
+as \(d = 0\). Now the matrix \(M\) for the adder
+can easily be seen as the result of five
+successive primitive operations, and
+therefore becomes the matrix product
+of the five successive matrices repre-
+senting these primitive objects.
+-->
+例えば、入力状態が \(| 1, 0, 1, 0\rangle\) の場合、出力状態は \(| 1, 0, 0, 1\rangle\) となることが分かっています。最初の 2 行はそのままなので、最初の 2 つの \(a^\prime, b^\prime\) は 1,0 となり、最後の 2 つの \(c^\prime, d^\prime\) は 0,1 となります。これは、最初の入力の最初の 3 ビット \(a, b, c,\) の和と繰り上がりを表し、\(d = 0\) となるためです。加算器の行列 \(M\) は、5 つの連続する基本演算の結果として簡単に見ることができ、したがって、これらの基本オブジェクトを表す 5 つの連続する行列の行列積となります。
+
+\[
+M= A_{a,b} A_{b,c} A_{bc,d} A_{a,b} A_{ab,d}
+\]
+</p><p>
+<!--
+The first, which is the one written
+farthest to the right, is \(A_{ab,d}\) for that
+represents the CONTROLLED CON-
+TROLLED NOT in which \(a\) and \(b\) are the
+CONTROL lines, and the NOT appears
+on line \(d\). By looking at the diagram in
+Fig. 5 we can immediately see what the
+remaining factors in the sequence represent. The last factor, for example, \(A_{a,b}\)
+means that there’s a CONTROLLED
+NOT with a CONTROL on line \(a\) and
+NOT on line \(b\). This matrix will have the
+unitary property \(M^*M = 1\) since all of
+the \(A\)’s out of which it is a product are
+unitary. That is to say \(M\) is a reversal
+operation, and \(M^*\) is its inverse.
+-->
+一番右に書かれている最初の要素は \(A_{ab,d}\) です。これは CONTROLLED CONTROLLED NOT を表し、\(a\) と \(b\) は CONTROL 行、NOT は \(d\) 行に現れます。図 5 の図を見れば、残りの要素が何を表しているかがすぐにわかります。例えば、最後の要素 \(A_{a,b}\) は、CONTROL 行 \(a\) に CONTROL 行、NOT 行 \(b\) に NOT 行がある CONTROLLED NOT があることを意味します。この行列は、積となるすべての \(A\) がユニタリ行列であるため、ユニタリ行列の性質 \(M^*M = 1\) を持ちます。つまり、\(M\) は逆演算であり、\(M^*\) はその逆演算です。
+
+</p><p>
+<!--
+Our general problem, then, is this.
+Let \(A_1,A_2, A_3, \cdots A_k\) be the succession of
+operations wanted, in some logical
+unit, to operate on \(n\) lines. The \(2^n\times 2^n\)
+matrix \(M\) needed to accomplish the
+same goal is a product \(A_k...A_3A_2A_1\), where
+each \(A\) is a simple matrix. How can we
+generate this \(M\) in a physical way if we
+know how to make the simpler elements?
+-->
+一般的な問題は次のようになります。
+\(A_1,A_2, A_3, \cdots A_k\) を、ある論理ユニットで \(n\) 行に対して実行したい一連の演算とします。同じ目的を達成するために必要な \(2^n\times 2^n\) 行列 \(M\) は、積 \(A_k...A_3A_2A_1\) です。ここで、各 \(A\) は単純行列です。より単純な要素の作成方法がわかっている場合、この \(M\) を物理的に生成するにはどうすればよいでしょうか。
+
+</p><p>
+<!--
+In general, in quantum mechanics,
+the outgoing state at time \(t\), is \(e^{iH_t}\psi_{IN}\) where \(\psi_{IN}\) is the input state, for a system
+with Hamiltonian \(H\). To try to find, fora
+given special time \(t\), the Hamiltonian
+which will produce \(M = e^{iHt}\) when \(M\) is
+such a product of non-commuting matrices, from some simple property of
+the matrices themselves, appears to be
+very difficult. 
+-->
+一般に量子力学では、ハミルトニアン\(H\)を持つシステムにおいて、時刻\(t\)における出力状態は\(e^{iH_t}\psi_{IN}\)です。ここで\(\psi_{IN}\)は入力状態です。与えられた特別な時刻\(t\)において、\(M\)がそのような非可換行列の積であるとき、\(M = e^{iHt}\)を生成するハミルトニアンを、行列自体の単純な性質から見つけようとすると、非常に困難に思えます。
+</p><p>
+<!--
+We realize however, that at any particular time, if we expand the \(e^{iHt}\) out (as
+\(1 + iHt - H^2t^2/2-..\)) we'll find the oper-
+ator H operating an innumerable arbitrary number of times, once, twice, three times and so forth, and the total state is generated by a superposition of
+these possibilities. This suggests that we
+can solve this problem of the composition of these A’s in the following way.
+-->
+しかし、ある特定の時点において、\(e^{iHt}\) を（\(1 + iHt - H^2t^2/2-..\) のように）展開すると、演算子 H が 1 回、2 回、3 回…と無数の任意の回数作用し、全体の状態はこれらの可能性の重ね合わせによって生成されることがわかります。これは、これらの A の合成の問題を次のように解くことができることを示唆しています。
+</p><p>
+<!--
+We add to the \(n\) atoms, which are in
+our register, an entirely new set of \(k + 1\)
+atoms, which we'll call ‘‘program
+counter sites.” Let us call \(q_i\) and \(q_i^*\) the
+annihilation and creation operators for
+the program site \(i\) for \(i = 0\) to \(k\), A good
+thing to think of, as an example, is an
+electron moving from one empty site to
+another. If the site i is occupied by the
+electron, its state is \(| 1\rangle\), while if the site
+is empty, its state is \(| 0\rangle\).
+-->
+レジスタ内の \(n\) 個の原子に、全く新しい \(k + 1\) 個の原子のセットを追加します。これを「プログラムカウンタサイト」と呼びます。\(q_i\) と \(q_i^*\) を、プログラムサイト \(i\) の \(i = 0\) から \(k\) までの消滅演算子と生成演算子と呼びます。例として、電子が 1 つの空きサイトから別の空きサイトへ移動することを考えてみましょう。サイト i が電子で占有されている場合、その状態は \(| 1\rangle\) であり、サイトが空の場合、その状態は \(| 0\rangle\) です。
+</p><p>
+
+<!--
+We write, as our Hamiltonian:
+-->
+ハミルトニアンとして次のように書きます。
+
+\[
+\begin{align}
+H =& \sum_{i=0}^{k-1} q_{i+1}^*q_iA_{i+1} \\
+\\
+&+ \text{複素共役} \\
+\\
+=& q_1^* q_0 A_1 + q_2^* q_1 A_2 \\
+\\
+&+ q_3^* q_2 A_3 + \cdots \\
+\\
+&+ q_0^* q_1 A_1^* + q_1^* q_2 A_2^* \\
+\\
+&+ q_2^* q_3 A_3^* + \cdots
+\end{align}
+\]
+</p><p>
+<!--
+The first thing to notice is that if all
+the program sites are unoccupied, that
+is all the program atoms are initially in
+the state 0, nothing happens because
+every term in the Hamiltonian starts
+with an annihilation operator and it
+gives 0 therefore.
+-->
+最初に注目すべき点は、すべてのプログラムサイトが空いている場合、つまりすべてのプログラム原子が初期状態で状態 0 にある場合、ハミルトニアンのすべての項が消滅演算子で始まり、したがって 0 になるため、何も起こらないということです。
+
+</p><p>
+<!--
+The second thing we notice is that if
+only one or another of the program sites
+is occupied (in state \(| 1\rangle\)), and the rest
+are not (state \(| 0\rangle\)), then this is always
+true. In fact the number of program
+sites that are in state \(| 1\rangle\) is a conserved
+quantity. We will suppose that in the
+operation of this computer, either no
+sites are occupied (in which case nothing happens) or just one site is occupied. Two or more program sites are never both occupied during normal operation.
+-->
+2 つ目に注目すべき点は、プログラムサイトのうち1つだけが占有され（状態\(| 1\rangle\)）、残りは占有されていない（状態 \(| 0\rangle\) ）場合、これは常に真であるということです。実際、状態\(| 1\rangle\)にあるプログラムサイトの数は保存量です。このコンピュータの動作では、どのサイトも占有されていない（この場合は何も起こらない）か、1 つのサイトだけが占有されていると仮定します。通常の動作では、2 つ以上のプログラムサイトが両方とも占有されることはありません。
+</p><p>
+<!--
+Let us start with an initial state where
+site 0 is occupied, is in the \(| 1\rangle\) state, and
+all the. others are empty, \(| 0\rangle\) state. If
+later, at some time, the final site k is
+found to be in the \(| 1\rangle\) state, (and there-
+fore all the others in \(| 0\rangle\)) then, we
+claim, the \(n\) register has been multiplied by the matrix \(M\), which is \(A_k \cdots A_2A_1\) as desired.
+-->
+初期状態として、サイト 0 が占有されており、\(| 1\rangle\) 状態、その他すべてが空で、\(| 0\rangle\) 状態から始めましょう。その後、ある時点で、最後のサイト　\(k\) が \(| 1\rangle\) 状態（したがって、その他すべて \(| 0\rangle\)状態）にあることが判明した場合、\(n\) レジスタに行列 \(M\) が乗算され、期待通り \(A_k \cdots A_2A_1\) が得られたとします。
+</p><p>
+<!--
+Let me explain how this works. Suppose that the register starts in any initial
+state, \(\psi_{in}\) and that the site, 0, of the
+program counter is occupied. Then the
+only term in the entire Hamiltonian
+that can first operate, as the Hamilto-
+nian operates in successive times, is the
+first term, \(q_1^*q_0A_1\). The \(q_0\) will change
+site number O to an unoccupied site,
+while \(q_1^*\) will change the site number 0
+to an occupied site. Thus the term
+\(q_1^*q_0\) is a term, which simply moves
+the occupied site from the location 0 to
+the location 1. But this is multiplied by
+the matrix \(A_1\) which operates only on
+the 12 register atoms, and therefore mul-
+tiplies the initial state of the » register
+atoms by \(A_1\).
+-->
+これがどのように機能するかを説明しましょう。レジスタが任意の初期状態 \(\psi_{in}\) から始まり、プログラムカウンタのサイト 0 が占有されていると仮定します。すると、ハミルトニアン全体の中で、ハミルトニアンが連続的に作用するときに最初に作用できる項は、最初の項 \(q_1^*q_0A_1\) のみです。\(q_0\) はサイト番号 0 を空サイトに変更し、\(q_1^*\) はサイト番号 0 を占有サイトに変更します。したがって、項 \(q_1^*q_0\) は、占​​有サイトを位置0から位置 1 に移動するだけの項です。しかし、これは12個のレジスタ原子のみに作用する行列 \(A_1\) に乗算されるため、レジスタ原子の初期状態に\(A_1\)が乗算されます。
+</p><p>
+<!--
+Now, if the Hamiltonian happens to
+operate a second time, this first term
+will produce nothing because \(q_0\) pro-
+duces 0 on the number 0 site because it
+is now unoccupied. The term which can
+operate now is the second term,
+\(q_2^*q_1A_2\) for that can move the occupied
+point, which I shall call a “cursor.” The
+cursor can move from site | to site 2 but
+the matrix \(A_2\) now operates on the regis-
+ter, therefore the register has now got
+the matrix \(A_2A_1\) operating on it.
+-->
+さて、ハミルトニアンが 2 回目に演算すると、この最初の項は何も生成しません。なぜなら、\(q_0\) は 0 番の位置に 0 を生成するからです。なぜなら、その位置は空いているからです。今、演算できる項は 2 番目の項、\(q_2^*q_1A_2\) です。これは占有されている点を移動させることができるからです。これを「カーソル」と呼びます。カーソルは位置 | から位置 2 に移動できますが、行列 \(A_2\) はレジスタ上で演算を行うため、レジスタには行列 \(A_2A_1\) が演算されていることになります。
+</p><p>
+<!--
+So, looking at the first line of the
+Hamiltonian, if that is all there was to it,
+as the Hamiltonian operates in
+successive orders, the cursor would
+move successively from 0 to \(k\), and you
+would acquire, one after the other, op-
+erating on the n register atoms, the
+matrices, \(A\), in the order that we would
+like to construct the total \(M\).
+-->
+ハミルトニアンの最初の行を見てみると、それが全てだとすれば、ハミルトニアンが連続的な順序で演算すると、カーソルは 0 から \(k\) まで連続的に移動し、\(n\) 個のレジスタ原子、つまり行列 \(A\) を、合計 \(M\) を構築したい順序で次々に演算していくことになります。
+</p><p>
+<!--
+However, a Hamiltonian must be her-
+mitian, and therefore the complex con-
+jugate of all these operators must be
+present. Suppose that at a given stage,
+we have gotten the cursor on site num-
+ber 2, and we have the matrix \(A_2A_1\)
+operating on the register. Now the \(q_2\)
+which intends to move that occupation
+to a new position, needn't come from
+the first line, but may have come from
+the second line. It may have come, in
+fact, from \(q_1^*q_2A_2^*\) which would move
+the cursor back from the position 2 to
+the position 1.
+-->
+しかし、ハミルトニアンはエルミートでなければならないため、これらすべての演算子の複素共役が存在する必要があります。ある段階で、カーソルがサイト番号 2 にあり、レジスタに対して行列 \(A_2A_1\) が作用しているとします。ここで、その占有を新しい位置に移動させる \(q_2\) は、必ずしも1行目から来る必要はなく、2行目から来るかもしれません。実際には、カーソルを位置 2 から位置1に戻す \(q_1^*q_2A_2^*\) から来ている可能性もあります。
+</p><p>
+<!--
+But note that when this happens, the
+operator \(A_2^*\) operates on the register,
+and therefore the total operator on the
+register is \(A_2^*A_2A_1\) in this case. But
+\(A_2^*A_2\) is 1 and therefore the operator is
+just \(A_1\). Thus we see that when the
+cursor is returned to the position 1, the
+net result is that only the operator \(A_1\)
+has really operated on the register. Thus
+it is that as the various terms of the
+Hamiltonian move the cursor forwards
+and backwards, the \(A\)'s accumulate, or
+are reduced out again.
+-->
+ただし、この場合、演算子 \(A_2^*\) がレジスタに対して演算を行うため、レジスタに対する演算子全体はこの場合 \(A_2^*A_2A_1\) となります。しかし、\(A_2^*A_2\) は 1 なので、演算子は \(A_1\) のみです。したがって、カーソルが位置 1 に戻されると、結果として、実際には演算子 \(A_1\) のみがレジスタに対して演算を行ったことになります。つまり、ハミルトニアンのさまざまな項によってカーソルが前後に移動するにつれて、\(A\) が累積するか、または再び減算されるのです。
+</p><p>
+<!--
+At any stage, for example, if the
+cursor were up to the \(j\) site, the matrices
+from \(A_1\) to \(A_j\) have operated in succession on the \(n\) register. It does not matter
+whether or not the cursor on the \(j\) site
+has arrived there, by going directly
+from 0 to \(j\), or going further and return-
+ing, or going back and forth in any
+pattern whatsoever, as long as it finally
+arrived at the state \(j\).
+-->
+例えば、どの段階でも、カーソルが \(j\) サイトまで移動している場合、\(A_1\) から \(A_j\) までの行列は \(n\) レジスタ上で連続して演算されています。\(j\) サイト上のカーソルが 0 から \(j\) に直接移動してそこに到達したか、さらに進んで戻ったか、あるいは何らかのパターンで行ったり来たりしたかは問題ではありません。最終的に状態 \(j\) に到達していれば問題ありません。
+</p><p>
+<!--
+Therefore it is true, that if the cursor
+is found at the site \(k\), we have the net
+result for the \(n\) register atoms that the
+matrix \(M\) has operated on their initial
+state as we desired.
+-->
+したがって、カーソルがサイト \(k\) にある場合、行列 \(M\) が初期状態に対して意図したとおりに操作した \(n\) レジスタ原子の正味結果が得られます。
+</p><p>
+<!--
+How then could we operate this com-
+puter? We begin by putting the input
+bits onto the register, and by putting the
+cursor to occupy the site 0. We then
+check at the site \(k\), say, by scattering
+electrons, that the site \(k\) is empty, or that
+the site \(k\) has a cursor. The moment we
+find the cursor at site \(k\) we remove the
+cursor so that it cannot return down the
+program line, and then we know that
+the register contains the output data.
+We can then measure it at our leisure.
+Of course, there are external things in-
+volved in making the measurements,
+and determining all of this, which are
+not part of our computer. Surely a com-
+puter has eventually to be in interaction
+with the external world, both for
+putting data in and for taking it out.
+-->
+では、このコンピュータをどのように操作すればよいのでしょうか。まず、入力ビットをレジスタに書き込み、カーソルをサイト0に配置します。次に、サイト \(k\) で、例えば電子を散乱させて、サイト \(k\) が空であるか、またはサイト \(k\) にカーソルがあるかを確認します。サイト \(k\) にカーソルを見つけたら、カーソルを削除してプログラム行に戻れないようにします。こうすることで、レジスタに出力データが含まれていることが分かります。これで、自由に測定できるようになります。もちろん、測定やこれらすべての決定には、コンピュータの一部ではない外部の要素が関与しています。コンピュータは、データの入力と取り出しの両方において、最終的には外部世界と相互作用する必要があるのは間違いありません。
+</p><p>
+<!--
+Mathematically it turns out that the
+propagation of the cursor up and down
+this program line is exactly the same as
+it would be if the operators A were not
+in the Hamiltonian. In other words, it
+represents just the waves which are fa-
+miliar from the propagation of the tight —
+binding electrons or spin waves in one
+dimension, and are very well known.
+There are waves that travel up and
+down the line and you can have packets
+of waves and so forth.
+-->
+数学的には、このプログラム行におけるカーソルの上下の伝播は、ハミルトニアンに演算子Aがない場合と全く同じであることがわかります。言い換えれば、これは、1次元における強束縛電子やスピン波の伝播でおなじみの、非常によく知られた波を表しているだけです。行を上下に伝播する波があり、波のパケットなどが存在することもあります。
+
+</p><p>
+<!--
+We could improve the action of this
+computer and make it into a ballistic
+action in the following way. By making
+a line of sites in addition to the ones
+inside, that we are actually using for
+computing, a line of say, many sites,
+both before and after. It’s just as though
+we had values of the index \(i\) for \q_i\), which
+are less than 0 and greater than \(k\), each
+of which has no matrix \(A\), just a 1 multi-
+plying there. Then we'd have a longer
+spin chain, and we could have started,
+instead of putting a cursor exactly at the
+beginning site 0, by putting the cursor
+with different amplitudes on different
+sites representing an initial incoming
+spin wave, a wide packet of nearly defi-
+nite momentum. 
+-->
+このコンピュータの動作を次のように改良し、弾道的な動作にすることができます。実際に計算に使用している内部のサイトに加えて、前後に多数のサイトのラインを作成します。これは、\(q_i\) のインデックス \(i\) の値が 0 未満で \(k\) より大きい場合とまったく同じです。各値には行列 \(A\) がなく、1 が乗算されるだけです。そうすれば、スピンチェーンは長くなり、カーソルを最初のサイト 0 に正確に配置するのではなく、異なる振幅のカーソルを異なるサイトに配置することで、ほぼ一定の運動量の幅広いパケットである初期の入射スピン波を表すことができます。
+</p><p>
+<!--
+This spin wave would then go
+through the entire computer in a ballis-
+tic fashion and out the other end into
+the outside tail that we have added to
+the line of program sites, and there it
+﻿would be easier to determine if it is
+present and to steer it away to some
+other place, and to capture the cursor.
+Thus, the logical unit can act in a ballistic way.
+-->
+このスピン波は弾道的にコンピュータ全体を通り抜け、反対側からプログラムサイトのラインに追加した外側のテールへと伝わります。そこでスピン波が存在するかどうかを判断し、別の場所に誘導してカーソルを捕捉することが容易になります。このように、論理ユニットは弾道的な動作をすることができます。
+</p><p>
+<!--
+This is the essential point and indi-
+cates, at least to a. computer scientist,
+that we could make a universal com-
+puter, because he knows if we can make
+any logical unit we can make a univer-
+sal computer. That this could represent
+a universal computer for which compo-
+sition of elements and branching can be
+done, is not entirely obvious unless you
+have some experience, but I will discuss
+that to some further extent later.
+-->
+これが本質的な点であり、少なくともコンピュータ科学者にとっては、汎用コンピュータが作れることを示しています。なぜなら、どんな論理ユニットでも作れるのであれば、汎用コンピュータも作れることを彼は知っているからです。これが、要素の合成や分岐が可能な汎用コンピュータを表しているかどうかは、ある程度の経験がなければ完全には明らかではありませんが、これについては後ほど詳しく説明します。
+
+</p>
+<!--
+<h2>Imperfections and irreversible free energy loss</h2>
+-->
+<h2>不完全性と不可逆な自由エネルギー損失</h2>
+<p>
+<!--
+There are, however, a number of
+questions that we would like to discuss
+in more detail such as the question of
+imperfections.
+-->
+しかし、不完全性の問題など、より詳細に議論したい疑問がいくつかあります。
+</p><p>
+<!--
+There are many sources of imperfec-
+tions in this machine, but the first one
+we would like to consider is the pos-
+sibility that the coefficients in the
+couplings, along the program line, are
+not exactly equal. The line is so long
+that in a real calculation little irregular-
+ities would produce a small probability
+of scattering, and the waves would not
+travel exactly ballistically, but would go
+back and forth.
+-->
+この装置には多くの欠陥の原因がありますが、まず最初に検討したいのは、プログラム線に沿った結合部の係数が正確に等しくない可能性です。線は非常に長いため、実際の計算ではわずかな不規則性でも散乱の可能性がわずかながら生じ、波は正確に弾道的に伝播するのではなく、往復運動することになります。
+</p><p>
+<!--
+If the system, for example, is built so
+that these sites are built on a substrate
+of ordinary physical atoms, then the
+thermal vibrations of these atoms
+would change the couplings a little bit 
+and generate imperfections, (We should
+even need such noise for with small
+fixed imperfections there are shallow
+trapping regions where the cursor may
+get caught.) Suppose then, that there is
+a certain probability, say \(p\) per step of
+calculation (that is, per step of cursor
+motion, \(i \rightarrow i+1\)) for scattering the
+cursor momentum until it is random-
+ized (\(1/p\) is the transport mean free
+path). We will suppose that the p is fairly
+small.
+-->
+例えば、これらのサイトが通常の物理原子の基板上に構築されるようにシステムが構築されている場合、これらの原子の熱振動によって結合がわずかに変化し、不完全性が生じます（小さな固定不完全性では、カーソルが捕捉される可能性のある浅い捕捉領域が存在するため、このようなノイズも必要になります）。そこで、計算ステップごとに（つまり、カーソル移動ステップごとに、\(i \rightarrow i+1\)）、カーソルの運動量がランダム化されるまで散乱する確率 （\(1/p\) は輸送平均自由行程）が、例えば\(p\)とすると仮定します。pはかなり小さいと仮定します。
+</p><p>
+<!--
+Then in a very long calculation, it
+might take a very long time for the wave
+{o make its way out the other end, once
+started at the beginning-—because it has
+to go back and forth so many times due
+to the scattering. What one then could
+do, would be to pull the cursor along
+the program line with an external force.
+If the cursor is for example, an electron
+_ moving from one vacant site to another,
+this would be just like an electric field
+trying to pull the electron along a wire,
+the resistance of which is generated by
+the imperfection or the probability of
+scattering. Under these circumstances
+we can calculate how much energy will
+be expended by this external force.
+-->
+非常に長い計算では、波が最初から反対側の端まで到達するまでに非常に長い時間がかかる可能性があります。これは、散乱のために何度も往復しなければならないためです。その場合、外力を使ってカーソルをプログラム行に沿って引っ張るという方法があります。例えば、カーソルが電子で、ある空き領域から別の空き領域へと移動するとします。これは、電線に沿って電子を引き寄せようとする電場と似ています。電線の抵抗は、散乱の不完全性や確率によって生じます。このような状況下では、この外力によってどれだけのエネルギーが消費されるかを計算できます。
+</p><p>
+<!--
+This analysis can be made very sim-
+ply: it is an almost classical analysis of
+an electron with a mean free path. Ev-
+ery time the cursor is scattered, I’m
+going to suppose it is randomly scat-
+tered forward and backward. In order
+for the machine to operate, of course, it
+must be moving forward at a higher
+probability than it is moving backward.
+When a scattering occurs therefore, the
+loss in entropy is the logarithm of the
+probability that the cursor is moving
+forward, divided by the probability the 
+cursor was moving backward.
+-->
+この分析は非常に簡単に行うことができます。これは、平均自由行程を持つ電子のほぼ古典的な分析です。カーソルが散乱するたびに、カーソルが前方と後方にランダムに散乱すると仮定します。もちろん、機械が動作するためには、カーソルが後方に移動する確率よりも前方に移動する確率の方が高くなければなりません。したがって、散乱が発生した場合のエントロピー損失は、カーソルが前方に移動する確率の対数を、カーソルが後方に移動する確率で割った値になります。
+</p><p>
+<!--
+This can be approximated by (the
+probability forward — the probability
+backward)/(the probability forward +
+the probability backward). That was the
+entropy lost per scattering. More inter-
+esting in the entropy lost per net
+calculational step, which is of course,
+simply p times that number. We can
+rewrite the entropy cost per calcula-
+tional step as:
+-->
+これは、(前方確率 - 後方確率) / (前方確率 + 後方確率) で近似できます。これが散乱ごとに失われるエントロピーです。さらに興味深いのは、純計算ステップごとに失われるエントロピーです。もちろん、これは単純にこの数値の p 倍です。計算ステップごとのエントロピーコストは次のように書き直すことができます。
+
+\[
+p v_D/v_R
+\]
+<!--
+where \(v_D\) is the drift velocity of the
+cursor and \(v_R\) its random velocity.
+-->
+ここで、\(v_D\)はカーソルの移動速度、\(v_R\)はカーソルのランダム速度です。
+</p><p>
+<!--
+Or if you like, it is \(p\) times the mini-
+mum time that the calculation could be
+done in, (that is if all the steps were
+always in the forward direction), di-
+vided by the actual time allowed.
+-->
+あるいは、必要に応じて、計算が実行できる最小時間（つまり、すべてのステップが常に順方向であった場合）を \(p\) で乗じ、実際に許容される時間で割ったものになります。
+</p><p>
+<!--
+The free energy loss per step then, is
+\(kT\times p\times\) the minimum time that the
+calculation could be done, divided by
+the actual time that you allow yourself
+to do it. This is a formula that was first
+derived by Bennett. The factor \(p\) is a
+coasting factor, to represent situations
+in which not every site scatters the
+cursor randomly, but it has only a small
+probability to be thus scattered.
+-->
+したがって、ステップあたりの自由エネルギー損失は、計算を実行できる最小時間（kT × p × ）を、実際に計算に費やす時間で割った値となります。これはベネットによって初めて導かれた式です。係数（p）は惰性係数であり、すべてのサイトがカーソルをランダムに散乱させるわけではないが、その確率は小さいという状況を表します。
+</p><p>
+<!--
+It will be appreciated that the energy
+loss per step is not \(kT\) but is that divided
+by two factors. One, (\(1/p\)), measures
+how perfectly you can build the ma-
+chine and the other is proportional to
+the length of time that you take to do the
+calculation. It is very much like a Car-
+not engine, in which in order to obtain
+reversibility, one must operate very
+slowly. For the ideal machine where \(p\) is
+0, or where you allow an infinite time,
+the mean energy loss can be 0.
+-->
+1ステップあたりのエネルギー損失は \(kT\) ではなく、2 つの係数で割った値であることがお分かりいただけるでしょう。1つは (\(1/p\)) で、機械をどれだけ完璧に構築できるかを測るものであり、もう1つは計算にかかる時間の長さに比例します。これはカルノーエンジンに非常に似ており、可逆性を得るためには非常にゆっくりと動作させる必要があります。\(p\) が 0、つまり無限の時間を許容する理想的な機械では、平均のエネルギー損失は0になる可能性があります。
+</p><p>
+<!--
+The uncertainty principle, which usually relates some energy and time uncertainty, is not directly a limitation.
+What we have in our computer is a
+device for making a computation, but
+the time of arrival of the cursor and the
+measurement of the output register at
+the other end (in other words, the time
+it takes in which to complete the calculation), is not a definite time. It’s a
+question of probabilities, and so there is
+a considerable uncertainty in the time
+at which a calculation will be done. 
+-->
+不確定性原理は、通常、エネルギーと時間の不確実性に関係しますが、直接的な制約ではありません。
+私たちのコンピュータには計算を行う装置がありますが、カーソルの到着時間と、反対側の出力レジスタの測定値（つまり、計算を完了するのにかかる時間）は、確定した時間ではありません。これは確率の問題であり、したがって、計算が実行される時間にはかなりの不確実性があります。
+</p><p>
+<!--
+There is no loss associated with the
+uncertainty of cursor energy; at least no
+loss depending on the number of calcu-
+lational steps. Of course, if you want to
+do a ballistic calculation on a perfect
+machine, some energy would have to be
+put into the original wave, but that en-
+ergy, of course, can be removed from
+the final wave when it comes out of the
+tail of the program line. All questions
+associated with the uncertainty of oper-
+ators and the irreversibility of measure-
+ments are associated with the input and
+output functions.
+-->
+カーソルエネルギーの不確実性に関連する損失はありません。少なくとも、計算ステップ数に依存する損失はありません。もちろん、完璧なマシンで弾道計算を行う場合、元の波にいくらかのエネルギーを投入する必要がありますが、そのエネルギーは、プログラム行の末尾から出てくる最終波から除去することができます。演算子の不確実性と測定の不可逆性に関連するすべての問題は、入出力関数に関連しています。
+</p><p>
+<!--
+No further limitations are generated
+by the quantum nature of the computer
+per \(se\); nothing that is proportional to
+the number of computational steps.
+-->
+コンピュータの量子的な性質自体によって、それ以上の制限は発生しません。計算ステップの数に比例する制限もありません。
+</p><p>
+<!--
+In a machine such as this, there are
+very many other problems, due to imperfections. For example, in the registers for holding the data, there will be
+problems of cross-talk, interactions between one atom and another in that register, or interaction of the atoms in
+that register directly with things that are
+happening along the program line, that
+we didn’t exactly bargain for. In other
+words, there may be small terms in the 
+Hamiltonian besides the ones we've
+written. 
+-->
+このようなマシンでは、不完全性のために、他にも非常に多くの問題が生じます。例えば、データを保持するレジスタでは、クロストーク、つまりレジスタ内の原子同士の相互作用、あるいはレジスタ内の原子とプログラム行で発生している事象との直接的な相互作用といった、想定外の問題が発生します。言い換えれば、ハミルトニアンには、私たちが書いたもの以外にも、小さな項が存在する可能性があるのです。
+</p><p>
+
+<!--
+Until we propose a complete implementation of this, it is very difficult to
+analyze. At least some of these problems
+can be remedied in the usual way by
+techniques such as error correcting
+codes, and so forth, that have been studied in normal computers. But until we
+find a specific implementation for this
+computer, I do not know how to pro-
+ceed to analyze these effects. However,
+it appears that they would be very im-
+portant, in practice. This computer
+seems to be very delicate and these
+imperfections may produce consider-
+able havoc.
+-->
+これを完全に実装するまでは、分析するのは非常に困難です。少なくともこれらの問題の一部は、通常のコンピュータで研究されてきた誤り訂正符号などの技術によって、通常の方法で解決できます。しかし、このコンピュータに固有の実装が見つかるまでは、これらの影響をどのように分析すればよいかわかりません。しかし、実際には、これらは非常に重要であると思われます。このコンピュータは非常に繊細なため、これらの欠陥は大きな混乱を引き起こす可能性があります。
+
+</p><p>
+<!--
+The time needed to make a step of
+calculation depends on the’strength or
+the energy of the interactions in the
+terms of the Hamiltonian. If each of the
+terms in the Hamiltonian is supposed to
+be of the order of 0.1 electron volts,
+then it appears that the time for the
+cursor to make each step, if done in a
+ballistic fashion, is of the order \(6X10^{15}\)
+sec. This does not represent an enor-
+mous improvement, perhaps only
+about four orders of magnitude over the
+present values of the time delays in
+transistors, and is not much shorter
+than the very shori times possible to
+achieve in many optical systems.
+-->
+計算ステップに必要な時間は、ハミルトニアンの各項における相互作用の強度、つまりエネルギーに依存します。ハミルトニアンの各項が 0.1 電子ボルトのオーダーであると仮定すると、弾道的にカーソルが各ステップを移動する時間は、\(6×10^{15}\) 秒のオーダーとなるようです。これは大幅な改善ではなく、トランジスタの遅延時間の現在の値と比べて4桁程度に過ぎず、多くの光学システムで達成可能な非常に短い時間よりもそれほど短くはありません。
+</p>
+<!--
+<h2>Simplifying the implementation</h2>
+-->
+<h2>実装の簡素化</h2>
+<p>
+<!--
+We have completed the job we set out
+to do-—to find some quantum mechani-
+cal Hamiltonian of a system that could
+compute, and that is all that we need
+say. But it is of some interest to deal
+with some questions about simplifying
+the implementation. The Hamiltonian
+that we've written involves terms which
+can involve a special kind of interaction
+between five atoms. For example, three
+of them in the register, for a CON-
+TROLLED CONTROLLED NOT and two
+of them as the two adjacent sites in the
+program counter.
+-->
+我々は、計算可能なシステムの量子力学的ハミルトニアンを見つけるという当初の目的を達成しました。そして、それが我々が言うべきことの全てです。しかし、実装を簡素化するためのいくつかの問題について検討することは興味深いことです。我々が記述したハミルトニアンには、5 つの原子間の特殊な相互作用を伴う可能性のある項が含まれています。例えば、そのうち 3 つはレジスタ内にあり、制御論理否定（CONTROLLED CONTROLLED NOT）を表し、残りの2つはプログラムカウンタ内の隣接する 2 つのサイトとして使用されます。
+</p><p>
+<!--
+This may be rather complicated to
+arrange. The question is, can we do it
+with simpler parts. It turns out, we can
+indeed. We can do it so that in each
+interaction there are only three atoms.
+We're going to start with new primitive
+elements, instead of the ones we began
+with. We’ll have the NOT all right, but
+we have in addition to that simply a
+“switch” (see also Priese<sup>5</sup>).
+-->
+これを配置するのはかなり複雑かもしれません。問題は、もっと単純な部品で実現できるかどうかです。実は、実際に可能です。相互作用する原子が3つだけになるように設定できます。最初に使用した要素ではなく、新しい基本要素から始めます。NOT は正しくありませんが、それに加えて、単に「スイッチ」があります（Priese<sup>5</sup>も参照）。
+</p><p>
+<!--
+Supposing that we have a term,
+\(q^*cp+r^*c^* p+\) its complex conjugate in the Hamiltonian (in all cases
+we'll use letters in the earlier part of the
+alphabet for register atoms and in the
+latter part of the alphabet for program
+sites). See Fig. 7. This is a switch in the
+sense that, if \(c\) is originally in the \(| 1\rangle\)
+state, a cursor at \(p\) will move to \(q\),
+whereas if \(c\) is in the \(| 0\rangle\) state, the
+cursor at \(p\) will move to \(r\).
+-->
+ハミルトニアンにおけるその複素共役項\(q^*cp+r^*c^* p+\)があるとします（いずれの場合も、レジスタ原子にはアルファベットの前半の文字を使用し、プログラムサイトにはアルファベットの後半の文字を使用します）。図7を参照してください。これは、\(c\)が元々\(| 1\rangle\)状態にある場合、\(p\)にあるカーソルは\(q\)に移動し、\(c\)が\(| 0\rangle\)状態にある場合、\(p\)にあるカーソルは\(r\)に移動するという意味でスイッチです。
+</p>
+<center><img src="images/fig7.png"></center>
+<p>
+<!--
+<center>Fig. 7. Switch.</center>
+-->
+<center>図7. スイッチ</center>
+</p><p>
+<!--
+During this operation the controlling
+atom \(c\) changes its state. (It is possible
+also to write an expression in which the
+control atom does not change its state,
+such as \(q^*c^*cp+r^*cc^*p\) and its
+complex conjugate but, there is no particular advantage or disadvantage to
+this, and we will take the simpler form.)
+The complex conjugate reverses this.
+-->
+この操作の間、制御原子 \(c\) の状態は変化します。（制御原子の状態が変化しない式、例えば \(q^*c^*cp+r^*cc^*p\) とその複素共役を書くことも可能ですが、特に利点も欠点もありませんので、ここではより単純な形をとります。）
+複素共役はこれを逆順にします。
+</p><p>
+<!--
+If, however, the cursor is at \(q\) and \(c\) is
+in the state \(| 1\rangle\) (or cursor at \(r, c\) in \(| 0\rangle\))
+the \(H\) gives 0, and the cursor gets re-
+flected back. We shall build all our cir-
+cuits and choose initial states so that
+this circumstance will not arise in nor-
+mal operation, and the ideal ballistic
+mode will work.
+-->
+しかし、カーソルが \(q\) にあり、\(c\) が \(| 1\rangle\) の状態にある場合（またはカーソルが \(r, c\) にあり、\(| 0\rangle\) の状態にある場合）、\(H\) は 0 となり、カーソルは反射されます。すべての回路を構築し、初期状態を選択することで、通常の動作ではこのような状況が発生しないようにし、理想的な弾道モードが動作するようにします。
+</p><p>
+<!--
+With this switch we can do a number
+of things. For example, we could pro-
+duce a CONTROLLED NOT as in Fig. 8.
+The switch \(a\) controls the operation.
+Assume the cursor starts at \(s\). If \(a= 1\)
+the program cursor is carried along the
+top line, whereas if \(a = 0\) it is carried
+along the bottom line, in either case
+terminating finally in the program site \(t\).
+-->
+このスイッチを使うと、いくつかのことが可能になります。例えば、図8のようにCONTROLLED NOTを生成できます。
+スイッチ \(a\) が演算を制御します。
+カーソルが \(s\) から始まると仮定します。\(a=1\) の場合、プログラムカーソルは上行に移動し、\(a = 0\) の場合、下行に移動します。どちらの場合も、最終的にはプログラムサイト \(t\) で終了します。
+</p>
+<center><img src="images/fig8.png"></center>
+<p>
+<!--
+<center>Fig. 8. CONTROLLED NOT by switches.</center>
+-->
+<center>図8. スイッチによる CONTROLLED NOT</center>
+</p><p>
+<!--
+In these diagrams, horizontal or verti-
+cal lines will represent program atoms.
+The switches are represented by diag-
+onal lines and in boxes we'll put the
+other matrices that operate on registers
+such as the NOT \(b\). To be specific, the
+Hamiltonian for this little section of a
+CONTROLLED NOT, thinking of it as
+starting at \(s\) and ending at \(t\), is given below:
+-->
+これらの図では、水平線または垂直線がプログラムアトムを表します。スイッチは対角線で表され、ボックス内にはレジスタを操作する他の行列（NOT \(b\)など）を配置します。具体的には、制御NOTのこの小さなセクションのハミルトニアンは、\(s\) から始まり、\(t\) で終わると考えた場合、以下のように表されます。
+
+\[
+\begin{align}
+H_c(s,t) =& s_M^*as+t^*a^*t_M \\
+\\
+&+t_M^*(b+b^*)s_M+s_N^*a^*s \\
+\\
+&+t^*at_N+t_N^*s_N+c.c.
+\end{align}
+\]
+
+<!--
+(The \(c.c.\) means to add the complex
+conjugate of all the previous terms.)
+-->
+（\(c.c.\) は、前のすべての項の複素共役を加算することを意味します。）
+</p><p>
+<!--
+Although there seem to be two routes
+here which would possibly produce all
+kinds of complications characteristic of
+quantum mechanics, this is not so. If
+the.entire computer system is started in
+a definite state for \(a\) by the time the
+cursor reaches \(s\), the atom \(a\) is still in
+some definite state (although possibly
+different from its initial state due to
+previous computer operations on it).
+Thus only one of the two routes is taken.
+The expression may be simplified by
+omitting the \(s_N^*t_N\) term and putting
+\(t_N=s_N\).
+-->
+ここでは量子力学に特有のあらゆる種類の複雑さを引き起こす可能性のある2 つのルートがあるように見えますが、実際にはそうではありません。カーソルが \(s\) に到達するまでに、コンピュータシステム全体が \(a\) の明確な状態で開始された場合、原子 \(a\) は依然として何らかの明確な状態にあります（ただし、以前のコンピュータ操作により初期状態と異なる可能性があります）。したがって、2 つのルートのうちの1つだけが採用されます。
+式は \(s_N^*t_N\) 項を省略し、\(t_N=s_N\) とすることで簡略化できます。
+</p><p>
+<!--
+One need not be concerned in that
+case, that one route is longer (two
+cursor sites) than the other (one cursor
+﻿site) for again there is no interference.
+No scattering is produced in any case by
+the insertion into a chain of coupled
+sites, an extra piece of chain of any
+number of sites with the same mutual
+coupling between sites (analogous to
+matching impedances in transmission
+lines).
+-->
+この場合、一方の経路（カーソルサイトが2つ）が他方の経路（カーソルサイトが1つ）よりも長いことを心配する必要はありません。干渉は発生しないからです。
+結合されたサイトのチェーンに、サイト間の相互結合が同じである任意の数のサイトのチェーンを追加しても、散乱は発生しません（伝送線路の整合インピーダンスに類似）。
+
+</p><p>
+<!--
+To study these things further, we think
+of putting pieces together. A piece (see
+Fig. 9) \(M\) might be represented as a
+logical unit of interacting parts in which
+we only represent the first input cursor
+site as \(s_M\) and the final one at the other
+end as \(t_M\). All the rest of the program
+sites that are between \(s_M\) and \(t_M\) are
+considered internal parts of \(M\), and \(M\)
+contains its registers. Only \(s_M\) and \(t_M\) are
+sites that may be coupled externally.
+-->
+これらのことをさらに詳しく検討するために、ピースを組み合わせることを考えます。ピース（図9参照） \(M\) は、相互作用するパーツの論理単位として表現できます。この論理単位では、最初の入力カーソルサイトのみを \(s_M\)、反対側の最後の入力カーソルサイトを \(t_M\) と表します。\(s_M\) と \(t_M\) の間にある残りのプログラムサイトはすべて\(M\)の内部パーツとみなされ、 \(M\) にはレジスタが含まれます。\(s_M\) と \(t_M\) のみが外部的に結合可能なサイトです。
+</p>
+<center><img src="images/fig9.png"></center>
+<p>
+<!--
+<center>Fig. 9. One “piece.”</center>
+-->
+<center>図9. 1つの「ピース」</center>
+</p><p>
+<!--
+The Hamiltonian for this sub-section
+we'll call \(H_M\) and we'll identify \(s_M\) and \(t_M\), as the name of the input and output
+program sites by writing \(H_M(s_M, t_M)\). So
+therefore \(H_M\) is that part of the Hamilto-
+nian representing all the atoms in the
+box and their external start and termi-
+nator sites.
+-->
+このサブセクションのハミルトニアンを\(H_M\)と呼び、\(s_M\)と\(t_M\)を入力プログラムサイトと出力プログラムサイトの名前として\(H_M(s_M, t_M)\)と表記します。したがって、\(H_M\)は、ボックス内のすべての原子とそれらの外部の開始サイトと終了サイトを表すハミルトニアンの部分です。
+</p><p>
+<!--
+An especially important and interest-
+ing case to consider is when the input
+data (in the regular atoms) comes from
+one logical unit, and we would like to
+transfer it to another (see Fig. 10), Suppose that we imagine that the box \(M\) 
+starts with its input register with 0 and
+its output (which may be the same regis-
+ter) also with 0. Then we could use it in
+the following way. We could make a
+program line, let’s say starting with \(s_M^\prime\)
+whose first job is to exchange the data in
+an external register which contains the
+input, with \(M\)’s input register which at
+the present time contains 0’s.
+-->
+特に重要かつ興味深いケースとして、入力データ（通常のアトム内）が1つの論理ユニットから来て、それを別の論理ユニットに転送したい場合が挙げられます（図10参照）。ボックス \(M\) の入力レジスタが 0 で始まり、出力（同じレジスタの場合もあります）も 0 であると仮定します。このとき、これを次のように使用できます。\(s_M^\prime\) で始まるプログラム行を作成し、その最初の仕事として、入力を含む外部レジスタのデータと、現時点では 0 を含む \(M\) の入力レジスタのデータを交換することができます。
+</p>
+<center><img src="images/fig10.png"></center>
+<p>
+<!--
+<center>Fig. 10. Piece with external input and output.</center>
+-->
+<center>図10. 外部入力と出力を備えたピース</center>
+</p><p>
+<!--
+Then the first step in our calculation,
+starting, say, at \(s_M^\prime\), would be to make an
+exchange with the register inside of \(M\).
+That puts zero’s into the original input
+register and puts the input where it
+belongs inside the box \(M\). The cursor is
+now at \(s_M\). (We have already explained
+how exchange can be made of con-
+trolled NOTs.). Then as the program
+goes from \(s_M\) to \(t_M\) we find the output
+now in the box \(M\). Then the output
+register of M is now cleared as we write
+the results into some new external reg-
+ister provided for that purpose, origi-
+nally containing 0’s. This we do from ty
+to \(t_M^\prime\) by exchanging data in the empty
+external register with the \(M\)’s output
+register.
+-->
+計算の最初のステップは、例えば \(s_M^\prime\) から始まり、\(M\) 内のレジスタとの交換を行うことです。
+これにより、元の入力レジスタにゼロが入り、入力はボックス \(M\) 内の適切な場所に配置されます。カーソルは今、\(s_M\) にあります。(制御 NOT の交換方法については既に説明しました。) 次に、プログラムが \(s_M\) から \(t_M\) に進むと、出力はボックス \(M\) 内にあります。次に、M の出力レジスタはクリアされ、その結果は、この目的のために用意された、元々 0 が格納されている新しい外部レジスタに書き込まれます。これは、tyから\(t_M^\prime\)まで、空の外部レジスタのデータを\(M\)の出力レジスタと交換することによって行われます。
+</p><p>
+<!--
+We can now consider connecting
+such units in different ways. For exam-
+ple, the most obvious way is succession.
+If we want to do first \(M\) and then \(N\) we
+can connect the terminal side of one to
+the starting side of the other as in Fig.
+11, to produce a new eflective operator
+\(K\), and the Hamiltonian. then for \(H_K\) is
+-->
+ここで、このような単位を様々な方法で接続することを検討できます。例えば、最も明白な方法は連続接続です。最初に \(M\) を実行し、次に \(N\) を実行したい場合、図 11 のように、一方の終端側をもう一方の始端側に接続して、新しい有効演算子 \(K\) とハミルトニアンを生成します。\(H_K\) の場合、
+
+\[
+H_K(s_K, t_K) = H_M(s_K, t)+ H_N(t, t_K)
+\]
+
+</p>
+<!--
+<center><img src="images/fig11.png"></center>
+<p>
+<center>Fig. 11. Operations in succession.</center>
+-->
+<center>図11. 連続した操作</center>
+</p><p>
+
+<!--
+The general conditional, if \(a= 1\) do \(M\),
+but if \(a = 0\) do \(N\), can be made, as in Fig.
+12. For this
+-->
+一般的な条件文、つまり、\(a= 1\) の場合は \(M\) を実行するが、\(a = 0\) の場合は \(N\) を実行する、は図12のように記述できる。この
+
+\[
+\begin{align}
+H_{cond}(s_c, t_c) =& (s_M^*as_c+t_c^*a^*t_M \\
+\\
+&+ s_N^*a^*s_c+t_c^*at_N+c.c.) \\
+\\
+&+H_M(s_M, t_M) + H_N(s_N, t_N)
+\end{align}
+\]
+</p>
+<center><img src="images/fig12.png"></center>
+<p>
+<!--
+<center>Fig. 12. Conditional if a = 1 then M, else N.</center>
+-->
+<center>図12. 条件文：\(a = 1\) の場合は \(M\)、それ以外の場合は \(N\) </center>
+</p><p>
+<!--
+The CONTROLLED NOT is the special case of this with \(M=NOTb\) for
+which \(H\) is:
+-->
+CONTROLLED NOT は \(M=NOT b\) の特別なケースであり、\(H\) は次のようになります。
+
+\[
+H_{NOTb}(s,t) = s^*(b+b^*)t + c.c
+\]
+
+<!--
+and \(N\) is no operation \(s^*t\).
+-->
+そして \(N\) は演算なし \(s^*t\) です。
+</p><p>
+<!--
+As another example, we can deal with
+a garbage clearer (previously described
+in Fig. 6) not by making two machines,
+a machine and its inverse, but by using
+the same machine and then sending the
+data back to the machine in the oppo-
+site direction, using our switch (see Fig.
+13).
+-->
+別の例として、図6で説明したガベージクリア装置を、2つのマシン（マシンとその逆）を作るのではなく、同じマシンを使用し、スイッチを使用してデータを反対方向にマシンに送り返すことで対処できます（図13を参照）。
+</p>
+<center><img src="images/fig13.png"></center>
+<p>
+<!--
+<center>Fig. 13. Garbage clearer.</center>
+-->
+<center>図13. ゴミ除去装置</center>
+</p><p>
+<!--
+Suppose in this system we have a
+special flag \(f\) which is originally always
+set to 0. We also suppose we have the
+input data in an external register, an
+empty external register available to
+hold the output, and the machine registers all empty (containing 0's). We come on the starting line \(s\).
+-->
+このシステムには、元々常に 0 に設定されている特別なフラグ \(f\) があるとします。また、入力データは外部レジスタにあり、出力を保持するために空の外部レジスタがあり、マシンレジスタはすべて空（0 を含む）であるとします。スタートライン \(s\) に到達します。
+</p><p>
+<!--
+The first thing we do is to copy (using
+CONTROLLED NOT’s) our external inpul into \(M\). Then \(M\) operates, and the
+cursor goes on the top line in our drawing. It copies the output out of \(M\) into
+the external output register. \(M\) now contains garbage. Next it changes \(f\) to NOT
+\(f\), comes down on the other line of the.
+switch, backs out through \(M\) clearing
+the garbage and uncopies the input
+again.
+-->
+まず最初に、外部入力を（CONTROLLED NOT を使って） \(M\) にコピーします。次に\(M\) が動作し、カーソルが図の一番上の行に移動します。\(M\) の出力を外部出力レジスタにコピーします。これで \(M\) にはゴミが含まれます。次に\(f\) をNOT \(f\) に変更し、スイッチの反対側の行に移動し、\(M\) を通って戻り、ゴミをクリアして入力を元に戻します。
+</p><p>
+<!--
+When you copy data and do it again,
+you reduce one of the registers to 0, the
+register into which you copied the first
+time. After the copying, it goes out
+(since \(f\) is now changed) on the other
+line where we restore \(f\) to 0 and come
+out at \(t\). So between \(s\) and \(t\) we have a
+new piece of equipment, which has the
+following properties.
+-->
+データをコピーして再度コピーすると、レジスタの1つ（最初にコピーしたレジスタ）が0になります。コピー後、（\(f\) が変更されているため）別の行でデータが出力されます。そこで\(f\)が0に戻され、\(t\)で出力されます。つまり、\(s\)と\(t\)の間に、次の特性を持つ新しい装置が誕生します。
+</p><p>
+<!--
+When it starts, we have, in a register
+called IN, the input data. In an external
+register which we call OUT, we have 0’s.
+There is an internal flag set at 0, and the
+box, \(M\), is empty of all data. At the
+termination of this, at t, the input register still contains the input data, the out﻿put register contains the output of the
+effort of the operator \(M\). \(M\) however, is
+still empty, and the flag f is reset to 0.
+-->
+開始時には、IN と呼ばれるレジスタに入力データが格納されています。OUT と呼ばれる外部レジスタには 0 が格納されています。内部フラグは 0 に設定され、\(M\) ボックスはすべてのデータが空になっています。この処理の終了時（時刻 \(t\)）には、入力レジスタにはまだ入力データが、出力レジスタには演算子 \(M\) の出力が格納されています。ただし、\(M\) はまだ空であり、フラグ \(f\) は 0 にリセットされます。
+</p><p>
+<!--
+Also important in computer pro-
+grams is the ability to use the same
+subroutine several times. Of course,
+from a logical point of view, that can be
+done by writing that bit of program over
+and over again, each time it is to be
+used, but in a practical computer, it is
+much better if we could build that sec-
+tion of the computer which does a par-
+ticular operation, just once, and use
+that section again and again.
+-->
+コンピュータプログラムにおいて、同じサブルーチンを何度も使用できることも重要です。もちろん、論理的な観点から言えば、使用するたびにそのプログラムを何度も書き直すことで実現できますが、実用的なコンピュータでは、特定の操作を一度だけ実行するコンピュータ部分を一度だけ構築し、その部分を何度も使用できる方がはるかに優れています。
+</p><p>
+<!--
+To show the possibilities, here, first
+just suppose we have an operation we
+simply wish to repeat twice in succes-
+sion (see Fig. 14). We start at s with the
+flag \(a\) in the condition 0, and thus we
+come along the line, and the first thing
+that happens is we change the value of
+\(a\). Next we do the operation \(M\). Now,
+because we changed \(a\), instead of com-
+ing out at the top line where we went in,
+we come out at the bottom line, which
+recirculates the program back into
+changing \(a\) again, it restores it.
+-->
+ここで可能性を示すために、まず、2 回連続して繰り返したい操作があるとします（図14を参照）。フラグ \(a\) が条件 0 の状態でsから開始し、行に沿って進みます。最初に起こることは、\(a\)の値を変更することです。次に、操作\(M\)を実行します。\(a\) を変更したため、最初に入った一番上の行ではなく、一番下の行に戻ります。これにより、プログラムは \(a\) を再び変更する状態に戻り、元に戻します。
+</p>
+<center><img src="images/fig14.png"></center>
+<p>
+<!--
+<center>Fig. 14. Do M twice.</center>
+-->
+<center>図14. Mを2回行います。</center>
+</p><p>
+<!--
+This time as we go through \(M\), we 
+come out and we have the a to follow on
+the upper line, and thus come out at the
+terminal, \(t\). The Hamiltonian for this is
+-->
+今回は\(M\)を通過すると、
+aが上の線に沿って進み、
+終端\(t\)に到達します。これに対するハミルトニアンは
+
+\[
+\begin{align}
+Hy_{MM}(s,t) =& (s_N^* a^* s + s_M^*(a^* + a)s_N \\
+\\
+&+x^*a^* t_M +s_N^* ax \\
+\\
+&+ t^*at_M + c.c.) \\
+\\
+&+ H_M(S_M, t_M)
+\end{align}
+\]
+</p><p>
+<!--
+Using this switching circuit a number
+of times, of course, we can repeat an
+operation several times. For example,
+using the same idea three times in suc-
+cession, a nested succession, we can do
+an operation eight times, by the appa-
+ratus indicated in Fig. 15. In order to do
+so, we have three flags, \(a, b,\) and \(c\). It is
+necessary to have flags when operations
+are done again for the reason that we
+must keep track of how many times its
+done and where we are in the program
+or we'll never be able to reverse things.
+-->
+もちろん、このスイッチング回路を何度も使用すれば、ある操作を何度も繰り返すことができます。例えば、同じ処理を 3 回連続して（ネストされた連続）、図15に示す装置を使って 8 回操作を行うことができます。そのためには、\(a, b, c\) という 3 つのフラグが必要です。操作を再度実行する際にフラグが必要なのは、操作が何回実行されたか、プログラムのどこにいるかを記録しておく必要があるためです。そうしないと、元に戻すことができなくなります。
+</p>
+<center><img src="images/fig15.png"></center>
+<p>
+<!--
+<center>Fig. 15. Do M eight times.</center>
+-->
+<center>図15. M を 8 回実施</center>
+</p><p>
+<!--
+A sub-routine in a normal computer
+can be used and emptied and used
+again without any record being kept of
+what happened. But here we have to
+keep a record and we do that with flags,
+of exactly where we are in the cycle of
+the use of the sub-routine. If the sub-
+routine is called from a certain place
+and has to go back to some other place,
+and another time is called, its origin and
+final destination are different, we have
+to know and keep track of where it
+came from and where it’s supposed to
+go individually in each case, so more
+data has to be kept. Using a sub-routine
+over and over ina reversible machine is
+only slightly harder than in a general 
+machine. All these considerations appear in papers by Fredkin, Toffoli and Bennett. 
+-->
+通常のコンピュータのサブルーチンは、何が起こったかの記録を残さずに、使用したり空にしたり、また使用したりできます。しかしここでは、サブルーチンの使用サイクルのどこにいるかを正確に記録する必要があり、フラグを用いてそれを行います。ある場所からサブルーチンが呼び出され、別の場所に戻らなければならない場合、別の時に呼び出されると、その起源と最終目的地が異なるため、それぞれのケースで、サブルーチンがどこから来て、どこに行くべきかを個別に把握し、記録しておく必要があります。そのため、より多くのデータを保持する必要があります。可逆マシンでサブルーチンを何度も使用することは、一般的なマシンよりもわずかに難しいだけです。これらの考慮事項はすべて、Fredkin、Toffoli、Bennettの論文に記載されています。
+</p><p>
+<!--
+It is clear by the use of this switch,
+and successive uses of such switches in
+trees, that we would be able to steer
+data to any point in a memory. A memory would simply be a place where there are registers into which you could copy data and then return the program.
+The cursor will have to follow the data
+along. I suppose there must be another
+set of tree switches set the opposite
+direction to carry the cursor out again,
+after copying the data so that the system
+remains reversible.
+-->
+このスイッチと、ツリー内での同様のスイッチの連続的な使用によって、メモリ内の任意のポイントにデータを誘導できることは明らかです。メモリとは、単にレジスタがあり、そこにデータをコピーしてプログラムを返すことができる場所です。カーソルはデータに追従する必要があります。データをコピーした後、カーソルを再び移動させるために、反対方向に設定された別のツリースイッチセットが必要であり、システムが可逆性を維持する必要があると思います。
+</p><p>
+<!--
+In Fig. 16 we show an incremental
+binary counter (of three bits \(a,b,c\) with \(c\)
+the most significant bit) which keeps
+track of how many net times the cursor
+has passed from \(s\) to \(t\). These few exam-
+ples should be enough to show that
+indeed we can construct all computer
+functions with our SWITCH and NOT.
+We need not follow this in more detail.
+-->
+図16 は、カーソルが \(s\) から　\(t\) まで正味何回通過したかを記録する、インクリメンタルバイナリカウンタ（3 ビット \(a,b,c\) で、\(c\) が最上位ビット）を示しています。これらのいくつかの例を見れば、SWITCH と NOT を使ってあらゆるコンピュータ関数を構成できることが十分にわかるでしょう。これ以上詳しく説明する必要はありません。
+</p>
+<center><img src="images/fig16.png"></center>
+<p>
+<!--
+<center>﻿Fig. 16. Increment counter (3-bit).</center>
+-->
+<center>図16. インクリメントカウンタ（3ビット）</center>
+</p>
+<!--
+<h2>Conclusions</h2>
+-->
+<h2>結論</h2>
+
+<p>
+<!--
+It’s clear from these examples that
+this quantum machine has: not really
+used many ‘of the specific qualities of
+the differential equations of quantum
+mechanics.
+-->
+これらの例から明らかなのは、この量子マシンは量子力学の微分方程式の「特定の性質」の多くを実際には使用していないということです。
+</p><p>
+<!--
+What we have done is only to try to
+imitate as closely as possible the digital
+machine of conventional sequential architecture. It is analogous to the use of transistors in conventional machines,
+where we don’t properly use all the
+analog continuum of the behavior of
+transistors, but just try to run them as
+saturated on or off digital devices so the
+logical analysis of the system behavior
+is easier. Furthermore, the system is
+absolutely sequential — for example,
+even in the comparison (exclusive or)
+of two \(k\) bit numbers, we must do each
+bit successively. What can be done, in
+these reversible quantum systems, to
+gain the speed available by concurrent
+operation has not been studied here.
+-->
+我々が行ったのは、従来の順次アーキテクチャのデジタルマシンを可能な限り模倣することだけです。これは、従来のマシンにおけるトランジスタの使用に似ています。従来のマシンでは、トランジスタのアナログ動作の連続性をすべて適切に使用するのではなく、飽和したオンまたはオフのデジタルデバイスとして動作させ、システムの動作の論理的分析を容易にします。さらに、このシステムは完全に順次的です。例えば、2 つの \(k\) ビット数の比較（排他的論理和）においても、各ビットを順次実行する必要があります。これらの可逆量子システムにおいて、同時実行によって得られる速度を得るために何ができるかについては、ここでは研究されていません。
+</p><p>
+<!--
+Although, for theoretical and aca-
+demic reasons, I have studied complete
+and reversible systems, if such tiny ma-
+chines could become practical there is
+no reason why irreversible and entropy
+creating interactions cannot be made
+frequently during the course of opera-
+tions of the machine.
+-->
+私は理論的かつ学術的な理由から、完全かつ可逆的なシステムを研究してきましたが、そのような小さな機械が実用化されるのであれば、機械の動作中に不可逆的でエントロピーを生み出す相互作用が頻繁に発生しても不思議ではありません。
+</p><p>
+<!--
+For example, it might prove wise, ina
+long calculation, to ensure that the
+cursor has surely reached some point
+and cannot be allowed to reverse again
+from there. Or, it may be found practi-
+cal to conneet irreversible memory
+storage (for items less frequently used)
+to reversible logic or short term revers-
+ible storage registers, etc. Again, there
+is nO reason we need to stick to chains
+of coupled sites for more distant com-
+munication where wires or light may be
+easier and faster.
+-->
+例えば、長時間の計算では、カーソルが確実にどこかの地点に到達し、そこから再び逆戻りできないようにすることが賢明であることが判明するかもしれません。あるいは、非可逆メモリストレージ（あまり使用されない項目用）を可逆ロジックや短期可逆ストレージレジスタなどに接続することが実用的であることが判明するかもしれません。繰り返しますが、有線や光の方が容易かつ高速な場合、より遠距離の通信のために、結合されたサイトのチェーンに固執する必要はありません。
+</p><p>
+<!--
+At any rate, it seems that the laws of
+physics present no barrier to reducing
+the size of computers until bits are the
+size of atoms, and quantum behavior
+holds dominant sway.
+-->
+いずれにせよ、ビットが原子サイズになり、量子挙動が支配的になるまでは、物理法則はコンピューターのサイズを縮小する上で何の障害にもならないようです。
+</p>
+<!--
+<h2>References</h2>
+-->
+<h2>参考文献</h2>
+<p>
+<div class="styleRef">
+<ul><li>
+1. C.H. Bennett, “Logical Reversibility of
+Computation,”(計算の論理的可逆性) IBM Journal of Research
+and Development, 6 (1979), pp. 525-532.
+
+</li><br><li>2. E. Fredkin and T. Toffoli, “Conservative
+
+Logic,”(保守的論理) Int. J. Theor. Phys., 21 (1982), pp.
+
+219-253
+
+</li><br><li>3. C.H. Bennett, “Thermodynamics of Com-
+
+putation—A Review,”(計算の熱力学―レビュー) Int. J. Theor. Phys.,
+
+21 (1982), pp. 905-940
+
+</li><br><li>4. T. Toffoli, ‘“‘Bicontinuous Extensions of
+Invertible Combinatorial Functions,’(可逆な組合せ関数の双連続拡張)
+Mathematical Systems Theory, 14 (1981),
+pp. 13-23
+
+</li><br><li>5. L. Priese, ‘On a Simple Combinatorial
+Structure Sufficient for Sublying Non-
+Trivial Self Reproduction,”(非自明な自己増殖を包含するのに十分な単純な組合せ構造について) Journal of Cy-
+bernetics, 6 (1976), pp. 101-137
+</li></ul></div>
+</p><p>
+<!--
+I would like to thank T. Toffoli for his help
+with the references.
+-->
+参考文献の提供にご協力いただいたT. Toffoli氏に感謝申し上げます。
+</p>
+    </body>
+</html>
