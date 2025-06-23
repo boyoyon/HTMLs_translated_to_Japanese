@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Mental Rotation of Three-Dimensional Objects</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Mental Rotation of Three-Dimensional Objects</center></h1>
+<p style="text-align: right;">
+ROGER N. SHEPARD <br>
+JACQUELINE METZLER <br>
+<br>
+Department of Psychology, <br>
+Stanford University, <br>
+Stanford, California 94305 <br>
+</p>
+<p>
+Abstract. The time required to recognize that two perspective drawings portray 
+objects of the same three-dimensional shape is found to be (i) a linearly increasing 
+function of the angular difference in the portrayed orientations of the two objects 
+and (ii) no shorter for differences corresponding simply to a rigid rotation of one 
+of the two-dimensional drawings in its own picture plane than for differences 
+corresponding to, a rotation of the three-dimensional object in depth. 
+</p><p>
+
+Human subjects are often able to 
+determine that two two-dimensional 
+pictures portray objects of the same 
+three-dimensional shape even though 
+the objects .are depicted in very different 
+orientations. The experiment reported 
+here was designed to measure the time 
+that subjects require to determine such 
+identity of shape as a function of the 
+angular difference in the portrayed ori- 
+entations of the two three-dimensional 
+objects.
+</p><p>
+ 
+This angular difference was produced 
+either by a rigid rotation of one of two 
+identical pictures in its own picture 
+plane or by a much more complex, 
+nonrigid transformation, of one of the 
+pictures, that corresponds to a (rigid) 
+rotation of the three-dimensional ob- 
+ject in depth. 
+</p><p>
+
+This reaction time is found (i) to 
+increase linearly with the angular dif- 
+ference in portrayed orientation and 
+(ii) to be no longer for a rotation in 
+depth than for a rotation merely in the 
+picture plane. These findings appear to 
+place rather severe constraints on pos- 
+sible explanations of how subjects go 
+about determining identity of shape of 
+differently oriented objects. They are, 
+however, consistent with an explanation 
+suggested by the subjects themselves. 
+Although introspective reports must be 
+interpreted with caution, all subjects 
+claimed (i) that to make the required 
+comparison they first had to imagine 
+one object as rotated into the same 
+orientation as the other and that they 
+could carry out this "mental rotation" 
+at no greater than a certain limiting 
+rate; and (ii) that, since they perceived 
+the two-dimensional pictures as objects 
+in three-dimensional space, they could 
+imagine the rotation around whichever 
+axis was required with equal ease. 
+</p><p>
+
+In the experiment each of eight adult 
+subjects was presented with 1600 pairs 
+of perspective line drawings. For each 
+pair the subject was asked to pull a 
+right-hand lever as soon as he deter- 
+mined that the two drawings portrayed 
+objects that were congruent with respect 
+to three-dimensional shape and to pull 
+a left-hand lever as soon as he deter- 
+mined that the two drawings depicted 
+objects of different three-dimensional 
+shapes. According to a random se- 
+quence, in half of the pairs (the "same" 
+pairs) the two objects could be rotated 
+into congruence with each other (as in 
+Fig. 1, A and B), and in the other half 
+(the "different" pairs) the two objects 
+differed by a reflection as well as a 
+rotation and could not be rotated into 
+congruence (as in Fig. 1C). 
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+
+Fig. 1. Examples of pairs of perspective 
+line drawings presented to the subjects. 
+(A) A "same" pair, which differs by an 
+\(80^\circ\) rotation in the picture plane; (B) a 
+"same" pair, which differs by an \(80^\circ\) ro- 
+tation in depth; and (C ) a "different" 
+pair, which cannot be brought into con- 
+gruence by any rotation. 
+</p><p>
+
+The choice of objects that were mir- 
+ror images or "isomers" of each other 
+for the "different" pairs was intended 
+to prevent subjects from discovering 
+some distinctive feature possessed by 
+only one of the two objects and thereby 
+reaching a decision of noncongruence 
+without actually having to carry out 
+any mental rotation. As a further pre- 
+caution, the ten different three-dimen- 
+sional objects depicted in the various 
+perspective drawings were chosen to 
+be relatively unfamiliar and meaning- 
+less in overall three-dimensional shape. 
+</p><p>
+
+Each object consisted of ten solid 
+cubes attached face-to-face to form a 
+rigid armlike structure with exactly 
+three right-angled "elbows" (see Fig. 1). 
+The set of all ten shapes included two 
+subsets of five: within either subset, no 
+shape could be transformed into itself 
+or any other by any reflection or rota- 
+tion (short of \(360^\circ\)). However, each 
+shape in either subset was the mirror 
+image of one shape in the other sub- 
+set, as required for the construction of 
+the "different" pairs. 
+</p><p>
+
+For each of the ten objects, 18 dif- 
+ferent perspective projections-corre- 
+sponding to one complete turn around 
+the vertical axis by \(20^\circ\) steps-were 
+generated by digital computer and asso- 
+ciated graphical output (1). Seven of the 
+18 perspective views of each object 
+were then selected so as (i) to avoid any 
+views in which some part of the object 
+was wholly occluded by another part 
+and yet (ii) to permit the construction 
+of two pairs that differed in orientation 
+by each possible angle, in \(20^\circ\) steps, 
+from \(0^\circ\) to \(180^\circ\). These 70 line draw- 
+ings were then reproduced by photo- 
+offset process and were attached to 
+cards in pairs for presentation to the 
+subjects. 
+</p><p>
+
+Half of the "same" pairs (the "depth" 
+pairs) represented two objects that dif- 
+fered by some multiple of a 200 rota- 
+tion about a vertical axis (Fig. iB). For 
+each of these pairs, copies of two appro- 
+priately different perspective views were 
+simply attached to the cards in the 
+orientation in which they were origi- 
+nally generated. The other half of the 
+"same" pairs (the "picture-plane" pairs) 
+represented two objects that differed by 
+some multiple of a \(20^\circ\) rotation in the 
+plane of the drawings themselves (Fig. 
+1A). For each of these, one of the 
+seven perspective views was selected 
+for each object and two copies of this 
+picture were attached to the card in 
+appropriately different orientations. Al- 
+together, the 1600 pairs presented to 
+each subject included 800 "same" pairs, 
+which consisted of 400 unique pairs (20 
+"depth" and 20 "picture-plane" pairs 
+at each of the ten angular differences 
+from \(0^\circ\) to \(180^\circ\)), each of which was 
+presented twice. The remaining 800 
+pairs, randomly intermixed with these, 
+consisted of 400 unique "different" 
+pairs, each of which (again) was pre- 
+sented twice. Each of these "different" 
+pairs corresponded to one "same" pair 
+(of either the "depth" or "picture-plane" 
+variety) in which, however, one of the 
+three-dimensional objects had been re- 
+flected about some plane in three-di- 
+mensional space. Thus the two objects 
+in each "different" pair differed, in gen- 
+eral, by both .a reflection and a rota- 
+tion. 
+</p><p>
+
+The 1600 pairs were grouped into 
+blocks of not more than 200 and pre- 
+sented over eight to ten 1-hour ses- 
+sions (depending upon the subject). 
+Also, although it is only of incidental 
+interest here, each such block of pres- 
+entations was either "pure," in that all 
+pairs involved rotations of the same 
+type ("depth" or "picture-plane"), or 
+"mixed," in that the two types of rotation were randomly intermixed within 
+the same block. 
+</p><p>
+Each trial began with a warning tone, 
+which was followed half a second later 
+by the presentation of a stimulus pair 
+and the simultaneous onset of a timer. 
+The lever-pulling response stopped the 
+timer, recorded the subject's reaction 
+time and terminated the visual display. 
+The line drawings, which averaged be- 
+tween 4 and 5 cm In maximum linear 
+extent, appeared at a viewing distance 
+of about 60 cm. They were positioned, 
+with a center-to-center spacing that 
+subtended a visual angle of \(9^\circ\), in two 
+circular apertures in a vertical black 
+surface (see Fig. 1, A to C). 
+</p><p>
+
+The subjects were instructed to re- 
+spond as quickly as possible while keep- 
+ing errors to a minimum. On the aver- 
+age only 3.2 percent of the responses 
+were incorrect (ranging from 0.6 to 
+5.7 percent for individual subjects). The 
+reaction-time data presented below in- 
+clude only the 96.8 percent correct re- 
+sponses. However, the data for the in- 
+correct responses exhibit a similar pat- 
+tern. 
+</p><p>
+
+In Fig. 2, the overall means of the 
+reaction times as a function of angular 
+difference in orientation for all correct 
+(right-hand) responses to "same" pairs 
+are plotted separately for the pairs dif- 
+fering by a rotation in the picture plane 
+(Fig. 2A) and for the pairs differing by 
+a rotation in depth (Fig. 2B). In both 
+cases, reaction time is a strikingly linear 
+function of the angular difference be- 
+tween the two three-dimensional objects 
+portrayed. The mean reaction times for 
+individual subjects increased from a 
+value of about 1 second at \(0^\circ\) of rota- 
+tion for all subjects to values ranging 
+from 4 to 6 seconds at \(180^\circ\) of rotation, 
+depending upon the particular individ- 
+ual. Moreover, despite such variations 
+in slope, the linearity of the function is 
+clearly evident when the data are 
+plotted separately for individual three- 
+dimensional objects or for individual 
+subjects. Polynomial regression lines 
+were computed separately for each sub- 
+ject under each type of rotation. In 
+all 16 cases the functions were found to 
+have a highly significant linear com- 
+ponent (P <.001) when tested against 
+deviations from linearity. No significant 
+quadratic or higher-order effects were 
+found (P > .05, in all cases). 
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+
+
+Fig. 2..Mean reaction times to two perspec- 
+tive line drawings portraying objects of the 
+same three-dimensional shape. Times are 
+plotted as a function of angular difference 
+in portrayed orientation: (A ) for pairs 
+differing by a rotation in the picture 
+plane only; and (B) for pairs differing 
+by a. rotation in depth. (The centers of 
+the circles indicate the means and. when 
+
+they extend far enough to show outside
+these circles, the vertical bars around each circle
+indicate a conservative estimate of the standard error of that mean
+based on the distribution of the eight component 
+means contributed by the individual subjects.)
+
+
+</p><p>
+The angle through which different 
+three-dimensional shapes must be ro- 
+tated to achieve congruence is not, of 
+course, defined. Therefore, a function 
+like those plotted in Fig. 2 cannot be 
+constructed in any straightforward manner for the "different" pairs. The overall 
+mean reaction time for these pairs was 
+found, however, to be 3.8 seconds- 
+nearly a second longer than the cor- 
+responding overall means for the "same" 
+pairs. (In the postexperimental inter- 
+view, the subjects typically reported 
+that they attempted to rotate one end of 
+one object into congruence with the 
+corresponding end of the other object; 
+they discovered that the two objects 
+were different when, after this "rota- 
+tion," the two free ends still remained 
+noncongruent.) 
+</p><p>
+
+Not only are the two functions shown 
+in Fig. 2 both linear but they are very 
+similar to each other with respect to 
+intercept and slope. Indeed, for the 
+larger angular differences the reaction 
+times were, if anything, somewhat 
+shorter for rotation in depth than for 
+rotation in the picture plane. However, 
+since this small difference is either ab- 
+sent or reversed in four of the eight 
+subjects, it is of doubtful significance. 
+The determination of identity of shape 
+may therefore be based, in both cases, 
+upon a process of the same general 
+kind. If we can describe this process as 
+some sort of "mental rotation in three- 
+dimensional space," then the slope of 
+the obtained functions indicates that 
+the average rate at which these particu- 
+lar objects can be thus "rotated" is 
+roughly \(60^\circ\) per second. 
+</p><p>
+
+Of course the plotted reaction times 
+necessarily include any times taken by 
+the subjects to decide how to process 
+the pictures in each presented pair as 
+well as the time taken actually to carry 
+out the process, once it was chosen. 
+However, even for these highly prac- 
+ticed subjects, the reaction times were 
+still linear and were no more than 20 
+percent lower in the "pure" blocks of 
+presentations (in which the subjects 
+knew both the axis and the direction 
+of the required rotation in advance of 
+each presentation) than in the "mixed" 
+blocks (in which the axis of rotation 
+was unpredictable). Tentatively, this 
+suggests that 80 percent of a typical 
+one of these reaction times may rep- 
+resent some such process as "mental 
+rotation" itself, rather than a prelimi- 
+nary process of preparation or search. 
+Nevertheless, in further research now 
+underway, we are seeking clarification 
+of this point and others. 
+</p>
+
+<h2><center>References and Notes</center></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+1. Mrs. Jih-Jie Chang of the Bell Telephone Lab- 
+oratories generated the 180 perspective projec- 
+tions for us by means of the Bell Laboratories' 
+Stromberg-Carlson 4020 microfilm recorder and 
+the computer program for constructing such 
+projections developed there by A. M. Noll. 
+See, for example, A. M. Noll, Computers 
+Automation 14, 20 (1965). 
+</li><br><li>2. We thank Mrs. Chang [see (1)1; and we also 
+thank Dr. J. D. Elashoff for her suggestions 
+concerning the statistical analyses. Assistance 
+in the computer graphics was provided by the 
+Bell Telephone Laboratories. Supported by 
+NSF grant GS-2283 to R.N.S. 
+</li></ul></div>
+</p><p>
+
+9 March 1970; revised 8 September 1970 
+</p>
+
+    </body>
+</html>

@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Mental Rotation of Three-Dimensional Objects</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Mental Rotation of Three-Dimensional Objects</center></h1>
+<center>三次元物体の心的回転</center>
+<br>
+<p style="text-align: right;">
+ROGER N. SHEPARD <br>
+JACQUELINE METZLER <br>
+<br>
+Department of Psychology, <br>
+Stanford University, <br>
+Stanford, California 94305 <br>
+</p>
+<p>
+<!--
+Abstract. The time required to recognize that two perspective drawings portray 
+objects of the same three-dimensional shape is found to be (i) a linearly increasing 
+function of the angular difference in the portrayed orientations of the two objects 
+and (ii) no shorter for differences corresponding simply to a rigid rotation of one 
+of the two-dimensional drawings in its own picture plane than for differences 
+corresponding to, a rotation of the three-dimensional object in depth. 
+</p><p>
+<!--
+Human subjects are often able to 
+determine that two two-dimensional 
+pictures portray objects of the same 
+three-dimensional shape even though 
+the objects .are depicted in very different 
+orientations. The experiment reported 
+here was designed to measure the time 
+that subjects require to determine such 
+identity of shape as a function of the 
+angular difference in the portrayed ori- 
+entations of the two three-dimensional 
+objects.
+-->
+要旨　2枚の透視図が同じ3次元形状の物体を描いていることを認識するために必要な時間は、(i)2つの物体の描かれた方向の角度差に比例して増加し、(ii)2次元図の1つをその平面内で単純に固定回転させる場合の差と、3次元物体の奥行き方向の回転に対応する差とでは、認識に必要な時間が短くならないことがわかった。
+</p><p>
+<!--
+This angular difference was produced 
+either by a rigid rotation of one of two 
+identical pictures in its own picture 
+plane or by a much more complex, 
+nonrigid transformation, of one of the 
+pictures, that corresponds to a (rigid) 
+rotation of the three-dimensional ob- 
+ject in depth. 
+-->
+この角度の差は、２つの同一の画像のうちの１つをその画像平面内で剛体回転させることによって、あるいは、３次元物体の奥行き方向の（剛体）回転に対応する、２つの画像のうちの１つに対するはるかに複雑な非剛体変換によって生じたものである。
+</p><p>
+<!--
+This reaction time is found (i) to 
+increase linearly with the angular dif- 
+ference in portrayed orientation and 
+(ii) to be no longer for a rotation in 
+depth than for a rotation merely in the 
+picture plane. These findings appear to 
+place rather severe constraints on pos- 
+sible explanations of how subjects go 
+about determining identity of shape of 
+differently oriented objects. They are, 
+however, consistent with an explanation 
+suggested by the subjects themselves. 
+Although introspective reports must be 
+interpreted with caution, all subjects 
+claimed (i) that to make the required 
+comparison they first had to imagine 
+one object as rotated into the same 
+orientation as the other and that they 
+could carry out this "mental rotation" 
+at no greater than a certain limiting 
+rate; and (ii) that, since they perceived 
+the two-dimensional pictures as objects 
+in three-dimensional space, they could 
+imagine the rotation around whichever 
+axis was required with equal ease. 
+-->
+この反応時間は、(i) 描かれた方向の角度差に比例して増加し、(ii) 奥行き方向の回転よりも、単に画面内での回転のほうが長いことが分かりました。これらの発見は、被験者が異なる方向にある物体の形状の同一性を判断する方法についての可能な説明に、かなり厳しい制約を課すように思われます。しかしながら、これらの結果は、被験者自身が示唆した説明と一致しています。内省的な報告は慎重に解釈する必要がありますが、すべての被験者は、(i) 必要な比較を行うには、まず一方の物体がもう一方の物体と同じ方向に回転している様子を想像する必要があり、この「心的回転」は一定の限界速度以下でしか実行できないと主張しました。 （ii）二次元画像を三次元空間内の物体として認識するので、どの軸の周りの回転も同じように容易に想像できる。
+</p><p>
+<!--
+In the experiment each of eight adult 
+subjects was presented with 1600 pairs 
+of perspective line drawings. For each 
+pair the subject was asked to pull a 
+right-hand lever as soon as he deter- 
+mined that the two drawings portrayed 
+objects that were congruent with respect 
+to three-dimensional shape and to pull 
+a left-hand lever as soon as he deter- 
+mined that the two drawings depicted 
+objects of different three-dimensional 
+shapes. According to a random se- 
+quence, in half of the pairs (the "same" 
+pairs) the two objects could be rotated 
+into congruence with each other (as in 
+Fig. 1, A and B), and in the other half 
+(the "different" pairs) the two objects 
+differed by a reflection as well as a 
+rotation and could not be rotated into 
+congruence (as in Fig. 1C). 
+-->
+実験では、8人の成人被験者それぞれに1600組の透視線画が提示されました。被験者は、それぞれの組について、2つの絵が三次元形状に関して合同な物体を描いていると判断した時点で右側のレバーを引き、2つの絵が異なる三次元形状の物体を描いていると判断した時点で左側のレバーを引くように指示されました。ランダムな順序に従って、半数の組（「同じ」組）では、2つの物体を互いに合同になるように回転させることができました（図1のAとBのように）。残りの半数の組（「異なる」組）では、2つの物体は回転だけでなく鏡映によっても異なり、合同になるように回転させることができませんでした（図1Cのように）。
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<!--
+Fig. 1. Examples of pairs of perspective 
+line drawings presented to the subjects. 
+(A) A "same" pair, which differs by an 
+\(80^\circ\) rotation in the picture plane; (B) a 
+"same" pair, which differs by an \(80^\circ\) ro- 
+tation in depth; and (C ) a "different" 
+pair, which cannot be brought into con- 
+gruence by any rotation. 
+-->
+図1. 被験者に提示された透視線画のペアの例。(A) 絵画平面内で \(80^\circ\) 回転した「同じ」ペア。(B) 奥行き方向に \(80^\circ\) 回転した「同じ」ペア。(C) どのような回転でも合致しない「異なる」ペア。
+</p><p>
+<!--
+The choice of objects that were mir- 
+ror images or "isomers" of each other 
+for the "different" pairs was intended 
+to prevent subjects from discovering 
+some distinctive feature possessed by 
+only one of the two objects and thereby 
+reaching a decision of noncongruence 
+without actually having to carry out 
+any mental rotation. As a further pre- 
+caution, the ten different three-dimen- 
+sional objects depicted in the various 
+perspective drawings were chosen to 
+be relatively unfamiliar and meaning- 
+less in overall three-dimensional shape. 
+-->
+「異なる」ペアとして、互いに鏡像または「異性体」である物体を選んだのは、被験者が2つの物体のうちの一方だけが持つ独特の特徴を発見し、実際に心の中で回転することなく不合同という結論に達することを防ぐためでした。さらなる予防策として、様々な透視図に描かれた10個の異なる三次元物体は、比較的馴染みがなく、全体的な三次元形状において意味をなさないものが選ばれました。
+</p><p>
+<!--
+Each object consisted of ten solid 
+cubes attached face-to-face to form a 
+rigid armlike structure with exactly 
+three right-angled "elbows" (see Fig. 1). 
+The set of all ten shapes included two 
+subsets of five: within either subset, no 
+shape could be transformed into itself 
+or any other by any reflection or rota- 
+tion (short of \(360^\circ\)). However, each 
+shape in either subset was the mirror 
+image of one shape in the other sub- 
+set, as required for the construction of 
+the "different" pairs. 
+-->
+それぞれの物体は、10個の立方体を向かい合わせに接合したもので、3つの直角の「肘」を持つ剛体の腕のような構造を形成していました（図1参照）。
+この10個の図形の集合には、5つの図形からなる2つのサブセットが含まれていました。どちらのサブセットでも、どの図形も、（360度回転以外では）鏡映または回転によってそれ自体や他の図形に変換することはできませんでした。しかし、どちらのサブセット内の各図形も、他方のサブセット内の一方の図形の鏡像であり、「異なる」ペアを構成するために必要なものでした。
+</p><p>
+<!--
+For each of the ten objects, 18 dif- 
+ferent perspective projections-corre- 
+sponding to one complete turn around 
+the vertical axis by \(20^\circ\) steps-were 
+generated by digital computer and asso- 
+ciated graphical output (1). Seven of the 
+18 perspective views of each object 
+were then selected so as (i) to avoid any 
+views in which some part of the object 
+was wholly occluded by another part 
+and yet (ii) to permit the construction 
+of two pairs that differed in orientation 
+by each possible angle, in \(20^\circ\) steps, 
+from \(0^\circ\) to \(180^\circ\). These 70 line draw- 
+ings were then reproduced by photo- 
+offset process and were attached to 
+cards in pairs for presentation to the 
+subjects. 
+-->
+10個の物体それぞれについて、垂直軸の周りを20°ずつ一回転する18通りの透視投影図がデジタルコンピュータによって生成され、グラフィカルな出力(1)が作成された。各物体の18通りの透視図のうち7つは、(i)物体の一部が他の部分によって完全に隠蔽されるような図を避け、かつ(ii)0°から180°まで20°ずつ、それぞれの角度で向きが異なる2組の図を作成できるように選択された。これらの70枚の線画は、写真オフセット印刷によって複製され、被験者に提示するために2枚1組でカードに貼り付けられた。
+</p><p>
+<!--
+Half of the "same" pairs (the "depth" 
+pairs) represented two objects that dif- 
+fered by some multiple of a 200 rota- 
+tion about a vertical axis (Fig. iB). For 
+each of these pairs, copies of two appro- 
+priately different perspective views were 
+simply attached to the cards in the 
+orientation in which they were origi- 
+nally generated. The other half of the 
+"same" pairs (the "picture-plane" pairs) 
+represented two objects that differed by 
+some multiple of a \(20^\circ\) rotation in the 
+plane of the drawings themselves (Fig. 
+1A). For each of these, one of the 
+seven perspective views was selected 
+for each object and two copies of this 
+picture were attached to the card in 
+appropriately different orientations. Al- 
+together, the 1600 pairs presented to 
+each subject included 800 "same" pairs, 
+which consisted of 400 unique pairs (20 
+"depth" and 20 "picture-plane" pairs 
+at each of the ten angular differences 
+from \(0^\circ\) to \(180^\circ\)), each of which was 
+presented twice. The remaining 800 
+pairs, randomly intermixed with these, 
+consisted of 400 unique "different" 
+pairs, each of which (again) was pre- 
+sented twice. Each of these "different" 
+pairs corresponded to one "same" pair 
+(of either the "depth" or "picture-plane" 
+variety) in which, however, one of the 
+three-dimensional objects had been re- 
+flected about some plane in three-di- 
+mensional space. Thus the two objects 
+in each "different" pair differed, in gen- 
+eral, by both .a reflection and a rota- 
+tion. 
+-->
+「同じ」ペアの半分（「奥行き」ペア）は、垂直軸を中心とした200度回転の倍数だけ異なる2つのオブジェクトを表していました（図1B）。これらのペアそれぞれについて、適切に異なる2つの透視図のコピーが、元々生成された方向でカードにそのまま貼り付けられました。「同じ」ペアの残りの半分（「画像面」ペア）は、図面自体の平面内で20度回転の倍数だけ異なる2つのオブジェクトを表していました（図1A）。これらのペアそれぞれについて、7つの透視図から1つが各オブジェクトに対して選択され、この画像の2つのコピーが適切に異なる方向でカードに貼り付けられました。各被験者に提示された1600組のペアのうち、800組は「同じ」ペアで、それぞれ400組の固有のペア（0度から180度までの10段階の角度差ごとに20組の「奥行き」ペアと20組の「画像面」ペア）で構成され、それぞれ2回提示された。残りの800組は、これらとランダムに混ざり合い、それぞれ400組の固有の「異なる」ペアで構成され、それぞれ（これも）2回提示された。これらの「異なる」ペアはそれぞれ、「同じ」ペア（「奥行き」または「絵画面」のいずれかの種類）に対応していたが、そのペアでは、三次元物体の一方が三次元空間のある平面を中心に反射されていた。したがって、それぞれの「異なる」ペアにおける二つの物体は、一般に、反射と回転の両方の点で異なっていた。
+</p><p>
+<!--
+The 1600 pairs were grouped into 
+blocks of not more than 200 and pre- 
+sented over eight to ten 1-hour ses- 
+sions (depending upon the subject). 
+Also, although it is only of incidental 
+interest here, each such block of pres- 
+entations was either "pure," in that all 
+pairs involved rotations of the same 
+type ("depth" or "picture-plane"), or 
+"mixed," in that the two types of rotation were randomly intermixed within 
+the same block. 
+</p><p>
+Each trial began with a warning tone, 
+which was followed half a second later 
+by the presentation of a stimulus pair 
+and the simultaneous onset of a timer. 
+The lever-pulling response stopped the 
+timer, recorded the subject's reaction 
+time and terminated the visual display. 
+The line drawings, which averaged be- 
+tween 4 and 5 cm In maximum linear 
+extent, appeared at a viewing distance 
+of about 60 cm. They were positioned, 
+with a center-to-center spacing that 
+subtended a visual angle of \(9^\circ\), in two 
+circular apertures in a vertical black 
+surface (see Fig. 1, A to C). 
+-->
+1600組のペアは、200組以下のブロックに分けられ、被験者に応じて8回から10回の1時間セッションにわたって提示された。
+また、ここでは付随的な関心事ではあるが、各提示ブロックは、すべてのペアが同じ種類の回転（「奥行き」または「画面」）を含む「純粋」な提示か、同じブロック内で2種類の回転がランダムに混在する「混合」な提示のいずれかであった。
+</p><p>
+各試行は警告音で始まり、その0.5秒後に刺激ペアが提示され、同時にタイマーが作動した。レバーを引く反応によってタイマーが停止し、被験者の反応時間が記録され、視覚提示が終了された。
+線画の最大線長は平均4～5cmで、約60cmの視距離で現れました。線画は、垂直な黒色面の2つの円形開口部内に、中心間の間隔が視角\(9^\circ\)となるように配置されていました（図1のA～C参照）。
+</p><p>
+<!--
+The subjects were instructed to re- 
+spond as quickly as possible while keep- 
+ing errors to a minimum. On the aver- 
+age only 3.2 percent of the responses 
+were incorrect (ranging from 0.6 to 
+5.7 percent for individual subjects). The 
+reaction-time data presented below in- 
+clude only the 96.8 percent correct re- 
+sponses. However, the data for the in- 
+correct responses exhibit a similar pat- 
+tern. 
+-->
+被験者は、誤りを最小限に抑えながら、できるだけ早く回答するよう指示されました。平均すると、回答のわずか3.2%が誤りでした（個々の被験者によって0.6%から5.7%の範囲）。以下に示す反応時間データには、96.8%の正答率のみが含まれています。しかし、誤答のデータも同様のパターンを示しています。
+</p><p>
+<!--
+In Fig. 2, the overall means of the 
+reaction times as a function of angular 
+difference in orientation for all correct 
+(right-hand) responses to "same" pairs 
+are plotted separately for the pairs dif- 
+fering by a rotation in the picture plane 
+(Fig. 2A) and for the pairs differing by 
+a rotation in depth (Fig. 2B). In both 
+cases, reaction time is a strikingly linear 
+function of the angular difference be- 
+tween the two three-dimensional objects 
+portrayed. The mean reaction times for 
+individual subjects increased from a 
+value of about 1 second at \(0^\circ\) of rota- 
+tion for all subjects to values ranging 
+from 4 to 6 seconds at \(180^\circ\) of rotation, 
+depending upon the particular individ- 
+ual. Moreover, despite such variations 
+in slope, the linearity of the function is 
+clearly evident when the data are 
+plotted separately for individual three- 
+dimensional objects or for individual 
+subjects. Polynomial regression lines 
+were computed separately for each sub- 
+ject under each type of rotation. In 
+all 16 cases the functions were found to 
+have a highly significant linear com- 
+ponent (P <.001) when tested against 
+deviations from linearity. No significant 
+quadratic or higher-order effects were 
+found (P > .05, in all cases). 
+-->
+図2には、「同じ」ペアに対するすべての正解（右利き）反応について、向きの角度差の関数としての反応時間の平均が、絵画平面内で回転が異なるペア（図2A）と奥行き方向の回転が異なるペア（図2B）について別々にプロットされている。どちらの場合も、反応時間は描かれた2つの3次元物体間の角度差の驚くほど直線的な関数となっている。個々の被験者の平均反応時間は、すべての被験者において回転角度\(0^\circ\)で約1秒であったのに対し、回転角度\(180^\circ\)では4秒から6秒の範囲で増加しており、個人によって差がある。さらに、傾きのばらつきにもかかわらず、個々の三次元物体または個々の被験者についてデータを個別にプロットすると、関数の直線性は明確に明らかになります。多項式回帰直線は、各回転の種類ごとに各被験者について個別に計算されました。16のケースすべてにおいて、直線性からの逸脱に対して検定したところ、関数は非常に有意な直線成分（P <.001）を持つことがわかりました。有意な二次効果または高次効果は認められませんでした（すべてのケースでP > .05）。
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+
+<!--
+Fig. 2..Mean reaction times to two perspec- 
+tive line drawings portraying objects of the 
+same three-dimensional shape. Times are 
+plotted as a function of angular difference 
+in portrayed orientation: (A ) for pairs 
+differing by a rotation in the picture 
+plane only; and (B) for pairs differing 
+by a. rotation in depth. (The centers of 
+the circles indicate the means and. when 
+they extend far enough to show outside
+these circles, the vertical bars around each circle
+indicate a conservative estimate of the standard error of that mean
+based on the distribution of the eight component 
+means contributed by the individual subjects.)
+-->
+図2. 同じ三次元形状の物体を描いた2つの透視線画に対する平均反応時間。時間は、描かれた方向の角度差の関数としてプロットされている。(A) は、絵の平面方向の回転のみが異なるペア、(B) は奥行き方向の回転のみが異なるペアである。(円の中心は平均値を示し、円が円の外側まで伸びている場合は、各円の周りの縦棒は、個々の被験者によって寄与された8つの平均の分布に基づいて、その平均値の標準誤差の控えめな推定値を示している。)
+
+</p><p>
+<!--
+The angle through which different 
+three-dimensional shapes must be ro- 
+tated to achieve congruence is not, of 
+course, defined. Therefore, a function 
+like those plotted in Fig. 2 cannot be 
+constructed in any straightforward manner for the "different" pairs. The overall 
+mean reaction time for these pairs was 
+found, however, to be 3.8 seconds- 
+nearly a second longer than the cor- 
+responding overall means for the "same" 
+pairs. (In the postexperimental inter- 
+view, the subjects typically reported 
+that they attempted to rotate one end of 
+one object into congruence with the 
+corresponding end of the other object; 
+they discovered that the two objects 
+were different when, after this "rota- 
+tion," the two free ends still remained 
+noncongruent.) 
+-->
+異なる三次元形状を回転させて合同にするために必要な角度は、もちろん定義されていません。したがって、図2にプロットされているような関数を、「異なる」ペアに対して単純に構築することはできません。しかしながら、これらのペアの全体的な平均反応時間は3.8秒であり、「同じ」ペアの対応する全体平均よりも約1秒長くなっています。（実験後のインタビューにおいて、被験者は典型的に、一方の物体の一端をもう一方の物体の対応する端と合同になるように回転させようとしたと報告しました。そして、この「回転」後も2つの自由端が依然として合同でないことから、2つの物体が異なるものであることに気付きました。）
+</p><p>
+<!--
+Not only are the two functions shown 
+in Fig. 2 both linear but they are very 
+similar to each other with respect to 
+intercept and slope. Indeed, for the 
+larger angular differences the reaction 
+times were, if anything, somewhat 
+shorter for rotation in depth than for 
+rotation in the picture plane. However, 
+since this small difference is either ab- 
+sent or reversed in four of the eight 
+subjects, it is of doubtful significance. 
+The determination of identity of shape 
+may therefore be based, in both cases, 
+upon a process of the same general 
+kind. If we can describe this process as 
+some sort of "mental rotation in three- 
+dimensional space," then the slope of 
+the obtained functions indicates that 
+the average rate at which these particu- 
+lar objects can be thus "rotated" is 
+roughly \(60^\circ\) per second. 
+-->
+図2に示されている2つの関数は、どちらも直線であるだけでなく、切片と傾きに関して非常によく似ています。実際、角度差が大きい場合、反応時間は、奥行き方向の回転の方が画面方向の回転よりもやや短くなっています。しかし、この小さな差は8人の被験者のうち4人では見られないか、逆転しているため、その重要性は疑わしいです。したがって、形状の同一性の決定は、どちらの場合も、同じ種類のプロセスに基づいている可能性があります。このプロセスをある種の「3次元空間における心的回転」と表現できるとすれば、得られた関数の傾きは、これらの特定の物体がこのように「回転」する平均速度が、おおよそ毎秒60^\circ\であることを示しています。
+</p><p>
+<!--
+Of course the plotted reaction times 
+necessarily include any times taken by 
+the subjects to decide how to process 
+the pictures in each presented pair as 
+well as the time taken actually to carry 
+out the process, once it was chosen. 
+However, even for these highly prac- 
+ticed subjects, the reaction times were 
+still linear and were no more than 20 
+percent lower in the "pure" blocks of 
+presentations (in which the subjects 
+knew both the axis and the direction 
+of the required rotation in advance of 
+each presentation) than in the "mixed" 
+blocks (in which the axis of rotation 
+was unpredictable). Tentatively, this 
+suggests that 80 percent of a typical 
+one of these reaction times may rep- 
+resent some such process as "mental 
+rotation" itself, rather than a prelimi- 
+nary process of preparation or search. 
+Nevertheless, in further research now 
+underway, we are seeking clarification 
+of this point and others. 
+-->
+もちろん、プロットされた反応時間には、被験者が提示された各ペアの画像をどのように処理するかを決定するのに要した時間と、選択された後に実際にその処理を実行するのに要した時間も必然的に含まれています。しかしながら、高度に訓練された被験者であっても、反応時間は依然として直線的であり、「純粋」な提示ブロック（被験者は各提示の前に必要な回転の軸と方向の両方を知っていた）では、「混合」ブロック（回転軸が予測できなかった）よりも20%以上低くなることはありませんでした。暫定的に、これは、これらの典型的な反応時間の80%が、準備や探索の予備的なプロセスではなく、「精神的回転」そのもののような何らかのプロセスを表している可能性があることを示唆しています。しかしながら、現在進行中のさらなる研究において、この点やその他の点の解明を目指しています。
+</p>
+<!--
+<h2><center>References and Notes</center></h2>
+-->
+<h2><center>参考文献と注記</center></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+<!--
+1. Mrs. Jih-Jie Chang of the Bell Telephone Lab- 
+oratories generated the 180 perspective projec- 
+tions for us by means of the Bell Laboratories' 
+Stromberg-Carlson 4020 microfilm recorder and 
+the computer program for constructing such 
+projections developed there by A. M. Noll. 
+See, for example, A. M. Noll, Computers 
+Automation 14, 20 (1965). 
+-->
+1. ベル電話研究所のJih-Jie Chang氏は、ベル研究所のStromberg-Carlson 4020マイクロフィルム・レコーダーと、A. M. Noll氏が同研究所で開発した投影図作成用コンピュータ・プログラムを用いて、180度の透視投影図を作成してくださいました。
+例えば、A. M. Noll著「Computers Automation 14, 20 (1965)」をご覧ください。
+
+</li><br><li>
+<!--
+2. We thank Mrs. Chang [see (1)1; and we also 
+thank Dr. J. D. Elashoff for her suggestions 
+concerning the statistical analyses. Assistance 
+in the computer graphics was provided by the 
+Bell Telephone Laboratories. Supported by 
+NSF grant GS-2283 to R.N.S. 
+-->
+2. Chang氏（(1)1参照）に感謝申し上げます。また、統計解析に関するご示唆を賜りましたJ. D. Elashoff博士にも感謝申し上げます。コンピュータ・グラフィックスの作成は、ベル電話研究所の協力を得て行われました。本研究は、R.N.S.に対するNSF助成金GS-2283の支援を受けて行われました。
+</li></ul></div>
+</p><p>
+<!--
+9 March 1970; revised 8 September 1970 
+-->
+1970年3月9日、1970年9月8日改訂
+</p>
+
+    </body>
+</html>
