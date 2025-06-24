@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>The PageRank Citation Ranking</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>The PageRank Citation Ranking:<br> 
+Bringing Order to the Web </center></h1>
+<center>PageRank引用ランキング：ウェブに秩序をもたらす</center>
+<br>
+<!--
+<center>January29,1998 </center>
+--><center>1998年1月29日</center>
+
+<!--
+<h2><center>Abstract</center></h2>
+-->
+<h2><center>要旨</center></h2>
+<p class="margin-abstract">
+<!--
+　The importance of a Web page is an inherently subjective matter, which depends on the
+readers interests, knowledge and attitudes. But there is still much that can be said objectively
+about the relative importance of Web pages. This paper describes PageRank, a method for
+rating Web pages objectively and mechanically, effectively measuring the human interest and
+attention devoted to them.<br>
+　We compare PageRank to an idealized random Web surfer. We show how to efficiently
+compute PageRank for large numbers of pages. And, we show how to apply PageRank to search
+and to user navigation.
+-->
+ウェブページの重要性は本質的に主観的な問題であり、読者の興味、知識、態度によって異なります。しかし、ウェブページの相対的な重要性について客観的に語れることはまだ多くあります。本論文では、ウェブページを客観的かつ機械的に評価し、人々の関心と注目度を効果的に測定する手法であるPageRankについて説明します。<br>
+　PageRankを理想的なランダムなウェブサーファーと比較します。多数のページのPageRankを効率的に計算する方法を示します。そして、PageRankを検索とユーザーナビゲーションに適用する方法を示します。
+</p>
+<!--
+<h2>1 Introduction and Motivation</h2>
+-->
+<h2>1 イントロと動機</h2>
+<p>
+<!--
+The World Wide Web creates many new challenges for information retrieval. It is very large and
+heterogeneous. Current estimates are that there are over 150 million web pages with a doubling
+life of less than one year. More importantly, the web pages are extremely diverse, ranging from
+” What is Joe having for lunch today?” to journals about information retrieval. In addition to these
+major challenges, search engines on the Web must also contend with inexperienced users and pages
+engineered to manipulate search engine ranking functions.
+-->
+ワールド・ワイド・ウェブは、情報検索において多くの新たな課題を生み出しています。ウェブは非常に大規模で、多種多様な情報で構成されています。現在、倍増寿命が1年未満のウェブページは1億5000万ページ以上あると推定されています。さらに重要なのは、ウェブページが極めて多様であり、「ジョーは今日何を食べているのか？」という情報から情報検索に関するジャーナルまで多岐にわたることです。こうした大きな課題に加えて、ウェブ上の検索エンジンは、経験の浅いユーザーや、検索エンジンのランキング機能を操作するように設計されたページにも対処しなければなりません。
+</p><p>
+<!--
+　However, unlike "flat” document collections, the World Wide Web is hypertext and provides
+considerable auxiliary information on top of the text of the web pages, such as link structure and
+link text. In this paper, we take advantage of the link structure of the Web to produce a global
+“importance” ranking of every web page. This ranking, called PageRank, helps search engines and
+users quickly make sense of the vast heterogeneity of the World Wide Web.
+-->
+　しかし、「フラット」な文書集合とは異なり、ワールド・ワイド・ウェブはハイパーテキストであり、ウェブページのテキストに加えて、リンク構造やリンクテキストといった多くの補助情報を提供します。本稿では、ウェブのリンク構造を利用して、すべてのウェブページのグローバルな「重要度」ランキングを作成します。Pag​​eRankと呼ばれるこのランキングは、検索エンジンとユーザーがワールド・ワイド・ウェブの広大な異質性を迅速に理解するのに役立ちます。
+</p>
+<!--
+<h3>1.1 Diversity of Web Pages</h3>
+-->
+<h3>1.1 ウェブページの多様性</h3>
+<p>
+<!--
+Although there is already a large literature on academic citation analysis, there are a number
+of significant differences between web pages and academic publications. Unlike academic papers
+which are scrupulously reviewed, web pages proliferate free of quality control or publishing costs.
+With a simple program, huge numbers of pages can be created easily, artificially inflating citation
+counts. Because the Web environment contains competing profit seeking ventures, attention getting
+strategies evolve in response to search engine algorithms. For this reason, any evaluation strategy
+which counts replicable features of web pages is prone to manipulation. Further, academic papers
+are well defined units of work, roughly similar in quality and number of citations, as well as in
+their purpose — to extend the body of knowledge. Web pages vary on a much wider scale than
+academic papers in quality, usage, citations, and length. A random archived message posting
+﻿asking an obscure question about an IBM computer is very different from the IBM home page. A
+research article about the effects of cellular phone use on driver attention is very different from an
+advertisement for a particular cellular provider. The average web page quality experienced by a
+user is higher than the quality of the average web page. This is because the simplicity of creating
+and publishing web pages results in a large fraction of low quality web pages that users are unlikely
+to read.
+-->
+学術引用分析に関する文献はすでに多数存在しますが、ウェブページと学術出版物の間には多くの重要な違いがあります。綿密に査読される学術論文とは異なり、ウェブページは品質管理や出版コストを伴わずに増殖します。単純なプログラムで膨大な数のページを簡単に作成でき、引用数を人為的に水増しすることができます。ウェブ環境には利益追求を目的とした競合関係が存在するため、注目を集める戦略は検索エンジンのアルゴリズムに応じて進化します。そのため、ウェブページの再現可能な機能を数える評価戦略は、操作されやすい傾向があります。さらに、学術論文は明確に定義された作業単位であり、質と引用数、そして知識体系の拡張という目的においてもほぼ同等です。ウェブページは、質、利用状況、引用、長さにおいて、学術論文よりもはるかに大きなばらつきがあります。IBMコンピュータに関する難解な質問を投稿したランダムなアーカイブメッセージは、IBMのホームページとは大きく異なります。携帯電話の使用が運転者の注意力に与える影響に関する研究論文は、特定の携帯電話会社の広告とは大きく異なります。ユーザーが体験する平均的なウェブページの品質は、平均的なウェブページの品質よりも高くなります。これは、ウェブページの作成と公開が簡単であるため、ユーザーが読む可能性の低い低品質のウェブページが大量に発生するためです。
+</p><p>
+<!--
+　There are many axes along which web pages may be differentiated. In this paper, we deal
+primarily with one - an approximation of the overall relative importance of web pages.
+-->
+ウェブページを差別化する軸は数多く存在します。本稿では、主にその一つ、ウェブページの全体的な相対的重要度の近似値について扱います。
+</p>
+<!--
+<h3>1.2 PageRank</h3>
+-->
+<h3>1.2 ページランク</h3>
+<p>
+<!--
+In order to measure the relative importance of web pages, we propose PageRank, a method for
+computing a ranking for every web page based on the graph of the web. PageRank has applications
+in search, browsing, and traffic estimation.
+-->
+ウェブページの相対的な重要度を測定するために、ウェブグラフに基づいて各ウェブページのランキングを計算する手法であるPageRankを提案します。Pag​​eRankは、検索、ブラウジング、トラフィック推定などに応用されています。
+</p><p>
+<!--
+　Section 2 gives a mathematical description of PageRank and provides some intuitive justifi-
+cation. In Section 3, we show how we efficiently compute PageRank for as many as 518 million
+hyperlinks. To test the utility of PageRank for search, we built a web search engine called Google
+(Section 5). We also demonstrate how PageRank can be used as a browsing aid in Section 7.3.
+-->
+第2節では、PageRankの数学的説明と、その直感的な根拠を示します。第3節では、最大5億1800万のハイパーリンクに対してPageRankを効率的に計算する方法を示します。検索におけるPageRankの有用性を検証するために、GoogleというWeb検索エンジンを構築しました（第5節）。また、第7.3節では、PageRankをブラウジング支援としてどのように活用できるかを示します。
+</p>
+<!--
+<h2>2 A Ranking for Every Page on the Web</h2>
+<h3>2.1 Related Work</h3>
+-->
+<h2>2 ウェブ上のすべてのページのランキング</h2>
+<h3>2.1 関連研究</h3>
+<p>
+<!--
+There has been a great deal of work on academic citation analysis [Gar95]. Goffman [Gof71] has
+published an interesting theory of how information flow in a scientific community is an epidemic
+process.
+-->
+学術論文の引用分析に関する研究は数多く行われてきました[Gar95]。Goffman[Gof71]は、科学コミュニティにおける情報の流れがいかにして伝染病のようなプロセスであるかという興味深い理論を発表しました。
+</p><p>
+<!--
+　There has been a fair amount of recent activity on how to exploit the link structure of large
+hypertext systems such as the web. Pitkow recently completed his Ph.D. thesis on “Characterizing
+World Wide Web Ecologies” [Pit97, PPR96] with a wide variety of link based analysis. Weiss
+discuss clustering methods that take the link structure into account [WVS* 96]. Spertus [Spe97]
+discusses information that can be obtained from the link structure for a variety of applications.
+Good visualization demands added structure on the hypertext and is discussed in |MFH95, MF95].
+Recently, Kleinberg |Kle98] has developed an interesting model of the web as Hubs and Authorities,
+based on an eigenvector calculation on the co-citation matrix of the web.
+-->
+近年、Webのような大規模ハイパーテキストシステムのリンク構造を活用する方法について、かなりの研究が行われています。Pitkowは最近、「ワールド・ワイド・ウェブの生態系の特徴づけ」[Pit97, PPR96]という博士論文を執筆し、様々なリンクベースの分析を取り上げています。Weissは、リンク構造を考慮したクラスタリング手法について論じています[WVS* 96]。Spertusは[Spe97]、様々なアプリケーションのためにリンク構造から得られる情報について論じています。優れた視覚化にはハイパーテキストに構造を追加する必要があり、これについては[MFH95, MF95]で議論されています。最近、Kleinbergは[Kle98]、Webの共引用行列の固有ベクトル計算に基づいて、Webをハブとオーソリティとして捉える興味深いモデルを開発しました。
+</p><p>
+<!--
+　Finally, there has been some interest in what “quality” means on the net from a library com-
+munity [Til].
+-->
+最後に、図書館コミュニティからは、ネット上での「品質」が何を意味するのかという点に関心が寄せられています[Til]。
+</p><p>
+<!--
+　It is obvious to try to apply standard citation analysis techniques to the web’s hypertextual
+citation structure. One can simply think of every link as being like an academic citation. So,
+a major page like http://www.yahoo.com/ will have tens of thousands of backlinks (or citations)
+pointing to it.
+-->
+標準的な引用分析手法をウェブのハイパーテキスト引用構造に適用しようとするのは当然のことです。すべてのリンクを学術的な引用と考えるだけで十分です。つまり、http://www.yahoo.com/ のような主要なページには、数万ものバックリンク（または引用）がリンクしていることになります。
+</p><p>
+<!--
+　This fact that the Yahoo home page has so many backlinks generally imply that it is quite
+important. Indeed, many of the web search engines have used backlink count as a way to try to bias
+their databases in favor of higher quality or more important pages. However, simple backlink counts
+have a number of problems on the web. Some of these problems have to do with characteristics of
+the web which are not present in normal academic citation databases.
+-->
+Yahoo!のホームページにこれほど多くのバックリンクがあるという事実は、一般的に、それが非常に重要であることを示しています。実際、多くのウェブ検索エンジンは、バックリンクの数を、データベースをより高品質またはより重要なページに偏らせるための手段として利用しています。しかし、単純なバックリンクの数には、ウェブ上でいくつかの問題があります。これらの問題のいくつかは、通常の学術引用データベースには見られない、ウェブの特性に関係しています。
+</p>
+<!--
+﻿<h3>2.2. Link Structure of the Web</h3>
+-->
+<h3>2.2. ウェブのリンク構造</h3>
+<p>
+<!--
+While estimates vary, the current graph of the crawlable Web has roughly 150 million nodes (pages)
+and 1.7 billion edges (links). Every page has some number of forward links (outedges) and backlinks
+(inedges) (see Figure 1). We can never know whether we have found all the backlinks of a particular
+page but if we have downloaded it, we know all of its forward links at that time.
+-->
+推定値は様々ですが、現在クロール可能なWebのグラフには、およそ1億5000万のノード（ページ）と17億のエッジ（リンク）があります。すべてのページには、一定数のフォワードリンク（アウトエッジ）とバックリンク（インエッジ）があります（図1参照）。特定のページのバックリンクをすべて見つけたかどうかはわかりませんが、ページをダウンロードしていれば、その時点でのフォワードリンクはすべてわかります。
+
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+<!--
+<center>Figure 1: A and B are Backlinks of C</center>
+-->
+<center>図1: AとBはCのバックリンクです</center>
+</p><p>
+<!--
+　Web pages vary greatly in terms of the number of backlinks they have. For example, the
+Netscape home page has 62,804 backlinks in our current database compared to most pages which
+have just a few backlinks. Generally, highly linked pages are more “important” than pages with
+few links. Simple citation counting has been used to speculate on the future winners of the Nobel
+Prize [San95]. PageRank provides a more sophisticated method for doing citation counting.
+-->
+ウェブページは、そのバックリンクの数によって大きく異なります。例えば、Netscapeのホームページは、現在のデータベースでは62,804ものバックリンクを持っていますが、ほとんどのページはバックリンクが数個しかありません。一般的に、リンク数の多いページは、リンク数の少ないページよりも「重要」です。単純な引用回数のカウントは、ノーベル賞の将来の受賞者を予想するために使われてきました[San95]。PageRankは、より洗練された引用回数のカウント方法を提供します。
+</p><p>
+<!--
+　The reason that PageRank is interesting is that there are many cases where simple citation
+counting does not correspond to our common sense notion of importance. For example, if a web
+page has a link off the Yahoo home page, it may be just one link but it is a very important one.
+This page should be ranked higher than many pages with more links but from obscure places.
+PageRank is an attempt to see how good an approximation to “importance” can be obtained just
+from the link structure.
+-->
+PageRankが興味深いのは、単純な引用数カウントが、私たちの常識的な重要性の概念と一致しない場合が多いからです。例えば、あるウェブページにYahoo!のホームページからのリンクがある場合、それはたった1つのリンクかもしれませんが、非常に重要なリンクです。このページは、より多くのリンクがあるものの、あまり知られていない場所からのリンクを持つ多くのページよりも上位にランク付けされるべきです。Pag​​eRankは、リンク構造のみから「重要性」をどの程度正確に推定できるかを測る試みです。
+</p>
+<!--
+<h3>2.3 Propagation of Ranking Through Links</h3>
+-->
+<h3>2.3 リンクを通じたランキングの伝播</h3>
+<p>
+<!--
+Based on the discussion above, we give the following intuitive description of PageRank: a page has
+high rank if the sum of the ranks of its backlinks is high. This covers both the case when a page
+has many backlinks and when a page has a few highly ranked backlinks.
+-->
+上記の議論に基づき、PageRankについて直感的に次のように説明します。ページのバックリンクのランクの合計が高い場合、そのページのランクは高くなります。これは、ページに多数のバックリンクがある場合と、ページに少数の高ランクのバックリンクがある場合の両方に当てはまります。
+</p>
+<!--
+<h3>2.4 Definition of PageRank</h3>
+-->
+<h3>2.4 PageRankの定義</h3>
+<p>
+<!--
+Let \(u\) be a web page. Then let \(F_u\) be the set of pages \(u\) points to and \(B_u\) be the set of pages that
+point to u. Let \(N_u = |F_u|\) be the number of links from u and let c be a factor used for normalization
+(so that the total rank of all web pages is constant).
+-->
+\(u\) をウェブページとします。\(F_u\) を \(u\) が指し示すページの集合、\(B_u\) を u を指し示すページの集合とします。\(N_u = |F_u|\) を u からのリンク数とし、c を正規化に用いる係数とします（これにより、すべてのウェブページの合計ランクは一定になります）。
+</p><p>
+<!--
+　We begin by defining a simple ranking, R which is a slightly simplified version of PageRank:
+-->
+まず、PageRank を少し簡略化したシンプルなランキング \(R\) を定義します。
+
+\[
+R(u)=c\sum_{v\in B_u} \frac{R(v)}{N_v}
+\]
+
+</p><p>
+<!--
+　This formalizes the intuition in the previous section. Note that the rank of a page is divided
+among its forward links evenly to contribute to the ranks of the pages they point to. Note that
+\(c < 1\) because there are a number of pages with no forward links and their weight is lost from the
+system (see section 2.7). The equation is recursive but it may be computed by starting with any set
+of ranks and iterating the computation until it converges. Figure 2 demonstrates the propagation
+of rank from one pair of pages to another. Figure 3 shows a consistent steady state solution for a
+set of pages.
+-->
+これは、前の節での直感を形式化したものです。ページのランクは、その前方リンクに均等に分配され、それらが指すページのランクに寄与することに注意してください。\(c < 1\) であることに注意してください。これは、前方リンクのないページが多数存在し、それらの重みがシステムから失われるためです（2.7節を参照）。この式は再帰的ですが、任意のランクの集合から開始し、収束するまで計算を繰り返すことで計算できます。図2は、あるページペアから別のページペアへのランクの伝播を示しています。図3は、ページセットに対する一貫した定常解を示しています。
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+<!--
+<center>Figure 2: Simplified PageRank Calculation</center>
+-->
+<center>図2: 簡略化されたPageRankの計算</center>
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+<!--
+﻿<center>Figure 3: Simplified PageRank Calculation</center>
+-->
+<center>図3: 簡略化されたPageRankの計算</center>
+</p><p>
+<!--
+　Stated another way, let \(A\) be a square matrix with the rows and column corresponding to web
+pages. Let \(A_{u,v} = 1/N_u\), if there is an edge from \(u\) to \(v\) and \(A_{u,v}= 0\) if not. If we treat \(R\) as a
+vector over web pages, then we have \(R = cAR\). So \(R\) is an eigenvector of \(A\) with eigenvalue \(c\). In
+fact, we want the dominant eigenvector of A. It may be computed by repeatedly applying A to any
+nondegenerate start vector.
+-->
+言い換えると、\(A\) を、行と列がウェブページに対応する正方行列とします。\(u\) から \(v\) への辺がある場合は \(A_{u,v} = 1/N_u\)、ない場合は \(A_{u,v}= 0\) とします。\(R\) をウェブページ上のベクトルとして扱うと、\(R = cAR\) となります。つまり、\(R\) は \(A\) の固有ベクトルであり、固有値は \(c\) です。実際、私たちが求めているのは A の支配的な固有ベクトルです。これは、任意の非退化開始ベクトルに A を繰り返し適用することで計算できます。
+</p><p>
+<!--
+There is a small problem with this simplified ranking function. Consider two web pages that
+point to each other but to no other page. And suppose there is some web page which points to
+one of them. Then, during iteration, this loop will accumulate rank but never distribute any rank
+(since there are no outedges). The loop forms a sort of trap which we call a rank sink.
+-->
+この簡略化されたランキング関数には、小さな問題があります。互いにリンクしているものの、他のページにはリンクしていない2つのウェブページを考えてみましょう。そして、そのうちの1つにリンクしているウェブページがあるとします。すると、反復処理中に、このループはランクを蓄積しますが、ランクを分配することはありません（アウトエッジがないため）。このループは、ランクシンクと呼ばれる一種の罠を形成します。
+</p><p>
+<!--
+To overcome this problem of rank sinks, we introduce a rank source:
+-->
+このランクシンクの問題を克服するために、ランクソースを導入します。
+</p><p>
+<!--
+<strong>Definition 1</strong>　Let \(E(u)\) be some vector over the Web pages that corresponds to a source of rank.
+Then, the PageRank of a set of Web pages is an assignment, \(R^\prime\), to the Web pages which satisfies
+-->
+<strong>定義 1</strong>　\(E(u)\) を、ランクのソースに対応するウェブページ上のベクトルとする。
+すると、ウェブページ集合の PageRank は、ウェブページへの割り当て \(R^\prime\) であり、次の式を満たす。
+
+\[
+R^\prime(u)=c\sum_{v\in B_u} \frac{R^\prime(v)}{N_v}+cR(u)  \tag{1}
+\]
+
+<!--
+　such that \(c\) is maximized and \(||R^\prime||_1 =1\)(\(||R^\prime||_1\) denotes the \(L_1\) norm of \(R^\prime\)).
+-->
+\(c\) が最大化され、\(||R^\prime||_1 =1\)（\(||R^\prime||_1\) は \(R^\prime\) の \(L_1\) ノルムを表します）となる。
+
+</p><p>
+<!--
+　where \(E(u)\) is some vector over the web pages that corresponds to a source of rank (see Sec-
+tion 6). Note that if \(E\) is all positive, \(c\) must be reduced to balance the equation. Therefore, this
+technique corresponds to a decay factor. In matrix notation we have \(R^\prime = c(AR^\prime + E)\). Since
+\(||R^\prime||_1 = 1\), we can rewrite this as \(R^\prime = c(A +E \times \mathbf{1})R^\prime\) where \(\mathbf{1}\) is the vector consisting of all ones.
+So, \(R^\prime\) is an eigenvector of \((A+ E \times \mathbf{1})\).
+-->
+ここで、\(E(u)\) はウェブページ上のベクトルであり、ランクのソースに対応します（セクション 6 を参照）。\(E\) がすべて正の場合、方程式のバランスをとるために \(c\) を縮小する必要があることに注意してください。したがって、この手法は減衰係数に対応します。行列表記では、\(R^\prime = c(AR^\prime + E)\) となります。\(||R^\prime||_1 = 1\) であるため、これを \(R^\prime = c(A +E \times \mathbf{1})R^\prime\) と書き直すことができます。ここで、\(\mathbf{1}\) はすべて 1 からなるベクトルです。
+したがって、\(R^\prime\) は \((A+ E \times \mathbf{1})\) の固有ベクトルです。
+</p>
+<!--
+<h3>2.5 Random Surfer Model</h3>
+-->
+<h3>2.5 ランダムサーファーモデル</h3>
+<p>
+<!--
+The definition of PageRank above has another intuitive basis in random walks on graphs. The
+simplified version corresponds to the standing probability distribution of a random walk on the
+graph of the Web. Intuitively, this can be thought of as modeling the behavior of a “random
+surfer”. The “random surfer” simply keeps clicking on successive links at random. However, if a
+real Web surfer ever gets into a small loop of web pages, it is unlikely that the surfer will continue
+in the loop forever. Instead, the surfer will jump to some other page. The additional factor \(E\) can
+be viewed as a way of modeling this behavior: the surfer periodically “gets bored” and jumps to a
+﻿random page chosen based on the distribution in \(E\).
+-->
+上記の PageRank の定義は、グラフ上のランダムウォークという直感的な根拠に基づいています。簡略化されたバージョンは、Web グラフ上のランダムウォークの定常確率分布に対応します。直感的には、これは「ランダムサーファー」の行動をモデル化したものと考えることができます。「ランダムサーファー」とは、単にランダムにリンクをクリックし続けるだけです。しかし、実際の Web サーファーが Web ページの小さなループに陥ったとしても、サーファーがそのループを永遠に続ける可能性は低いでしょう。代わりに、サーファーは他のページに移動します。追加の係数 \(E\) は、この行動をモデル化する方法として考えることができます。サーファーは定期的に「退屈」し、\(E\) の分布に基づいて選択されたランダムなページに移動します。
+</p><p>
+<!--
+　So far we have left \(E\) as a user defined parameter. In most tests we let \(E\) be uniform over all
+web pages with value \(\alpha\). However, in Section 6 we show how different values of \(E\) can generate
+“customized” page ranks.
+-->
+これまで、\(E\) はユーザー定義パラメータとして扱ってきました。ほとんどのテストでは、\(E\) はすべてのウェブページで均一で、値は \(\alpha\) とします。しかし、セクション6では、\(E\) の値を変えることで、どのように「カスタマイズされた」ページランクを生成できるかを示します。
+</p>
+<!--
+<h3>2.6 Computing PageRank</h3>
+-->
+<h3>2.6 PageRankの計算</h3>
+<p>
+<!--
+The computation of PageRank is fairly straightforward if we ignore the issues of scale. Let \(S\) be
+almost any vector over Web pages (for example \(E\)). Then PageRank may be computed as follows:
+-->
+スケールの問題を無視すれば、PageRankの計算は非常に簡単です。\(S\)をWebページ上のほぼ任意のベクトル（例えば\(E\)）とします。Pag​​eRankは以下のように計算できます。
+
+\[
+\begin{align}
+R_0 &\leftarrow S \\
+\\
+loop: & \\
+\\
+R_{i+1} &\leftarrow AR_i \\
+\\
+d &\leftarrow ||R_i||_1 — ||R_{i+1}||_1 \\
+\\
+R_{i+1} &\leftarrow R_{i+1}+dE \\
+\\
+\delta &\leftarrow ||R_{i+1}-R_i||_1 \\
+\\
+while\; \delta \gt \epsilon &
+\end{align}
+\]
+
+<!--
+　Note that the \(d\) factor increases the rate of convergence and maintains \(||R||_1\). An alternative
+normalization is to multiply R by the appropriate factor. The use of d may have a small impact
+on the influence of \(E\).
+-->
+\(d\) 係数は収束速度を高め、\(||R||_1\)を維持することに注意してください。別の正規化方法としては、\(R\) に適切な係数を乗じることです。\(d\) 係数の使用は、\(E\)の影響にわずかな影響を与える可能性があります。
+</p>
+<!--
+<h3>2.7 Dangling Links</h3>
+-->
+<h3>2.7 ぶら下がりリンク</h3>
+<p>
+<!--
+One issue with this model is dangling links. Dangling links are simply links that point to any page
+with no outgoing links. They affect the model because it is not clear where their weight should
+be distributed, and there are a large number of them. Often these dangling links are simply pages
+that we have not downloaded yet, since it is hard to sample the entire web (in our 24 million pages
+currently downloaded, we have 51 million URLs not downloaded yet, and hence dangling). Because
+dangling links do not affect the ranking of any other page directly, we simply remove them from
+the system until all the PageRanks are calculated. After all the PageRanks are calculated, they
+can be added back in, without affecting things significantly. Notice the normalization of the other
+links on the same page as a link which was removed will change slightly, but this should not have
+a large effect.
+-->
+このモデルの問題点の一つは、ダングリングリンクです。ダングリングリンクとは、外部リンクを持たない任意のページを指すリンクのことです。ダングリングリンクの重み付けが明確でなく、数が多いため、モデルに影響を与えます。多くの場合、これらのダングリングリンクは、Web全体をサンプリングすることが困難なため、まだダウンロードされていないページです（現在ダウンロードされている2,400万ページのうち、5,100万のURLがまだダウンロードされておらず、ダングリングリンクとなっています）。ダングリングリンクは他のページのランキングに直接影響を与えないため、すべてのPageRankが計算されるまで、システムから削除します。すべてのPageRankが計算された後、ダングリングリンクをシステムに戻しても、大きな影響はありません。削除されたリンクと同じページにある他のリンクの正規化はわずかに変化しますが、大きな影響はないでしょう。
+</p>
+<!--
+<h2>3 Implementation</h2>
+-->
+<h2>3 実装</h2>
+<p>
+<!--
+As part of the Stanford WebBase project [PB98], we have built a complete crawling and indexing
+system with a current repository of 24 million web pages. Any web crawler needs to keep a database
+of URLs so it can discover all the URLs on the web. To implement PageRank, the web crawler
+simply needs to build an index of links as it crawls. While a simple task, it is non-trivial because
+of the huge volumes involved. For example, to index our current 24 million page database in about
+five days, we need to process about 50 web pages per second. Since there about about 11 links on
+an average page (depending on what you count as a link) we need to process 550 links per second.
+Also, our database of 24 million pages references over 75 million unique URLs which each link must
+be compared against.
+-->
+スタンフォードWebBaseプロジェクト[PB98]の一環として、私たちは2400万ページのWebページをリポジトリに持つ完全なクロールおよびインデックス作成システムを構築しました。Webクローラーは、Web上のすべてのURLを発見できるようにURLのデータベースを保持する必要があります。Pag​​eRankを実装するには、Webクローラーがクロールしながらリンクのインデックスを作成するだけです。これは単純な作業ですが、膨大なデータ量を必要とするため、容易ではありません。例えば、現在2400万ページのデータベースを約5日間でインデックス化するには、1秒あたり約50ページのWebページを処理する必要があります。平均的なページには約11個のリンクがあるため（リンクの数え方によって異なります）、1秒あたり550個のリンクを処理する必要があります。また、2400万ページのデータベースは7500万を超える固有のURLを参照しており、各リンクはこれらのURLと比較する必要があります。
+</p><p>
+<!--
+　﻿Much time has been spent making the system resilient in the face of many deeply and intricately
+flawed web artifacts. There exist infinitely large sites, pages, and even URLs. A large fraction of
+web pages have incorrect HTML, making parser design difficult. Messy heuristics are used to help
+the crawling process. For example, we do not crawl URLs with /cgi-bin/ in them. Of course it
+is impossible to get a correct sample of the ”entire web” since it is always changing. Sites are
+sometimes down, and some people decide to not allow their sites to be indexed. Despite all this, we
+believe we have a reasonable representation of the actual link structure of publicly accessible web.
+-->
+複雑かつ深刻な欠陥を抱えた多くのウェブ成果物に対して、システムの耐性を高めるために多くの時間を費やしてきました。膨大な数のサイト、ページ、そしてURLさえも存在します。多くのウェブページには誤ったHTMLが含まれており、パーサーの設計を困難にしています。クロールプロセスを支援するために、複雑なヒューリスティックが用いられています。例えば、/cgi-bin/を含むURLはクロールしません。もちろん、「ウェブ全体」は常に変化しているため、正確なサンプルを取得することは不可能です。サイトがダウンすることもあれば、インデックス登録を拒否する人もいます。こうした状況にもかかわらず、私たちは公開されているウェブの実際のリンク構造をある程度再現できていると考えています。
+</p>
+<!--
+<h3>3.1 PageRank Implementation</h3>
+-->
+<h3>3.1 PageRankの実装</h3>
+<p>
+<!--
+We convert each URL into a unique integer, and store each hyperlink in a database using the integer
+IDs to identify pages. Details of our implementation are in [PB98]. In general, we have implemented
+PageRank in the following manner. First we sort the link structure by Parent ID. Then dangling
+links are removed from the link database for reasons discussed above (a few iterations removes the
+vast majority of the dangling links). We need to make an initial assignment of the ranks. This
+assignment can be made by one of several strategies. If it is going to iterate until convergence, in
+general the initial values will not affect final values, just the rate of convergence. But we can speed
+up convergence by choosing a good initial assignment. We believe that careful choice of the initial
+assignment and a small finite number of iterations may result in excellent or improved performance.
+-->
+各 URL を一意の整数に変換し、各ハイパーリンクをデータベースに格納します。このデータベースでは、整数 ID を使用してページを識別します。実装の詳細は [PB98] に記載されています。一般的に、PageRank は次のように実装されています。まず、リンク構造を親 ID でソートします。次に、前述の理由により、リンク データベースから未結合リンクを削除します (数回の反復処理で、未結合リンクの大部分が削除されます)。ランクの初期割り当てを行う必要があります。この割り当ては、いくつかの戦略のいずれかで行うことができます。収束するまで反復処理を実行する場合、一般に初期値は最終値には影響せず、収束速度のみに影響します。しかし、適切な初期割り当てを選択することで収束を加速できます。初期割り当てを慎重に選択し、反復処理を少数の有限回数にすることで、優れたパフォーマンス、またはパフォーマンスの向上が得られると考えています。
+</p><p>
+<!--
+　Memory is allocated for the weights for every page. Since we use single precision floating point
+values at 4 bytes each, this amounts to 300 megabytes for our 75 million URLs. If insufficient
+RAM is available to hold all the weights, multiple passes can be made (our implementation uses
+half as much memory and two passes). The weights from the current time step are kept in memory,
+and the previous weights are accessed linearly on disk. Also, all the access to the link database,
+A, is linear because it is sorted. Therefore, A can be kept on disk as well. Although these data
+structures are very large, linear disk access allows each iteration to be completed in about 6 minutes
+on a typical workstation. After the weights have converged, we add the dangling links back in and
+recompute the rankings. Note after adding the dangling links back in, we need to iterate as many
+times as was required to remove the dangling links. Otherwise, some of the dangling links will have
+a zero weight. This whole process takes about five hours in the current implementation. With less
+strict convergence criteria, and more optimization, the calculation could be much faster. Or, more
+efficient techniques for estimating eigenvectors could be used to improve performance. However, it
+should be noted that the cost required to compute the PageRank is insignificant compared to the
+cost required to build a full text index.
+-->
+各ページの重みにはメモリが割り当てられます。単精度浮動小数点値をそれぞれ4バイト使用するため、7,500万のURLでは300MBになります。すべての重みを保持するのに十分なRAMがない場合は、複数のパスを作成できます（この実装では、メモリを半分にし、2つのパスを使用します）。現在のタイムステップの重みはメモリに保持され、以前の重みにはディスク上で線形アクセスされます。また、リンクデータベースAへのアクセスはすべて線形です。これは、リンクデータベースAがソートされているためです。したがって、Aもディスク上に保持できます。これらのデータ構造は非常に大きいですが、線形ディスクアクセスにより、一般的なワークステーションでは各反復処理を約6分で完了できます。重みが収束した後、ダングリングリンクを戻してランキングを再計算します。ダングリングリンクを戻した後は、ダングリングリンクを削除するのに必要な回数だけ反復処理を実行する必要があることに注意してください。そうでなければ、一部のダングリングリンクの重みはゼロになります。現在の実装では、この処理全体に約5時間かかります。収束基準を緩和し、最適化を強化すれば、計算ははるかに高速化できます。あるいは、より効率的な固有ベクトル推定手法を用いることで、パフォーマンスを向上させることも可能です。ただし、PageRankの計算にかかるコストは、フルテキストインデックスの構築にかかるコストと比較するとごくわずかであることに留意する必要があります。
+</p>
+<!--
+<h2>4 Convergence Properties</h2>
+-->
+<h2>4つの収束特性</h2>
+<p>
+<!--
+As can be seen from the graph in Figure 4 PageRank on a large 322 million link database converges
+to a reasonable tolerance in roughly 52 iterations. The convergence on half the data takes roughly
+45 iterations. This graph suggests that PageRank will scale very well even for extremely large
+collections as the scaling factor is roughly linear in \(\log n\).
+-->
+図4のグラフからわかるように、3億2,200万リンクの大規模データベースにおけるPageRankは、約52回の反復処理で妥当な許容範囲に収束します。データの半分の収束には約45回の反復処理が必要です。このグラフは、スケーリング係数が\(\log n\)にほぼ比例するため、PageRankは非常に大規模なコレクションであっても非常に良好にスケーリングできることを示唆しています。
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+<!--
+<center>Figure 4: Loop Which Acts as a Rank Sink</center>
+-->
+<center>図4: ランクシンクとして機能するループ</center>
+</p><p>
+<!--
+　One of the interesting ramifications of the fact that the PageRank calculation converges rapidly
+is that the web is an expander-like graph. To understand this better, we give a brief overview of
+the theory of random walks on graphs; refer to Motwani-Raghavan [MR95] for further details. A
+random walk on a graph is a stochastic process where at any given time step we are at a particular
+node of the graph and choose an outedge uniformly at random to determine the node to visit at
+the next time step. A graph is said to be an expander if it is the case that every (not too large)
+subset of nodes S has a neighborhood (set of vertices accessible via outedges emanating from nodes
+﻿in S) that is larger than some factor a times ||; here, a is called the expansion factor. It is the
+case that a graph has a good expansion factor if and only if the largest eigenvalue is sufficiently
+larger than the second-largest eigenvalue. A random walk on a graph is said to be rapidly-mixing
+if it quickly (time logarithmic in the size of the graph) converges to a limiting distribution on the
+set of nodes in the graph. It is also the case that a random walk is rapidly-mixing on a graph if
+and only if the graph is an expander or has an eigenvalue separation.
+-->
+PageRankの計算が急速に収束するという事実から生じる興味深い帰結の一つは、ウェブが拡張型グラフであるということです。これをより深く理解するために、グラフ上のランダムウォーク理論について簡単に概説します。詳細については、Motwani-Raghavan [MR95] を参照してください。グラフ上のランダムウォークとは、任意の時点においてグラフの特定のノードにいて、次の時点に訪れるノードを決定するために一様ランダムにアウトエッジを選択する確率過程です。ノードSのすべての（それほど大きくない）部分集合に、S内のノードから発するアウトエッジを介してアクセスできる頂点の集合である近傍が、ある係数a倍||よりも大きい場合、グラフは拡張型と呼ばれます。ここで、aは拡張係数と呼ばれます。グラフが良好な拡張係数を持つためには、最大の固有値が2番目に大きい固有値よりも十分に大きい必要があります。グラフ上のランダムウォークは、グラフ内のノード集合上の極限分布に急速に（グラフのサイズの対数的な時間で）収束する場合、急速混合型であると言われます。また、グラフがエクスパンダーであるか、固有値分離を持つ場合に限り、ランダムウォークがグラフ上で急速混合型となります。
+</p><p>
+<!--
+　To relate all this to the PageRank computation, note that it is essentially the determination of
+the limiting distribution of a random walk on the Web graph. The importance ranking of a node
+is essentially the limiting probability that the random walk will be at that node after a sufficiently
+large time. The fact that the PageRank computation terminates in logarithmic time is equivalent to
+saying that the random walk is rapidly mixing or that the underlying graph has a good expansion
+factor. Expander graphs have many desirable properties that we may be able to exploit in the
+future in computations involving the Web graph.
+-->
+これらすべてをPageRank計算に関連付けると、PageRank計算は本質的にWebグラフ上のランダムウォークの極限分布を決定するものであることに留意してください。ノードの重要度ランキングは、本質的に、ランダムウォークが十分に長い時間後にそのノードに到達する極限確率です。Pag​​eRank計算が対数時間で終了するという事実は、ランダムウォークが急速に混合している、あるいは基礎となるグラフが良好な拡張係数を持っていると言っているのと同じです。拡張グラフには、将来Webグラフを含む計算で利用できる可能性のある多くの望ましい特性があります。
+
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+<!--
+Figure 5: Rates of Convergence for Full Size and Half Size Link Databases
+-->
+図5: フルサイズとハーフサイズのリンクデータベースの収束率
+
+</p>
+<!--
+<h2>5 Searching with PageRank</h2>
+-->
+<h2>5 PageRankを使った検索</h2>
+<p>
+<!--
+A major application of PageRank is searching. We have implemented two search engines which use
+PageRank. The first one we will discuss is a simple title-based search engine. The second search
+engine is a full text search engine called Google [BP]. Google utilizes a number of factors to rank
+search results including standard IR measures, proximity, anchor text (text of links pointing to web
+pages), and PageRank. While a comprehensive user study of the benefits of PageRank is beyond
+the scope of this paper, we have performed some comparative experiments and provide some sample
+results in this paper.
+-->
+PageRankの主な用途は検索です。私たちはPageRankを使用する2つの検索エンジンを実装しました。1つ目は、シンプルなタイトルベースの検索エンジンです。2つ目は、Google [BP]と呼ばれる全文検索エンジンです。Googleは、標準的な検索インタラクション指標、近接性、アンカーテキスト（Webページへのリンクテキスト）、そしてPageRankなど、さまざまな要素を利用して検索結果をランク付けしています。Pag​​eRankの利点に関する包括的なユーザー調査は本稿の範囲を超えていますが、いくつかの比較実験を行い、その結果のサンプルを本稿で提供しています。
+</p><p>
+<!--
+　﻿The benefits of PageRank are the greatest for underspecified queries. For example, a query
+for “Stanford University” may return any number of web pages which mention Stanford (such as
+publication lists) on a conventional search engine, but using PageRank, the university home page
+is listed first.
+-->
+PageRank のメリットは、詳細が明確に指定されていないクエリで最も顕著になります。例えば、「スタンフォード大学」というクエリを実行すると、従来の検索エンジンではスタンフォード大学に言及しているウェブページ（出版物リストなど）がいくつも表示されますが、PageRank を使用すると、大学のホームページが最初に表示されます。
+</p>
+<!--
+<h3>5.1 Title Search</h3>
+-->
+<h3>5.1 タイトル検索</h3>
+<p>
+<!--
+To test the usefulness of PageRank for search we implemented a search engine that used only the
+titles of 16 million web pages. ‘To answer a query, the search engine finds all the web pages whose
+titles contain all of the query words. Then it sorts the results by PageRank. This search engine
+is very simple and cheap to implement. In informal tests, it worked remarkably well. As can be
+seen in Figure 6, a search for “University” yields a list of top universities. This figure shows our
+MultiQuery system which allows a user to query two search engines at the same time. The search
+engine on the left is our PageRank based title search engine. The bar graphs and percentages shown
+are a log of the actual PageRank with the top page normalized to 100%, not a percentile which is
+used everywhere else in this paper. The search engine on the right is Altavista. You can see that
+Altavista returns random looking web pages that match the query “University” and are the root
+page of the server (Altavista seems to be using URL length as a quality heuristic).
+-->
+PageRankの検索における有用性をテストするため、1,600万のウェブページのタイトルのみを使用する検索エンジンを実装しました。クエリに答えるために、検索エンジンはタイトルにクエリ語をすべて含むすべてのウェブページを検索します。そして、結果をPageRankで並べ替えます。この検索エンジンは実装が非常に簡単で安価です。非公式なテストでは、非常にうまく機能しました。図6に示すように、「大学」を検索すると、上位の大学のリストが表示されます。この図は、ユーザーが2つの検索エンジンに同時にクエリを実行できるマルチクエリシステムを示しています。左側の検索エンジンは、PageRankベースのタイトル検索エンジンです。表示されている棒グラフとパーセンテージは、トップページを100%に正規化した実際のPageRankのログであり、本稿の他の部分で使用されているパーセンタイルではありません。右側の検索エンジンはAltavistaです。 Altavista が「大学」というクエリに一致し、サーバーのルートページであるランダムなウェブページを返していることがわかります（Altavista は URL の長さを品質ヒューリスティックとして使用しているようです）。
+
+</p>
+<center><img src="images/fig6.png"></center>
+<p>
+<!--
+<center>Figure 6: Comparison of Query for “University”</center>
+-->
+<center>図6：「大学」のクエリの比較</center>
+</p>
+<!--
+<h3>5.2 Rank Merging</h3>
+-->
+<h3>5.2 ランクの統合</h3>
+<p>
+<!--
+The reason that the title based PageRank system works so well is that the title match ensures
+high precision, and the PageRank ensures high quality. When matching a query like “University”
+on the web, recall is not very important because there is far more than a user can look at. For
+more specific searches where recall is more important, the traditional information retrieval scores
+over full-text and the PageRank should be combined. Our Google system does this type of rank
+merging. Rank merging is known to be a very difficult problem, and we need to spend considerable
+additional effort before we will be able to do a reasonable evaluation of these types of queries.
+However, we do believe that using PageRank as a factor in these queries is quite beneficial.
+-->
+タイトルベースのPageRankシステムが非常にうまく機能する理由は、タイトルの一致によって高い精度が保証され、PageRankによって高品質が保証されるからです。Web上で「大学」のようなクエリを一致させる場合、ユーザーが確認できる範囲をはるかに超える情報が存在するため、再現率はそれほど重要ではありません。再現率がより重要となるより具体的な検索では、従来の情報検索が全文検索よりも重視され、PageRankを組み合わせる必要があります。Googleのシステムは、このようなランクの統合を行っています。ランクの統合は非常に難しい問題であることが知られており、この種のクエリを適切に評価できるようになるまでには、相当な追加作業が必要です。しかしながら、これらのクエリにおいてPageRankを要素として使用することは非常に有益であると考えています。
+</p>
+<!--
+<h3>5.3 Some Sample Results</h3>
+-->
+<h3>5.3 いくつかのサンプル結果</h3>
+<p>
+<!--
+We have experimented considerably with Google, a full-text search engine which uses PageRank.
+While a full-scale user study is beyond the scope of this paper, we provide a sample query in
+Appendix A. For more queries, we encourage the reader to test Google themselves [BP].
+-->
+我々は、PageRank を使用する全文検索エンジンである Google を用いて、かなりの実験を行ってきました。
+本格的なユーザー調査は本稿の範囲を超えていますが、付録 A にサンプルクエリを掲載しています。より多くのクエリについては、読者の皆様ご自身で Google をテストすることをお勧めします [BP]。
+</p><p>
+<!--
+　Table 1 shows the top 15 pages based on PageRank. This particular listing was generated in
+July 1996. In a more recent calculation of PageRank, Microsoft has just edged out Netscape for
+the highest PageRank.
+-->
+表1は、PageRankに基づく上位15ページを示しています。このリストは1996年7月に作成されました。最近のPageRankの計算では、MicrosoftがNetscapeをわずかに上回り、PageRankが最高位となりました。
+
+</p>
+<center><img src="images/table1.png"></center>
+</p>
+<!--
+<center>Table 1: Top 15 Page Ranks: July 1996</center>
+-->
+<center>表1: ページランク上位15位: 1996年7月</center>
+</p>
+<!--
+<h3>5.4 Common Case</h3>
+-->
+<h3>5.4 一般的なケース</h3>
+<p>
+<!--
+One of the design goals of PageRank was to handle the common case for queries well. For example,
+a user searched for “wolverine”, remembering that the University of Michigan system used for all
+administrative functions by students was called something with a wolverine in it. Our PageRank
+based title search system returned the answer “Wolverine Access” as the first result. This is sensible
+since all the students regularly use the Wolverine Access system, and a random user is quite likely
+to be looking for it given the query “wolverine”. The fact that the Wolverine Access site is a good
+common case is not contained in the HTML of the page. Even if there were a way of defining good
+﻿meta-information of this form within a page, it would be problematic since a page author could
+not be trusted with this kind of evaluation. Many web page authors would simply claim that their
+pages were all the best and most used on the web.
+-->
+PageRank の設計目標の一つは、クエリの一般的なケースを適切に処理することでした。例えば、ミシガン大学の学生がすべての管理機能に使用しているシステムが、wolverine(マーベル・コミックの架空のスーパーヒーロー)の名前を冠していることを思い出し、ユーザーが「wolverine」を検索したとします。Pag​​eRank ベースのタイトル検索システムは、最初の結果として「Wolverine Access」を返しました。これは理にかなっています。なぜなら、すべての学生が Wolverine Access システムを定期的に使用しており、ランダムなユーザーが「wolverine」というクエリで検索する可能性が非常に高いからです。Wolverine Access サイトが一般的なケースであるという事実は、ページの HTML には含まれていません。たとえページ内でこのような形式の適切なメタ情報を定義する方法があったとしても、ページ作成者がこの種の評価を信頼できないため、問題が生じます。多くの Web ページ作成者は、自分のページがすべて Web 上で最も優れ、最も使用されていると主張するだけでしょう。
+</p><p>
+<!--
+　It is important to note that the goal of finding a site that contains a great deal of information
+about wolverines is a very different task than finding the common case wolverine site. There is an
+interesting system |[Mar97| that attempts to find sites that discuss a topic in detail by propagating
+the textual matching score through the link structure of the web. It then tries to return the page
+on the most central path. This results in good results for queries like “flower”; the system will
+return good navigation pages from sites that deal with the topic of flowers in detail. Contrast that
+with the common case approach which might simply return a commonly used commercial site that
+had little information except how to buy flowers. It is our opinion that both of these tasks are
+important, and a general purpose web search engine should return results which fulfill the needs
+of both of these tasks automatically. In this paper, we are concentrating only on the common case
+approach.
+-->
+wolverine に関する豊富な情報を含むサイトを見つけるという目標は、一般的な wolverine のサイトを見つけるという目標とは全く異なるタスクであることに注意することが重要です。Webのリンク構造を通じてテキストマッチングスコアを伝播させることで、あるトピックを詳細に議論しているサイトを見つけようとする興味深いシステムがあります（|[Mar97|）。このシステムは、最も中心的なパスにあるページを返そうとします。このシステムは、「花」のようなクエリに対して良好な結果をもたらします。システムは、花のトピックを詳細に扱っているサイトから、適切なナビゲーションページを返します。これを、花の買い方以外にほとんど情報のない、一般的に使用されている商用サイトを返すだけの一般的なアプローチと比較してください。私たちは、これらのタスクはどちらも重要であり、汎用Web検索エンジンは、これらのタスクの両方のニーズを自動的に満たす結果を返すべきだと考えています。本稿では、一般的なアプローチにのみ焦点を当てます。
+</p>
+<!--
+<h3>5.5 Subcomponents of Common Case</h3>
+-->
+<h3>5.5 一般的なケースのサブコンポーネント</h3>
+<p>
+<!--
+It is instructive to consider what kind of common case scenarios PageRank can help represent.
+Besides a page which has a high usage, like the Wolverine Access cite, PageRank can also represent
+a collaborative notion of authority or trust. For example, a user might prefer a news story simply
+because it is linked is linked directly from the New York Times home page. Of course such a story
+will receive quite a high PageRank simply because it is mentioned by a very important page. This
+seems to capture a kind of collaborative trust, since if a page was mentioned by a trustworthy
+or authoritative source, it is more likely to be trustworthy or authoritative. Similarly, quality or
+importance seems to fit within this kind of circular definition.
+-->
+PageRank がどのような一般的なケースシナリオを表現するのに役立つかを考えてみると、有益です。
+Wolverine Access のような利用頻度の高いページ以外にも、PageRank は権威や信頼といった協調的な概念を表すことができます。例えば、ユーザーは、New York Times のホームページから直接リンクされているという理由だけで、あるニュース記事を好むかもしれません。もちろん、そのような記事は、非常に重要なページで言及されているという理由だけで、かなり高い PageRank を獲得するでしょう。これは、ある種の協調的な信頼を捉えているように思われます。なぜなら、ページが信頼できる、あるいは権威のある情報源によって言及されている場合、そのページは信頼できる、あるいは権威がある可能性が高いからです。同様に、品質や重要性も、このような循環的な定義に当てはまるようです。
+</p>
+<!--
+<h2>6 Personalized PageRank</h2>
+-->
+<h2>6 パーソナライズされたページランク</h2>
+<p>
+<!--
+An important component of the PageRank calculation is \(E\) — a vector over the Web pages which
+is used as a source of rank to make up for the rank sinks such as cycles with no outedges (see
+Section 2.4). However, aside from solving the problem of rank sinks, F turns out to be a powerful
+parameter to adjust the page ranks. Intuitively the (E\) vector corresponds to the distribution of web
+pages that a random surfer periodically jumps to. As we see below, it can be used to give broad
+general views of the Web or views which are focussed and personalized to a particular individual.
+-->
+PageRank計算の重要な要素は \(E\) です。\(E\) はWebページ上のベクトルで、アウトエッジのないサイクルなどのランクシンクを補うためのランクソースとして使用されます（セクション2.4を参照）。しかし、ランクシンクの問題を解決する以外にも、\(E\) はページランクを調整するための強力なパラメータであることがわかります。直感的に、\(E\) ベクトルは、ランダムなサーファーが定期的にジャンプするWebページの分布に対応します。以下に示すように、\(E\) ベクトルはWebの広範な概要を示すために、または特定の個人に焦点を当ててパーソナライズされたビューを提供するために使用できます。
+</p><p>
+<!--
+　We have performed most experiments with an \(E\) vector that is uniform over all web pages with
+\(||E||_1 = 0.15\). This corresponds to a random surfer periodically jumping to a random web page.
+This is a very democratic choice for \(E\) since all web pages are valued simply because they exist.
+Although this technique has been quite successful, there is an important problem with it. Some
+Web pages with many related links receive an overly high ranking. Examples of these include
+copyright warnings, disclaimers, and highly interlinked mailing list archives.
+-->
+ほとんどの実験は、すべてのウェブページで均一な \(E\) ベクトル（\(||E||_1 = 0.15\)）を用いて行いました。これは、ランダムなサーファーが定期的にランダムなウェブページにジャンプする状況に相当します。
+すべてのウェブページは存在するだけで評価されるため、\(E\) にとってこれは非常に民主的な選択です。
+この手法は非常に成功していますが、重要な問題があります。関連リンクを多く含む一部のウェブページは、過度に高いランキング付けを受けます。このような例としては、著作権警告、免責事項、相互にリンクされたメーリングリストのアーカイブなどが挙げられます。
+</p><p>
+<!--
+　Another extreme is to have \(E\) consist entirely of a single web page. We tested two such \(E\)’s —
+the Netscape home page, and the home page of a famous computer scientist, John McCarthy. For
+the Netscape home page, we attempt to generate page ranks from the perspective of a novice user
+who has Netscape set as the default home page. In the case of John McCarthy’s home page we
+want to calculate page ranks from the perspective of an individual who has given us considerable
+contextual information based on the links on his home page.
+-->
+もう1つの極端な例は、\(E\)が完全に1つのWebページで構成されることです。私たちはそのような\(E\)を2つテストしました。Netscapeのホームページと、著名なコンピュータ科学者であるJohn McCarthyのホームページです。Netscapeのホームページについては、Netscapeをデフォルトのホームページに設定している初心者ユーザーの視点からページランクを生成しようとします。John McCarthyのホームページの場合は、ホームページ上のリンクに基づいてかなりのコンテキスト情報を提供してくれた個人の視点からページランクを計算したいと考えています。
+</p><p>
+<!--
+　In both cases, the mailing list problem mentioned above did not occur. And, in both cases, the
+respective home page got the highest PageRank and was followed by its immediate links. From that point, the disparity decreased. In Table 2, we show the resulting page rank percentiles for
+an assortment of different pages. Pages related to computer science have a higher McCarthy-rank
+than Netscape-rank and pages related to computer science at Stanford have a considerably higher
+McCarthy-rank. For example, the Web page of another Stanford Computer Science Dept. faculty
+member is more than six percentile points higher on the McCarthy-rank. Note that the page ranks
+are displayed as percentiles. This has the effect of compressing large differences in PageRank at
+the top of the range.
+-->
+どちらのケースでも、前述のメーリングリストの問題は発生しませんでした。また、どちらのケースでも、それぞれのホームページが最も高い PageRank を獲得し、その直下のリンクが続いていました。そこから格差は縮小しました。表 2 は、様々なページの PageRank パーセンタイルを示しています。コンピュータサイエンス関連のページは、Netscape ランクよりも McCarthy ランクが高く、スタンフォード大学のコンピュータサイエンス関連のページは McCarthy ランクがかなり高くなっています。例えば、スタンフォード大学のコンピュータサイエンス学科の他の教員の Web ページは、McCarthy ランクで 6 パーセンタイル以上高くなっています。ページランクはパーセンタイルで表示されていることに注意してください。これにより、範囲の上限における PageRank の大きな差が圧縮されます。
+</p>
+<center><img src="images/table2.png"></center>
+<p>
+<!--
+Table 2: Page Ranks for Two Different Views: Netscape vs. John McCarthy
+-->
+表2: 2つの異なる視点のページランク: Netscape vs. John McCarthy
+</p><p>
+<!--
+　Such personalized page ranks may have a number of applications, including personal search
+engines. These search engines could save users a great deal of trouble by efficiently guessing a
+large part of their interests given simple input such as their bookmarks or home page. We show an
+example of this in Appendix A with the “Mitchell” query. In this example, we demonstrate that
+while there are many people on the web named Mitchell, the number one result is the home page
+of a colleague of John McCarthy named John Mitchell.
+-->
+このようなパーソナライズされたページランクは、パーソナル検索エンジンをはじめ、様々な用途に応用できます。これらの検索エンジンは、ブックマークやホームページといった簡単な入力から、ユーザーの興味関心の大部分を効率的に推測することで、ユーザーの手間を大幅に省くことができます。付録Aでは、「Mitchell」というクエリを用いて、この例を示しています。この例では、ウェブ上にはMitchellという名前の人が多数存在するにもかかわらず、検索結果の1位はJohn McCarthyの同僚であるJohn Mitchellのホームページであることを示しています。
+</p>
+<!--
+<h3>6.1 Manipulation by Commercial Interests</h3>
+-->
+<h3>6.1 商業的利益による操作</h3>
+<p>
+<!--
+These types of personalized PageRanks are virtually immune to manipulation by commercial in-
+terests. For a page to get a high PageRank, it must convince an important page, or a lot of
+non-important pages to link to it. At worst, you can have manipulation in the form of buying
+advertisements(links) on important sites. But, this seems well under control since it costs money.
+This immunity to manipulation is an extremely important property. This kind of commercial ma-
+nipulation is causing search engines a great deal of trouble, and making features that would be great
+to have very difficult to implement. For example fast updating of documents is a very desirable
+feature, but it is abused by people who want to manipulate the results of the search engine.
+-->
+このようなパーソナライズされたPageRankは、商業目的の操作を実質的に防ぎます。ページが高いPageRankを獲得するには、重要なページ、あるいは多くの重要でないページにリンクを張ってもらう必要があります。最悪の場合、重要なサイトで広告（リンク）を購入するという形で操作される可能性があります。しかし、費用がかかるため、これは十分に管理されているようです。
+この操作に対する耐性は非常に重要な特性です。このような商業目的の操作は検索エンジンに大きな問題を引き起こし、あれば便利な機能の実装を非常に困難にしています。例えば、ドキュメントの高速更新は非常に望ましい機能ですが、検索エンジンの結果を操作しようとする人々によって悪用されています。
+</p><P>
+<!--
+　A compromise between the two extremes of uniform \(E\) and single page \(E\) is to let \(E\) consist of
+all the root level pages of all web servers. Notice this will allow some manipulation of PageRanks.
+Someone who wished to manipulate this system could simply create a large number of root level
+servers all pointing at a particular site.
+-->
+一様な \(E\) と単一ページ \(E\) という両極端の間の妥協案として、\(E\) をすべてのウェブサーバーのルートレベルページすべてで構成することが挙げられます。ただし、これにより PageRank をある程度操作できるようになることに注意してください。このシステムを操作したい人は、特定のサイトを指すルートレベルサーバーを多数作成するだけで済みます。
+</p>
+<!--
+﻿<h2>7 Applications</h2>
+<h3>7.1 Estimating Web Traffic</h3>
+-->
+<h2>7 アプリケーション</h2>
+<h3>7.1 Web トラフィックの見積もり</h3>
+<p>
+<!--
+Because PageRank roughly corresponds to a random web surfer (see Section 2.5), it is interesting
+to see how PageRank corresponds to actual usage. We used the counts of web page accesses from
+NLANR [NLA] proxy cache and compared these to PageRank. The NLANR data was from several
+national proxy caches over the period of several months and consisted of 11,817,665 unique URLs
+with the highest hit count going to Altavista with 638,657 hits. There were 2.6 million pages in the
+intersection of the cache data and our 75 million URL database. It is extremely difficult to compare
+these datasets analytically for a number of different reasons. Many of the URLs in the cache access
+data are people reading their personal mail on free email services. Duplicate server names and page
+names are a serious problem. Incompleteness and bias a problem is both the PageRank data and
+the usage data. However, we did see some interesting trends in the data. There seems to be a high
+usage of pornographic sites in the cache data, but these sites generally had low PageRanks. We
+believe this is because people do not want to link to pornographic sites from their own web pages.
+Using this technique of looking for differences between PageRank and usage, it may be possible to
+find things that people like to look at, but do not want to mention on their web pages. There are
+some sites that have a very high usage, but low PageRank such as netscape.yahoo.com. We believe
+there is probably an important backlink which simply is omitted from our database (we only have
+a partial link structure of the web). It may be possible to use usage data as a start vector for
+PageRank, and then iterate PageRank a few times. This might allow filling in holes in the usage
+data. In any case, these types of comparisons are an interesting topic for future study.
+-->
+PageRankはランダムなウェブサーファーとほぼ一致するため（セクション2.5を参照）、PageRankが実際の利用状況とどのように一致するかを見ることは興味深いことです。NLANR [NLA]プロキシキャッシュからのウェブページアクセス数を使用し、PageRankと比較しました。NLANRデータは、数か月間にわたる複数の国内プロキシキャッシュから取得されたもので、11,817,665のユニークURLで構成されており、最もヒット数が多かったのはAltavistaで638,657ヒットでした。キャッシュデータと7,500万URLデータベースの共通部分には260万ページがありました。これらのデータセットを分析的に比較することは、いくつかの理由から非常に困難です。キャッシュアクセスデータ内のURLの多くは、無料メールサービスで個人メールを読んでいる人々です。サーバー名とページ名の重複は深刻な問題です。不完全性と偏りは、PageRankデータと利用状況データの両方に見られる問題です。しかし、データにはいくつか興味深い傾向が見られました。キャッシュデータではポルノサイトの利用率が高いようですが、これらのサイトのPageRankは概して低いです。これは、人々が自分のウェブページからポルノサイトにリンクしたくないためだと考えられます。Pag​​eRankと利用率の違いを探すこの手法を用いることで、人々が見たいと思っていても自分のウェブページでは触れたくないものを見つけることができるかもしれません。netscape.yahoo.comのように、利用率は非常に高いのにPageRankが低いサイトも存在します。おそらく、重要なバックリンクがデータベースから省略されているだけでしょう（ウェブのリンク構造は部分的なものしか持っていません）。利用率データをPageRankの開始ベクトルとして使用し、PageRankを数回反復処理することで、利用率データの欠落を埋めることができるかもしれません。いずれにせよ、このような比較は今後の研究にとって興味深いテーマです。
+</p>
+<!--
+<h3>7.2 PageRank as Backlink Predictor</h3>
+-->
+<h3>7.2 バックリンク予測ツールとしてのPageRank</h3>
+<p>
+<!--
+One justification for PageRank is that it is a predictor for backlinks. In [|CGMP98] we explore the
+issue of how to crawl the web efficiently, trying to crawl better documents first. We found on tests
+of the Stanford web that PageRank is a better predictor of future citation counts than citation
+counts themselves.
+-->
+PageRank の正当性の一つは、被リンクの予測指標となることです。[|CGMP98] では、より質の高い文書をまずクロールすることで、ウェブを効率的にクロールする方法を探求しました。スタンフォード大学のウェブを対象としたテストでは、PageRank は引用数そのものよりも将来の引用数を予測する上で優れていることがわかりました。
+</p><p>
+<!--
+　The experiment assumes that the system starts out with only a single URL and no other
+information, and the goal is to try to crawl the pages in as close to the optimal order as possible.
+The optimal order is to crawl pages in exactly the order of their rank according to an evaluation
+function. For the purposes here, the evaluation function is simply the number of citations, given
+complete information. The catch is that all the information to calculate the evaluation function is
+not available until after all the documents have been crawled. It turns out using the incomplete
+data, PageRank is a more effective way to order the crawling than the number of known citations.
+In other words, PageRank is a better predictor than citation counting even when the measure is
+the number of citations! The explanation for this seems to be that PageRank avoids the local
+maxima that citation counting gets stuck in. For example, citation counting tends to get stuck in
+local collections like the Stanford CS web pages, taking a long time to branch out and find highly
+cited pages in other areas. PageRank quickly finds the Stanford homepage is important, and gives
+preference to its children resulting in an efficient, broad search.
+-->
+この実験では、システムが単一のURLのみを持ち、その他の情報は何も持たない状態から開始し、可能な限り最適な順序でページをクロールすることを目標としています。
+最適な順序とは、評価関数に基づいてランク付けされた順序でページをクロールすることです。ここでの目的のために、評価関数は完全な情報が与えられた場合の引用数です。ただし、評価関数を計算するために必要なすべての情報は、すべての文書がクロールされた後でなければ入手できないという難点があります。不完全なデータを用いた結果、PageRankは既知の引用数よりもクロール順序付けの順序付けに効果的な方法であることがわかりました。
+言い換えれば、引用数を指標とする場合であっても、PageRankは引用数よりも優れた予測指標となるのです。この理由としては、PageRank が引用数のカウントが陥りやすい局所的な最大値を回避している点が挙げられます。例えば、引用数のカウントはスタンフォード大学のコンピュータサイエンスのウェブページのような局所的な集合体では行き詰まりがちで、他の領域で引用数の多いページを見つけるのに長い時間がかかります。Pag​​eRank はスタンフォード大学のホームページが重要であることを素早く認識し、その子ページを優先することで、効率的で広範な検索を実現します。
+</p><p>
+<!--
+　This ability of PageRank to predict citation counts is a powerful justification for using PageR-
+ank. Since it is very difficult to map the citation structure of the web completely, PageRank may
+even be a better citation count approximation than citation counts themselves.
+-->
+PageRankが引用数を予測する能力は、PageRankを使用する強力な根拠となります。Webの引用構造を完全にマッピングすることは非常に困難であるため、PageRankは引用数そのものよりも引用数の近似値として優れている可能性があります。
+</p>
+<!--
+<h3>7.3 User Navigation: The PageRank Proxy</h3>
+-->
+<h3>7.3 ユーザーナビゲーション: PageRank プロキシ</h3>
+<p>
+<!--
+We have developed a web proxy application that annotates each link that a user sees with its
+PageRank. This is quite useful, because users receive some information about the link before they
+click on it. In Figure 7 is a screen shot from the proxy. The length of the red bars is the log of the
+URL’s PageRank. We can see that major organizations, like Stanford University, receive a very
+high ranking followed by research groups, and then people, with professors at the high end of the
+people scale. Also notice ACM has a very high PageRank, but not as high as Stanford University.
+Interestingly, this PageRank annotated view of the page makes an incorrect URL for one of the
+professors glaringly obvious since the professor has a embarrassingly low PageRank. Consequently
+this tool seems useful for authoring pages as well as navigation. This proxy is very helpful for
+looking at the results from other search engines, and pages with large numbers of links such as
+Yahoo’s listings. The proxy can help users decide which links in a long listing are more likely to
+be interesting. Or, if the user has some idea where the link they are looking for should fall in the
+“importance” spectrum, they should be able to scan for it much more quickly using the proxy.
+-->
+私たちは、ユーザーが目にする各リンクにPageRankを注釈として付与するWebプロキシアプリケーションを開発しました。これは非常に便利です。ユーザーはリンクをクリックする前に、そのリンクに関する情報を受け取ることができるからです。図7はプロキシのスクリーンショットです。赤いバーの長さはURLのPageRankの対数値です。スタンフォード大学のような主要な組織が非常に高いランキングを獲得しており、次に研究グループ、そして人物の順で、教授陣は人物スケールの上位に位置していることがわかります。また、ACMのPageRankは非常に高いものの、スタンフォード大学ほど高くないことにも注目してください。興味深いことに、このPageRank注釈付きページビューでは、教授の一人のURLが間違っていることが一目瞭然です。なぜなら、教授のPageRankは恥ずかしいほど低いからです。したがって、このツールはページの作成だけでなく、ナビゲーションにも役立つようです。このプロキシは、他の検索エンジンの結果や、Yahoo!のリストのようなリンクが多数あるページを確認するのに非常に役立ちます。プロキシは、長いリストの中からどのリンクが興味を引く可能性が高いかをユーザーが判断するのに役立ちます。また、ユーザーが探しているリンクが「重要度」のどのレベルに位置するかをある程度把握している場合は、プロキシを使用することで、より迅速にリンクをスキャンできるようになります。
+</p>
+<center><img src="images/fig7.png"></center>
+<p>
+
+<!--
+<center>Figure 7: PageRank Proxy</center>
+-->
+<center>図7: PageRankプロキシ</center>
+</p>
+<!--
+<h3>﻿7.4 Other Uses of PageRank</h3>
+-->
+<h3>﻿7.4 PageRank のその他の用途</h3>
+<p>
+
+<!--
+The original goal of PageRank was a way to sort backlinks so if there were a large number of
+backlinks for a document, the “best” backlinks could be displayed first. We have implemented such
+a system. It turns out this view of the backlinks ordered by PageRank can be very interesting when
+trying to understand your competition. For example, the people who run a news site always want
+to keep track of any significant backlinks the competition has managed to get. Also, PageRank can
+help the user decide if a site is trustworthy or not. For example, a user might be inclined to trust
+information that is directly cited from the Stanford homepage.
+-->
+PageRankの本来の目的は、バックリンクを並べ替えることで、ある文書に多数のバックリンクがある場合に「最適な」バックリンクを最初に表示できるようにすることでした。私たちはそのようなシステムを実装しました。PageRankで順序付けられたバックリンクのこの表示は、競合他社を理解しようとするときに非常に興味深いものになることがわかりました。例えば、ニュースサイトを運営している人は、競合他社が獲得した重要なバックリンクを常に把握したいと考えています。また、PageRankは、ユーザーがサイトが信頼できるかどうかを判断するのに役立ちます。例えば、ユーザーはスタンフォード大学のホームページから直接引用された情報を信頼する傾向があるかもしれません。
+</p>
+<!--
+<h2>8 Conclusion</h2>
+-->
+<h2>8 結論</h2>
+<p>
+<!--
+In this paper, we have taken on the audacious task of condensing every page on the World Wide
+Web into a single number, its PageRank. PageRank is a global ranking of all web pages, regardless
+of their content, based solely on their location in the Web’s graph structure.
+-->
+本稿では、ワールド・ワイド・ウェブ上のあらゆるページを単一の数値、つまりPageRankに凝縮するという大胆な試みに挑戦しました。PageRankとは、ウェブのグラフ構造における位置のみに基づいて、コンテンツに関係なくすべてのウェブページをグローバルにランク付けするものです。
+</p><p>
+<!--
+　Using PageRank, we are able to order search results so that more important and central Web
+pages are given preference. In experiments, this turns out to provide higher quality search results to
+users. Th intuition behind PageRank is that it uses information which is exernal to the Web pages
+themselves - their backlinks, which provide a kind of peer review. Furthermore, backlinks from
+“important” pages are more significant than backlinks from average pages. This is encompassed in
+the recursive definition of PageRank (Section 2.4).
+-->
+PageRank を用いることで、より重要で中心的なウェブページが優先されるように検索結果を順序付けることができます。実験では、これによりユーザーに高品質な検索結果が提供されることがわかりました。PageRank の背後にある直感的な考え方は、ウェブページ自体の外部にある情報、つまり一種のピアレビューとして機能するバックリンクを利用するというものです。さらに、「重要な」ページからのバックリンクは、平均的なページからのバックリンクよりも重要です。これは、PageRank の再帰的定義（セクション 2.4）に含まれています。
+</p><p>
+<!--
+　PageRank could be used to separate out a small set of commonly used documents which can
+answer most queries. The full database only needs to be consulted when the small database is not
+adequate to answer a query. Finally, PageRank may be a good way to help find representative
+pages to display for a cluster center.
+-->
+PageRank は、ほとんどのクエリに回答できる、一般的に使用される少数のドキュメントを分離するために使用できます。完全なデータベースを参照する必要があるのは、小規模なデータベースではクエリに回答できない場合にのみです。最後に、PageRank は、クラスターセンターに表示する代表的なページを見つけるのに役立つ可能性があります。
+</p><p>
+<!--
+　We have found a number of applications for PageRank in addition to search which include traffic
+estimation, and user navigation. Also, we can generate personalized PageRanks which can create
+a view of Web from a particular perspective.
+-->
+PageRankは、検索以外にも、トラフィック推定やユーザーナビゲーションなど、様々な用途に活用できることが分かっています。また、パーソナライズされたPageRankを生成することで、特定の視点からWebを分析することも可能です。
+</p><p>
+<!--
+ Overall, our experiments with PageRank suggest that the structure of the Web graph is very
+useful for a variety of information retrieval tasks.
+-->
+全体的に、PageRank に関する私たちの実験は、Web グラフの構造がさまざまな情報検索タスクに非常に有用であることを示唆しています。
+</p>
+<!--
+<h2>References</h2>
+-->
+<h2>参考文献</h2>
+<p>
+<div class="styleRef">
+<ul><li>
+
+[BP] Sergey Brin and Larry Page. Google search engine. http: //google.stanford.edu.
+
+</li><br><li>[CGMP98] Junghoo Cho, Hector Garcia-Molina, and Lawrence Page. Efficient crawling through
+url ordering. In To Appear: Proceedings of the Seventh International Web Conference
+
+
+</li><br><li>[Gar95| Eugene Garfield. New international professional society signals the maturing of sciento-
+metrics and informetrics. The Scientist, 9(16), Aug 1995. http: //www.the-scientist.
+library .upenn.edu/yr1995/august/issi_950821 .ht/ml.
+
+|Gof71] William Goffman. A mathematical method for analyzing the growth of a scientific
+discipline. Journal of the ACM, 18(2):173-185, April 1971.
+
+</li><br><li>[Kle98] Jon Kleinberg. Authoritative sources in a hyperlinked environment. In Proceedings of
+the Nineth Annual ACM-SIAM Symposium on Discrete Algorithms., 1998.
+
+
+﻿[Mar97| Massimo Marchiori. The quest for correct information on the web: Hyper search engines.
+In Proceedings of the Sixth International WWW Conference, Santa Claram USA, April,
+1997, 1997. http: //www6 .nttlabs.com/HyperNews/get/PAPER222.htm1.
+
+
+</li><br><li>[MF 95] Sougata Mukherjea and James D. Foley. Showing the context of nodes in the world-
+wide web. In Proceedings of ACM CHI’95 Conference on Human Factors in Computing
+Systems, volume 2 of Short Papers: Web Browsing, pages 326-327, 1995.
+
+</li><br><li>[MFH95] Sougata Mukherjea, James D. Foley, and Scott Hudson. Visualizing complex hyper-
+media networks through multiple hierarchical views. In Proceedings of ACM CHI’95
+Conference on Human Factors in Computing Systems, volume 1 of Papers: Creating
+Visualizations, pages 331-337, 1995.
+
+</li><br><li>[MR95] R. Motwani and P. Raghavan. Randomized Algorithms. Cambridge University Press,
+1995.
+
+</li><br><li>[NLA] NLANR. A distributed testbed for national information provisioning. http://ircache.
+nlanr.net/Cache/.
+
+</li><br><li>[PB98] Lawrence Page and Sergey Brin. The anatomy of a large-scale hypertextual web search
+engine. In To Appear: Proceedings of the Seventh International Web Conference (WWW
+98), 1998.
+
+</li><br><li>[Pit97] James E. Pitkow. Characterizing World Wide Web Ecologies. PhD thesis, Georgia
+Institue of Technology, June 1997.
+
+</li><br><li>[PPR96] Peter Pirolli, James Pitkow, and Ramana Rao. Silk from a sow’s ear: Extracting usable
+structure from the web. In Michael J. Tauber, Victoria Bellotti, Robin Jeffries, Jock D.
+Mackinlay, and Jakob Nielsen, editors, Proceedings of the Conference on Human Factors
+in Computing Systems : Common Ground, pages 118-125, New York, 13-18 April 1996.
+ACM Press.
+
+</li><br><li>[San95| Neeraja Sankaran. Speculation in the biomedical community abounds over likely candi-
+dates for nobel. The Scientist, 9(19), Oct 1995. http://www.the-scientist.library.
+upenn.edu/yr1995/oct/nobel_951002.htm1%.
+
+</li><br><li>[Spe97| Ellen Spertus. Parasite: Mining structural information on the web. In Proceedings
+of the Sixth International WWW Conference, Santa Claram USA, April, 1997, 1997.
+http: //www6 .nttlabs.com/HyperNews/get/PAPER206.htm1.
+
+</li><br><li>[Til] Hope N. Tillman. Evaluating quality on the net. http://www.tiac.net/users/hope/
+findqual.html.
+
+</li><br><li>[WVS+96] Ron Weiss, Bienvenido Vélez, Mark A. Sheldon, Chanathip Manprempre, Peter Szi-
+lagyi, Andrzej Duda, and David K. Gifford. HyPursuit: A hierarchical network search
+engine that exploits content-link hypertext clustering. In Proceedings of the 7th ACM
+Conference on Hypertext, pages 180-193, New York, 16-20 March 1996. ACM Press.
+</li></ul></div>
+</p>
+<!--
+<h2>﻿Appendix A</h2>
+-->
+<h2>付録A</h2>
+<p>
+<!--
+This Appendix contains several sample query results using Google. The first is a query for “Digital Libraries” using a uniform \(E\). The next is a query for “Mitchell” using \(E\) consisting just of John McCarthy’s home page.
+-->
+この付録には、Google を用いたクエリ結果のサンプルがいくつか掲載されています。1 つ目は、統一された \(E\) を使用した「Digital Libraries」のクエリです。2 つ目は、John McCarthy のホームページのみを含む \(E\) を使用した「Mitchell」のクエリです。
+
+</p>
+    </body>
+</html>
