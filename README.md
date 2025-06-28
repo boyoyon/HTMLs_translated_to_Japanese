@@ -12,6 +12,9 @@
         <h2>その他</h2>
         <p>
             AIが要約してくれるし、言語を選択すれば日本語で読める･･･<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.18254v1">RLPR: ベリファイアなしでRLVRを汎用ドメインに外挿する</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2506.01622v2">汎用エージェントは世界モデルを必要とする</a><br>
+            ・<a href="https://www.alphaxiv.org/ja/overview/1803.10122v4">世界モデル</a>　2018年<br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.17218v1">機械心像：潜在視覚トークンを活用したマルチモーダル推論の強化</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2504.07960">VisualCloze: ビジュアルインコンテキスト学習によるユニバーサル画像生成フレームワーク</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/1707.06347 ">近接方策最適化アルゴリズム：強化学習に革命をもたらす</a>　2017年<br><br>
