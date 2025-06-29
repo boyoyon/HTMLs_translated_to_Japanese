@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Algorithm for computer contril of a digital plotter</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .highlight {
+            color: red; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+An algorithm is given for computer control of a digital plotter.
+<br><br>
+The algorithm may be programmed without multiplication or dt-
+vision instructions and is efficient with respect to speed of execution
+and memory uttlization.
+
+        <h1><center>Algorithm for computer control of a digital plotter</center></h1>
+<center>by J. E. Bresenham</center><br>
+
+<p>
+This paper describes an algorithm for computer control of a type 
+of digital plotter that is now in common use with digital computers.<sup>1</sup>
+</p><p class="margin-large">
+
+<sup>1</sup> This paper is based on “An incremental algorithm for digital plotting,"
+presented by the author at the ACM National Conference at Denver,
+Colorado, on August 30, 1963.
+</p><p>
+
+The plotter under consideration is capable of executing, in
+response to an appropriate pulse, any one of the eight linear
+movements shown in Figure 1. Thus, the plotter can move linearly
+from a point on a mesh to any adjacent point on the mesh. A
+typical mesh size is 1/100th of an inch.
+</p>
+<center><img src="images/fig1.png"></center>
+<p>
+
+<center>Figure 1 Plotter movements</center>
+</p><p>
+
+The data to be plotted are expressed in an \((x, y)\) rectangular
+coordinate system which has been scaled with respect to the mesh;
+i.e., the data points lie on mesh points and consequently have
+integral coordinates.
+</p><p>
+
+It is assumed that the data include a sufficient number of
+appropriately selected points to produce a satisfactory representa-
+tion of the curve by connecting the points with line segments, as
+illustrated in Figure 2. In Figure 3, the line segment connecting the two adjacent data points \(D_1(x_1, y_1)\) and \(D_2(x_2,y_2)\) is shown on
+the mesh, drawn on an enlarged scale. Also shown is the path
+actually taken by the plotter in accordance with the algorithm.
+In each instance, the mesh point nearest the desired line segment
+is selected. For example, since \(Q\) is closer to the line segment than
+\(R\),\(Q\) is chosen as the second mesh point in the path taken by the
+plotter in approximating the desired segment joining \(D_1\) and \(D_2\).
+
+</p>
+<center><img src="images/fig2.png"></center>
+<p>
+
+<center>Figure 2 Curve defined by linear segments joining data points</center>
+</p>
+<center><img src="images/fig3.png"></center>
+<p>
+
+<center>Figure 3 Sequence of plotter movements</center>
+</p><p>
+
+In the first case to be considered, it is assumed that \(D_2\) lies
+in the first octant, relative to a rectangular coordinate system ob-
+tained by translation of the origin to \(D_1\). It is apparent that the
+plotter movement can be accomplished by a sequence of moves
+involving only \(M_1\) and \(M_2\), as illustrated in Figure 3.
+</p><p>
+
+In Figure 4, an \((a, b)\) coordinate system obtained by translation
+of the origin to \(D_1\) is shown. Consequently, the new coordinates of
+\(D_2\) are \((\Delta a,\Delta b) = (x_2 - x_1, y_2 - y_1)\).
+</p>
+<center><img src="images/fig4.png"></center>
+<p>
+
+<center>Figure 4 Notation for the algorithm</center>
+
+</p><p>
+When the plotter has progressed to the point \(P_{i-1}\), as indicated
+in Figure 4, the next movement is either \(M_i\) (to the point \(R_i\))
+if \(r_i \lt q_i\), or \(M_2\) (to the point \(Q_i\)) if \(r_i \geq q_i\).
+</p><p>
+
+It follows from similar triangles that \(r_i^\prime — q_i^\prime\)has the same sign
+as \(r_i - q_i\). Since the segment \(D_1D_2\) lies in the first octant, \(\Delta a > 0\).
+Thus, \(\nabla_i = (r_i^\prime — q_i^\prime)\Delta a\) also has the same sign as \(r_i - q_i\), and may
+be used for computational convenience in selecting the appropriate
+movement, either \(M_1\) or \(M_2\). Later in the paper, \(\nabla_i\) is shown to
+satisfy the recursive relation:
+
+\[
+\begin{align}
+\nabla_1 &= 2\Delta b - \Delta a \\
+\\
+\nabla_{i+1} &=
+\begin{cases}
+\begin{array}{l l l}
+\nabla_i + 2\Delta b - 2\Delta a & if & \nabla_i \geq 0 \\
+\nabla_i + 2\Delta b & if & \nabla_i \lt 0 \\
+\end{array}
+\end{cases}
+\end{align}
+\tag{1}
+\]
+
+where
+
+\[
+\Delta a = x_2 - x_1,　\Delta b = y_2 - y_1  \tag{2}
+\]
+
+The values of \(\nabla_i\) computed by means of (1) and (2) are used to
+determine the movement of the plotter:
+
+\[
+if 
+\left\{
+\begin{array}{l l l}
+\nabla_i \lt 0 & execute & m_1 \\
+\nabla_i \geq 0 & execute & m_2
+\end{array}
+\right\}\; i=1,\cdots,\Delta a \tag{3}
+\]
+
+where
+
+\[
+m_1=M_1　and　m_2 = M_2  \tag{4}
+\]
+
+Expressions (1), (2), (8), and (4) constitute the algorithm for the
+present case. For other octants, the right members of each equality
+in (2) and (4) must be modified.
+</p><p>
+
+Before indicating this modification, the recursive relation (1)
+is shown to hold. The notation employed in Figure 4 is as follows:
+\((a_{i-1},\hat{b}_{i-1})\) is used to denote the coordinates of \(P_{i-1}\). Consequently,
+the coordinates of \(R_i\) and \(Q_i\) are, respectively, \((a_i, \lfloor b_i \rfloor)\) and
+\((a_i, \lceil b_i \rceil)\), where “\(\lfloor \; \rfloor\)” and “\(\lceil \; \rceil\)" are used to denote the floor
+and ceiling operators.<sup>2</sup> Denoting the ordinate of \(S_i\) by \(b_i\), the
+coordinates of \(S_i\) are (\(a_i, b_i\)).
+</p><p class="margin-large">
+
+<sup>2</sup> The floor (\(\lfloor \; \rfloor\)) and ceiling (\(\lceil \; \rceil\)) operators are defined as follows: \(\lfloor x \rfloor\) denotes the greatest integer not exceeding \(x\), and \(\lceil x \rceil\) denotes the smallest integer not exceeded by \(x\). This notation was introduced by Iverson; see,
+for example: K. E. Iverson, "Programming notation in systems design,”
+IBM Systems Journal 2, 117 (1963). 
+
+</p><p>
+This notation 1s used to rewrite the expression for \(\nabla_i\):
+
+\[
+\nabla_i =(r_i^\prime — g_i^\prime)\Delta a = [(b_i — \lfloor b_i \rfloor) — (\lceil b_i \rceil - b_i)]\Delta a
+\]
+
+By noting that \(b_i = (\Delta b/\Delta a)a_i\),
+
+\[
+\nabla_i = 2a_i \Delta b — (\lfloor b_i \rfloor + \lceil b_i \rceil)\Delta a
+\]
+
+Since the line segment \(D_1D_2\) lies in the first octant, \(a_i = a_{i-1}+1\).
+By definition, \(\lceil b_i \rceil = \hat{b}_{i-1}+ 1\) and \(\lfloor b_i \rfloor = \hat{b}_{i-1}\). These relations
+are used to rewrite the latter expression for \(\nabla_i\) in a form free of
+\(a_i\) and \(b_i\):
+
+\[
+\nabla_i = 2a_{i-1}\Delta b — 2\hat{b}_{i-1}\Delta a + 2\Delta b — \Delta a
+\]
+
+
+
+
+
+Applying the initial condition for the coordinates of \(P_0, a_0 =0\)
+and \(\hat{b}_0 = 0\),
+
+\[
+\nabla_i = 2\Delta b - \Delta a
+\]
+
+If \(\nabla_i \geq 0\),
+
+\[
+\hat{b}_i=\hat{b}_{i-1}+1
+\]
+
+so that
+
+\[
+\begin{align}
+\nabla_{i+1} &= 2(a_{i-1}+1)\Delta b-2(\hat{b}_{i-1}+1)\Delta a+2\Delta b-\Delta a \\
+\\
+&= \nabla_i + 2\Delta b - 2\Delta a
+\end{align}
+\]
+
+if \(\nabla_i \lt 0\)
+
+\[
+\hat{b}_i = \hat{b}_{i-1}
+\]
+
+so that
+
+\[
+\begin{align}
+\nabla_{i+1} &= 2(a_{i-1}+1)\Delta b -2\hat{b}_i\Delta a + 2\Delta b -\Delta a \\
+\\
+&= \nabla_i + 2\Delta b
+\end{align}
+\]
+
+
+Thus (1) has been shown to hold.
+</p><p>
+
+The second data point has been assumed to be in the first
+octant with respect to the first data point. If the second data
+point lies in another octant, an \((a, b)\) rectangular coordinate
+system is again chosen with origin at the first data point, but
+with the axes oriented individually for each octant, as shown
+in Figure 5. Directions associated with the plotter movements
+m, and m, are also indicated. This information is summarized
+in the left columns of Table 1 together with the assignments
+made to \(m_1\) and \(m_2\). Thus, the variants of Equations (1) and (4)
+have been specified for each of the eight octants, and the reader
+may verify that, in conjunction with (2) and (3) as previously
+stated, they comprise a correct formulation for the general case.
+</p>
+<center><img src="images/fig5.png"></center>
+<p>
+<center>Figure 5 Axes orientation</center>
+</p>
+<center><img src="images/table1.png"></center>
+<p>
+<center>Table 1 Determination of form of Equations 2 and 4</center>
+
+</p><p>
+
+To complete the algorithm, a computational procedure is
+needed to determine the applicable octant for an arbitrary pair
+of data points so that the appropriate forms of (2) and (4) can be
+determined. The form of (2) depends on the sign of \(|\Delta x| — |\Delta y|\).
+</p><p>
+
+To find the form of (4), Boolean variables \(X, Y,\) and \(Z,\) corre-
+
+sponding to \(\Delta x, \Delta y,\) and \(|\Delta x| — |\Delta y|\), are introduced. As shown
+in Table 1, these variables assume the value 0 or 1, depending
+on whether or not the correspondent is negative. To determine
+the assignment of m,, the function
+
+\[
+F(X, Y, Z) = (XZ, Y\overline{Z}, \overline{X}Z, \overline{Y}\overline{Z})
+\]
+
+found by inspection of Table 1, is introduced. Correspondence
+between values assumed by F and the assignment of m, is indi-
+cated by columns headed \(F\) and \(m_1\). Similarly,
+
+\[
+G(X, Y) = (XY, \overline{X}Y, \overline{X}\overline{Y}, X\overline{Y})
+\]
+
+
+is used in conjunction with the \(G\)- and \(m_2\)-columns of Table 1 to
+make the appropriate assignment to \(m_2\).
+</p><p>
+
+The algorithm can be programmed without the use of multiplication or division. It was found that 333 core locations were
+sufficient for an IBM 1401 program (used to control an IBM 1627).
+The average computation time between successive incrementations
+was approximately 1.5 milliseconds.
+</p><p>
+
+A functionally similar algorithm reported in the literature<sup>3</sup> is
+described as requiring 513 core positions and 2.4 milliseconds
+between successive incrementations.<sup>4</sup>
+</p><p class="margin-large">
+
+3. F. G. Stockton, Algorithm 162, XMOVE PLOTTING, Communications
+of the ACM 6, Number 4, April 1963. Certification appears in 6, Number 5,
+May 1963.<br>
+<br>
+4, F. G. Stockton, Plotting of Computer Output, Bulletin No. 139, California
+Computer Products, May 1963.
+</p>
+
+<h2>ACKNOWLEDGMENT</h2>
+<p>
+The suggestions of the author’s colleagues, D. Clark and A.
+Hoffman, were of considerable assistance.
+</p>
+    </body>
+</html>
