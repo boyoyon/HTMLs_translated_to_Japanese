@@ -14,6 +14,8 @@
             AIが要約してくれるし、言語を選択すれば日本語で読める･･･<br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.22084v1">トランスフォーマーはグラフニューラルネットワークである</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.21521v1">大規模言語モデルにおける「ポチョムキン的理解」(見せかけの理解)</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2408.10234v2">存在の耐え難い遅さ：なぜ私たちは10ビット/秒で生きるのか？</a><br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2503.20680v1">ビジョンとしてのLoRA</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.21551v1">LLM事前学習におけるグロッキングはどこで見つかるか？：テストなしで記憶から汎化への監視</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.18254v1">RLPR: ベリファイアなしでRLVRを汎用ドメインに外挿する</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.01622v2">汎用エージェントは世界モデルを必要とする</a><br>
