@@ -12,6 +12,7 @@
         <h2>その他</h2>
         <p>
             AIが要約してくれるし、言語を選択すれば日本語で読める･･･<br><br>
+            <a href="https://www.alphaxiv.org/ja/overview/2507.11906v1">CoCre-Sam (コックリさん): ウイジャ盤の融合言語モデルからの集団ランジュバン動力学サンプリングとしてのモデル化</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.22084v1">トランスフォーマーはグラフニューラルネットワークである</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2506.21521v1">大規模言語モデルにおける「ポチョムキン的理解」(見せかけの理解)</a><br><br>
             <a href="https://www.alphaxiv.org/ja/overview/2408.10234v2">存在の耐え難い遅さ：なぜ私たちは10ビット/秒で生きるのか？</a><br><br>
