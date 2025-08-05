@@ -1,0 +1,1612 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>HRM</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+            .margin-large
+            {
+                margin-left: 30px;
+            }
+            .margin-large-blue
+            {
+                margin-left: 30px;
+                color: blue;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .two-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px; /* 列間のスペース */
+        }
+        .column {
+            flex: 1; /* 各列が均等に幅を取る */
+        }
+    </style>
+<style>
+.three-columns {
+  display: flex;
+  gap: 10px; /* 列間の余白を設定 */
+}
+.column {
+  flex: 1; /* 各列の幅を均等にする */
+  padding: 10px; /* 内側の余白を設定 */
+}
+</style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 0px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+            ol
+            {
+                margin-left: 30px;
+            }
+            ul
+            {
+                margin-left: 30px;
+            }
+    </style>
+    <style>
+        .thin-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 1px;
+            background-color: gray;
+        }
+
+        .thick-line {
+            margin: 0; 
+            margin-left:2em;
+            border: 0;
+            height: 2px;
+            background-color: black;
+        }
+    </style>
+    <style>
+        .blue {
+            color: blue; /* 好きな色に変更してください */
+        }
+    </style>
+    </head>
+    <body>
+        <h1><center>Hierarchical Reasoning Model <br><span style="color:blue;">階層的推論モデル</span></center></h1>
+
+<center>Guan Wang<sup>1,†</sup>, Jin Li<sup>1</sup>, Yuhao Sun<sup>1</sup>, Xing Chen<sup>1</sup>, Changling Liu<sup>1</sup>, </center>
+<center>Yue Wu1, Meng Lu<sup>1,†</sup>, Sen Song<sup>2,†</sup>, Yasin Abbasi Yadkori<sup>1,†</sup> </center>
+<br>
+<center><sup>1</sup> Sapient Intelligence, Singapore </center>
+<center><sup>2</sup> Tsinghua University</center>
+<center><sup>†</sup> Corresponding author.</center>
+
+<p style="text-align: right;">
+Contact: research@sapient.inc.<br>
+Code available at: github.com/sapientinc/HRM 
+
+<h2><center>Abstract　<span style="color:blue;">要旨</span></center></h2>
+</p><p class="margin-abstract">
+
+Reasoning, the process of devising and executing complex goal-oriented action sequences, remains a critical challenge in AI. Current large language models (LLMs) primarily employ Chain-of-Thought (CoT) techniques, which suffer from brittle task decomposition, extensive data requirements, and high latency. Inspired by the hierarchical and multi-timescale pro- cessing in the human brain, we propose the Hierarchical Reasoning Model (HRM), a novel recurrent architecture that attains signifcant computational depth while maintaining both train- ing stability and effciency. HRM executes sequential reasoning tasks in a single forward pass without explicit supervision of the intermediate process, through two interdependent recurrent modules: a high-level module responsible for slow, abstract planning, and a low-level mod- ule handling rapid, detailed computations. With only 27 million parameters, HRM achieves exceptional performance on complex reasoning tasks using only 1000 training samples. The model operates without pre-training or CoT data, yet achieves nearly perfect performance on challenging tasks including complex Sudoku puzzles and optimal path fnding in large mazes. Furthermore, HRM outperforms much larger models with signifcantly longer context windows on the Abstraction and Reasoning Corpus (ARC), a key benchmark for measuring artifcial general intelligence capabilities. These results underscore HRM's potential as a transformative advancement toward universal computation and general-purpose reasoning systems. 
+
+<br><span style="color:blue;">
+推論は、複雑な目標指向のアクションシーケンスを考案して実行するプロセスであり、AI において依然として重要な課題です。現在の大規模言語モデル (LLM) は主に思考連鎖(Chain-of-Thought(CoT)) 手法を採用していますが、タスク分解が不安定で、データ要件が膨大で、レイテンシが高いという問題があります。人間の脳の階層的でマルチタイムスケールの処理にヒントを得て、我々は階層的推論モデル (HRM) を提案します。これは、トレーニングの安定性と効率性の両方を維持しながら、大きな計算深度を実現する新しい再帰型アーキテクチャです。HRM は、2 つの相互に依存する再帰型モジュール (低速で抽象的な計画を担当する高レベルモジュールと、高速で詳細な計算を処理する低レベルモジュール) を介して、中間プロセスの明示的な監視なしに、単一のフォワードパスで順次推論タスクを実行します。わずか 2,700 万のパラメーターで、HRM はわずか 1,000 のトレーニング サンプルを使用して複雑な推論タスクで並外れたパフォーマンスを実現します。このモデルは事前学習やCoTデータなしで動作し、複雑な数独パズルや大規模迷路における最適経路探索といった難解なタスクにおいてほぼ完璧なパフォーマンスを達成しています。さらに、HRMは、汎用人工知能の能力を測定するための重要なベンチマークである抽象化推論コーパス（ARC）において、はるかに長いコンテキストウィンドウを持つ、はるかに大規模なモデルよりも優れた性能を発揮します。これらの結果は、HRMが普遍的な計算および汎用推論システムに向けた革新的な進歩となる可能性を強く示唆しています。
+</span>
+</p>
+<center><img src="images/1.png"></center>
+<p>
+Figure 1: Left: HRM is inspired by hierarchical processing and temporal separation in the brain. It has two recurrent networks operating at different timescales to collaboratively solve tasks. Right: With only about 1000 training examples, the HRM (~27M parameters) surpasses state-of-the-art CoT models on inductive benchmarks (ARC-AGI) and challenging symbolic tree-search puzzles (Sudoku-Extreme, Maze-Hard) where CoT models failed completely. The HRM was randomly initialized, and it solved the tasks directly from inputs without chain of thoughts. 
+
+<br><span style="color:blue;">
+図1：左：HRMは、脳内の階層的処理と時間的分離に着想を得ています。異なる時間スケールで動作する2つのリカレントネットワークが協調的にタスクを解決します。右：わずか1000件の学習例で、HRM（約2700万パラメータ）は、最先端のCoTモデルを、帰納的ベンチマーク（ARC-AGI）と、CoTモデルが完全に失敗した難解な記号木探索パズル（Sudoku-Extreme、Maze-Hard）で凌駕します。HRMはランダムに初期化され、思考の連鎖なしに入力から直接タスクを解決しました。
+</span>
+</p>
+
+<h2>1. Introduction　<span style="color:blue;">はじめに</span></h2>
+<p>
+Deep learning, as its name suggests, emerged from the idea of stacking more layers to achieve increased representation power and improved performance<sup>1,2</sup>. However, despite the remarkable success of large language models, their core architecture is paradoxically shallow<sup>3</sup>. This imposes a fundamental constraint on their most sought-after capability: reasoning. The fxed depth of stan- dard Transformers places them in computational complexity classes such as \(AC^0\) or \(TC^0\)<sup>4</sup>, prevent- ing them from solving problems that require polynomial time<sup>5,6</sup>. LLMs are not Turing-complete and thus they cannot, at least in a purely end-to-end manner, execute complex algorithmic rea- soning that is necessary for deliberate planning or symbolic manipulation tasks<sup>7,8</sup>. For example, our results on the Sudoku task show that increasing Transformer model depth can improve per- formance,<sup>1</sup> but performance remains far from optimal even with very deep models (see Figure  2 ), which supports the conjectured limitations of the LLM scaling paradigm<sup>9</sup>. 
+
+<br><span style="color:blue;">
+ディープラーニングは、その名前が示すように、より多くのレイヤーを積み重ねることで表現力を高め、パフォーマンスを改善するというアイデアから生まれました<sup>1,2</sup>。しかし、大規模言語モデルの目覚ましい成功にもかかわらず、そのコアアーキテクチャは逆説的に浅いものです<sup>3</sup>。これが、最も求められている機能である推論に根本的な制約を課しています。標準的なTransformerの固定された深さは、\(AC^0\)や\(TC^0\)<sup>4</sup>などの計算複雑性クラスに分類され、多項式時間を必要とする問題を解くことができません<sup>5,6</sup>。LLMはチューリング完全ではないため、少なくとも純粋にエンドツーエンドでは、意図的な計画や記号操作タスクに必要な複雑なアルゴリズム推論を実行できません<sup>7,8</sup>。たとえば、数独タスクの結果では、Transformer モデルの深さを増やすとパフォーマンスが向上することがわかりました <sup>1</sup> が、非常に深いモデルでもパフォーマンスは最適にはほど遠いままです (図 2 を参照)。これは、LLM スケーリング パラダイムの想定される限界を裏付けています <sup>9</sup>。
+</span>
+</p><p class="margin-large">
+<sup>1</sup>
+Simply increasing the model width does not improve performance here. 
+
+<br><span style="color:blue;">
+モデルの幅を単に増やすだけではパフォーマンスは向上しません。
+</span>
+
+</p>
+<center><img src="images/2.png"></center>
+<p>
+Figure 2: The necessity of depth for complex reasoning. Left: On Sudoku-Extreme Full, which require extensive tree-search and backtracking, increasing a Transformer's width yields no perfor- mance gain, while increasing depth is critical. Right: Standard architectures saturates, failing to beneft from increased depth. HRM overcomes this fundamental limitation, effectively using its computational depth to achieve near-perfect accuracy. 
+
+<br><span style="color:blue;">
+図2：複雑な推論における深さの必要性。左：膨大なツリー探索とバックトラッキングを必要とするSudoku-Extreme Fullでは、Transformerの幅を広げてもパフォーマンスは向上せず、深さを増やすことが重要である。右：標準的なアーキテクチャは飽和状態になり、深さの増加によるメリットが得られない。HRMはこの根本的な限界を克服し、計算深さを効果的に活用してほぼ完璧な精度を実現している。
+</span>
+
+</p><p>
+The LLMs literature has relied largely on Chain-of-Thought (CoT) prompting for reasoning<sup>10</sup>. CoT externalizes reasoning into token-level language by breaking down complex tasks into sim- pler intermediate steps, sequentially generating text using a shallow model<sup>11</sup>. However, CoT for reasoning is a crutch, not a satisfactory solution. It relies on brittle, human-defned decompositions where a single misstep or a misorder of the steps can derail the reasoning process entirely<sup>12,13</sup>. This dependency on explicit linguistic steps tethers reasoning to patterns at the token level. As a result, CoT reasoning often requires signifcant amount of training data and generates a large number of tokens for complex reasoning tasks, resulting in slow response times. A more effcient approach is needed to minimize these data requirements<sup>14</sup>. 
+
+<br><span style="color:blue;">
+LLMの文献は、推論において主に思考連鎖（CoT）の促進に依存してきました<sup>10</sup>。CoTは、複雑なタスクをより単純な中間ステップに分解し、浅いモデルを用いて逐次テキストを生成することで、推論をトークンレベルの言語に外在化します<sup>11</sup>。しかし、推論のためのCoTは松葉杖であり、満足のいく解決策ではありません。CoTは、人間が定義した脆弱な分解に依存しており、1つのステップの誤りやステップの順序の誤りが推論プロセス全体を狂わせる可能性があります<sup>12,13</sup>。明示的な言語ステップへの依存は、推論をトークンレベルのパターンに縛り付けます。その結果、CoT推論は多くの場合、大量のトレーニングデータを必要とし、複雑な推論タスクに対して多数のトークンを生成するため、応答時間が遅くなります。これらのデータ要件を最小限に抑えるには、より効率的なアプローチが必要です<sup>14</sup>。
+</span>
+</p><p>
+Towards this goal, we explore “latent reasoning”, where the model conducts computations within its internal hidden state space<sup>15,16</sup>. This aligns with the understanding that language is a tool for human communication, not the substrate of thought itself<sup>17</sup>; the brain sustains lengthy, coherent chains of reasoning with remarkable effciency in a latent space, without constant translation back to language. However, the power of latent reasoning is still fundamentally constrained by a model's effective computational depth. Naively stacking layers is notoriously diffcult due to vanishing gra- dients, which plague training stability and effectiveness<sup>1,18</sup>. Recurrent architectures, a natural al- ternative for sequential tasks, often suffer from early convergence, rendering subsequent computa- tional steps inert, and rely on the biologically implausible, computationally expensive and memory intensive Backpropagation Through Time (BPTT) for training<sup>19</sup>. 
+
+<br><span style="color:blue;">
+この目標に向けて、我々は「潜在的推論」を探求しています。これは、モデルが内部の隠れ状態空間内で計算を行うものです<sup>15,16</sup>。これは、言語は人間のコミュニケーションのためのツールであり、思考そのものの基盤ではないという理解と一致しています<sup>17</sup>。脳は潜在空間において、言語への絶え間ない翻訳なしに、長く一貫した推論の連鎖を驚くべき効率で維持します。しかし、潜在的推論の能力は、依然としてモデルの有効な計算深度によって根本的に制約されています。単純に層を積み重ねることは、勾配消失のために非常に困難であり、トレーニングの安定性と有効性に悪影響を及ぼします<sup>1,18</sup>。逐次タスクの自然な代替手段である再帰型アーキテクチャは、多くの場合、早期収束に悩まされ、後続の計算ステップが不活性化され、生物学的に不可能で、計算コストが高く、メモリを大量に消費する Backpropagation Through Time (BPTT) に依存してトレーニングを行っています<sup>19</sup>。
+</span>
+</p><p>
+The human brain provides a compelling blueprint for achieving the effective computational depth that contemporary artifcial models lack. It organizes computation hierarchically across corti- cal regions operating at different timescales, enabling deep, multi-stage reasoning<sup>20,21,22</sup>. Recur- rent feedback loops iteratively refne internal representations, allowing slow, higher-level areas to guide, and fast, lower-level circuits to execute—subordinate processing while preserving global coherence<sup>23,24,25</sup>. Notably, the brain achieves such depth without incurring the prohibitive credit- assignment costs that typically hamper recurrent networks from backpropagation through time<sup>19,26</sup>.
+
+<br><span style="color:blue;">
+人間の脳は、現代の人工モデルに欠けている効果的な計算深度を実現するための魅力的な青写真を提供します。脳は、異なる時間スケールで動作する皮質領域にわたって階層的に計算を組織化し、深く多段階の推論を可能にします<sup>20,21,22</sup>。再帰フィードバックループは内部表現を反復的に洗練させ、低速で高レベルの領域が誘導し、高速で低レベルの回路が実行することを可能にします。これにより、全体的な一貫性を維持しながら、従属的な処理が可能になります<sup>23,24,25</sup>。注目すべきは、脳がこのような深度を、通常、時間経過による逆伝播からの再帰ネットワークの計算を阻害する法外なクレジット割り当てコストを負担することなく実現している点です<sup>19,26</sup>。
+</span>
+</p><p>
+Inspired by this hierarchical and multi-timescale biological architecture, we propose the Hierar- chical Reasoning Model (HRM). HRM is designed to signifcantly increase the effective compu- tational depth. It features two coupled recurrent modules: a high-level (H) module for abstract, deliberate reasoning, and a low-level (L) module for fast, detailed computations. This structure avoids the rapid convergence of standard recurrent models through a process we term “hierarchi- cal convergence.” The slow-updating H-module advances only after the fast-updating L-module has completed multiple computational steps and reached a local equilibrium, at which point the L-module is reset to begin a new computational phase. 
+
+<br><span style="color:blue;">
+この階層的かつマルチタイムスケールの生物学的構造に着想を得て、我々は階層的推論モデル（HRM）を提案する。HRMは、実効的な計算深度を大幅に向上させるように設計されている。HRMは、抽象的で慎重な推論を行う高レベル（H）モジュールと、高速で詳細な計算を行う低レベル（L）モジュールという、2つの結合した回帰モジュールを特徴とする。この構造は、「階層的収束」と呼ぶプロセスを通じて、標準的な回帰モデルに見られる急速な収束を回避する。更新速度の遅いHモジュールは、更新速度の速いLモジュールが複数の計算ステップを完了して局所平衡に達した後にのみ前進し、その時点でLモジュールはリセットされ、新たな計算フェーズを開始する。
+</span>
+
+</p><p>
+Furthermore, we propose a one-step gradient approximation for training HRM, which offers im- proved effciency and eliminates the requirement for BPTT. This design maintains a constant mem- ory footprint (O(1) compared to BPTT's O(T) for T timesteps) throughout the backpropagation process, making it scalable and more biologically plausible. 
+
+<br><span style="color:blue;">
+さらに、HRMの学習に1ステップ勾配近似法を提案する。これにより効率が向上し、BPTTが不要になる。この設計により、バックプロパゲーション処理全体を通してメモリ使用量が一定（TタイムステップのBPTTのO(T)と比較してO(1)）に維持されるため、スケーラブルで生物学的妥当性も向上する。
+</span>
+</p><p>
+Leveraging its enhanced effective depth, HRM excels at tasks that demand extensive search and backtracking. <strong>Using only 1,000 input-output examples, without pre-training or CoT supervision</strong>, HRM learns to solve problems that are intractable for even the most advanced LLMs. For example, it achieves near-perfect accuracy in complex Sudoku puzzles (Sudoku-Extreme Full) and optimal pathfnding in 30x30 mazes, where state-of-the-art CoT methods completely fail (0% ac- curacy). In the Abstraction and Reasoning Corpus (ARC) AGI Challenge<sup>27,28,29</sup> - a benchmark of inductive reasoning - HRM, trained from scratch with only the offcial dataset (~1000 exam- ples), with only 27M parameters and a 30x30 grid context (900 tokens), achieves a performance of 40.3%, which substantially surpasses leading CoT-based models like o3-mini-high (34.5%) and Claude 3.7 8K context (21.2%), despite their considerably larger parameter sizes and con- text lengths, as shown in Figure  1 . This represents a promising direction toward the development of next-generation AI reasoning systems with universal computational capabilities. 
+
+<br><span style="color:blue;">
+HRMは、強化された有効深度を活用することで、広範な探索とバックトラッキングを必要とするタスクにおいて優れた性能を発揮します。<strong>わずか1,000個の入出力例を使用し、事前学習やCoTによる監督なしに</strong>、HRMは最先端のLLMでさえ解くことが困難な問題を学習します。例えば、複雑な数独パズル（Sudoku-Extreme Full）においてほぼ完璧な精度を達成し、最先端のCoT手法では完全に失敗する（精度0%）30x30迷路における最適経路探索を実現します。帰納的推論のベンチマークである抽象化および推論コーパス（ARC）AGIチャレンジ<sup>27,28,29</sup>において、公式データセット（約1000例）のみ、わずか2700万のパラメータ、30x30グリッドコンテキスト（900トークン）でゼロからトレーニングされたHRMは、40.3％のパフォーマンスを達成しました。これは、図1に示すように、パラメータサイズとコンテキスト長がかなり大きいにもかかわらず、o3-mini-high（34.5％）やClaude 3.7 8Kコンテキスト（21.2％）などの主要なCoTベースのモデルを大幅に上回っています。これは、普遍的な計算能力を備えた次世代AI推論システムの開発に向けた有望な方向性を示しています。
+</span>
+</p>
+
+<h2>2  Hierarchical Reasoning Model <span style="color:blue;">階層的推論モデル</span></h2>
+<p>
+We present the HRM, inspired by three fundamental principles of neural computation observed in the brain: 
+
+<br><span style="color:blue;">
+私たちは、脳内で観察される神経計算の 3 つの基本原理に着想を得た HRM を紹介します。
+</span>
+<div class="styleBullet">
+<ul><li>
+• Hierarchical processing: The brain processes information across a hierarchy of cortical ar- eas. Higher-level areas integrate information over longer timescales and form abstract repre- sentations, while lower-level areas handle more immediate, detailed sensory and motor process- ing<sup>20,22,21</sup>. 
+
+<br><span style="color:blue;">
+階層的処理：脳は皮質領域の階層構造にわたって情報を処理します。高次の領域はより長い時間スケールで情報を統合し、抽象的な表現を形成します。一方、低次の領域はより即時的で詳細な感覚・運動処理を担います<sup>20,22,21</sup>。
+</span>
+</li><br><li>
+• Temporal Separation: These hierarchical levels in the brain operate at distinct intrinsic timescales, refected in neural rhythms (e.g., slow theta waves, 4–8 Hz and fast gamma waves, 30–100 Hz)<sup>30,31</sup>. This separation allows for stable, high-level guidance of rapid, low-level computations<sup>32,33</sup>. 
+
+<br><span style="color:blue;">
+時間的分離：脳内のこれらの階層レベルは、それぞれ異なる固有の時間スケールで機能し、神経リズム（例えば、4～8Hzの低速シータ波と30～100Hzの高速ガンマ波）に反映されます<sup>30,31</sup>。この分離により、高速で低レベルの計算を安定的に高レベルで誘導することが可能になります<sup>32,33</sup>。
+</span>
+</li><br><li>
+• Recurrent Connectivity: The brain features extensive recurrent connections. These feedback loops enable iterative refnement, yielding more accurate and context-sensitive representations at the cost of additional processing time. Additionally, the brain largely avoids the problematic deep credit assignment problem associated with BPTT<sup>19</sup>.
+
+<br><span style="color:blue;">
+再帰的接続：脳は広範な再帰的接続を特徴としています。これらのフィードバックループは反復的な改良を可能にし、処理時間の増加を犠牲にして、より正確で文脈依存的な表現を生み出します。さらに、脳はBPTT<sup>19</sup>に関連する問題のある深層クレジット割り当て問題をほぼ回避します。
+</span>
+</li></ul></div>
+</p><p>
+
+The HRM model consists of four learnable components: an input network \(f_I(·;θ_I)\), a low-level re- current module \(f_L(·;θ_L)\), a high-level recurrent module \(f_H(·;θ_H)\), and an output network \(f_O(·;θ_O)\). The model's dynamics unfold over \(N\) high-level cycles of \(T\) low-level timesteps each<sup>2</sup>. We index the total timesteps of one forward pass by \(i = 1, . . . , N×T\). The modules \(f_L\) and \(f_H\) each keep a hidden state—\(z_L^i\) for \(f_L\) and \(z_H^i\) for \(f_H\)—which are initialized with the vectors \(z_L^0\) and \(z_H^0\), respectively. 
+
+<br><span style="color:blue;">
+HRMモデルは、学習可能な4つのコンポーネントで構成されています。入力ネットワーク\(f_I(·;θ_I)\)、低レベルリカレントモジュール\(f_L(·;θ_L)\)、高レベルリカレントモジュール\(f_H(·;θ_H)\)、および出力ネットワーク\(f_O(·;θ_O)\)です。モデルのダイナミクスは、\(T\)個の低レベルタイムステップをそれぞれ2回繰り返す\(N\)個の高レベルサイクルにわたって展開されます。1回のフォワードパスの合計タイムステップは、\(i = 1, . . . , N×T\)でインデックス付けされます。モジュール \(f_L\) と \(f_H\) はそれぞれ隠れ状態 (\(f_L\) の場合は \(z_L^i\)、\(f_H\) の場合は \(z_H^i\)) を保持し、これらはそれぞれベクトル \(z_L^0\) と \(z_H^0\) で初期化されます。
+</span>
+</p><p class="margin-large">
+<sup>2</sup>
+While inspired by temporal separation in the brain, our model's “high-level” and “low-level” modules are conceptual abstractions and do not map directly to specifc neural oscillation frequencies. 
+
+<br><span style="color:blue;">
+私たちのモデルの「高レベル」および「低レベル」モジュールは、脳内の時間的分離にヒントを得ていますが、概念的な抽象化であり、特定の神経振動周波数に直接マッピングされるわけではありません。
+</span>
+</p><p>
+The HRM maps an input vector \(x\) to an output prediction vector \(\hat{y}\) as follows. First, the input \(x\) is projected into a working representation \(\tilde{x}\) by the input network: 
+
+<br><span style="color:blue;">
+HRMは、入力ベクトル\(x\)を出力予測ベクトル\(\hat{y}\)に以下のようにマッピングします。まず、入力\(x\)は入力ネットワークによって作業表現\(\tilde{x}\)に投影されます。
+</span>
+\[
+\tilde{x} = f_I(x;θ_I)
+\]
+ 
+At each timestep \(i\), the \(L\)-module updates its state conditioned on its own previous state, the \(H\)- module's current state (which remains fxed throughout the cycle), and the input representation. The H-module only updates once per cycle (i.e., every \(T\) timesteps) using the \(L\)-module's fnal state at the end of that cycle: 
+
+<br><span style="color:blue;">
+各タイムステップ \(i\) において、\(L\) モジュールは、自身の前回の状態、\(H\) モジュールの現在の状態（サイクルを通して固定）、および入力表現に基づいて状態を更新します。H モジュールは、サイクルごとに（つまり、\(T\) タイムステップごとに）1 回のみ、そのサイクルの終了時の \(L\) モジュールの最終状態を使用して更新します。
+</span>
+\[
+\begin{align}
+z_L^i &= f_L(z_L^{i−1}, z_H^{i−1},\tilde{x};θ_L) \\
+\\
+z_H^i &=
+\begin{cases} 
+f_H(z_H^{i-1},z_L^{i-1},\theta_H) &if\;i\equiv0\;(mod\;T) \\
+\\
+z_H^{i-1} & otherwise
+\end{cases}
+\end{align}
+\]
+
+Finally, after \(N\) full cycles, a prediction \(\hat{y}\) is extracted from the hidden state of the \(H\)-module:
+
+<br><span style="color:blue;">
+最後に、\(N\)回の完全なサイクルの後、\(H\)モジュールの隠れ状態から予測\(\hat{y}\)が抽出されます。
+</span>
+\[ 
+\hat{y} = f_O(z_H^{NT};θ_O)
+\]
+ 
+This entire \(NT\)-timestep process represents a single forward pass of the HRM. A halting mecha- nism (detailed later in this section) determines whether the model should terminate, in which case \(\hat{y}\) will be used as the fnal prediction, or continue with an additional forward pass. 
+
+<br><span style="color:blue;">
+この \(NT\)-タイムステッププロセス全体は、HRM の単一のフォワードパスを表します。停止メカニズム（このセクションで後述）によって、モデルを終了するかどうかが決定されます。終了した場合は \(\hat{y}\) が最終予測として使用されます。終了しない場合は、追加のフォワードパスが実行されます。
+</span>
+</p><p>
+<strong>Hierarchical convergence</strong>　Although convergence is crucial for recurrent networks, standard RNNs are fundamentally limited by their tendency to converge too early. As the hidden state settles toward a fxed point, update magnitudes shrink, effectively stalling subsequent computation and capping the network's effective depth. To preserve computational power, we actually want convergence to proceed very slowly–but engineering that gradual approach is diffcult, since pushing convergence too far edges the system toward instability. 
+
+<br><span style="color:blue;">
+<strong>階層的収束</strong>　収束は再帰型ネットワークにとって極めて重要ですが、標準的なRNNは、収束が早すぎるという傾向によって根本的に限界があります。隠れ状態が固定点に向かって落ち着くと、更新量は減少し、後続の計算が事実上停止し、ネットワークの有効な深さが制限されます。計算能力を維持するためには、実際には収束を非常にゆっくりと進める必要がありますが、収束を過度に進めるとシステムが不安定になるため、そのような段階的なアプローチを設計することは困難です。
+</span>
+
+</p><p>
+HRM is explicitly designed to counteract this premature convergence through a process we term hierarchical convergence. During each cycle, the \(L\)-module (an RNN) exhibits stable convergence to a local equilibrium. This equilibrium, however, depends on the high-level state \(z_H\) supplied during that cycle. After completing the \(T\) steps, the \(H\)-module incorporates the sub-computation's outcome (the fnal state \(z_L\)) and performs its own update. This \(z_H\) update establishes a fresh context for the \(L\)-module, essentially “restarting” its computational path and initiating a new convergence phase toward a different local equilibrium. 
+
+<br><span style="color:blue;">
+HRMは、階層的収束と呼ばれるプロセスを通じて、この早期収束を抑制するように明示的に設計されています。各サイクルにおいて、\(L\)モジュール（RNN）は局所平衡点への安定した収束を示します。ただし、この収束点は、そのサイクル中に提供される高レベル状態\(z_H\)に依存します。\(T\)ステップを完了すると、\(H\)モジュールはサブ計算の結果（最終状態\(z_L\)）を取り込み、独自の更新を実行します。この\(z_H\)の更新により、\(L\)モジュールに新たなコンテキストが確立され、実質的に計算パスが「再起動」され、異なる局所平衡点に向けた新たな収束フェーズが開始されます。
+</span>
+</p><p>
+This process allows the HRM to perform a sequence of distinct, stable, nested computations, where the \(H\)-module directs the overall problem-solving strategy and the \(L\)-module executes the intensive search or refnement required for each step. Although a standard RNN may approach convergence within T iterations, the hierarchical convergence benefts from an enhanced effective depth of \(NT\) steps. As empirically shown in Figure  3 , this mechanism allows HRM both to maintain high computational activity (forward residual) over many steps (in contrast to a standard RNN, whose activity rapidly decays) and to enjoy stable convergence. This translates into better performance at any computation depth, as illustrated in Figure  2 . 
+
+<br><span style="color:blue;">
+このプロセスにより、HRM は、一連の明確で安定したネストされた計算を実行できます。\(H\) モジュールは全体的な問題解決戦略を指示し、\(L\) モジュールは各ステップで必要な集中的な検索または改良を実行します。標準的な RNN は T 回の反復で収束に近づく可能性がありますが、階層的な収束は、\(NT\) ステップの有効な深度の向上による恩恵を受けます。図 3 で実証的に示されているように、このメカニズムにより、HRM は (アクティビティが急速に減少する標準的な RNN とは対照的に) 多くのステップにわたって高い計算アクティビティ (順方向残差) を維持し、安定した収束を実現できます。これは、図 2 に示すように、どの計算深度でもパフォーマンスが向上することを意味します。
+</span>
+
+</p>
+<center><img src="images/3.png"></center>
+<p>
+Figure 3: Comparison of forward residuals and PCA trajectories. HRM shows hierarchical conver- gence: the H-module steadily converges, while the L-module repeatedly converges within cycles before being reset by H, resulting in residual spikes. The recurrent neural network exhibits rapid convergence with residuals quickly approaching zero. In contrast, the deep neural network experi- ences vanishing gradients, with signifcant residuals primarily in the initial (input) and fnal layers. 
+
+<br><span style="color:blue;">
+図3：順方向残差とPCA軌跡の比較。HRMは階層的な収束を示している。Hモジュールは着実に収束するのに対し、LモジュールはHによってリセットされる前に周期的に収束を繰り返し、残差にスパイクが生じる。リカレントニューラルネットワークは急速な収束を示し、残差は急速にゼロに近づく。対照的に、ディープニューラルネットワークでは勾配が消失し、主に初期層（入力層）と最終層で大きな残差が生じる。
+</span>
+
+</p><p>
+<strong>Approximate gradient</strong>　Recurrent models typically use BPTT to compute gradients. However, BPTT requires storing the hidden states from the forward pass and then combining them with gradients during the backward pass, which demands \(O(T)\) memory for T timesteps. This heavy memory burden forces smaller batch sizes and leads to poor GPU utilization, especially for large- scale networks. Additionally, because retaining the full history trace through time is biologically implausible, it is unlikely that the brain implements BPTT<sup>19</sup>. 
+
+<br><span style="color:blue;">
+<strong>近似勾配</strong>　リカレントモデルは通常、勾配を計算するためにBPTTを使用します。しかし、BPTTでは、フォワードパスで隠れ状態を保存し、バックワードパスでそれらを勾配と組み合わせる必要があるため、Tタイムステップで\(O(T)\)のメモリを必要とします。この大きなメモリ負荷により、バッチサイズが小さくなり、特に大規模ネットワークではGPU利用率が低下します。さらに、時間経過を通して完全な履歴トレースを保持することは生物学的に不可能であるため、脳がBPTTを実装している可能性は低いと考えられます<sup>19</sup>。
+</span>
+</p><p>
+Fortunately, if a recurrent neural network converges to a fxed point, we can avoid unrolling its state sequence by applying backpropagation in a single step at that equilibrium point. Moreover, such a mechanism could plausibly be implemented in the brain using only local learning rules<sup>34,35</sup>. Based on this fnding, we propose a one-step approximation of the HRM gradient–using the gradient of the last state of each module and treating other states as constant. The gradient path is, therefore, 
+
+<br><span style="color:blue;">
+幸いなことに、リカレントニューラルネットワークが固定点に収束する場合、その平衡点でバックプロパゲーションを1ステップで適用することで、状態系列の展開を回避できます。さらに、このようなメカニズムは、局所学習規則<sup>34,35</sup>のみを用いて脳内に実装できる可能性があります。この発見に基づき、各モジュールの最終状態の勾配を用い、他の状態を一定として扱うことで、HRM勾配の1ステップ近似を提案します。したがって、勾配パスは次のようになります。
+</span>
+\[
+\text{Output head → fnal state of the H-module → fnal state of the L-module → input embedding}
+\]
+ 
+The above method needs \(O(1)\) memory, does not require unrolling through time, and can be easily implemented with an autograd framework such as PyTorch, as shown in Figure  4 . Given that each module only needs to back-propagate errors through its most recent local synaptic activity, this approach aligns well with the perspective that cortical credit assignment relies on short-range, temporally local mechanisms rather than on a global replay of activity patterns. 
+
+<br><span style="color:blue;">
+上記の方法は \(O(1)\) メモリを必要とし、時間軸での展開を必要とせず、図4に示すようにPyTorchなどのautogradフレームワークで簡単に実装できます。各モジュールは最新の局所的なシナプス活動を通じてエラーを逆伝播するだけでよいため、このアプローチは、皮質へのクレジット割り当てが活動パターンのグローバルな再生ではなく、短距離かつ時間的に局所的なメカニズムに依存するという見方とよく一致しています。
+</span>
+
+</p>
+<center><img src="images/4.png"></center>
+<p>
+Figure 4: <strong>Top:</strong> Diagram of HRM with lows us to calculate the exact gradient of fxed point z⋆H 
+approximate gradient. <strong>Bottom:</strong> Pseu- with respect to the parameters θ without explicit back- 
+docode of HRM with deep supervision propagation: 
+
+<br><span style="color:blue;">
+図4: <strong>上:</strong> 固定点z⋆Hの正確な勾配を計算するための近似勾配を用いたHRMの図。<strong>下:</strong> 明示的な逆伝搬法を用いずに、パラメータθに関する擬似勾配。深層教師伝播を用いたHRMのコード:
+</span>
+
+</p><p>
+The one-step gradient approximation is theoretically 
+grounded in the mathematics of Deep Equilibrium Mod
+els (DEQ)<sup>36</sup> which employs the Implicit Function Theo- 
+rem (IFT) to bypass BPTT, as detailed next. Consider an 
+idealized HRM behavior where, during high-level cycle 
+k, the L-module repeatedly updates until its state \(z_L\) converges to a local fxed point \(z_L^⋆\). This fxed point, given 
+the current high-level state \(z_H^{k−1}\), can be expressed as 
+
+<br><span style="color:blue;">
+1ステップ勾配近似は、理論的には深層平衡モデル（DEQ）<sup>36</sup>の数学的根拠に基づいており、次に示すように、BPTTを回避するために暗黙関数定理（IFT）を採用しています。高レベルサイクルkにおいて、Lモジュールの状態\(z_L\)が局所的な固定点\(z_L^⋆\)に収束するまで、Lモジュールが繰り返し更新されるという理想的なHRM挙動を考えてみましょう。この固定点は、現在の高レベル状態\(z_H^{k−1}\)が与えられた場合、次のように表すことができます。
+</span>
+\[ 
+z_L^⋆ = f_L(z_L^⋆, z_H^{k−1},\tilde{x};θ_L)
+\]
+ 
+The \(H\)-module then performs a single update using this 
+converged \(L\)-state:
+
+<br><span style="color:blue;">
+\(H\)-モジュールは、この収束した \(L\)-状態を使用して単一の更新を実行します。
+</span>
+\[
+z_H^k = f_H(z_H^{k−1}, z_L^⋆;θ_H)
+\]
+ 
+With a proper mapping \(\mathcal{F}\), the updates to the high-level 
+state can be written in a more compact form as \(z_H^k = 
+\mathcal{F}(z_H^{k−1};\tilde{x},θ)\), where \(θ = (θ_I, θ_L)\), and the fxed-point 
+can be written as \(z_H^⋆= \mathcal{F}(zH^⋆;\tilde{x},θ)\). Let \(J_{\mathcal{F}} =\frac{∂\mathcal{F}}{∂z_H}\) be 
+the Jacobian of \(\mathcal{F}\), and assume that the matrix \(I − J_{\mathcal{F}}\) is  
+invertible at \(z_H^⋆\) and that the mapping \(\mathcal{F}\) is continuously differentiable. The Implicit Function Theorem then allows respect to the parameters \(θ\) without explicit backpropagation:
+
+<br><span style="color:blue;">
+適切なマッピング \(\mathcal{F}\) を用いると、高レベル状態の更新はよりコンパクトな形式で \(z_H^k = \mathcal{F}(z_H^{k−1};\tilde{x},θ)\) と記述できます。ここで \(θ = (θ_I, θ_L)\) であり、固定点は \(z_H^⋆= \mathcal{F}(zH^⋆;\tilde{x},θ)\) と記述できます。 \(J_{\mathcal{F}} =\frac{∂\mathcal{F}}{∂z_H}\) を \(\mathcal{F}\) のヤコビ行列とし、行列 \(I − J_{\mathcal{F}}\) が \(z_H^⋆\) において逆行列を持ち、写像 \(\mathcal{F}\) が連続的に微分可能であると仮定する。すると、暗黙関数定理により、明示的な逆伝播なしにパラメータ \(θ\) に関して以下の式が成立する。
+</span>
+
+\[
+\frac{∂z_H^⋆}{∂θ}=\big(I-J_{\mathcal{F}}\big|_{z_H^*}\big)^{-1}\frac{∂F}{∂θ}\Bigg|_{z_H^*}  \tag{1}
+\]
+ 
+Calculating the above gradient requires evaluating and inverting matrix \((I − J_{\mathcal{F}})\) that can be com- putationally expensive. Given the Neumann series expansion, 
+
+<br><span style="color:blue;">
+上記の勾配を計算するには、行列\((I − J_{\mathcal{F}})\)の評価と逆行列の計算が必要であり、これは計算コストが高くなる可能性がある。ノイマン級数展開を考えると、
+</span>
+\[
+(I − J_{\mathcal{F}})^{−1} = I + J_{\mathcal{F}} + J_{\mathcal{F}}^2 + J_{\mathcal{F}}^3 + . . . ,
+\] 
+
+
+the so-called 1-step gradient<sup>37</sup> approximates the series by considering only its frst term, i.e. \((I − J_{\mathcal{F}})^{−1}\approx I\), and leads to the following approximation of Equation (1): 
+
+<br><span style="color:blue;">
+いわゆる1段階勾配<sup>37</sup>は、級数をその第1項のみ、つまり\((I − J_{\mathcal{F}})^{−1}\approx I\)を考慮して近似し、式(1)の次の近似値を導きます。
+</span>
+\[
+\frac{∂z_H^∗}{∂θ_H}\approx\frac{∂f_H}{∂θ_H},　
+\frac{∂z_H^∗}{∂θ_L}\approx\frac{∂f_H}{∂z_L^∗}\cdot\frac{∂z_L^∗}{∂θ_L},　
+\frac{∂z_H^∗}{∂θ_I}\approx\frac{∂f_H}{∂z_L^∗}\cdot
+\frac{∂z_L^∗}{∂θ_I}
+\tag{2}
+\]
+
+The gradients of the low-level fxed point, \(\frac{∂z_L^∗}{∂θ_L}\) and \(\frac{∂z_K^∗}{∂θ_I}\), can also be approximated using another application of the 1-step gradient: 
+
+<br><span style="color:blue;">
+低レベルの固定点の勾配 \(\frac{∂z_L^∗}{∂θ_L}\) と \(\frac{∂z_K^∗}{∂θ_I}\) も、1 ステップ勾配の別の適用を使用して近似できます。
+</span>
+\[
+\frac{∂z_L^∗}{∂θ_L}\approx\frac{∂f_L}{∂θ_L},　\frac{∂z_L^∗}{∂θ_I}\approx\frac{∂f_L}{∂θ_I}
+\tag{3}
+\]   
+
+By substituting Equation (3) back into Equation (2), we arrive at the fnal simplifed gradients. 
+
+<br><span style="color:blue;">
+式(3)を式(2)に代入すると、最終的な簡略化された勾配が得られます。
+</span>
+</p><p>
+Before defning our loss function, we must frst introduce two key elements of our proposed method: deep supervision and adaptive computational time. 
+
+<br><span style="color:blue;">
+損失関数を定義する前に、まず、提案方法の 2 つの重要な要素である、深い監視と適応的な計算時間を導入する必要があります。
+</span>
+</p><p>
+<strong>Deep supervision</strong>　Inspired by the principle that periodic neural oscillations regulate when learning occurs in the brain<sup>38</sup>, we incorporate a deep supervision mechanism into HRM, as detailed next. 
+
+<br><span style="color:blue;">
+<strong>ディープスーパービジョン</strong>　脳内で学習が起こると周期的な神経振動が制御されるという原理<sup>38</sup> に着想を得て、次に詳述するように、ディープスーパービジョンメカニズムを HRM に組み込みました。
+</span>
+</p><p>
+Given a data sample \((x, y)\), we run multiple forward passes of the HRM model, each of which we refer to as a segment. Let \(M\) denote the total number of segments executed before termination. For each segment \(m ∈ \{1,..., M\}\), let \(z^m = (z_H^{mNT}, z_L^{mNT})\) represent the hidden state at the conclusion of segment m, encompassing both high-level and low-level state components. 
+
+<br><span style="color:blue;">
+データサンプル \((x, y)\) が与えられた場合、HRM モデルの複数のフォワードパスを実行します。各パスをセグメントと呼びます。\(M\) は、終了までに実行されたセグメントの総数を表します。各セグメント \(m ∈ \{1,..., M\}\) について、\(z^m = (z_H^{mNT}, z_L^{mNT})\) は、セグメント m の終了時の隠れ状態を表し、高レベルと低レベルの両方の状態要素を含みます。
+</span>
+</p><p>
+At each segment m, we apply a deep supervision step as follows: 
+
+<br><span style="color:blue;">
+各セグメントmでは、次のように深い監視ステップを適用します。
+</span>
+<div class="styleBullet">
+<ul><li>
+1.  Given the state \(z^{m−1}\) from the previous segment, compute the next state \(z^m\) and its associated 
+output \(\hat{y}^m\) through a forward pass in the HRM model: 
+
+<br><span style="color:blue;">
+前のセグメントの状態\(z^{m−1}\)が与えられた場合、HRMモデルの順方向パスを通じて次の状態\(z^m\)とそれに関連する出力\(\hat{y}^m\)を計算します。
+</span>
+\[
+(z^m,\hat{y}^m) ← HRM(z^{m−1}, x;θ)
+\] 
+
+</li><br><li>
+2.  Compute the loss for the current segment: 
+
+<br><span style="color:blue;">
+現在のセグメントの損失を計算します。
+</span>
+\[
+L^m ← LOSS(\hat{y}^m, y)
+\] 
+
+</li><br><li>
+3.  Update parameters: 
+</span>
+<br><span style="color:blue;">
+更新パラメータ:
+</span>
+\[
+θ ← OPTIMIZERSTEP(θ,∇_θL^m) 
+\]
+
+</li></ul></div>
+</p><p>
+The crucial aspect of this procedure is that the hidden state \(z^m\) is “detached” from the computa- tion graph before being used as the input state for the next segment. Consequently, gradients from segment \(m + 1\) do not propagate back through segment \(m\), effectively creating a 1-step approxi- mation of the gradient of the recursive deep supervision process<sup>39,40</sup>. This approach provides more frequent feedback to the H-module and serves as a regularization mechanism, demonstrating supe- rior empirical performance and enhanced stability in deep equilibrium models when compared to more complex, Jacobian-based regularization techniques<sup>39,41</sup>. Figure  4  shows pseudocode of deep supervision training. 
+
+<br><span style="color:blue;">
+この手順の重要な点は、隠れ状態 \(z^m\) が次のセグメントの入力状態として使用される前に、計算グラフから「切り離される」ことです。その結果、セグメント \(m + 1\) からの勾配はセグメント \(m\) を介して伝播せず、再帰的な深層教師プロセスの勾配の1ステップ近似が効果的に作成されます<sup>39,40</sup>。このアプローチは、Hモジュールへのフィードバックをより頻繁に提供し、正則化メカニズムとして機能し、より複雑なヤコビアンベースの正則化手法と比較して、深層平衡モデルにおいて優れた経験的パフォーマンスと強化された安定性を示します<sup>39,41</sup>。図4は、深層教師トレーニングの疑似コードを示しています。
+</span>
+</p><p>
+<strong>Adaptive computational time (ACT)</strong>　The brain dynamically alternates between automatic think- ing (“System 1”) and deliberate reasoning (“System 2”)<sup>42</sup>. Neuroscientifc evidence shows that these cognitive modes share overlapping neural circuits, particularly within regions such as the prefrontal cortex and the default mode network<sup>43,44</sup>. This indicates that the brain dynamically mod- ulates the “runtime” of these circuits according to task complexity and potential rewards<sup>45,46</sup>. 
+
+<br><span style="color:blue;">
+<strong>適応的計算時間（ACT）</strong>　脳は自動思考（「システム1」）と意図的な推論（「システム2」）を動的に切り替えます<sup>42</sup>。神経科学的な証拠は、これらの認知モードが重複する神経回路を共有していることを示しており、特に前頭前皮質やデフォルトモードネットワークなどの領域において顕著です<sup>43,44</sup>。これは、脳がタスクの複雑さと潜在的な報酬に応じてこれらの回路の「実行時間」を動的に調整していることを示しています<sup>45,46</sup>。
+</span>
+</p><p>
+Inspired by the above mechanism, we incorporate an adaptive halting strategy into HRM that en- ables “thinking, fast and slow”. This integration leverages deep supervision and uses the Q-learning 
+algorithm<sup>47</sup> to adaptively determine the number of segments. A Q-head uses the fnal state of the \(H\)-module to predict the \(Q\)-values \(\hat{Q}ˆm = (\hat{Q}_{halt}^m,\hat{Q}_{continue}^m)\) of the “halt” and “continue” actions: 
+
+<br><span style="color:blue;">
+上記のメカニズムに着想を得て、HRMに適応型停止戦略を組み込み、「速く、そしてゆっくり考える」ことを可能にする。この統合は、ディープスーパービジョンを活用し、Q学習アルゴリズム<sup>47</sup>を用いてセグメント数を適応的に決定する。Qヘッドは、\(H\)モジュールの最終状態を用いて、「停止」および「継続」アクションの\(Q\)値\(\hat{Q}ˆm = (\hat{Q}_{halt}^m,\hat{Q}_{continue}^m)\)を予測する。
+</span>
+\[
+\hat{Q}^m = σ\left(θ_Q^Tz_H^{mNTH}\right)
+\] 
+
+where \(σ\) denotes the sigmoid function applied element-wise. The halt or continue action is chosen using a randomized strategy as detailed next. Let \(M_{max}\) denote the maximum number of segments (a fxed hyperparameter) and \(M_{min}\) denote the minimum number of segments (a random variable). The value of \(M_{min}\) is determined stochastically: with probability \(ε\), it is sampled uniformly from the set \(\{2,···,M_{max}\}\) (to encourage longer thinking), and with probability \(1−ε\), it is set to 1. The halt action is selected under two conditions: when the segment count surpasses the maximum threshold \(M_{max}\), or when the estimated halt value \(\hat{Q}_{halt}\) exceeds the estimated continue value \(\hat{Q}_{continue}\) and the segment count has reached at least the minimum threshold \(M_{min}\). 
+
+<br><span style="color:blue;">
+ここで、\(σ\) は要素ごとに適用されるシグモイド関数を表します。停止または継続のアクションは、次に示すランダム化戦略を用いて選択されます。\(M_{max}\) はセグメントの最大数（固定ハイパーパラメータ）、\(M_{min}\) はセグメントの最小数（ランダム変数）を表します。 \(M_{min}\) の値は確率的に決定されます。確率 \(ε\) で、集合 \(\{2,···,M_{max}\}\) から均一にサンプリングされ (より長い思考を促すため)、確率 \(1−ε\) で 1 に設定されます。停止アクションは、セグメント数が最大しきい値 \(M_{max}\) を超えた場合、または推定停止値 \(\hat{Q}_{halt}\) が推定継続値 \(\hat{Q}_{continue}\) を超え、セグメント数が少なくとも最小しきい値 \(M_{min}\) に達した場合の 2 つの条件下で選択されます。
+</span>
+</p><p>
+The Q-head is updated through a Q-learning algorithm, which is defned on the following episodic Markov Decision Process (MDP). The state of the MDP at segment \(m\) is \(z^m\), and the action space is {halt,continue}. Choosing the action “halt” terminates the episode and returns a binary reward indicating prediction correctness, i.e., \(1\{yˆm = y\}\). Choosing “continue” yields a reward of 0 and the state transitions to \(z^{m+1}\). Thus, the Q-learning targets for the two actions \(\hat{G}ˆm = (\hat{G}_{halt}^m,\hat{G}_{continue}^m)\) are given by
+
+<br><span style="color:blue;">
+Qヘッドは、以下のエピソードマルコフ決定過程（MDP）に基づいて定義されるQ学習アルゴリズムによって更新される。セグメント \(m\) におけるMDPの状態は \(z^m\) であり、行動空間は{halt,continue}である。行動「halt」を選択するとエピソードが終了し、予測の正しさを示す2値報酬、すなわち\(1\{y_m = y\}\) が返される。「continue」を選択すると報酬は0となり、状態は \(z^{m+1}\) に遷移する。したがって、2つの行動\(\hat{G}^m = (\hat{G}_{halt}^m,\hat{G}_{continue}^m)\)のQ学習目標は次のように与えられる。
+</span>
+\[ 
+\begin{align}
+\hat{G}_{halt}^m &= 1\{\hat{y}^m = y\} \\
+\\
+\hat{G}_{continue}^m &=
+\begin{cases}
+\hat{Q}_{halt}^{m+1} & if\;m\geq N_{max} \\
+\\
+\max(\hat{Q}_{halt}^{m+1},\hat{Q}_{continue}^{m+1}) & otherwise
+\end{cases}
+\end{align}
+\]
+
+We can now defne the loss function of our learning procedure. The overall loss for each supervision segment combines both the Q-head loss and the sequence-to-sequence loss: 
+
+<br><span style="color:blue;">
+これで、学習手順の損失関数を定義できます。各教師セグメントの全体的な損失は、Qヘッド損失とシーケンス間損失の両方を組み合わせたものになります。
+</span>
+\[
+L_{ACT}^m = LOSS(\hat{y}^m, y) +BINARYCROSSENTROPY(\hat{Q}^m,\hat{G}^m)
+\] 
+
+Minimizing the above loss enables both accurate predictions and nearly optimal stopping decisions. 
+
+<br><span style="color:blue;">
+上記の損失を最小限に抑えることで、正確な予測とほぼ最適な停止決定の両方が可能になります。
+</span>
+</p><p>
+Selecting the “halt” action ends the supervision loop. In practice, sequences are processed in batches, which can be easily handled by substituting any halted sample in the batch with a fresh sample from the dataloader. 
+
+<br><span style="color:blue;">
+「停止」アクションを選択すると、監視ループが終了します。実際には、シーケンスはバッチ処理されます。バッチ内の停止したサンプルをデータローダーから取得した新しいサンプルに置き換えることで、簡単に処理できます。
+</span>
+
+</p><p>
+<strong>Inference-time scaling</strong>　An effective neural model should exploit additional computational re- sources during inference to enhance performance. As illustrated in Figure  5 -(c), HRM seamlessly achieves inference-time scaling by simply increasing the computational limit parameter, \(M_{max}\) without requiring further training or architectural modifcations.
+
+<br><span style="color:blue;">
+<strong>推論時間のスケーリング</strong>　効果的なニューラルモデルは、推論中に追加の計算リソースを活用して性能を向上させる必要があります。図5(c)に示すように、HRMは、追加の学習やアーキテクチャの変更を必要とせずに、計算限界パラメータ \(M_{max}\) を増やすだけで、推論時間のスケーリングをシームレスに実現します。 
+</span>
+
+</p>
+<center><img src="images/5.png"></center>
+<p>
+Figure 5  presents a performance comparison between two HRM variants: one incorporating ACT and another employing a fxed computational step count equivalent to ACT's \(M_{max}\) parameter. It shows that ACT effectively adapts its computational resources based on task complexity, achieving signifcant computational savings with minimal impact on performance. 
+
+<br><span style="color:blue;">
+図5は、ACTを組み込んだHRMバリアントと、ACTの \(M_{max}\) パラメータに相当する固定計算ステップ数を採用したHRMバリアントの2つのバリアントのパフォーマンス比較を示しています。ACTはタスクの複雑さに応じて計算リソースを効果的に調整し、パフォーマンスへの影響を最小限に抑えながら、大幅な計算コストの削減を実現していることがわかります。
+</span>
+
+</p><p>
+Additional compute is especially effective for tasks that demand deeper reasoning. On Sudoku— a problem that often requires long-term planning—HRM exhibits strong inference-time scaling. On the other hand, we fnd that extra computational resources yield minimal gains in ARC-AGI challenge, as solutions generally require only a few transformations. 
+
+<br><span style="color:blue;">
+追加の計算リソースは、より深い推論を必要とするタスクに特に効果的です。長期的な計画が必要となることが多い数独問題では、HRMは推論時間に対して高いスケーリング効果を示します。一方、ARC-AGIチャレンジでは、解くのに通常わずかな変換しか必要としないため、追加の計算リソースによる効果は最小限であることがわかりました。
+</span>
+</p><p>
+Figure 5: Effectiveness of Adaptive Computation Time (ACT) on the Sudoku-Extreme-Full. (a) Mean compute steps used by models with ACT versus models with a fxed number of compute steps (\(M\)). ACT maintains a low and stable number of average compute steps even as the maximum limit (\(M_{max}\)) increases. (b) Accuracy comparison. The ACT model achieves performance comparable to the fxed-compute model while utilizing substantially fewer computational steps on average. (c) Inference-time scalability. Models trained with a specifc \(M_{max}\) can generalize to higher computational limits during inference, leading to improved accuracy. For example, a model trained with \(M_{max} = 8\) continues to see accuracy gains when run with \(M_{max} = 16\) during inference. 
+
+<br><span style="color:blue;">
+図5: Sudoku-Extreme-Fullにおける適応型計算時間（ACT）の有効性。（a）ACT搭載モデルと固定計算ステップ数（\(M\)）のモデルで使用される平均計算ステップ数。ACTは、最大制限（\(M_{max}\)）が増加しても、平均計算ステップ数を低く安定させています。（b）精度の比較。ACTモデルは、平均して大幅に少ない計算ステップ数で、固定計算モデルに匹敵するパフォーマンスを実現しています。（c）推論時間のスケーラビリティ。特定の\(M_{max}\)でトレーニングされたモデルは、推論中により高い計算制限に一般化できるため、精度が向上します。たとえば、\(M_{max} = 8\)でトレーニングされたモデルは、推論中に\(M_{max} = 16\)で実行すると、精度が向上し続けます。
+</span>
+</p><p>
+<strong>Stability of Q-learning in ACT</strong>　The deep Q-learning that underpins our ACT mechanism is known to be prone to instability, often requiring stabilization techniques such as replay buffers and target networks<sup>48</sup>, which are absent in our design. Our approach, however, achieves stability through the intrinsic properties of our model and training procedure. Recent theoretical work by Gallici et al.<sup>49</sup> shows that Q-learning can achieve convergence if network parameters are bounded, weight decay is incorporated during training, and post-normalization layers are implemented. Our model satisfes these conditions through its Post-Norm architecture that employs RMSNorm (a layer normalization variant) and the AdamW optimizer. AdamW has been shown to solve an \(L_∞\)- constrained optimization problem, ensuring that model parameters remain bounded by \(1/λ\)<sup>50</sup>. 
+
+<br><span style="color:blue;">
+<strong>ACT における Q 学習の安定性</strong>　ACT メカニズムの基盤となるディープ Q 学習は不安定になりやすいことが知られており、多くの場合、リプレイ バッファやターゲット ネットワーク<sup>48</sup> などの安定化手法が必要になりますが、私たちの設計ではこれらは使用されていません。しかし、私たちのアプローチでは、モデルとトレーニング手順の固有の特性によって安定性を実現しています。Gallici らによる最近の理論的研究<sup>49</sup> では、ネットワーク パラメータが制限され、トレーニング中に重み減衰が組み込まれ、ポスト正規化層が実装されている場合、Q 学習は収束を達成できることが示されています。私たちのモデルは、RMSNorm (層正規化のバリアント) と AdamW オプティマイザーを採用した Post-Norm アーキテクチャによってこれらの条件を満たしています。AdamW は、モデル パラメータが \(1/λ\) によって制限されたままになることを保証する、\(L_∞\) 制約の最適化問題を解決できることが示されています<sup>50</sup>。
+</span>
+</p><p>
+<strong>Architectural details</strong>　We employ a sequence-to-sequence architecture for HRM. Both input and output are represented as token sequences: \(x = (x_1,..., x_l)\) and \(y = (y_1,...,y_{l^\prime})\) respectively. The model includes an embedding layer \(f_I\) that converts discrete tokens into vector representa- tions, and an output head \(f_O(z;θ_O) = softmax(θ_Oz)\) that transforms hidden states into token prob- ability distributions \(\hat{y}\). For small-sample experiments, we replace softmax with stablemax51 to improve generalization performance. The sequence-to-sequence loss is averaged over all tokens,l 
+\(LOSS(\hat{y}, y) = \frac{1}{l^\prime}\sum_{i=1}^{l^\prime}
+\log p(y_i)\), where \(p(y_i)\) is the probability that distribution \(\hat{y}_i\) assigns to token \(y_i\). The initial hidden states \(z^0\) are initialized by sampling from a truncated normal distribution with standard deviation of 1, truncation of 2, and kept fxed throughout training. 
+
+<br><span style="color:blue;">
+<strong>アーキテクチャの詳細</strong>　HRMにはsequence-to-sequenceアーキテクチャを採用しています。入力と出力はトークンシーケンスとして表現されます：\(x = (x_1,..., x_l)\)と\(y = (y_1,...,y_{l^\prime})\)。モデルには、離散トークンをベクトル表現に変換する埋め込み層\(f_I\)と、隠れ状態をトークン確率分布\(\hat{y}\)に変換する出力ヘッド\(f_O(z;θ_O) = softmax(θ_Oz)\)が含まれます。小規模サンプルの実験では、一般化性能を向上させるために、softmaxをstablemax51に置き換えます。シーケンス間損失はすべてのトークンについて平均化され、l
+\(LOSS(\hat{y}, y) = \frac{1}{l^\prime}\sum_{i=1}^{l^\prime}
+\log p(y_i)\) となります。ここで、\(p(y_i)\) は分布 \(\hat{y}_i\) がトークン \(y_i\) に割り当てる確率です。初期の隠れ状態 \(z^0\) は、標準偏差 1、切り捨て 2 の切断正規分布からサンプリングすることで初期化され、学習中は固定値に保たれます。
+</span>
+</p><p>
+Both the low-level and high-level recurrent modules \(f_L\) and \(f_H\) are implemented using encoder- only Transformer<sup>52</sup> blocks with identical architectures and dimensions. These modules take mul- tiple inputs, and we use straightforward element-wise addition to combine them, though more sophisticated merging techniques such as gating mechanisms could potentially improve perfor- mance and is left for future work. For all Transformer blocks in this work—including those in the baseline models—we incorporate the enhancements found in modern LLMs (based on Llama53 architectures). These improvements include Rotary Positional Encoding<sup>54</sup>, Gated Linear Units<sup>55</sup>, RMSNorm<sup>56</sup>, and the removal of bias terms from linear layers. 
+
+<br><span style="color:blue;">
+低水準および高水準の再帰モジュール \(f_L\) と \(f_H\) はどちらも、同一のアーキテクチャおよび次元を持つエンコーダのみの Transformer<sup>52</sup> ブロックを使用して実装されています。これらのモジュールは複数の入力を受け取り、それらを結合するために単純な要素ごとの加算を使用しますが、ゲーティングメカニズムなどのより洗練されたマージ手法は潜在的にパフォーマンスを向上させる可能性があり、将来の作業に残されています。本研究のすべての Transformer ブロック（ベースラインモデルのブロックを含む）には、最新の LLM（Llama53 アーキテクチャに基づく）に見られる機能強化が組み込まれています。これらの機能強化には、Rotary Positional Encoding<sup>54</sup>、Gated Linear Units<sup>55</sup>、RMSNorm<sup>56</sup>、および線形層からのバイアス項の削除が含まれます。
+</span>
+</p><p>
+Furthermore, both HRM and recurrent Transformer models implement a Post-Norm architecture with weights initialized via truncated LeCun Normal initialization<sup>57,58,59</sup>, while the scale and bias parameters are excluded from RMSNorm. All parameters are optimized using the Adam-atan2 op- timizer<sup>60</sup>, a scale-invariant variant of Adam<sup>61</sup>, combined with a constant learning rate that includes linear warm-up. 
+
+<br><span style="color:blue;">
+さらに、HRMモデルとリカレントTransformerモデルはどちらも、重みがTruncated LeCun Normal初期化法<sup>57,58,59</sup>によって初期化されるPost-Normアーキテクチャを実装しています。一方、スケールパラメータとバイアスパラメータはRMSNormから除外されています。すべてのパラメータは、Adamのスケール不変版であるAdam-atan2最適化器<sup>60</sup>と、線形ウォームアップを含む定数学習率を用いて最適化されます。<sup>61</sup>
+</span>
+
+</p>
+
+<h2>3  Results <span style="color:blue;">結果</span></h2>
+<p>
+This section begins by describing the ARC-AGI, Sudoku, and Maze benchmarks, followed by an overview of the baseline models and their results. Figure  6 -(a,b,c) presents a visual representa- tion of the three benchmark tasks, which are selected to evaluate various reasoning abilities in AI models. 
+
+<br><span style="color:blue;">
+このセクションでは、まずARC-AGI、数独、迷路のベンチマークについて説明し、続いてベースラインモデルとその結果の概要を説明します。図6 (a, b, c) は、AIモデルの様々な推論能力を評価するために選択された3つのベンチマークタスクを視覚的に表したものです。
+</span>
+
+</p>
+<center><img src="images/6.png"></center>
+<p>
+Figure 6: Left: Visualization of benchmark tasks. Right: Diffculty of Sudoku-Extreme examples. 
+
+<br><span style="color:blue;">
+図6: 左: ベンチマークタスクの視覚化。右: Sudoku-Extremeの例の難易度。
+</span>
+</p>
+
+<h3>3.1  Benchmarks <span style="color:blue;">ベンチマーク</span></h3>
+<p>
+<strong>ARC-AGI Challenge</strong>　The ARC-AGI benchmark evaluates general fuid intelligence through IQ- test-like puzzles that require inductive reasoning<sup>27</sup>. The initial version, ARC-AGI-1, presents chal- lenges as input-label grid pairs that force AI systems to extract and generalize abstract rules from just a few examples. Each task provides a few input–output demonstration pairs (usually 2–3) and a test input. An AI model has two attempts to produce the correct output grid. Although some be- lieve that mastering ARC-AGI would signal true artifcial general intelligence, its primary purpose is to expose the current roadblocks in AGI progress. In fact, both conventional deep learning meth- ods and CoT techniques have faced signifcant challenges with ARC-AGI-1, primarily because it requires the ability to generalize to entirely new tasks<sup>28</sup>. 
+
+<br><span style="color:blue;">
+<strong>ARC-AGI チャレンジ</strong>　ARC-AGI ベンチマークは、帰納的推論を必要とする IQ テストのようなパズルを通じて、汎用流動知能を評価します<sup>27</sup>。最初のバージョンである ARC-AGI-1 では、入力とラベルのグリッドのペアとして課題が提示され、AI システムはわずかな例から抽象的なルールを抽出して一般化する必要があります。各タスクでは、いくつかの入力と出力のデモンストレーション ペア (通常 2～3 個) とテスト入力が提供されます。AI モデルは、正しい出力グリッドを生成するために 2 回試行します。ARC-AGI を習得すれば真の汎用人工知能が実現すると考える人もいますが、その主な目的は、AGI の進歩における現在の障害を明らかにすることです。実際、従来のディープラーニング手法と CoT 技術の両方が、ARC-AGI-1 で大きな課題に直面しています。これは主に、まったく新しいタスクに一般化する能力が必要になるためです<sup>28</sup>。
+</span>
+</p><p>
+Addressing the limitations identifed in ARC-AGI-1, ARC-AGI-2 signifcantly expands the bench- mark by providing a more comprehensive and carefully refned collection of tasks. These new tasks emphasize deeper compositional reasoning, multi-step logic, contextual rule application, and symbolic abstraction. Human calibration studies show these tasks are challenging but doable for people, while being much harder for current AI systems, offering a clearer measure of general reasoning abilities<sup>29</sup>. 
+
+<br><span style="color:blue;">
+ARC-AGI-2は、ARC-AGI-1で特定された限界に対処し、より包括的かつ綿密に改良されたタスク群を提供することで、ベンチマークを大幅に拡張します。これらの新しいタスクは、より深い構成的推論、多段階の論理、文脈的ルールの適用、そして記号的抽象化を重視しています。人間を対象としたキャリブレーション研究では、これらのタスクは人間にとっては困難ではあるものの実行可能である一方、現在のAIシステムにとってははるかに困難であることが示されており、一般的な推論能力をより明確に測定できます<sup>29</sup>。
+</span>
+</p><p>
+<strong>Sudoku-Extreme</strong>　Sudoku is a 9×9 logic puzzle, requiring each row, column, and 3×3 block to contain the digits 1–9 exactly once. A prediction is considered correct if it exactly matches the puzzle's unique solution. Sudoku's complex logical structure makes it a popular benchmark for evaluating logical reasoning in machine learning<sup>62,63,64</sup>. 
+
+<br><span style="color:blue;">
+<strong>数独エクストリーム</strong>　数独は9×9の論理パズルで、各行、各列、3×3のブロックに1から9までの数字が1つずつ含まれている必要があります。予測がパズルの唯一の解と完全に一致した場合、正解とみなされます。数独の複雑な論理構造は、機械学習における論理的推論を評価するためのベンチマークとして広く使用されています<sup>62,63,64</sup>。
+</span>
+</p><p>
+The most frequently used Sudoku dataset in research, namely the Kaggle dataset65, can be fully solved using elementary single-digit techniques<sup>66</sup>. The minimal 17-clue puzzles<sup>62</sup>, another widely- used collection, might seem more challenging due to its small number of clues. However, this perception is misleading—since 17 represents the minimum number of clues required to guarantee a unique Sudoku solution, these hints need to be highly orthogonal to each other. This orthogonal arrangement leads to many direct, easily-resolved solution paths<sup>67</sup>. 
+
+<br><span style="color:blue;">
+研究で最も頻繁に利用されている数独データセット、すなわちKaggleデータセット65は、初歩的な1桁の数字を用いた技法を用いて完全に解くことができます<sup>66</sup>。もう一つの広く利用されているデータセットである、最小17個のヒントパズル<sup>62</sup>は、ヒントの数が少ないため、より難しそうに見えるかもしれません。しかし、この認識は誤解を招きます。17個は、数独の解が一意であることを保証するのに必要な最小のヒント数であるため、これらのヒントは互いに高度に直交している必要があります。この直交配置により、多くの直接的で簡単に解ける解の経路が生まれます<sup>67</sup>。
+</span>
+</p><p>
+We introduce Sudoku-Extreme, a more challenging dataset that is compiled from the aforemen- tioned easy datasets as well as puzzles recognized by the Sudoku community as exceptionally diffcult for human players: 
+
+<br><span style="color:blue;">
+ここでは、前述の簡単なデータセットと、数独コミュニティで人間のプレイヤーにとって非常に難しいと認識されているパズルからコンパイルされた、より挑戦的なデータセットである Sudoku-Extreme を紹介します。
+</span>
+<div class="styleBullet">
+<ul><li>
+•  Easy puzzles compiled from Kaggle, 17-clue, plus unbiased samples from the Sudoku puzzle distribution<sup>67</sup>: totaling 1 149 158 puzzles. 
+
+<br><span style="color:blue;">
+Kaggle からコンパイルされた簡単なパズル、17-clue、および数独パズルの分布からの公平なサンプル<sup>67</sup>: 合計 1,149,158 個のパズル。
+</span>
+</li><br><li>
+•  Challenging puzzles compiled from Magictour 1465, Forum-Hard and Forum-Extreme subsets: totaling 3 104 157 puzzles. 
+
+<br><span style="color:blue;">
+Magictour 1465、Forum-Hard、Forum-Extreme のサブセットからコンパイルされた挑戦的なパズル: 合計 3,104,157 個のパズル。
+</span>
+</li></ul></div>
+</p><p>
+
+The compiled data then undergo a strict 90/10 train-test split, ensuring that the test set puzzles cannot be derived through equivalent transformations of any training samples. Sudoku-Extreme is a down-sampled subset of this data containing 1000 training examples. We use Sudoku-Extreme in our main experiments (Figure  1 ), which focuses on small-sample learning scenarios. To guarantee convergence and control overftting effects in our analysis experiments (Figures  2 ,  3  and  5 ), we use the complete training data, Sudoku-Extreme-Full, containing 3 831 994 examples.
+
+<br><span style="color:blue;">
+コンパイルされたデータは、厳密に90/10のトレーニング/テスト分割を受け、テストセットのパズルがトレーニングサンプルの等価変換によって導出されないようにします。Sudoku-Extremeは、このデータのダウンサンプリングされたサブセットで、1000個のトレーニングサンプルが含まれています。私たちは、小規模サンプル学習シナリオに焦点を当てたメインの実験（図1）でSudoku-Extremeを使用しています。分析実験（図2、図3、図5）では、収束を保証し、過剰学習の影響を制御するために、3,831,994個のサンプルを含む完全なトレーニングデータであるSudoku-Extreme-Fullを使用しています。 
+</span>
+</p><p>
+We measure puzzle diffculty by counting the number of search backtracks (“guesses”) required by a smart Sudoku solver program tdoku, which uses propositional logic to reduce the number of guesses<sup>67</sup>. Our Sudoku-Extreme dataset exhibits a mean diffculty of 22 backtracks per puzzle, sig- nifcantly higher than existing datasets, including recent handmade puzzles Sudoku-Bench<sup>68</sup> which average just 0.45 backtracks per puzzle. These subset complexity levels are shown in Figure  6 -(d). 
+
+<br><span style="color:blue;">
+パズルの難易度は、スマートな数独解答プログラムtdokuが要求する探索バックトラック（「推測」）の数を数えることで測定します。tdokuは命題論理を用いて推測回数を削減します<sup>67</sup>。私たちのSudoku-Extremeデータセットは、パズルあたり平均22回のバックトラックという難易度を示しており、これは、パズルあたり平均0.45回のバックトラックしか必要としない最近の手作りパズルであるSudoku-Bench<sup>68</sup>を含む既存のデータセットよりも大幅に高い数値です。これらのサブセットの複雑さのレベルは、図6-(d)に示されています。
+</span>
+</p><p>
+<strong>Maze-Hard</strong>　This task involves fnding the optimal path in a 30×30 maze, making it interpretable and frequently used for training LLMs in search tasks<sup>69,70,71</sup>. We adopt the instance generation procedure of Lehnert et al.<sup>71</sup>, but introduce an additional flter to retain only those instances whose diffculty exceeds 110. Here, “diffculty” is defned as the length of the shortest path, which aligns with the linear time complexity of the wavefront breadth-frst search algorithm on GPUs<sup>72</sup>. A path is considered correct if it is valid and optimal—that is, the shortest route from the start to the goal. The training and test set both include 1000 examples. 
+
+<br><span style="color:blue;">
+<strong>Maze-Hard</strong> このタスクでは、30×30 の迷路で最適な経路を見つけることが求められます。これにより、経路は解釈可能となり、探索タスクにおける LLM のトレーニングに頻繁に使用されます<sup>69,70,71</sup>。私たちは Lehnert らのインスタンス生成手順を採用していますが<sup>71</sup>、難易度が 110 を超えるインスタンスのみを保持するための追加のフィルターを導入しています。ここで、「難易度」は最短経路の長さとして定義され、GPU 上の波面幅優先探索アルゴリズムの線形時間計算量と一致しています<sup>72</sup>。経路が有効かつ最適である場合、つまりスタートからゴールまでの最短ルートである場合、その経路は正しいとみなされます。トレーニング セットとテスト セットの両方に 1000 個の例が含まれています。
+</span>
+</p>
+
+<h3>3.2  Evaluation Details <span style="color:blue;">評価の詳細</span></h3>
+<p>
+For all benchmarks, HRM models were initialized with random weights and trained in the sequence- to-sequence setup using the input-output pairs. The two-dimensional input and output grids were fattened and then padded to the maximum sequence length. The resulting performance is shown in Figure  1 . Remarkably, HRM attains these results with just ~1000 training examples per task—and without pretraining or CoT labels. 
+
+<br><span style="color:blue;">
+全てのベンチマークにおいて、HRMモデルはランダムな重みで初期化され、入力-出力ペアを用いてシーケンスツーシーケンス方式で学習されました。2次元の入力グリッドと出力グリッドは太らせられ、その後、最大シーケンス長までパディングされました。その結果得られたパフォーマンスを図1に示します。驚くべきことに、HRMはタスクごとにわずか約1000個の学習例で、事前学習やCoTラベルなしでこれらの結果を達成しました。
+</span>
+</p><p>
+For ARC-AGI challenge, we start with (1) all demonstration and test input-label pairs from the training set, and (2) all demonstration pairs along with test inputs from the evaluation set. The dataset is augmented by applying translations, rotations, fips, and color permutations to the puz- zles. Each task example is prepended with a learnable special token that represents the puzzle it belongs to. At test time, we proceed as follows for each test input in the evaluation set: (1) Gener- ate and solve 1000 augmented variants and, for each, apply the inverse-augmentation transform to obtain a prediction. (2) Choose the two most popular predictions as the fnal outputs.<sup>3</sup> All reported results are obtained by comparing the outputs with the withheld test labels from the evaluation set. 
+
+<br><span style="color:blue;">
+ARC-AGIチャレンジでは、（1）トレーニングセットのすべてのデモンストレーションとテストの入力ラベルのペア、および（2）評価セットのすべてのデモンストレーションのペアとテスト入力から開始します。データセットは、パズルに平行移動、回転、FIP、および色の順列を適用することで拡張されます。各タスクの例の先頭には、それが属するパズルを表す学習可能な特別なトークンが付加されます。テスト時には、評価セットの各テスト入力に対して次のように進めます。（1）1000個の拡張バリアントを生成して解き、それぞれに対して逆拡張変換を適用して予測を取得します。（2）最終出力として、最も人気のある2つの予測を選択します。<sup>3</sup> 報告された結果はすべて、評価セットから差し控えられたテストラベルと出力を比較することによって得られます。
+</span>
+</p><p class="margin-large">
+<sup>3</sup>
+The ARC-AGI allows two attempts for each test input. 
+
+<br><span style="color:blue;">
+ARC-AGI では、テスト入力ごとに 2 回の試行が許可されます。
+</span>
+</p><p>
+We augment Sudoku puzzles by applying band and digit permutations, while data augmentation is disabled for Maze tasks. Both tasks undergo only a single inference pass. 
+
+<br><span style="color:blue;">
+数独パズルにはバンドと数字の順列を適用することで拡張しますが、迷路タスクではデータ拡張は無効です。どちらのタスクも推論パスは1回のみ実行されます。
+</span>
+</p><p>
+For ARC-AGI, the scores of the CoT models are taken from the offcial leaderboard<sup>29</sup>, while for Sudoku and Maze, the scores are obtained by evaluating through the corresponding API.
+
+<br><span style="color:blue;">
+ARC-AGI の場合、CoT モデルのスコアは公式リーダーボード<sup>29</sup> から取得されますが、数独と迷路の場合、スコアは対応する API を通じて評価することによって取得されます。 
+</span>
+</p><p>
+In Figure 1 , the baselines are grouped based on whether they are pre-trained and use CoT, or neither. The “Direct pred” baseline means using “direct prediction without CoT and pre-training”, which retains the exact training setup of HRM but swaps in a Transformer architecture. Interestingly, on ARC-AGI-1, “Direct pred” matches the performance of Liao and Gu<sup>73</sup>, who built a carefully de- signed, domain-specifc equivariant network for learning the ARC-AGI task from scratch, without pre-training. By substituting the Transformer architecture with HRM's hierarchical framework and implementing ACT, we achieve more than a twofold performance improvement. 
+
+<br><span style="color:blue;">
+図1では、ベースラインは、事前学習済みでCoTを使用しているか、どちらも使用していないかに基づいてグループ分けされています。「Direct pred」ベースラインは、「CoTと事前学習なしの直接予測」を使用することを意味します。これは、HRMの学習設定を正確に維持しながら、Transformerアーキテクチャに置き換えます。興味深いことに、ARC-AGI-1では、「Direct pred」はLiaoとGu<sup>73</sup>のパフォーマンスと一致します。彼らは、ARC-AGIタスクを事前学習なしでゼロから学習するために、慎重に設計されたドメイン固有の等変ネットワークを構築しました。TransformerアーキテクチャをHRMの階層型フレームワークに置き換え、ACTを実装することで、2倍以上のパフォーマンス向上を実現します。
+</span>
+</p><p>
+On the Sudoku-Extreme and Maze-Hard benchmarks, the performance gap between HRM and the baseline methods is signifcant, as the baselines almost never manage to solve the tasks. These benchmarks that demand lengthy reasoning traces are particularly diffcult for CoT-based methods. With only 1000 training examples, the “Direct pred” baseline—which employs an 8-layer Trans- former identical in size to HRM—fails entirely on these challenging reasoning problems. When trained on the larger Sudoku-Extreme-Full dataset, however, “Direct pred” can solve some easy Sudoku puzzles and reaches 16.9% accuracy (see Figure  2 ). Lehnert et al.<sup>71</sup> showed that a large vanilla Transformer model with 175M parameters, trained on 1 million examples across multiple trials, achieved only marginal success on 30x30 Maze tasks, with accuracy below 20% using the pass@64 evaluation metric. 
+
+<br><span style="color:blue;">
+Sudoku-ExtremeとMaze-Hardのベンチマークでは、HRMとベースライン手法のパフォーマンス差は顕著で、ベースライン手法ではこれらのタスクをほとんど解くことができません。長い推論トレースを必要とするこれらのベンチマークは、CoTベースの手法にとって特に困難です。わずか1000件のトレーニング例では、HRMと同等のサイズの8層Transformerを採用した「Direct pred」ベースラインは、これらの難しい推論問題に全く対応できません。しかし、より大規模なSudoku-Extreme-Fullデータセットでトレーニングすると、「Direct pred」は簡単な数独パズルを解くことができ、16.9%の精度に達します（図2参照）。 Lehnert ら<sup>71</sup>は、1 億 7,500 万のパラメータを持つ大規模な標準の Transformer モデルを複数の試行にわたって 100 万のサンプルでトレーニングした結果、30x30 Maze タスクでわずかに成功し、pass@64 評価メトリックを使用した精度は 20% 未満であったことを示しました。
+</span>
+</p>
+
+<h3>3.3  Visualization of intermediate timesteps <span style="color:blue;">中間タイムステップの可視化</span></h3>
+<p>
+Although HRM demonstrates strong performance on complex reasoning tasks, it raises an intrigu- ing question: what underlying reasoning algorithms does the HRM neural network actually imple- ment? Addressing this question is important for enhancing model interpretability and developing a deeper understanding of the HRM solution space. 
+
+<br><span style="color:blue;">
+HRMは複雑な推論タスクにおいて優れたパフォーマンスを発揮しますが、興味深い疑問が生じます。HRMニューラルネットワークは実際にはどのような推論アルゴリズムを実装しているのでしょうか？この疑問に取り組むことは、モデルの解釈可能性を高め、HRMソリューション空間への理解を深める上で重要です。
+</span>
+</p><p>
+While a defnitive answer lies beyond our current scope, we begin our investigation by analyzing state trajectories and their corresponding solution evolution. More specifcally, at each timestep \(i\) and given the low-level and high-level state pair (\(z_L^i\) and \(z_H^i\)) we perform a preliminary forward pass through the \(H\)-module to obtain \(\overline{z}^i = f_H(z_H^i, z_L^i;θ_H)\) and its corresponding decoded prediction \(\overline{y}^i = f_O(\overline{z}^i;θ_O)\). The prediction \(\overline{y}^i\) is then visualized in Figure  7 . 
+
+<br><span style="color:blue;">
+決定的な答えは現時点では私たちの範囲外ですが、まずは状態軌跡とそれに対応する解の進化を分析することから調査を始めます。具体的には、各タイムステップ \(i\) において、低レベルと高レベルの状態ペア (\(z_L^i\) と \(z_H^i\)) が与えられた場合、\(H\) モジュールを予備的にフォワードパスして、\(\overline{z}^i = f_H(z_H^i, z_L^i;θ_H)\) と、それに対応するデコードされた予測値 \(\overline{y}^i = f_O(\overline{z}^i;θ_O)\) を取得します。予測値 \(\overline{y}^i\) は図 7 に視覚化されています。
+</span>
+
+</p>
+<center><img src="images/7.png"></center>
+<p>
+Figure 7: <strong>Visualization of intermediate predictions by HRM on benchmark tasks. Top:</strong> Maze- Hard—blue cells indicate the predicted path. Middle: Sudoku-Extreme—bold cells represent ini- tial givens; red highlights cells violating Sudoku constraints; grey shading indicates changes from the previous timestep. <strong>Bottom:</strong> ARC-AGI-2 Task—left: provided example input-output pair; right: intermediate steps solving the test input. 
+
+<br><span style="color:blue;">
+図7: <strong>ベンチマークタスクにおける HRM による中間予測の視覚化。上:</strong> Maze-Hard - 青いセルは予測パスを示します。中央: Sudoku-Extreme - 太字のセルは初期条件、赤は Sudoku の制約に違反するセル、灰色の網掛けは前のタイムステップからの変更を示します。<strong>下:</strong> ARC-AGI-2 タスク - 左: 提供された入力と出力のペアの例、右: テスト入力を解く中間ステップ。
+</span>
+
+</p><p>
+In the Maze task, HRM appears to initially explore several potential paths simultaneously, subse- quently eliminating blocked or ineffcient routes, then constructing a preliminary solution outline followed by multiple refnement iterations. In Sudoku, the strategy resembles a depth-frst search approach, where the model appears to explore potential solutions and backtracks when it hits dead ends. HRM uses a different approach for ARC tasks, making incremental adjustments to the board and iteratively improving it until reaching a solution. Unlike Sudoku, which involves frequent backtracking, the ARC solution path follows a more consistent progression similar to hill-climbing optimization. 
+
+<br><span style="color:blue;">
+迷路課題では、HRMは最初に複数の潜在的な経路を同時に探索し、その後、閉塞した経路や非効率的な経路を排除し、暫定的な解のアウトラインを構築した後、複数回の改良反復を行うようです。数独では、この戦略は深さ優先探索アプローチに似ており、モデルは潜在的な解を探索し、行き止まりにぶつかるとバックトラックするようです。ARC課題ではHRMは異なるアプローチを採用し、ボードに段階的な調整を加え、解に到達するまで反復的に改善していきます。頻繁なバックトラックを伴う数独とは異なり、ARCの解の経路は、山登り最適化に似た、より一貫した進行を辿ります。
+</span>
+
+</p><p>
+Importantly, the model shows that it can adapt to different reasoning approaches, likely choosing an effective strategy for each particular task. Further research is needed to gain more comprehensive insights into these solution strategies.
+
+<br><span style="color:blue;">
+重要なのは、このモデルが様々な推論アプローチに適応し、それぞれのタスクに効果的な戦略を選択できることを示していることです。これらの解決戦略に関するより包括的な洞察を得るには、さらなる研究が必要です。 
+</span>
+</p>
+
+<h2>4  Brain Correspondence <span style="color:blue;">脳の対応</span></h2>
+<p>
+A key principle from systems neuroscience is that a brain region's functional repertoire—its ability to handle diverse and complex tasks—is closely linked to the dimensionality of its neural represen- tations<sup>75,76</sup>. Higher-order cortical areas, responsible for complex reasoning and decision-making, must handle a wide variety of tasks, demanding more fexible and context-dependent processing<sup>77</sup>. In dynamical systems, this fexibility is often realized through higher-dimensional state-space tra- jectories, which allow for a richer repertoire of potential computations<sup>78</sup>. This principle gives rise to an observable dimensionality hierarchy, where a region's position in the processing hierarchy correlates with its effective dimensionality. To quantify this phenomenon, we can examine the Participation Ratio (PR), which serves as a standard measure of the effective dimensionality of a high-dimensional representation<sup>79</sup>. The PR is calculated using the formula 
+
+<br><span style="color:blue;">
+システム神経科学の重要な原理は、脳領域の機能レパートリー（多様で複雑なタスクを処理する能力）は、その神経表現の次元数と密接に関連しているというものです<sup>75,76</sup>。複雑な推論と意思決定を担う高次皮質領域は、多様なタスクを処理する必要があり、より柔軟で文脈依存的な処理が求められます<sup>77</sup>。動的システムでは、この柔軟性は多くの場合、より豊富な潜在的計算レパートリーを可能にする高次元状態空間軌跡を通じて実現されます<sup>78</sup>。この原理は、観測可能な次元階層を生み出し、処理階層における領域の位置はその実効次元数と相関します。この現象を定量化するために、高次元表現の実効次元数の標準的な尺度として機能する参加率（PR）を調べることができます<sup>79</sup>。 PRは次の式で計算されます
+</span>
+\[ 
+PR =\frac{(\sum_i \lambda_i)^2}{\sum_i\lambda_i^2}
+\] 
+
+where {\(λ_i\)} are the eigenvalues of the covariance matrix of neural trajectories. Intuitively, a higher PR value signifes that variance is distributed more evenly across many dimensions, corresponding to a higher-dimensional representation. Conversely, a lower PR value indicates that variance is concentrated in only a few principal components, refecting a more compact, lower-dimensional structure. 
+
+<br><span style="color:blue;">
+ここで、{\(λ_i\)}はニューラルトラジェクトリの共分散行列の固有値です。直感的に、PR値が高いほど、分散が多くの次元にわたってより均等に分布していることを意味し、高次元表現に対応します。逆に、PR値が低いほど、分散が少数の主成分に集中していることを意味し、よりコンパクトで低次元な構造を反映しています。
+</span>
+</p><p>
+The dimensionality hierarchy can be observed, for example, in the mouse cortex, where the PR of population activity increases monotonically from low-level sensory areas to high-level associative areas, supporting this link between dimensionality and functional complexity<sup>74</sup> (Figure  8  (a,b)). 
+
+<br><span style="color:blue;">
+次元階層は、例えばマウスの皮質で観察することができ、集団活動のPRは、低レベルの感覚領域から高レベルの連合領域にかけて単調に増加しており、次元と機能的複雑さの間のこの関連を裏付けています<sup>74</sup>（図8（a、b））。
+</span>
+</p>
+<center><img src="images/8.png"></center>
+<p>
+Figure 8: Hierarchical Dimensionality Organization in the HRM and Mouse Cortex. (a,b) are adapted from Posani et al.<sup>74</sup>. (a) Anatomical illustration of mouse cortical areas, color-coded by functional modules. (b) Correlation between Participation Ratio (PR), a measure of effective neural dimensionality, and hierarchical position across different mouse cortical areas. Higher positions in the hierarchy (e.g., MOs, ACAd) exhibit signifcantly higher PR values compared to lower sensory areas (e.g., SSp-n), with a Spearman correlation coeffcient of ρ = 0.79 (P = 0.0003). (c,d) Trained HRM. (c) PR scaling of the trained HRM with task diversity. The dimensionality of the high- level module (\(z_H\)) scales with the number of unique tasks (trajectories) included in the analysis, indicating an adaptive expansion of its representational capacity. In contrast, the low-level module's (\(z_L\)) dimensionality remains stable. (d) PR values for the low-level (\(z_L\), PR = 30.22) and high- level (\(z_H\), PR = 89.95) modules of the trained HRM, computed from neural activity during 100 unique Sudoku-solving trajectories. A clear dimensionality hierarchy is observed, with the high- level module operating in a substantially higher-dimensional space. (e,f) Analysis of Untrained Network. To verify that the dimensionality hierarchy is an emergent property of training, the same analyses were performed on an untrained HRM with random weights. (e) In contrast to the trained model's scaling in (c), the dimensionality of both modules in the untrained model remains low and stable, failing to scale with the number of tasks. (f) Similarly, contrasting with the clear separation in (d), the PR values for the untrained model's modules (\(z_L\), PR = 42.09; \(z_H\), PR = 40.75) are low and nearly identical, showing no evidence of hierarchical separation. This confrms that the observed hierarchical organization of dimensionality is a learned property that emerges through training, not an artifact of the model's architecture. 
+
+<br><span style="color:blue;">
+図8：HRMとマウス皮質における階層的次元構造。（a、b）はPosaniら<sup>74</sup>から引用。（a）機能モジュールごとに色分けしたマウス皮質領域の解剖図。（b）有効神経次元の尺度である参加率（PR）と、異なるマウス皮質領域間の階層的位置との相関。階層内の上位位置（MO、ACAdなど）は、下位の感覚領域（SSp-nなど）と比較して、有意に高いPR値を示し、スピアマン相関係数はρ = 0.79（P = 0.0003）であった。（c、d）訓練されたHRM。（c）タスクの多様性による訓練されたHRMのPRスケーリング。高レベルモジュール (\(z_H\)) の次元性は、分析に含まれる一意のタスク (軌跡) の数に応じて変化し、その表現能力が適応的に拡張されていることを示しています。対照的に、低レベルモジュール (\(z_L\)) の次元性は安定しています。(d) トレーニング済み HRM の低レベルモジュール (\(z_L\)、PR = 30.22) と高レベルモジュール (\(z_H\)、PR = 89.95) の PR 値。100 個の一意の数独を解く軌跡中の神経活動から計算されています。明確な次元階層が見られ、高レベルモジュールは大幅に高次元の空間で動作しています。(e、f) 未トレーニングネットワークの分析。次元階層がトレーニングの出現特性であることを確認するために、ランダムな重みを持つ未トレーニング HRM に対して同じ分析を実行しました。 (e) (c) の学習済みモデルのスケーリングとは対照的に、未学習モデルの両モジュールの次元数は低く安定しており、タスク数に応じてスケーリングできません。(f) 同様に、(d) の明確な分離とは対照的に、未学習モデルのモジュールの PR 値 (\(z_L\), PR = 42.09; \(z_H\), PR = 40.75) は低く、ほぼ同一であり、階層的な分離の証拠は見られません。これは、観察された次元の階層構造が、学習を通じて獲得された特性であり、モデルのアーキテクチャによる結果ではないことを裏付けています。
+</span>
+
+</p><p>
+We evaluated whether HRM reproduces this neuroscientifc principle by calculating the PR for both recurrent modules after training on the Sudoku-Extreme Full dataset. The PR computation used the covariance matrix derived from neural states gathered across multiple Sudoku-solving trajectories. The results show a striking parallel to the biological fndings. The low-level module's state (\(z_L\)) occupies a relatively small subspace with a participation ratio of 30.22, whereas the high- level module's state (\(z_H\)) operates in a substantially larger subspace with a participation ratio of 89.95, as shown in Figure  8 (c). Furthermore, Figure  8 (d) shows that increasing the number of unique tasks (trajectories) from 10 to 100 causes \(z_H\) dimensionality to scale up accordingly, while \(z_L\) dimensionality remains stable. These results suggest an emergent separation of representational capacity between the modules that parallels their functional roles. 
+
+<br><span style="color:blue;">
+HRM がこの神経科学的原理を再現するかどうかを、Sudoku-Extreme Full データセットでトレーニングした後、両方のリカレント モジュールの PR を計算することで評価しました。PR の計算には、複数の数独を解く軌跡から収集された神経状態から得られた共分散行列を使用しました。結果は、生物学的な発見との顕著な類似点を示しています。図 8 (c) に示すように、低レベル モジュールの状態 (\(z_L\)) は、参加率が 30.22 の比較的小さなサブスペースを占めますが、高レベル モジュールの状態 (\(z_H\)) は、参加率が 89.95 のかなり大きなサブスペースで動作します。さらに、図 8 (d) は、一意のタスク (軌跡) の数を 10 から 100 に増やすと、\(z_H\) の次元がそれに応じてスケールアップしますが、\(z_L\) の次元は安定していることを示しています。これらの結果は、モジュール間の機能的役割と並行する表現能力の分離が出現したことを示唆しています。
+</span>
+</p><p>
+To confrm that this hierarchical organization is an emergent property of training, and not an artifact of the network's architecture, we performed a control analysis using an identical but untrained network with random weights. 
+
+<br><span style="color:blue;">
+この階層構造がトレーニングによって生じた特性であり、ネットワークのアーキテクチャによる結果ではないことを確認するために、ランダムな重みを持つ同一だが未トレーニングのネットワークを使用して制御分析を実行しました。
+</span>
+</p><p>
+We initialized an identical HRM architecture with random weights and, without any training, mea- sured the PR of its modules as the network processed the same task-specifc inputs given to the trained model. 
+
+<br><span style="color:blue;">
+我々はランダムな重みを持つ同一のHRMアーキテクチャを初期化し、訓練なしで、訓練されたモデルに与えられた同じタスク固有の入力をネットワークが処理するときのそのモジュールのPRを測定しました。
+</span>
+</p><p>
+The results, shown in Figure  8 (e,f), reveal a stark contrast: the high-level and low-level modules of the untrained network exhibit no hierarchical separation, with their PR values remaining low and nearly indistinguishable from each other. This control analysis validates that the dimensionality hierarchy is an emergent property that arises as the model learns to perform complex reasoning. 
+
+<br><span style="color:blue;">
+図8（e, f）に示す結果は、際立った対照を示しています。未学習ネットワークの高レベルモジュールと低レベルモジュールは階層的な分離を示さず、PR値は低いままで、互いにほとんど区別がつきません。この制御分析は、次元階層が、モデルが複雑な推論を実行することを学習するにつれて生じる創発的な特性であることを検証しています。
+</span>
+</p><p>
+The high-to-low PR ratio in HRM (\(z_H/z_L \approx 2.98\)) closely matches that measured in the mouse cortex (\(\approx 2.25\)). In contrast, conventional deep networks often exhibit neural collapse, where last-layer features converge to a low-dimensional subspace<sup>80,81,82</sup>. HRM therefore departs from the collapse pattern and instead fosters a high-dimensional representation in its higher module. This is signifcant because such representations are considered crucial for cognitive fexibility and are a hallmark of higher-order brain regions like the prefrontal cortex (PFC), which is central to complex reasoning. 
+
+<br><span style="color:blue;">
+HRMにおける高低PR比（\(z_H/z_L \approx 2.98\)）は、マウス大脳皮質で測定された値（\(\approx 2.25\)）とほぼ一致しています。対照的に、従来の深層ネットワークでは、最終層の特徴が低次元部分空間に収束する神経崩壊がしばしば見られます<sup>80,81,82</sup>。したがって、HRMはこのような崩壊パターンから逸脱し、代わりに高次モジュールにおいて高次元表現を促進します。これは、このような表現が認知の柔軟性に不可欠であると考えられており、複雑な推論の中核を担う前頭前野（PFC）などの高次脳領域の特徴であるため、重要です。
+</span>
+</p><p>
+This structural parallel suggests the model has discovered a fundamental organizational principle. By learning to partition its representations into a high-capacity, high-dimensional subspace (\(z_H\)) and a more specialized, low-dimensional one (\(z_L\)), HRM autonomously discovers an organizational principle that is thought to be fundamental for achieving robust and fexible reasoning in biological systems. This provides a potential mechanistic explanation for the model's success on complex, long-horizon tasks that are intractable for models lacking such a differentiated internal structure. We emphasize, however, that this evidence is correlational. While a causal link could be tested via intervention (e.g., by constraining the \(H\)-module's dimensionality), such methods are diffcult to interpret in deep learning due to potential confounding effects on the training process itself. Thus, the causal necessity of this emergent hierarchy remains an important question for future investigation. 
+
+<br><span style="color:blue;">
+この構造的な類似性は、モデルが根本的な組織化原理を発見したことを示唆しています。HRMは、その表現を大容量・高次元の部分空間 (\(z_H\)) と、より特化した低次元の部分空間 (\(z_L\)) に分割することを学習することで、生物系において堅牢かつ柔軟な推論を実現するために不可欠と考えられる組織化原理を自律的に発見します。これは、このような差別化された内部構造を持たないモデルでは扱いにくい、複雑で長期的なタスクにおいて、モデルが成功していることのメカニズム的な説明となる可能性があります。ただし、この証拠は相関関係に基づくものであることを強調しておきます。因果関係は介入（例えば、\(H\)モジュールの次元数を制限すること）によって検証できますが、深層学習においては、トレーニングプロセス自体に潜在的な交絡効果が生じる可能性があるため、そのような手法を解釈することは困難です。したがって、この新たな階層構造の因果的必然性は、今後の研究における重要な問題として残されています。
+</span>
+</p>
+
+<h2>5  Related Work <span style="color:blue;">関連研究</span></h2>
+<p>
+<strong>Reasoning and algorithm learning</strong>　Given the central role of reasoning problems and their close relation to algorithms, researchers have long explored neural architectures that enable algorithm learning from training instances. This line of work includes Neural Turing Machines (NTM)<sup>83</sup>, the Differentiable Neural Computer (DNC)<sup>84</sup>, and Neural GPUs<sup>85</sup>–all of which construct iterative neural architectures that mimic computational hardware for algorithm execution, and are trained to learn algorithms from data. Another notable work in this area is Recurrent Relational Networks (RRN)<sup>62</sup>, which executes algorithms on graph representations through graph neural networks. 
+
+<br><span style="color:blue;">
+<strong>推論とアルゴリズム学習</strong>　推論問題が中心的な役割を果たし、アルゴリズムと密接に関連していることから、研究者は長年、トレーニングインスタンスからアルゴリズムを学習できるニューラルアーキテクチャを研究してきました。この研究分野には、ニューラルチューリングマシン（NTM）<sup>83</sup>、微分可能ニューラルコンピュータ（DNC）<sup>84</sup>、ニューラルGPU<sup>85</sup>が含まれます。これらはすべて、アルゴリズム実行用の計算ハードウェアを模倣した反復的なニューラルアーキテクチャを構築し、データからアルゴリズムを学習するようにトレーニングされます。この分野で注目すべきもう1つの研究は、グラフニューラルネットワークを介してグラフ表現上でアルゴリズムを実行するリカレントリレーショナルネットワーク（RRN）<sup>62</sup>です。
+</span>
+
+</p><p>
+Recent studies have integrated algorithm learning approaches with Transformer-based architec- tures. Universal Transformers extend the standard Transformer model by introducing a recurrent loop over the layers and implementing an adaptive halting mechanism. Geiping et al.<sup>86</sup> demonstrate that looped Transformers can generalize to a larger number of recurrent steps during inference than what they were trained on. Shen et al.<sup>16</sup> propose adding continuous recurrent reasoning tokens to the Transformer. Finally, TransNAR<sup>8</sup> combine recurrent graph neural networks with language models. 
+
+<br><span style="color:blue;">
+最近の研究では、アルゴリズム学習アプローチとTransformerベースのアーキテクチャが統合されています。Universal Transformerは、層に再帰ループを導入し、適応的な停止メカニズムを実装することで、標準的なTransformerモデルを拡張します。Geipingら<sup>86</sup>は、ループされたTransformerが、推論中に訓練時よりも多くの再帰ステップに一般化できることを実証しました。Shenら<sup>16</sup>は、Transformerに連続的な再帰推論トークンを追加することを提案しています。最後に、TransNAR<sup>8</sup>は、再帰グラフニューラルネットワークと言語モデルを組み合わせています。
+</span>
+</p><p>
+Building on the success of CoT-based reasoning, a line of work have introduced fne-tuning meth- ods that use reasoning paths from search algorithms (like A*) as SFT targets<sup>87,71,70</sup>. 
+
+<br><span style="color:blue;">
+CoT ベースの推論の成功を基に、一連の研究では、検索アルゴリズム (A* など) からの推論パスを SFT ターゲットとして使用する微調整手法が導入されました<sup>87,71,70</sup>。
+</span>
+</p><p>
+We also mention adaptive halting mechanisms designed to allocate additional computational re- sources to more challenging problems. This includes the Adaptive Computation Time (ACT) for RNNs<sup>88</sup> and follow-up research like PonderNet<sup>89</sup>, which aims to improve the stability of this allo- cation process. 
+
+<br><span style="color:blue;">
+また、より困難な問題に追加の計算リソースを割り当てるために設計された適応停止機構についても言及する。これには、RNNの適応計算時間（ACT）<sup>88</sup>や、この割り当てプロセスの安定性を向上させることを目的としたPonderNet<sup>89</sup>などの後継研究が含まれる。
+</span>
+</p><p>
+HRM further pushes the boundary of algorithm learning through a brain-inspired computational architecture that achieves exceptional data effciency and model expressiveness, successfully dis- covering complex and diverse algorithms from just 1000 training examples. 
+
+<br><span style="color:blue;">
+HRM は、優れたデータ効率とモデル表現力を実現する脳にヒントを得た計算アーキテクチャを通じてアルゴリズム学習の限界をさらに押し広げ、わずか 1,000 のトレーニング例から複雑で多様なアルゴリズムを発見することに成功しました。
+</span>
+</p><p>
+<strong>Brain-inspired reasoning architectures</strong>　Developing a model with the reasoning power of the brain has long been a goal in brain-inspired computing. Spaun<sup>90</sup> is one notable example, which uses spiking neural networks to create distinct modules corresponding to brain regions like the visual cortex and prefrontal cortex. This design enables an architecture to perform a range of cognitive tasks, from memory recall to simple reasoning puzzles. However, its reasoning relies on hand- designed algorithms, which may limit its ability to learn new tasks. Another signifcant model is the Tolman-Eichenbaum Machine (TEM)<sup>91</sup>, which is inspired by the hippocampal-entorhinal system's role in spatial and relational memory tasks. TEM proposes that medial entorhinal cells create a basis for structural knowledge, while hippocampal cells link this basis to sensory information. This allows TEM to generalize and explains the emergence of various cell types like grid, border, and place cells. Another approach involves neural sampling models<sup>92</sup>, which view the neural signaling process as inference over a distribution, functioning similarly to a Boltzmann machine. These models often require hand-made rules to be set up for solving a specifc reasoning task. In essence, while prior models are restricted to simple reasoning problems, HRM is designed to solve complex tasks that are hard for even advanced LLMs, without pre-training or task-specifc manual design. 
+
+<br><span style="color:blue;">
+<strong>脳に着想を得た推論アーキテクチャ</strong>　脳の推論能力を備えたモデルの開発は、脳に着想を得たコンピューティングの長年の目標でした。Spaun<sup>90</sup> は注目すべき例の 1 つで、スパイキング ニューラル ネットワークを使用して、視覚野や前頭前皮質などの脳領域に対応する個別のモジュールを作成します。この設計により、アーキテクチャは記憶の想起から単純な推論パズルまで、さまざまな認知タスクを実行できます。ただし、その推論は手動で設計されたアルゴリズムに依存しているため、新しいタスクを学習する能力が制限される可能性があります。もう 1 つの重要なモデルは、Tolman-Eichenbaum Machine (TEM)<sup>91</sup> で、空間記憶と関係記憶タスクにおける海馬-嗅内皮質系の役割にヒントを得たものです。TEM では、内側嗅内皮質細胞が構造的知識の基礎を作成し、海馬細胞がこの基礎を感覚情報に結び付けると提唱されています。これにより、TEMはグリッド細胞、境界細胞、場所細胞といった様々な細胞タイプの出現を一般化し、説明することが可能になります。もう一つのアプローチとして、ニューラルサンプリングモデル<sup>92</sup>が挙げられます。これは、神経シグナル伝達プロセスを分布に基づく推論と捉え、ボルツマンマシンと同様に機能します。これらのモデルでは、特定の推論タスクを解決するために、多くの場合、手作業でルールを設定する必要があります。本質的には、従来のモデルが単純な推論問題に限定されているのに対し、HRMは、事前学習やタスク固有の手動設計なしに、高度なLLMでさえ困難な複雑なタスクを解くように設計されています。
+</span>
+</p><p>
+<strong>Hierarchical memory</strong>　The hierarchical multi-timescale structure also plays an important role in how the brain processes memory. Models such as Hierarchical Sequential Models<sup>93</sup> and Clockwork RNN<sup>94</sup> use multiple recurrent modules that operate at varying time scales to more effectively cap- ture long-range dependencies within sequences, thereby mitigating the forgetting issue in RNNs. 
+
+<br><span style="color:blue;">
+<strong>階層的記憶</strong>　階層的なマルチタイムスケール構造は、脳の記憶処理においても重要な役割を果たします。階層的シーケンシャルモデル<sup>93</sup>やクロックワークRNN<sup>94</sup>などのモデルは、様々な時間スケールで動作する複数の再帰モジュールを用いることで、シーケンス内の長期的な依存関係をより効果的に捉え、RNNにおける忘却の問題を軽減します。
+</span>
+</p><p>
+Similar mechanisms have also been adopted in linear attention methods for memorizing long con- texts (see the Discussions section). Since HRM focuses on reasoning, full attention is applied for simplicity. Incorporating hierarchical memory into HRM could be a promising future direction. 
+
+<br><span style="color:blue;">
+同様のメカニズムは、長い文脈を記憶するための線形注意法にも採用されています（「考察」セクションを参照）。HRMは推論に重点を置いているため、簡略化のために完全な注意が適用されます。階層的記憶をHRMに組み込むことは、将来的に有望な方向性となる可能性があります。
+</span>
+</p>
+
+<h2>6  Discussions <span style="color:blue;">考察</span></h2>
+<p>
+Turing-completeness of HRM Like earlier neural reasoning algorithms including the Universal Transformer<sup>95</sup>, HRM is computationally universal when given suffcient memory and time con- straints. In other words, it falls into the category of models that can simulate any Turing machine, overcoming the computational limitations of standard Transformers discussed previously in the in- troduction. Given that earlier neural algorithm reasoners were trained as recurrent neural networks, they suffer from premature convergence and memory intensive BPTT. Therefore, in practice, their effective computational depth remains limited, though still deeper than that of a standard Trans- former. By resolving these two challenges and being equipped with adaptive computation, HRM could be trained on long reasoning processes, solve complex puzzles requiring intensive depth-frst search and backtracking, and move closer to practical Turing-completeness. 
+
+<br><span style="color:blue;">
+HRM のチューリング完全性 Universal Transformer<sup>95</sup> などの以前のニューラル推論アルゴリズムと同様に、HRM は十分なメモリと時間の制約が与えられれば計算的にユニバーサルです。言い換えると、HRM は、導入で前述した標準的な Transformer の計算上の制限を克服し、あらゆるチューリング マシンをシミュレートできるモデルのカテゴリに分類されます。以前のニューラル アルゴリズム推論エンジンは再帰型ニューラル ネットワークとしてトレーニングされていたため、早期収束とメモリを大量に消費する BPTT に悩まされていました。そのため、実際には、有効な計算の深さは限られたままですが、それでも標準的な Transformer よりは深いです。これら 2 つの課題を解決し、適応型計算を備えることで、HRM は長い推論プロセスでトレーニングでき、集中的な深さ優先探索とバックトラッキングを必要とする複雑なパズルを解き、実用的なチューリング完全性に近づくことができます。
+</span>
+</p><p>
+<strong>Reinforcement learning with chain-of-thought</strong>　Beyond fne-tuning using human-annotated CoT, reinforcement learning (RL) represents another widely adopted training methodology. However, recent evidence suggests that RL primarily unlocks existing CoT-like capabilities rather than dis- covering fundamentally new reasoning mechanisms<sup>96,97,98,99</sup>. Additionally, CoT-training with RL is known for its instability and data ineffciency, often requiring extensive exploration and careful reward design. In contrast, HRM takes feedback from dense gradient-based supervision rather than relying on a sparse reward signal. Moreover, HRM operates naturally in a continuous space, which is biologically plausible and avoids allocating same computational resources to each token, even though tokens vary in their reasoning and planning complexity<sup>16</sup>.
+
+<br><span style="color:blue;">
+<strong>思考の連鎖による強化学習</strong>　人間が注釈を付けたCoTを使用した微調整を超えて、強化学習（RL）はもう1つの広く採用されているトレーニング方法論です。しかし、最近の証拠は、RLが根本的に新しい推論メカニズムを発見するのではなく、主に既存のCoTのような機能を解放することを示唆しています<sup>96,97,98,99</sup>。さらに、RLによるCoTトレーニングは不安定性とデータの非効率性で知られており、多くの場合、広範な探索と慎重な報酬設計が必要です。対照的に、HRMはスパースな報酬信号に頼るのではなく、稠密な勾配ベースの監督からフィードバックを受け取ります。さらに、HRMは連続空間で自然に動作します。これは生物学的に妥当であり、トークンの推論と計画の複雑さが異なっていても、各トークンに同じ計算リソースを割り当てることを回避します<sup>16</sup>。
+</span>
+</p><p> 
+<strong>Linear attention</strong>　Recurrence has been explored not only for its capability in universal computa- tion, but also as a means to replace the attention mechanism in Transformers, which suffers from quadratic time and memory complexity<sup>100</sup>. Recurrent alternatives offer a more effcient design by processing input tokens sequentially and predicting the next token at each time step, similar to early RNN-based language models. 
+
+<br><span style="color:blue;">
+<strong>線形アテンション</strong> 再帰は、汎用的な計算能力だけでなく、Transformerのアテンション機構を置き換える手段としても研究されてきました。Transformerのアテンション機構は、計算時間とメモリの複雑度が2乗に比例します<sup>100</sup>。再帰的な代替手法は、初期のRNNベースの言語モデルと同様に、入力トークンを順次処理し、各タイムステップで次のトークンを予測することで、より効率的な設計を提供します。
+</span>
+</p><p>
+Some linear-attention variants, such as Log-linear Attention<sup>101</sup>, share an RNN-like state-update that can be interpreted as propagating multi-timescale summary statistics, thereby retaining long-range context without the quadratic memory growth of standard self-attention. However, substituting the attention mechanism alone does not change the fact that Transformers are still fxed-depth, and require CoT as a compensatory mechanism. Notably, linear attention can operate with a reduced key-value cache over extended contexts, making them more suitable for deployment on resource- constrained edge devices.
+
+<br><span style="color:blue;">
+Log-linear Attention<sup>101</sup> などの一部の線形アテンションの変種は、RNNのような状態更新を共有しており、これはマルチタイムスケールの要約統計を伝播するものと解釈できるため、標準的な自己アテンションのような二次的なメモリ増加なしに、長距離コンテキストを保持できます。しかし、アテンションメカニズムのみを置き換えても、Transformerが依然として固定深度であり、補償メカニズムとしてCoTを必要とするという事実は変わりません。特に、線形アテンションは拡張コンテキスト上でキーバリューキャッシュを削減して動作できるため、リソースが限られたエッジデバイスへの導入に適しています。
+</span>
+</p>
+ 
+<h2>7  Conclusion <span style="color:blue;">結論</span></h2>
+<p>
+This work introduces the Hierarchical Reasoning Model, a brain-inspired architecture that lever- ages hierarchical structure and multi-timescale processing to achieve substantial computational depth without sacrifcing training stability or effciency. With only 27M parameters and train- ing on just 1000 examples, HRM effectively solves challenging reasoning problems such as ARC, Sudoku, and complex maze navigation–tasks that typically pose signifcant diffculties for contem- porary LLM and chain-of-thought models. 
+
+<br><span style="color:blue;">
+本研究では、階層的推論モデル（Hierarchical Reasoning Model）を紹介します。これは、脳に着想を得たアーキテクチャで、階層構造とマルチタイムスケール処理を活用することで、学習の安定性や効率性を犠牲にすることなく、高い計算深度を実現します。わずか2,700万個のパラメータとわずか1,000個の例題を用いた学習で、Hierarchical Reasoning ModelはARC、数独、複雑な迷路ナビゲーションといった、現代のLLM（論理的思考モデル）や連鎖思考モデルでは通常大きな困難を伴う難問を効果的に解くことができます。
+</span>
+</p><p>
+Although the brain relies heavily on hierarchical structures to enable most cognitive processes, these concepts have largely remained confned to academic literature rather than being translated into practical applications. The prevailing AI approach continues to favor non-hierarchical models. Our results challenge this established paradigm and suggest that the Hierarchical Reasoning Model represents a viable alternative to the currently dominant chain-of-thought reasoning methods, ad- vancing toward a foundational framework capable of Turing-complete universal computation. 
+
+<br><span style="color:blue;">
+脳はほとんどの認知プロセスを可能にするために階層構造に大きく依存していますが、これらの概念は主に学術文献の域に留まっており、実用化には至っていません。現在のAIアプローチは、依然として非階層的モデルを好んでいます。私たちの研究結果は、この確立されたパラダイムに異議を唱え、階層的推論モデルが現在主流となっている思考連鎖型推論手法に代わる現実的な選択肢となり、チューリング完全な普遍的計算を可能にする基礎的枠組みへと前進することを示唆しています。
+</span>
+</p>
+<p>
+<strong>Acknowledgements</strong>  We thank Mingli Yuan, Ahmed Murtadha Hasan Mahyoub and Hengshuai Yao for their insightful discussions and valuable feedback throughout the course of this work. 
+
+<br><span style="color:blue;">
+<strong>謝辞</strong> 本研究の過程を通して洞察に満ちた議論と貴重なフィードバックを提供してくれた Mingli Yuan、Ahmed Murtadha Hasan Mahyoub、Hengshuai Yao に感謝します。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleBullet">
+<ul><li>
+1.  Ian Goodfellow, Yoshua Bengio, and Aaron Courville. Deep Learning. MIT Press, 2016. 
+http://www.deeplearningbook.org. 
+
+<br><span style="color:blue;">
+ディープラーニング
+</span>
+</li><br><li>2.  Kaiming He, X. Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image 
+recognition. 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 
+pages 770–778, 2015. 
+
+<br><span style="color:blue;">
+画像認識のための深層残差学習(ResNet)
+</span>
+</li><br><li>3.  Lena Strobl. Average-hard attention transformers are constant-depth uniform threshold 
+circuits, 2023. 
+
+<br><span style="color:blue;">
+平均ハードアテンショントランスフォーマーは、一定深度の均一閾値回路
+</span>
+</li><br><li>4.  Tom Bylander. Complexity results for planning. In Proceedings of the 12th International Joint 
+Conference on Artifcial Intelligence - Volume 1, IJCAI'91, page 274–279, San Francisco, 
+CA, USA, 1991. Morgan Kaufmann Publishers Inc. ISBN 1558601600. 
+
+<br><span style="color:blue;">
+プランニングにおける複雑性の結果
+</span>
+</li><br><li>5.  William Merrill and Ashish Sabharwal. A logic for expressing log-precision transformers. In 
+Neural Information Processing Systems, 2023. 
+
+<br><span style="color:blue;">
+対数精度変換器を表現するためのロジック
+</span>
+</li><br><li>6.  David Chiang. Transformers in DLOGTIME-uniform TC 
+0. 
+Transactions on Machine 
+Learning Research, 2025. 
+
+<br><span style="color:blue;">
+DLOGTIME均一TC0のトランスフォーマー
+</span>
+
+</li><br><li>7.  Lucas Lehnert, Sainbayar Sukhbaatar, DiJia Su, Qinqing Zheng, Paul McVay, Michael 
+Rabbat, and Yuandong Tian. Beyond a*: Better planning with transformers via search 
+dynamics bootstrapping. In First Conference on Language Modeling, 2024. 
+
+<br><span style="color:blue;">
+a*を超えて：探索ダイナミクスブートストラッピングによるTransformerを用いたより良い計画
+</span>
+</li><br><li>8.  Wilfried Bounsi, Borja Ibarz, Andrew Dudzik, Jessica B. Hamrick, Larisa Markeeva, Alex 
+Vitvitskyi, Razvan Pascanu, and Petar Velivckovi'c. Transformers meet neural algorithmic 
+reasoners. ArXiv, abs/2406.09308, 2024. 
+
+<br><span style="color:blue;">
+トランスフォーマーとニューラルアルゴリズム推論器の出会い
+</span>
+</li><br><li>9.  William Merrill and Ashish Sabharwal. The parallelism tradeoff: Limitations of log-precision 
+transformers. Transactions of the Association for Computational Linguistics, 11:531–545, 
+2023. doi: 10.1162/tacl_a_00562. 
+
+<br><span style="color:blue;">
+並列性のトレードオフ：対数精度Transformerの限界
+</span>
+</li><br><li>10.  Jason Wei, Yi Tay, et al. Chain-of-thought prompting elicits reasoning in large language 
+models, 2022. arXiv preprint arXiv:2201.11903. 
+
+<br><span style="color:blue;">
+思考連鎖の促進は大規模言語モデルにおける推論を引き出す
+</span>
+</li><br><li>11.  William Merrill and Ashish Sabharwal. The expressive power of transformers with chain of 
+thought. In ICLR, 2024. 
+
+<br><span style="color:blue;">
+思考の連鎖によるトランスフォーマーの表現力
+</span>
+</li><br><li>12.  Xinyun Chen, Ryan A. Chi, Xuezhi Wang, and Denny Zhou. Premise order matters in 
+reasoning with large language models. ArXiv, abs/2402.08939, 2024. 
+
+<br><span style="color:blue;">
+大規模言語モデルを用いた推論では前提順序が重要
+</span>
+</li><br><li>13.  Rongwu Xu, Zehan Qi, and Wei Xu. Preemptive answer "attacks" on chain-of-thought 
+reasoning. In Annual Meeting of the Association for Computational Linguistics, 2024. 
+
+<br><span style="color:blue;">
+思考連鎖推論に対する先制的な回答「攻撃」
+</span>
+</li><br><li>14.  Pablo Villalobos, Anson Ho, Jaime Sevilla, Tamay Besiroglu, Lennart Heim, and Marius 
+Hobbhahn. Will we run out of data? limits of llm scaling based on human-generated data. 
+arXiv preprint arXiv:2211.04325, 2022. 
+
+<br><span style="color:blue;">
+データは枯渇するのか？ 人間が生成したデータに基づくLLMスケーリングの限界
+</span>
+</li><br><li>15.  Xinghao Chen, Anhao Zhao, Heming Xia, Xuan Lu, Hanlin Wang, Yanjun Chen, Wei Zhang, 
+Jian Wang, Wenjie Li, and Xiaoyu Shen. Reasoning beyond language: A comprehensive 
+survey on latent chain-of-thought reasoning, 2025. 
+
+<br><span style="color:blue;">
+言語を超えた推論：潜在的思考連鎖推論に関する包括的サーベイ
+</span>
+</li><br><li>16.  Xuan Shen, Yizhou Wang, Xiangxi Shi, Yanzhi Wang, Pu Zhao, and Jiuxiang Gu. 
+Training large language models to reason in a continuous latent space. arXiv preprint 
+arXiv:2412.07423, 2024. 
+
+<br><span style="color:blue;">
+連続潜在空間における推論のための大規模言語モデルの学習
+</span>
+</li><br><li>17.  Evelina Fedorenko, Steven T Piantadosi, and Edward AF Gibson. Language is primarily a 
+tool for communication rather than thought. Nature, 630(8017):575–586, 2024. 
+
+<br><span style="color:blue;">
+言語は主に思考ではなくコミュニケーションのためのツールである
+</span>
+</li><br><li>18.  Hongyu Wang, Shuming Ma, Li Dong, Shaohan Huang, Dongdong Zhang, and Furu Wei. 
+Deepnet: Scaling transformers to 1,000 layers. IEEE Transactions on Pattern Analysis and 
+Machine Intelligence, 2024. 
+
+<br><span style="color:blue;">
+1,000層へのトランスフォーマーのスケーリング
+</span>
+</li><br><li>19.  Timothy P Lillicrap and Adam Santoro. Backpropagation through time and the brain. Current 
+Opinion in Neurobiology, 55:82–89, 2019. ISSN 0959-4388. doi: https://doi.org/10.1016/j. 
+conb.2019.01.011. 
+
+<br><span style="color:blue;">
+時間を通じたバックプロパゲーションと脳
+</span>
+</li><br><li>20.  John D Murray, Alberto Bernacchia, David J Freedman, Ranulfo Romo, Jonathan D Wallis, 
+Xinying Cai, Camillo Padoa-Schioppa, Tatiana Pasternak, Hyojung Seo, Daeyeol Lee, et al. 
+A hierarchy of intrinsic timescales across primate cortex. Nature neuroscience, 17(12):1661– 
+1663, 2014. 
+
+<br><span style="color:blue;">
+霊長類大脳皮質における内在的時間スケールの階層
+</span>
+</li><br><li>21.  Roxana Zeraati, Yan-Liang Shi, Nicholas A Steinmetz, Marc A Gieselmann, Alexander 
+Thiele, Tirin Moore, Anna Levina, and Tatiana A Engel. Intrinsic timescales in the 
+visual cortex change with selective attention and refect spatial connectivity. Nature 
+communications, 14(1):1858, 2023. 
+
+<br><span style="color:blue;">
+視覚皮質における内在的時間スケールは選択的注意によって変化し、空間的連結性を反映する
+</span>
+</li><br><li>22.  Julia M Huntenburg, Pierre-Louis Bazin, and Daniel S Margulies. Large-scale gradients in 
+human cortical organization. Trends in cognitive sciences, 22(1):21–31, 2018. 
+
+<br><span style="color:blue;">
+ヒト大脳皮質組織における大規模勾配
+</span>
+</li><br><li>23.  Victor AF Lamme and Pieter R Roelfsema. The distinct modes of vision offered by 
+feedforward and recurrent processing. Trends in neurosciences, 23(11):571–579, 2000. 
+
+<br><span style="color:blue;">
+フィードフォワード処理とリカレント処理が提供する視覚の異なるモード
+</span>
+</li><br><li>24.  Andre M Bastos, W Martin Usrey, Rick A Adams, George R Mangun, Pascal Fries, and Karl J 
+Friston. Canonical microcircuits for predictive coding. Neuron, 76(4):695–711, 2012. 
+
+<br><span style="color:blue;">
+予測符号化のための標準的なマイクロ回路
+</span>
+</li><br><li>25.  Klara Kaleb, Barbara Feulner, Juan Gallego, and Claudia Clopath. Feedback control guides 
+credit assignment in recurrent neural networks. Advances in Neural Information Processing 
+Systems, 37:5122–5144, 2024. 
+
+<br><span style="color:blue;">
+フィードバック制御はリカレントニューラルネットワークにおけるクレジット(信用)割り当てを導く
+</span>
+</li><br><li>26.  Timothy P Lillicrap, Adam Santoro, Luke Marris, Colin J Akerman, and Geoffrey Hinton. 
+Backpropagation and the brain. Nature Reviews Neuroscience, 21(6):335–346, 2020. 
+
+<br><span style="color:blue;">
+バックプロパゲーションと脳
+</span>
+</li><br><li>27.  François Chollet. On the measure of intelligence (abstraction and reasoning corpus), 2019. 
+arXiv preprint arXiv:1911.01547. 
+
+<br><span style="color:blue;">
+知能の尺度について（抽象化と推論のコーパス）
+</span>
+</li><br><li>28.  Francois Chollet, Mike Knoop, Gregory Kamradt, and Bryan Landers. Arc prize 2024: 
+Technical report. ArXiv, abs/2412.04604, 2024. 
+
+<br><span style="color:blue;">
+技術報告書
+</span>
+</li><br><li>29.  Francois Chollet, Mike Knoop, Gregory Kamradt, Bryan Landers, and Henry Pinkard. Arc- 
+agi-2: A new challenge for frontier ai reasoning systems. arXiv preprint arXiv:2505.11831, 
+2025. 
+
+<br><span style="color:blue;">
+最先端のAI推論システムへの新たな挑戦
+</span>
+</li><br><li>30.  György Buzsáki. Gamma, alpha, delta, and theta oscillations govern cognitive processes. 
+International Journal of Psychophysiology, 39:241–248, 2000. 
+
+<br><span style="color:blue;">
+ガンマ波、アルファ波、デルタ波、シータ波の振動が認知プロセスを支配する
+</span>
+</li><br><li>31.  György Buzsáki. Rhythms of the Brain. Oxford university press, 2006. 
+
+<br><span style="color:blue;">
+脳のリズム
+</span>
+</li><br><li>32.  Anja Pahor and Norbert Jaušovec. Theta–gamma cross-frequency coupling relates to the level 
+of human intelligence. Intelligence, 46:283–290, 2014. 
+
+<br><span style="color:blue;">
+シータ波とガンマ波の相互周波数結合は人間の知能レベルと関連している
+</span>
+</li><br><li>33.  Adriano BL Tort, Robert W Komorowski, Joseph R Manns, Nancy J Kopell, and Howard 
+Eichenbaum. Theta–gamma coupling increases during the learning of item–context 
+associations. Proceedings of the National Academy of Sciences, 106(49):20942–20947, 2009. 
+
+<br><span style="color:blue;">
+項目-文脈連想学習中のシータ-ガンマ結合の増加
+</span>
+</li><br><li>34.  Benjamin Scellier and Yoshua Bengio. Equilibrium propagation: Bridging the gap between 
+energy-based models and backpropagation. Frontiers in Computational Neuroscience, 11, 
+2016. 
+
+<br><span style="color:blue;">
+平衡伝播：エネルギーベースモデルとバックプロパゲーションのギャップを埋める
+</span>
+</li><br><li>35.  Guillaume Bellec, Franz Scherr, Anand Subramoney, Elias Hajek, Darjan Salaj, Robert 
+Legenstein, and Wolfgang Maass. A solution to the learning dilemma for recurrent 
+networks of spiking neurons. Nature Communications, 11, 07 2020. doi: 10.1038/ 
+s41467-020-17236-y. 
+
+<br><span style="color:blue;">
+スパイキングニューロンの再帰型ネットワークにおける学習ジレンマの解決策
+</span>
+</li><br><li>36.  Shaojie Bai, J Zico Kolter, and Vladlen Koltun. Deep equilibrium models. In Advances in 
+Neural Information Processing Systems, pages 690–701, 2019. 
+
+<br><span style="color:blue;">
+深層平衡モデル
+</span>
+</li><br><li>37.  Zhengyang Geng, Xinyu Zhang, Shaojie Bai, Yisen Wang, and Zhouchen Lin. On training 
+implicit models. ArXiv, abs/2111.05177, 2021. 
+
+<br><span style="color:blue;">
+暗黙的モデルの学習について
+</span>
+</li><br><li>38.  Katarina Begus and Elizabeth Bonawitz. The rhythm of learning: Theta oscillations as an 
+index of active learning in infancy. Developmental Cognitive Neuroscience, 45:100810, 2020. 
+ISSN 1878-9293. doi: https://doi.org/10.1016/j.dcn.2020.100810. 
+
+<br><span style="color:blue;">
+学習のリズム：乳児期の能動学習の指標としてのシータ振動
+</span>
+
+</li><br><li>39.  Shaojie Bai, Zhengyang Geng, Yash Savani, and J. Zico Kolter. Deep Equilibrium 
+Optical Flow Estimation . In 2022 IEEE/CVF Conference on Computer Vision and Pattern 
+Recognition (CVPR), pages 610–620, 2022. 
+
+<br><span style="color:blue;">
+深層平衡　オプティカルフロー推定
+</span>
+</li><br><li>40.  Zaccharie Ramzi, Florian Mannel, Shaojie Bai, Jean-Luc Starck, Philippe Ciuciu, and 
+Thomas Moreau. Shine: Sharing the inverse estimate from the forward pass for bi-level 
+optimization and implicit models. ArXiv, abs/2106.00553, 2021. 
+
+<br><span style="color:blue;">
+Shine：二階層最適化と暗黙的モデルにおけるフォワードパスからの逆推定値の共有
+</span>
+</li><br><li>41.  Shaojie Bai, Vladlen Koltun, and J. Zico Kolter. Stabilizing equilibrium models by jacobian 
+regularization. In International Conference on Machine Learning, 2021.
+
+<br><span style="color:blue;">
+ヤコビ正則化による平衡モデルの安定化
+</span>
+</li><br><li>42.  Daniel Kahneman and P Egan. Thinking, fast and slow (farrar, straus and giroux, new york), 
+2011. 
+
+<br><span style="color:blue;">
+思考、ファスト＆スロー
+</span>
+</li><br><li>43.  Matthew D Lieberman. Social cognitive neuroscience: a review of core processes. Annu. Rev. 
+Psychol., 58(1):259–289, 2007. 
+
+<br><span style="color:blue;">
+社会認知神経科学：中核プロセスのレビュー
+</span>
+</li><br><li>44.  Randy L Buckner, Jessica R Andrews-Hanna, and Daniel L Schacter. The brain's default 
+network: anatomy, function, and relevance to disease. Annals of the new York Academy of 
+Sciences, 1124(1):1–38, 2008. 
+
+<br><span style="color:blue;">
+脳のデフォルト・ネットワーク：解剖学、機能、疾患との関連性
+</span>
+</li><br><li>45.  Marcus E Raichle. The brain's default mode network. Annual review of neuroscience, 38(1): 
+433–447, 2015. 
+
+<br><span style="color:blue;">
+脳のデフォルト・モード・ネットワーク
+</span>
+</li><br><li>46.  Andrew Westbrook and Todd S Braver. Cognitive effort: A neuroeconomic approach. 
+Cognitive, Affective, & Behavioral Neuroscience, 15:395–415, 2015. 
+
+<br><span style="color:blue;">
+認知努力：神経経済学的アプローチ.
+</span>
+
+</li><br><li>47.  Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. MIT 
+Press, Cambridge, MA, 2018. 
+
+<br><span style="color:blue;">
+強化学習：入門
+</span>
+</li><br><li>48.  Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Alex Graves, Ioannis Antonoglou, Daan 
+Wierstra, and Martin A. Riedmiller. Playing atari with deep reinforcement learning. ArXiv, 
+abs/1312.5602, 2013. 
+
+<br><span style="color:blue;">
+深層強化学習を用いた Atari のプレイ
+</span>
+</li><br><li>49.  Matteo Gallici, Mattie Fellows, Benjamin Ellis, Bartomeu Pou, Ivan Masmitja, 
+Jakob Nicolaus Foerster, and Mario Martin. Simplifying deep temporal difference learning, 
+2025. 
+
+<br><span style="color:blue;">
+深層時間差分学習の簡素化
+</span>
+</li><br><li>50.  Shuo Xie and Zhiyuan Li. Implicit bias of adamw: L inf norm constrained optimization. 
+ArXiv, abs/2404.04454, 2024. 
+
+<br><span style="color:blue;">
+Adamw の暗黙的バイアス：L inf ノルム制約付き最適化
+</span>
+</li><br><li>51.  Lucas Prieto, Melih Barsbey, Pedro A. M. Mediano, and Tolga Birdal. Grokking at the edge of 
+numerical stability. In The Thirteenth International Conference on Learning Representations, 
+2025. 
+
+<br><span style="color:blue;">
+数値的安定性の限界における理解
+</span>
+</li><br><li>52.  Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, 
+Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. In Advances in neural 
+information processing systems, pages 5998–6008, 2017. 
+
+<br><span style="color:blue;">
+必要なのは Attention だけ
+</span>
+</li><br><li>53.  Meta AI. Llama 3: State-of-the-art open weight language models. Technical report, Meta, 
+2024. URL https://ai.meta.com/llama/. 
+
+<br><span style="color:blue;">
+最先端のオープンウェイト言語モデル。技術レポート
+</span>
+</li><br><li>54.  Jianlin Su, Murtadha Ahmed, Yu Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu. Roformer: 
+Enhanced transformer with rotary position embedding. Neurocomputing, 568:127063, 2024. 
+
+<br><span style="color:blue;">
+回転位置埋め込みを備えた拡張トランスフォーマー
+</span>
+</li><br><li>55.  Noam M. Shazeer. Glu variants improve transformer. ArXiv, abs/2002.05202, 2020. 
+
+<br><span style="color:blue;">
+GluバリアントによるTransformerの性能向上
+</span>
+</li><br><li>56.  Biao Zhang and Rico Sennrich. Root mean square layer normalization. ArXiv, 
+abs/1910.07467, 2019. 
+
+<br><span style="color:blue;">
+Root Mean Square Layerの正規化
+</span>
+</li><br><li>57.  Günter Klambauer, Thomas Unterthiner, Andreas Mayr, and Sepp Hochreiter. Self- 
+normalizing neural networks. In Neural Information Processing Systems, 2017. 
+
+<br><span style="color:blue;">
+自己正規化ニューラルネットワーク
+</span>
+</li><br><li>58.  JAX Developers. jax.nn.initializers.lecun_normal. Google Research, 2025. URL 
+https://docs.jax.dev/en/latest/_autosummary/jax.nn.initializers.lecun_ 
+normal.html. Accessed June 22, 2025. 
+
+<br><span style="color:blue;">
+jax.nn.初期化子
+</span>
+</li><br><li>59.  Yann LeCun, Léon Bottou, Genevieve B Orr, and Klaus-Robert Müller. Effcient backprop. 
+In Neural networks: Tricks of the trade, pages 9–50. Springer, 2002. 
+
+<br><span style="color:blue;">
+効率的なバックプロパゲーション
+</span>
+</li><br><li>60.  Katie E Everett, Lechao Xiao, Mitchell Wortsman, Alexander A Alemi, Roman Novak, 
+Peter J Liu, Izzeddin Gur, Jascha Sohl-Dickstein, Leslie Pack Kaelbling, Jaehoon Lee, and 
+Jeffrey Pennington. Scaling exponents across parameterizations and optimizers. In Forty-frst 
+International Conference on Machine Learning, 2024. 
+
+<br><span style="color:blue;">
+パラメータ化と最適化器をまたぐ指数のスケーリング
+</span>
+</li><br><li>61.  Diederik P. Kingma and Jimmy Ba. Adam: A method for stochastic optimization, 2017. 
+
+<br><span style="color:blue;">
+確率的最適化のための手法
+</span>
+</li><br><li>62.  Rasmus Berg Palm, Ulrich Paquet, and Ole Winther. Recurrent relational networks. In Neural 
+Information Processing Systems, 2017. 
+
+<br><span style="color:blue;">
+リカレントリレーショナルネットワーク
+</span>
+</li><br><li>63.  Jieyi Long. Large language model guided tree-of-thought. ArXiv, abs/2305.08291, 2023. 
+
+<br><span style="color:blue;">
+大規模言語モデルに基づく思考木
+</span>
+</li><br><li>64.  Yilun Du, Jiayuan Mao, and Josh Tenenbaum. Learning iterative reasoning through energy 
+diffusion. ArXiv, abs/2406.11179, 2024. 
+
+<br><span style="color:blue;">
+エネルギー拡散による反復推論の学習
+</span>
+</li><br><li>65.  Kyubyong Park. Can convolutional neural networks crack sudoku puzzles? https: 
+//github.com/Kyubyong/sudoku, 2018. 
+
+<br><span style="color:blue;">
+畳み込みニューラルネットワークは数独パズルを解けるか？
+</span>
+</li><br><li>66.  Single-digit techniques. https://hodoku.sourceforge.net/en/tech_singles.php. 
+Accessed: 2025-06-16. 
+
+<br><span style="color:blue;">
+シングル・ディジット・テクニック
+</span>
+</li><br><li>67.  Tom Dillion. Tdoku: A fast sudoku solver and generator. https://t-dillon.github.io/ 
+tdoku/, 2025. 
+
+<br><span style="color:blue;">
+高速数独ソルバーおよびジェネレーター
+</span>
+</li><br><li>68.  Jeffrey Seely, Yuki Imajuku, Tianyu Zhao, Edoardo Cetin, and Llion Jones. Sudoku-bench: 
+Evaluating creative reasoning with sudoku variants. arXiv preprint arXiv:2505.16135, 2025. 
+
+<br><span style="color:blue;">
+数独のバリエーションを用いた創造的推論の評価
+</span>
+</li><br><li>69.  Luke Darlow, Ciaran Regan, Sebastian Risi, Jeffrey Seely, and Llion Jones. Continuous 
+thought machines. arXiv preprint arXiv:2505.05522, 2025. 
+
+<br><span style="color:blue;">
+連続思考マシン
+</span>
+</li><br><li>70.  DiJia Su, Sainbayar Sukhbaatar, Michael Rabbat, Yuandong Tian, and Qinqing Zheng. 
+Dualformer: Controllable fast and slow thinking by learning with randomized reasoning 
+traces, 2025. 
+
+<br><span style="color:blue;">
+ランダム化された推論トレースを用いた学習による制御可能な高速思考と低速思考
+</span>
+</li><br><li>71.  Lucas Lehnert, Sainbayar Sukhbaatar, DiJia Su, Qinqing Zheng, Paul McVay, Michael 
+Rabbat, and Yuandong Tian. Beyond a*: Better planning with transformers via search 
+dynamics bootstrapping. In First Conference on Language Modeling, 2024. 
+
+<br><span style="color:blue;">
+A*を超えて：探索ダイナミクスブートストラッピングによるTransformerを用いたより良い計画
+</span>
+</li><br><li>72.  Mubbasir Kapadia, Francisco Garcia, Cory D. Boatright, and Norman I. Badler. Dynamic 
+search on the gpu. In 2013 IEEE/RSJ International Conference on Intelligent Robots and 
+Systems, pages 3332–3337, 2013. doi: 10.1109/IROS.2013.6696830. 
+
+<br><span style="color:blue;">
+GPU上の動的探索
+</span>
+</li><br><li>73.  Isaac Liao and Albert Gu. Arc-agi without pretraining, 2025. URL https: 
+//iliao2345.github.io/blog_posts/arc_agi_without_pretraining/arc_agi_ 
+without_pretraining.html. 
+
+<br><span style="color:blue;">
+事前学習なしの Arc-agi
+</span>
+</li><br><li>74.  Lorenzo Posani, Shuqi Wang, Samuel P Muscinelli, Liam Paninski, and Stefano Fusi. 
+Rarely categorical, always high-dimensional: how the neural code changes along the cortical 
+hierarchy. bioRxiv, pages 2024–11, 2025. 
+
+<br><span style="color:blue;">
+まれにカテゴリカル、常に高次元：神経コードは皮質階層に沿ってどのように変化するか
+</span>
+</li><br><li>75.  Mattia Rigotti, Omri Barak, Melissa R. Warden, Xiao-Jing Wang, Nathaniel D. Daw, Earl K. 
+Miller, and Stefano Fusi. The importance of mixed selectivity in complex cognitive tasks. 
+Nature, 497:585–590, 2013. doi: 10.1038/nature12160. 
+
+<br><span style="color:blue;">
+複雑な認知課題における混合選択性の重要性
+</span>
+</li><br><li>76.  Valerio Mante, David Sussillo, Krishna V. Shenoy, and William T. Newsome. Context- 
+dependent computation by recurrent dynamics in prefrontal cortex. Nature, 503(7474):78–84, 
+2013. doi: 10.1038/nature12742. 
+
+<br><span style="color:blue;">
+前頭前皮質におけるリカレントダイナミクスによる文脈依存計算
+</span>
+</li><br><li>77.  Earl K. Miller and Jonathan D. Cohen. An integrative theory of prefrontal cortex function. 
+Annual Review of Neuroscience, 24(1):167–202, 2001. doi: 10.1146/annurev.neuro.24.1.167. 
+
+<br><span style="color:blue;">
+前頭前皮質機能の統合理論
+</span>
+</li><br><li>78.  Wolfgang Maass. Real-time computing without stable states: a new framework for neural 
+computation based on perturbations. Neural Computation, 14(11):2531–2560, 2002. doi: 
+10.1162/089976602760407955. 
+
+<br><span style="color:blue;">
+安定状態のないリアルタイムコンピューティング：摂動に基づくニューラルコンピューティングのための新しいフレームワーク
+</span>
+</li><br><li>79.  Ege Altan, Sara A. Solla, Lee E. Miller, and Eric J. Perreault. Estimating the dimensionality 
+of the manifold underlying multi-electrode neural recordings. PLoS Computational Biology, 
+17(11):e1008591, 2021. doi: 10.1371/journal.pcbi.1008591. 
+
+<br><span style="color:blue;">
+多電極神経記録における多様体の次元推定
+</span>
+</li><br><li>80.  Vardan Papyan, X. Y. Han, and David L. Donoho. Prevalence of neural collapse during the 
+terminal phase of deep learning training. Proceedings of the National Academy of Sciences, 
+117(40):24652–24663, 2020. doi: 10.1073/pnas.2015509117. 
+
+<br><span style="color:blue;">
+深層学習訓練の終末期における神経虚脱の発生率
+</span>
+</li><br><li>81.  Cong Fang, Hangfeng He, Qi Long, and Weijie J. Su. Exploring deep neural networks via 
+layer–peeled model: Minority collapse in imbalanced training. Proceedings of the National 
+Academy of Sciences, 118(43):e2103091118, 2021. doi: 10.1073/pnas.2103091118. 
+
+<br><span style="color:blue;">
+層剥離モデルによるディープニューラルネットワークの探索：不均衡学習における少数派崩壊
+</span>
+</li><br><li>82.  Zhihui Zhu, Tianyu Ding, Jinxin Zhou, Xiao Li, Chong You, Jeremias Sulam, and Qing Qu. 
+A geometric analysis of neural collapse with unconstrained features. In Advances in Neural 
+Information Processing Systems, volume 34 of NeurIPS, pages 29820–29834, 2021. 
+
+<br><span style="color:blue;">
+制約のない特徴量を用いたニューラル崩壊の幾何学的解析
+</span>
+</li><br><li>83.  Alex Graves, Greg Wayne, and Ivo Danihelka. Neural turing machines, 2014. 
+
+<br><span style="color:blue;">
+ニューラル・チューリング・マシン
+</span>
+</li><br><li>84.  Alex Graves, Greg Wayne, Malcolm Reynolds, Tim Harley, Ivo Danihelka, Agnieszka 
+Grabska-Barwinska, Sergio Gómez Colmenarejo, Edward Grefenstette, Tiago Ramalho, John´ 
+Agapiou, et al. Hybrid computing using a neural network with dynamic external memory. 
+Nature, 538(7626):471–476, 2016. 
+
+<br><span style="color:blue;">
+動的外部メモリを備えたニューラルネットワークを用いたハイブリッドコンピューティング
+</span>
+</li><br><li>85.  Lukasz Kaiser and Ilya Sutskever. Neural GPUs learn algorithms. In ICLR, 2016. 
+
+<br><span style="color:blue;">
+ニューラルGPUによるアルゴリズムの学習
+</span>
+</li><br><li>86.  Jonas Geiping, Sean McLeish, Neel Jain, John Kirchenbauer, Siddharth Singh, Brian R. 
+Bartoldson, Bhavya Kailkhura, Abhinav Bhatele, and Tom Goldstein. Scaling up test-time 
+compute with latent reasoning: A recurrent depth approach, 2025. 
+
+<br><span style="color:blue;">
+潜在的推論によるテスト時間計算のスケールアップ：再帰深度アプローチ
+</span>
+</li><br><li>87.  Tiedong Liu and Kian Hsiang Low. Goat: Fine-tuned llama outperforms gpt-4 on arithmetic 
+tasks. ArXiv, abs/2305.14201, 2023. 
+
+<br><span style="color:blue;">
+微調整されたLlamaは算術タスクでGPT-4を上回る
+</span>
+</li><br><li>88.  Alex Graves. Adaptive computation time for recurrent neural networks. ArXiv, 
+abs/1603.08983, 2016. 
+
+<br><span style="color:blue;">
+リカレントニューラルネットワークの適応的計算時間
+</span>
+</li><br><li>89.  Andrea Banino, Jan Balaguer, and Charles Blundell. Pondernet: Learning to ponder. ArXiv, 
+abs/2107.05407, 2021. 
+
+<br><span style="color:blue;">
+Pondernet: 考えることを学ぶ
+</span>
+</li><br><li>90.  Chris Eliasmith, Terrence C Stewart, Xuan Choo, Trevor Bekolay, Travis DeWolf, Yichuan 
+Tang, and Daniel Rasmussen. A large-scale model of the functioning brain. science, 338 
+(6111):1202–1205, 2012. 
+
+<br><span style="color:blue;">
+脳機能の大規模モデル
+</span>
+</li><br><li>91.  James CR Whittington, Timothy H Muller, Shirley Mark, Guifen Chen, Caswell Barry, Neil 
+Burgess, and Timothy EJ Behrens. The tolman-eichenbaum machine: unifying space and 
+relational memory through generalization in the hippocampal formation. Cell, 183(5):1249– 
+1263, 2020. 
+
+<br><span style="color:blue;">
+Tolman-Eichenbaumマシン：海馬体における汎化を介した空間記憶と関係記憶の統合
+</span>
+</li><br><li>92.  Lars Buesing, Johannes Bill, Bernhard Nessler, and Wolfgang Maass. Neural dynamics as 
+sampling: a model for stochastic computation in recurrent networks of spiking neurons. PLoS 
+computational biology, 7(11):e1002211, 2011. 
+
+<br><span style="color:blue;">
+サンプリングとしてのニューラルダイナミクス：スパイクニューロンの再帰ネットワークにおける確率的計算モデル
+</span>
+</li><br><li>93.  Salah Hihi and Yoshua Bengio. Hierarchical recurrent neural networks for long-term 
+dependencies. In D. Touretzky, M.C. Mozer, and M. Hasselmo, editors, Advances in Neural 
+Information Processing Systems, volume 8. MIT Press, 1995.
+
+<br><span style="color:blue;">
+長期依存関係のための階層的リカレントニューラルネットワーク
+</span>
+</li><br><li>94.  Jan Koutník, Klaus Greff, Faustino J. Gomez, and Jürgen Schmidhuber. A clockwork rnn. In 
+International Conference on Machine Learning, 2014. 
+
+<br><span style="color:blue;">
+時計仕掛け RNN
+</span>
+</li><br><li>95.  Mostafa Dehghani, Stephan Gouws, Oriol Vinyals, Jakob Uszkoreit, and Lukasz Kaiser. 
+Universal transformers, 2018. arXiv preprint arXiv:1807.03819. 
+
+<br><span style="color:blue;">
+ユニバーサル・トランスフォーマー
+</span>
+</li><br><li>96.  Yiping Wang, Qing Yang, Zhiyuan Zeng, Liliang Ren, Lucas Liu, Baolin Peng, Hao Cheng, 
+Xuehai He, Kuan Wang, Jianfeng Gao, Weizhu Chen, Shuohang Wang, Simon Shaolei Du, 
+and Yelong Shen. Reinforcement learning for reasoning in large language models with one 
+training example, 2025. URL https://arxiv.org/abs/2504.20571. 
+
+<br><span style="color:blue;">
+大規模な言語モデルでの推論のための強化学習トレーニング例
+</span>
+</li><br><li>97.  Niklas Muennighoff. s1: Simple test-time scaling. arXiv preprint arXiv:2502.23456, 2025. 
+
+<br><span style="color:blue;">
+s1:単純なテスト時間のスケーリング
+</span>
+</li><br><li>98.  Liang Wen, Yunke Cai, Fenrui Xiao, Xin He, Qi An, Zhenyu Duan, Yimin Du, Junchen Liu, 
+Lifu Tang, Xiaowei Lv, Haosheng Zou, Yongchao Deng, Shousheng Jia, and Xiangzheng 
+Zhang. Light-r1: Curriculum sft, dpo and rl for long cot from scratch and beyond, 2025. 
+
+<br><span style="color:blue;">
+Light-r1: 長い思考連鎖のためのカリキュラム sft、dpo、rl。ゼロから、そしてさらに
+</span>
+</li><br><li>99.  Xuefeng Li, Haoyang Zou, and Pengfei Liu. Limr: Less is more for rl scaling, 2025. 
+
+<br><span style="color:blue;">
+RL スケーリングでは、少ない方が良い
+</span>
+
+</li><br><li>100.  Tri Dao and Albert Gu. Transformers are ssms: Generalized models and effcient algorithms 
+through structured state space duality. ArXiv, abs/2405.21060, 2024. 
+
+<br><span style="color:blue;">
+トランスフォーマーはSSMS。構造化された状態空間の双対性を通じて、一般化されたモデルと効率的なアルゴリズムを実現する
+</span>
+
+</li><br><li>101.  Han Guo, Songlin Yang, Tarushii Goel, Eric P Xing, Tri Dao, and Yoon Kim. Log-linear 
+attention. arXiv preprint arXiv:2506.04761, 2025. 
+
+<br><span style="color:blue;">
+対数線形アテンション
+</span>
+
+</li></ul></div>
+</p>
+    </body>
+</html>
