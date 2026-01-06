@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>The Big World Hypothesis </title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 20px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>The Big World Hypothesis and its Ramifications for Artificial Intelligence<br><span style="color:blue;">ビッグワールド仮説と人工知能への影響</span></center></h1>
+
+<center>
+<div class="container">
+<div class="column">Khurram Javed<br>kjaved@ualberta.ca</div>
+<div class="column">Richard S. Sutton<br>rsutton@ualberta.ca</div> 
+</div> 
+</center>
+<br>
+<center>Alberta Machine Intelligence Institute (Amii)</center>
+<center>Department of Computing Science, University of Alberta</center>
+<center>Edmonton, Canada</center>
+
+<h2><center>Abstract　<span style="color:blue;">要旨</span></center></h2>
+<p class="margin-abstract">
+The big world hypothesis says that for many learning problems, the world is multiple orders of magnitude larger than the agent. The agent neither fully perceives the state of the world nor can it learn the correct value or optimal action for each state. It has to rely on approximate solutions to achieve its goals. In this paper, we make a case for embracing the big world hypothesis. We argue that even as computational resources grow, the big world hypothesis remains relevant. We conclude by discussing the implications of accepting the big world hypothesis on the design and evaluation of algorithms.
+
+<br><span style="color:blue;">
+ビッグワールド仮説によれば、多くの学習問題において、世界はエージェントよりも桁違いに大きいとされています。エージェントは世界の状態を完全に認識することも、各状態における正しい値や最適な行動を学習することもできません。そのため、目標を達成するためには近似解に頼らざるを得ません。本稿では、ビッグワールド仮説を採用する理由を論じます。計算資源が増加したとしても、ビッグワールド仮説は依然として重要であると主張します。結論として、ビッグワールド仮説を採用することがアルゴリズムの設計と評価に及ぼす影響について考察します。
+</span>
+</p>
+<h2>1 The Big World Hypothesis <span style="color:blue;">ビッグワールド仮説</span></h2>
+<p>
+The big world hypothesis says that in many decision-making problems the agent is orders of magnitude smaller than the environment. It can neither fully perceive the state of the world nor can it represent the value or optimal action for every state. Instead, it must learn to make sound decisions using its limited understanding of the environment. The key research challenge for achieving goals in big worlds is to come up with solution methods that efficiently utilize the limited resources of the agent. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説によれば、多くの意思決定問題において、エージェントは環境よりも桁違いに小さい。エージェントは世界の状態を完全に認識することも、あらゆる状態における価値や最適な行動を表現することもできない。その代わりに、エージェントは環境に関する限られた理解に基づいて、健全な意思決定を行うことを学習しなければならない。ビッグワールドにおいて目標を達成するための重要な研究課題は、エージェントの限られたリソースを効率的に活用する解法を見つけることである。
+</span>
+</p><p>
+The opposing view to the big world hypothesis is that real-world decision-making problems have a simple solution. The agent is not only capable of representing the simple solution but also has additional capacity that can be used to search for the solution more efficiently—they are over-parameterized. The key research challenge for achieving goals with over-parameterized agents is to find the solution that enables optimal decision-making in perpetuity. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説とは対照的な見解は、現実世界の意思決定問題には単純な解が存在するというものです。エージェントは単純な解を表現する能力だけでなく、より効率的に解を探索するための追加的な能力も備えています。つまり、エージェントは過剰パラメータ化されているということです。過剰パラメータ化されたエージェントを用いて目標を達成するための重要な研究課題は、永続的に最適な意思決定を可能にする解を見つけることです。
+</span>
+</p><p>
+There are many problems that satisfy the big world hypothesis and many that do not. The problem of finding roots of a second degree polynomial admits a simple solution that always work. Representing the value function of the game of Go for all states does not have a simple solution. The big world hypothesis is more a statement about the class of problems we should care about than a fact about all decision-making problems. It can be made true or false by exercising control over the design of the environment and the agent (e.g., when developing benchmarks). 
+
+<br><span style="color:blue;">
+ビッグワールド仮説を満たす問題も、満たさない問題も数多く存在します。2次多項式の根を求める問題には、常に有効な単純な解が存在します。囲碁の価値関数をあらゆる状態について表現することには、単純な解は存在しません。ビッグワールド仮説は、あらゆる意思決定問題に関する事実というよりも、私たちが関心を持つべき問題のクラスに関する主張です。環境とエージェントの設計を制御することで（例えばベンチマークを開発する際に）、ビッグワールド仮説が真か偽かを判断することができます。
+</span>
+</p><p>
+Developing algorithms for big worlds poses unique challenges. The best algorithms for big worlds might prefer fast approximate solutions over slow exact ones. They might learn incorrect simplistic models that are sufficient for achieving agent’s goals over causally correct complex models (e.g., Newtonian physics as opposed to quantum mechanics). They might forgo knowledge that is not frequently used by the agent to make room for knowledge used more often. Such trade-offs do not exist for over-parameterized agents. 
+
+<br><span style="color:blue;">
+ビッグワールド向けのアルゴリズムの開発には、特有の課題が伴います。ビッグワールドに最適なアルゴリズムは、低速な厳密解よりも高速な近似解を優先するかもしれません。因果的に正しい複雑なモデル（例えば、量子力学ではなくニュートン力学）よりも、エージェントの目標を達成するのに十分な、誤った単純化されたモデルを学習するかもしれません。エージェントが頻繁に使用しない知識を放棄し、より頻繁に使用される知識のためのスペースを確保するかもしれません。このようなトレードオフは、過剰にパラメータ化されたエージェントには存在しません。
+</span>
+</p><p>
+The big world hypothesis is not a novel proposition. Over the past few years, several independent works have entertained the idea of small bounded agents learning in large unbounded environments.
+
+<br><span style="color:blue;">
+ビッグワールド仮説は目新しい命題ではありません。ここ数年、境界を持つ小さなエージェントが、境界のない大きな環境で学習するというアイデアを、いくつかの独立した研究が検討してきました。
+</span>
+</p><p>
+Sutton (2020) argued that the world is large and complex and an agent cannot learn everything there is to learn exactly. He proposed embracing function approximation for learning values, policies, models, and states. Dong et.al. (2022) theoretically studied the performance of a reinforcement learning algorithm without making simplifying assumptions about the environment. Their work shifts the focus from making assumptions about the environment to making assumptions about the capabilities of the agent. Javed et.al. (2023) empirically studied the performance of small agents in large environments. They found that approximate algorithms that use less computation can outperform exact algorithms that use more computation in big worlds. Kumar et.al. (2023) showed that continual learning is a necessary element of reinforcement learning when the agent is computationally constrained. 
+
+<br><span style="color:blue;">
+Sutton (2020) は、世界は広大で複雑であり、エージェントは学習すべきすべてを正確に学習することはできないと主張しました。彼は、値、ポリシー、モデル、および状態の学習に関数近似を採用することを提案しました。Dong ら (2022) は、環境に関する単純化の仮定を立てずに、強化学習アルゴリズムのパフォーマンスを理論的に研究しました。彼らの研究は、環境に関する仮定を立てることから、エージェントの能力に関する仮定を立てることに焦点を移しています。Javed ら (2023) は、大規模環境における小型エージェントのパフォーマンスを経験的に研究しました。彼らは、大規模な世界では、計算量が少ない近似アルゴリズムの方が、計算量が多い正確なアルゴリズムよりも優れたパフォーマンスを発揮できることを発見しました。Kumar ら (2023) は、エージェントが計算的に制約されている場合、継続学習が強化学習の必須要素であることを示しました。
+</span>
+</p><p>
+Is the big world hypothesis a temporary artifact of limitations of our current computers? Or would it have relevance even as computational resources grow? In the next section, we argue that the big world hypothesis is here to irrespective of the rate at which computational resources grow. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説は、現在のコンピュータの限界による一時的な産物なのでしょうか？それとも、計算リソースが増加しても意味を持ち続けるのでしょうか？次のセクションでは、ビッグワールド仮説は計算リソースの増加率に関わらず、常に存在すると主張します。
+</span>
+</p>
+
+<h2>2 Reconciling the Big World Hypothesis and Exponentially Growing Computation <br><span style="color:blue;">　ビッグワールド仮説と指数関数的に増大する計算の調和</span></h2>
+
+<p>
+Historically, access to computation has increased exponentially. With continuing growth, computers of the future could be sufficiently powerful to solve all problems we care about using over-parameterized agents. We see two problems with this view. 
+
+<br><span style="color:blue;">
+歴史的に、計算へのアクセスは指数関数的に増加してきました。この成長が続けば、将来のコンピュータは、過剰パラメータ化されたエージェントを用いて、私たちが関心を持つあらゆる問題を解くのに十分な性能を備えるようになるかもしれません。しかし、この見方には2つの問題点があります。
+</span>
+</p><p>
+First, it is not just our agents that are constrained by compute. The sensors used by our agents are also constrained by compute. A rise in computation makes it possible to sense the world with more precision and at a higher frequency. For example, within the last decade the camera sensors in our phones have gone from sensing 640 x 420 pixels at 30 fps—around 7 million pixels per second—to sensing in 4k at 60 fps—around 500 million pixels per second. To put these numbers in perspective, a modern smartphone camera sensor in 2024 can generate more data in a week than that used to train GPT-3 (Brown et.al., 2020). Even with these massive increases in the ability to sense the world, our agents are not even close to sensing the world at its full scale. We speculate that as computational resources grow so would the appetite to sense the world at higher fidelity, making the decision-making problem more challenging. 
+
+<br><span style="color:blue;">
+まず、コンピューティングによって制約を受けるのはエージェントだけではありません。エージェントが使用するセンサーもコンピューティングによって制約されます。コンピューティング能力の向上により、より正確に、より高頻度で世界を感知することが可能になります。例えば、過去10年間で、携帯電話のカメラセンサーは、640 x 420ピクセルを30 fps（約700万ピクセル/秒）で感知していたものから、4Kで60 fps（約5億ピクセル/秒）で感知できるようになりました。これらの数字を比較すると、2024年の最新のスマートフォンカメラセンサーは、GPT-3のトレーニングに使用されたデータよりも多くのデータを1週間で生成できます（Brown et.al.、2020）。世界を感知する能力がこのように大幅に向上したとしても、エージェントは世界をフルスケールで感知することにはまだほど遠いです。計算リソースが増加するにつれて、より高い忠実度で世界を感知したいという欲求も高まり、意思決定の問題がより困難になるのではないかと推測しています。
+</span>
+</p><p>
+The second problem with waiting for compute to grow is that as compute becomes more readily available, the world itself becomes more complex. From the perspective of an agent, the world consists of everything outside of itself. This includes other equally complex agents and computers. An agent that interacts with multiple other agents of similar capabilities would be unable to model the world exactly regardless of the rate at which computation grows. 
+
+<br><span style="color:blue;">
+計算能力の増大を待つことの2つ目の問題は、計算能力がより容易に利用できるようになると、世界自体がより複雑になるということです。エージェントの視点から見ると、世界は自分自身の外にあるすべてのものから構成されています。これには、同様に複雑な他のエージェントやコンピュータも含まれます。同様の能力を持つ複数の他のエージェントと相互作用するエージェントは、計算能力の増大速度に関わらず、世界を正確にモデル化することができません。
+</span>
+</p><p>
+A concrete example of the world getting more complex as computation grows is that of an agent playing the game of Go against an opponent. If the opponent picks moves randomly, it is fairly simple for the agent to model the environment exactly. The dynamics of the environment can be simulated with a short program. However, if the opponent is more complex, such as an AlphaZero (Silver et.al., 2015) agent, the only way to model the dynamics of the environment correctly is to be able to represent the policy of the large AlphaZero agent accurately. 
+
+<br><span style="color:blue;">
+計算能力の増大に伴って世界が複雑化していく具体例として、囲碁で対戦相手と対戦するエージェントが挙げられます。対戦相手がランダムに手を選ぶ場合、エージェントが環境を正確にモデル化するのは比較的簡単です。環境のダイナミクスは短いプログラムでシミュレートできます。しかし、対戦相手がAlphaZero（Silver et.al., 2015）エージェントのようにより複雑な場合、環境のダイナミクスを正しくモデル化する唯一の方法は、大規模なAlphaZeroエージェントのポリシーを正確に表現することです。
+</span>
+</p><p>
+As computational resources increase so does the complexity of the world. The big world hypothesis is not a temporary artifact of limitations of our current computers. For many problems, the world will always be much larger than any single agent.
+
+<br><span style="color:blue;">
+計算資源が増加するにつれて、世界の複雑さも増大します。ビッグワールド仮説は、現在のコンピュータの限界による一時的な産物ではありません。多くの問題において、世界は常に単一のエージェントよりもはるかに広大です。
+</span>
+</p>
+
+<h2>3 Existing Evidence Consistent with the Big World Hypothesis <br><span style="color:blue;">　ビッグワールド仮説と一致する既存の証拠</span></h2>
+
+<p>
+There is some indirect evidence that shows that the behavior of our learning algorithms on large problems is consistent with the big world hypothesis. We discuss two cases.
+
+<br><span style="color:blue;">
+大規模問題における学習アルゴリズムの挙動がビッグワールド仮説と整合していることを示す間接的な証拠がいくつかあります。ここでは2つの事例について考察します。
+</span>
+</p><p>
+Silver et al. (2015) trained a large neural network to learn the value function for the game of Go. They found that even after extensive training the performance of the system could be improved if the decisions were taken by combining the value function with a planner. 
+
+<br><span style="color:blue;">
+Silverら（2015）は、大規模なニューラルネットワークを訓練し、囲碁の価値関数を学習させました。彼らは、価値関数とプランナーを組み合わせて意思決定を行うことで、大規模な訓練を行った後でもシステムの性能が向上することを発見しました。
+</span>
+</p><p>
+If the neural network had the capacity to represent the optimal value function of Go, and it had been trained for sufficiently long time, decision time planning should not have improved performance. Perhaps the neural network did not have sufficient capacity to represent the value function correctly for all states and the planner was able to fill in the gaps. 
+
+<br><span style="color:blue;">
+ニューラルネットワークが囲碁の最適な価値関数を表現できる能力を持ち、十分な時間訓練されていたならば、決定時プランニングによってパフォーマンスが向上するはずはなかった。おそらくニューラルネットワークは全ての状態において価値関数を正しく表現できる能力が不足しており、プランナーがそのギャップを埋めることができたのだろう。
+</span>
+</p><p>
+The second and more direct evidence comes from the work of Brown et.al. (2020). They showed a clear trend between the model size and performance of neural networks when fitting large language datasets. They found that the train and validation error on the dataset could be reduced by increasing the number of parameters in the network. Their finding is consistent with the big world hypothesis and makes little sense if the neural networks were over-parameterized. 
+
+<br><span style="color:blue;">
+2つ目、そしてより直接的な証拠は、Brownら（2020）の研究から得られます。彼らは、大規模な言語データセットをフィッティングする際のニューラルネットワークのモデルサイズとパフォーマンスの間に明確な傾向を示しました。彼らは、ネットワークのパラメータ数を増やすことで、データセットにおける学習および検証の誤差を削減できることを発見しました。この発見はビッグワールド仮説と一致しており、ニューラルネットワークが過剰にパラメータ化されている場合にはほとんど意味がありません。
+</span>
+</p><p>
+Neither of the two papers directly set out to test the big world hypothesis and their results have other explanations. However, they don’t contradict the big world hypothesis and provide circumstantial evidence for its relevance. 
+
+<br><span style="color:blue;">
+どちらの論文もビッグワールド仮説を直接検証しようとしたものではなく、その結果には他の説明が可能である。しかし、ビッグワールド仮説と矛盾するものではなく、その妥当性を示す状況証拠を提供している。
+</span>
+</p>
+
+<h2>4 Ramifications of the Big World Hypothesis on Algorithm Design <br><span style="color:blue;">　ビッグワールド仮説のアルゴリズム設計への影響</span></h2>
+
+<p>
+The big world hypothesis is only worth discussing if accepting it would directly impact how we do research in AI. In the next subsections, we discuss three ways accepting the hypothesis can influence research today. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説は、それを受け入れることでAI研究の進め方に直接的な影響を与える場合にのみ議論する価値があります。次のサブセクションでは、この仮説を受け入れることで今日の研究にどのような影響を与える可能性があるかを3つ考察します。
+</span>
+</p>
+
+<h3>4.1 Online continual learning is an important solution method for achieving goals in big worlds <br><span style="color:blue;">　オンラインでの継続学習は、ビッグワールドで目標を達成するための重要な解決策です</span></h3>
+
+<p>
+
+The need for online continual learning in big worlds is intuitive—if the agent does not have the resources to learn and retain everything important about the world simultaneously, it can learn aspects that are important for decision-making at the current time and discard them when they are no longer useful by learning continually. In the over-parameterized setting, on the other hand, there is no need for online continual learning. Once the agent has found the underlying optimal solution, it can use it forever without changing. 
+
+<br><span style="color:blue;">
+ビッグワールドにおけるオンライン継続学習の必要性は直感的に理解できます。エージェントが世界に関する重要な情報をすべて同時に学習・保持するためのリソースを持たない場合、継続的な学習によって、現時点での意思決定に重要な側面を学習し、もはや有用でなくなったら破棄することができます。一方、過剰パラメータ化された設定では、オンライン継続学習は必要ありません。エージェントが一度根本的な最適解を見つければ、それを変更することなく永久に使用できます。
+</span>
+</p><p>
+Learning things when they are needed and discarding them when they are not is sometimes called tracking. Tracking has been empirically demonstrated to be superior to fixed solution in partially observable environments by Sutton, Koop, & Silver (2007) and Silver, Sutton, & Müller (2008). 
+
+<br><span style="color:blue;">
+必要な時に学習し、必要のない時に破棄することをトラッキングと呼ぶことがあります。トラッキングは、部分的に観測可能な環境において、固定された解よりも優れていることが、Sutton, Koop, & Silver (2007) および Silver, Sutton, & Müller (2008) によって実証されています。
+</span>
+</p><p>
+A key requirement or tracking to be effective is temporal coherence. Temporal coherence means that parts of the world the agent experiences from one step to the next are correlated. An agent learning online can exploit the temporal coherence to direct its resources to learn about the states of the world that are temporally close at the expense of those that are far away. Tracking can be a powerful solution method in temporally coherent big worlds. 
+
+<br><span style="color:blue;">
+追跡を効果的に行うための重要な要件は、時間的な一貫性です。時間的な一貫性とは、エージェントがステップごとに経験する世界の部分が相関していることを意味します。オンラインで学習するエージェントは、時間的な一貫性を利用して、時間的に近い世界の状態を学習することにリソースを集中させ、遠い世界の状態を犠牲にすることができます。追跡は、時間的に一貫性のあるビッグワールドにおいて、強力な解決策となり得ます。
+</span>
+</p><p>
+Humans extensively rely on tracking in everyday life 
+Humans are continually learning agents. We extensively rely on tracking to achieve our goals. An intuitive example is that of exams. Given the choice between taking exams of different subjects on different days or taking them all on the same day, most of us would pick the former. Intuitively, it feels easier to have to only have to learn and remember the material for one exam at a time. This is exactly the behavior we should expect from a tracking agent in a big world. 
+
+<br><span style="color:blue;">
+人間は日常生活において、追跡に大きく依存しています。
+人間は継続的に学習するエージェントであり、目標を達成するために追跡に大きく依存しています。直感的な例として、試験が挙げられます。異なる科目の試験を別々の日に受けるか、すべての試験を同じ日に受けるかという選択肢があった場合、ほとんどの人は前者を選ぶでしょう。直感的に、一度に1つの試験の教材だけを学習し、記憶すれば済む方が楽だと感じます。これはまさに、広大な世界における追跡エージェントに期待される動作です。
+</span>
+</p><p>
+An analogy of a tracking system is the cache used by a CPU. The cache is much smaller than the memory and can only store a small fraction of instructions and data used by the program. However, by retaining the right pieces of information and discarding the least useful ones, a small cache can have a high hit ratio. Moreover, a high hit ratio is only possible when the program accesses memory predictably, akin to having temporal coherence in big worlds. 
+
+<br><span style="color:blue;">
+追跡システムの例として、CPUが使用するキャッシュが挙げられます。キャッシュはメモリよりもはるかに小さく、プログラムが使用する命令とデータのごく一部しか保存できません。しかし、必要な情報のみを保持し、あまり役に立たない情報を破棄することで、小さなキャッシュでも高いヒット率を実現できます。さらに、高いヒット率は、プログラムが予測通りにメモリにアクセスしている場合にのみ実現可能であり、これはビッグワールドにおける時間的一貫性に似ています。
+</span>
+</p><p>
+If we were to accept the hypothesis, we would have to develop algorithms that can learn online and continually. This is a significant departure from the current practice of training agents offline and then deploying them. 
+
+<br><span style="color:blue;">
+この仮説を受け入れるならば、オンラインで継続的に学習できるアルゴリズムを開発する必要があります。これは、エージェントをオフラインで訓練してから展開するという現在の実践方法とは大きく異なります。
+</span>
+</p>
+
+<h3>4.2 Computationally efficient learning algorithms can be advantageous in big worlds <br><span style="color:blue;">　計算効率の高い学習アルゴリズムは、ビッグワールドでは有利になり得る</span></h3>
+
+<p>
+In big worlds, increasing the size of the agent can improve performance. This raises an important trade-off between the complexity of the learning algorithm and the size of the agent. A trivial example is the mini-batch size of a deep RL algorithm, such as DQN (Mnih et.al. 2015). For a fixed amount of resources, an agent can double the number of parameters by halving the mini-batch size. 
+
+<br><span style="color:blue;">
+広大な世界では、エージェントのサイズを大きくすることでパフォーマンスを向上させることができます。これは、学習アルゴリズムの複雑さとエージェントのサイズの間に重要なトレードオフをもたらします。分かりやすい例として、DQN (Mnih et.al. 2015) などの深層強化学習アルゴリズムのミニバッチサイズが挙げられます。一定のリソース量であれば、エージェントはミニバッチサイズを半分にすることでパラメータ数を倍増させることができます。
+</span>
+</p><p>
+Javed, Shah, Sutton, & White (2023) empirically demonstrated that approximate but efficient learning algorithms can outperform computationally expensive exact algorithms in big worlds. In their experiments, they evaluated tiny recurrent networks—hidden state is a vector of less than 10 dimensions—on the Arcade Learning Environment (Bellemare et.al., 2013). They constrained all algorithms to use the same amount of per-step computation. They found that a simple algorithm that used less computation was able to outperform a more complex algorithm by repurposing the saved computation to increase the size of the network. 
+
+<br><span style="color:blue;">
+Javed、Shah、Sutton、White (2023) は、近似的だが効率的な学習アルゴリズムが、ビッグワールドにおいて計算コストの高い厳密なアルゴリズムよりも優れた性能を発揮できることを経験的に実証しました。実験では、Arcade Learning Environment (Bellemare et.al., 2013) 上で、小さな再帰型ネットワーク（隠れ状態は10次元未満のベクトル）を評価しました。彼らは、すべてのアルゴリズムがステップごとに同じ量の計算を行うように制約しました。その結果、計算量が少ない単純なアルゴリズムでも、節約した計算をネットワークの規模拡大に再利用することで、より複雑なアルゴリズムよりも優れた性能を発揮できることが分かりました。
+</span>
+</p><p>
+Accepting the big world hypothesis mean we should actively look for more efficient learning algorithms. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説を受け入れるということは、より効率的な学習アルゴリズムを積極的に探す必要があることを意味します。
+</span>
+</p>
+
+<h3>4.3 Making progress on big world problems requires a different approach for evaluating algorithms <br><span style="color:blue;">　ビッグワールド課題の解決には、アルゴリズムを評価するための異なるアプローチが必要である</span></h3>
+
+<p>
+A common way to evaluate algorithms is to run them on a standardized benchmark. A good benchmark is an accurate proxy for the real-world problem we care about and allows us to do careful experiments. Designing a benchmark for big worlds requires a different approach than designing a benchmark for over-parameterized agents. 
+
+<br><span style="color:blue;">
+アルゴリズムを評価する一般的な方法は、標準化されたベンチマークで実行することです。優れたベンチマークは、私たちが関心を持つ現実世界の問題の正確な代理指標であり、慎重な実験を可能にします。大規模な世界を対象としたベンチマークの設計には、過剰にパラメータ化されたエージェントを対象としたベンチマークの設計とは異なるアプローチが必要です。
+</span>
+</p><p>
+One way to evaluate algorithms for big worlds is to test them on complex environments so that even our largest agents on the latest hardware are not over-parameterized. While this approach has merit, it makes it difficult to do careful and reproducible experiments. 
+
+<br><span style="color:blue;">
+ビッグワールド向けのアルゴリズムを評価する一つの方法は、複雑な環境でテストすることです。これにより、最新のハードウェア上で動作する最大級のエージェントであっても、過剰にパラメータ化されることがなくなります。このアプローチにはメリットがありますが、慎重かつ再現性の高い実験を行うことが困難になります。
+</span>
+</p><p>
+The alternative is to restrict the computational capabilities of the agents instead of making the environments larger. The primary limitation of restricting agents is that we might miss out on emergent properties of large agents. However, a small agent learning in a non-trivial environment is still a better proxy for learning in big worlds than a large over-parameterized agent learning in the same environment. 
+
+<br><span style="color:blue;">
+代替案としては、環境を拡大するのではなく、エージェントの計算能力を制限することが挙げられます。エージェントを制限することの主な限界は、大規模エージェントの創発特性を見逃してしまう可能性があることです。しかしながら、非自明な環境で学習する小規模エージェントは、同じ環境で過剰にパラメータ化された大規模なエージェントが学習するよりも、ビッグワールドにおける学習のより適切な代理指標となります。
+</span>
+</p><p>
+Example: A typical DQN agent for Atari users orders of magnitude more computation than the enviornment.
+
+<br><span style="color:blue;">
+例: Atari ユーザー向けの典型的な DQN エージェントは、環境よりも桁違いに多くの計算を実行します。
+</span>
+</p><p>
+Arcade learning environment (Bellemare et.al.,2013)is a popular benchmark for reinforcement learning. A typical game in the benchmark can run at around 7000 frames per second on a modern CPU core. A DQN agent (Mnihet.al.,2014), on the other hand, runs at 300 frames per second on a modern GPU. While it is hard to directly compare different implementations of the agent and the environment running on different hardwares, it is clear that the agent uses orders of magnitude more computation than the environment in this case..
+
+<br><span style="color:blue;">
+アーケード学習環境（Bellemare et.al., 2013）は、強化学習のベンチマークとして広く用いられています。このベンチマークにおける典型的なゲームは、最新のCPUコアで約7000フレーム/秒で動作します。一方、DQNエージェント（Mnihet.al., 2014）は、最新のGPUで300フレーム/秒で動作します。異なるハードウェア上で動作するエージェントと環境の異なる実装を直接比較することは困難ですが、この場合、エージェントは環境よりも桁違いに多くの計算量を使用することは明らかです。
+</span>
+</p><p>
+Restricting the computational capabilities of the agents is not trivial. There is no consensus on what aspects of the agents should be restricted. We could restrict the number of operations, the amount of memory, the amount of memory bandwidth, or the amount of energy the agent can use. The choice of constraints can have a significant impact on the performance of the agent.
+
+<br><span style="color:blue;">
+エージェントの計算能力を制限することは容易ではありません。エージェントのどの側面を制限すべきかについては、コンセンサスが得られていません。例えば、操作数、メモリ量、メモリ帯域幅、あるいはエージェントが使用できるエネルギー量などを制限することは可能です。しかし、どのような制約を選択するかは、エージェントのパフォーマンスに大きな影響を与える可能性があります。
+</span>
+</p><p>
+One option is to match the constraints on the agent with the constraints imposed by current hardware. For example, if memory is cheaper than CPU cycles, we might want to restrict the CPU cycles. Alternatively, if accessing the memory is a bottleneck, we might want to restrict the memory bandwidth. 
+
+<br><span style="color:blue;">
+一つの選択肢は、エージェントの制約を現在のハードウェアの制約と一致させることです。例えば、メモリがCPUサイクルよりも安価な場合は、CPUサイクルを制限することが考えられます。また、メモリへのアクセスがボトルネックになっている場合は、メモリ帯域幅を制限することが考えられます。
+</span>
+</p><p>
+A second option is to limit energy usage. Energy is a universal constraint that can take into account the evolution of hardware overtime and can even drive research for designing better hardware for our agents. The downside of using energy as a constraint is that it is difficult to measure. Normally, the computer running the agent is also running the environment, an operating system, and other unrelated processes. Isolating the energy used by the agent from background tasks is challenging. 
+
+<br><span style="color:blue;">
+2つ目の選択肢は、エネルギー使用量を制限することです。エネルギーは、ハードウェアの経時的な進化を考慮できる普遍的な制約であり、エージェントのためのより優れたハードウェア設計のための研究を促進することにもつながります。エネルギーを制約として使用することの欠点は、測定が難しいことです。通常、エージェントを実行するコンピューターは、環境、オペレーティングシステム、その他の無関係なプロセスも実行しています。エージェントが使用するエネルギーをバックグラウンドタスクから分離することは困難です。
+</span>
+</p>
+
+<h2>5 Conclusions <span style="color:blue;">結論</span></h2>
+
+<p>
+The big world hypothesis has direct implications on what we choose to study and how we evaluate our algorithms. It is not a temporary artifact of current limitations of our computers. It is imperative that we develop algorithms that can allow agents to achieve goals in big worlds. This requires developing computationally efficient algorithms for learning continually. It also requires rethinking the way we benchmark our algorithms. 
+
+<br><span style="color:blue;">
+ビッグワールド仮説は、私たちが何を研究対象とするか、そしてアルゴリズムをどのように評価するかに直接的な影響を与えます。これは、現在のコンピュータの限界による一時的な産物ではありません。エージェントがビッグワールドにおいて目標を達成できるアルゴリズムを開発することが不可欠です。そのためには、継続的な学習を可能にする計算効率の高いアルゴリズムの開発が求められます。また、アルゴリズムのベンチマーク方法も見直す必要があります。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">結論</span></h2>
+
+<p>
+<div class="styleRef">
+<ul><li>
+Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D., Dhariwal, P., ... & Amodei, D. (2020). Language models are few-shot learners. Advances in neural information processing systems, 33, 1877-1901. 
+
+<br><span style="color:blue;">
+『言語モデルは少数ショット学習器である』
+</span>
+</li><br><li>
+Dong, S., Van Roy, B., & Zhou, Z. (2022). Simple agent, complex environment: Efficient reinforcement learning with agent states. Journal of Machine Learning Research, 23(255), 1-54. 
+
+<br><span style="color:blue;">
+『単純なエージェント、複雑な環境：エージェント状態を用いた効率的な強化学習』
+</span>
+</li><br><li>
+Javed, K., Shah, H., Sutton, R. S., & White, M. (2023). Scalable real-time recurrent learning using columnar-constructive networks. Journal of Machine Learning Research, 24, 1-34. 
+
+<br><span style="color:blue;">
+『列構造構築型ネットワークを用いたスケーラブルなリアルタイム再帰学習』
+</span>
+</li><br><li>
+Kumar, S., Marklund, H., Rao, A., Zhu, Y., Jeon, H. J., Liu, Y., & Van Roy, B. (2023). Continual learning as computationally constrained reinforcement learning. arXiv preprint arXiv:2307.04345. 
+
+<br><span style="color:blue;">
+『計算制約付き強化学習としての継続学習』
+</span>
+</li><br><li>
+Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., ... & Hassabis, D. (2015). Human-level control through deep reinforcement learning. nature, 518(7540), 529-533. 
+
+<br><span style="color:blue;">
+『深層強化学習による人間レベルの制御』
+</span>
+</li><br><li>
+Silver, D., Hubert, T., Schrittwieser, J., Antonoglou, I., Lai, M., Guez, A., ... & Hassabis, D. (2017). Mastering chess and shogi by self-play with a general reinforcement learning algorithm. arXiv preprint arXiv:1712.01815.
+
+<br><span style="color:blue;">
+『汎用強化学習アルゴリズムを用いた自己対戦によるチェスと将棋の習得』
+</span>
+</li><br><li>
+Silver, D., Sutton, R. S., & Müller, M. (2008, July). Sample-based learning and search with permanent and transient memories. In Proceedings of the 25th international conference on Machine learning (pp. 968-975). 
+
+<br><span style="color:blue;">
+『永続記憶と一時記憶を用いたサンプルベース学習と探索』
+</span>
+</li><br><li>
+Sutton, R. S. (2020). Rich Sutton, Are You Ready to Fully Embrace Approximation? (June 8, 2020) [Video]. YouTube. https://www.youtube.com/watch?v=JjB58InuTqM 
+
+<br><span style="color:blue;">
+『近似法を完全に受け入れる準備はできていますか？』
+</span>
+</li><br><li>
+Sutton, R. S., Koop, A., & Silver, D. (2007, June). On the role of tracking in stationary environments. In Proceedings of the 24th international conference on Machine learning (pp. 871-878).
+
+<br><span style="color:blue;">
+『静止環境におけるトラッキングの役割について』
+</span>
+</p>
+    </body>
+</html>
