@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>GEOMETRIC AND DYNAMIC SCALING IN DEEP TRANSFORMERS </title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1>GEOMETRIC AND DYNAMIC SCALING IN DEEP TRANSFORMERS <br><span style="color:blue;">ディープトランスフォーマーにおける幾何学的および動的スケーリング</span></h1>
+
+<div class="container">
+<div class="column">Haoran Su<br>New York University<br>haoran.su@nyu.edu </div> 
+<div class="column">Chenyu You<br>Stony Brook University<br>chenyu.you@stonybrook.edu </div> 
+
+</div> 
+
+<br>
+
+<h2><center>Abstract　<span style="color:blue;">要旨</span></center></h2>
+<p class="margin-abstract">
+Scaling Transformer architectures to extreme depth often leads to rank collapse: 
+representations become redundant and degenerate despite modern normalization 
+schemes. We argue this is fundamentally <strong>a geometric problem</strong>. Standard residual 
+connections implicitly assume monotonic feature accumulation is beneficial, but 
+provide no mechanism to constrain update directions or erase outdated information. As depth increases, this causes uncontrolled drift from the semantic manifold and representational collapse. 
+
+<br><span style="color:blue;">
+Transformerアーキテクチャを極端に深くまで拡張すると、しばしばランク崩壊が発生します。表現は冗長になり、最新の正規化スキームを適用しても縮退します。
+これは根本的に<strong>幾何学的な問題</strong>であると我々は主張します。標準的な残差接続は、単調な特徴蓄積が有益であると暗黙的に想定していますが、
+更新方向を制約したり、古い情報を消去したりするメカニズムを提供していません。深度が増すにつれて、これは意味多様体からの制御不能なドリフトと表現崩壊を引き起こします。
+</span>
+</p>
+
+<p class="margin-abstract">
+We propose the <strong>Manifold-Geometric Transformer (MGT)</strong>, a unified framework 
+addressing these failures through two orthogonal principles. First, manifold-
+constrained hyper-connections (mHC) restrict residual updates to valid tangent 
+space directions, preventing manifold drift. Second, deep delta learning (DDL) 
+enables data-dependent, non-monotonic updates that support feature erasure rather 
+than unconditional accumulation. Together, mHC controls update direction while 
+DDL controls magnitude and sign, yielding stable geometric evolution across 
+depth. 
+
+<br><span style="color:blue;">
+我々は、2つの直交原理を通してこれらの欠陥に対処する統合フレームワークである<strong>多様体幾何学的変換器（MGT）</strong>を提案する。第一に、多様体制約超接続（mHC）は、残差更新を有効な接空間方向に制限し、多様体ドリフトを防止する。第二に、深層デルタ学習（DDL）は、無条件蓄積ではなく特徴消去をサポートする、データ依存の非単調更新を可能にする。これらを組み合わせることで、mHCは更新方向を制御し、DDLは大きさと符号を制御することで、深度全体にわたって安定した幾何学的進化を実現する。
+</span>
+</p>
+
+<p class="margin-abstract">
+Our theoretical analysis predicts that coupling geometric constraints with dynamic 
+erasure is essential for scaling beyond current depth limits. We design a rigorous 
+evaluation protocol for ultra-deep networks (100+ 
+layers) to test whether geometry, 
+not depth itself, is the fundamental bottleneck in Transformer scalability. 
+
+<br><span style="color:blue;">
+我々の理論分析は、幾何学的制約と動的消去を組み合わせることが、現在の深度限界を超えてスケ​​ーリングするために不可欠であると予測しています。我々は、超深層ネットワーク（100層以上）向けの厳密な評価プロトコルを設計し、深度そのものではなく、幾何学がTransformerのスケーラビリティにおける根本的なボトルネックであるかどうかを検証します。
+</span>
+</p>
+
+<h2>1. Introduction　<span style="color:blue;">はじめに</span></h2>
+<p>
+The residual connection is the cornerstone of modern Deep Learning, allowing gradients to flow 
+through hundreds of layers. However, the standard additive update \(\mathbf{x}_{l+1} 
+=\mathbf{x}_l+\mathcal{F}(\mathbf{x}_l)\) makes a 
+strong assumption: that the optimal update is always an unconstrained vector addition in Euclidean 
+space. Recent geometric deep learning perspectives suggest that data flows on low-dimensional 
+non-linear manifolds embedded in high-dimensional space. An unconstrained update \(\mathcal{F}(\mathbf{x}_l)\) often 
+points “off-manifold,” leading to feature degradation and rank collapse in deep layers. 
+
+<br><span style="color:blue;">
+残差接続は現代のディープラーニングの礎であり、勾配が数百層に渡って流れることを可能にします。しかし、標準的な加法更新 \(\mathbf{x}_{l+1}
+=\mathbf{x}_l+\mathcal{F}(\mathbf{x}_l)\) は、最適な更新は常にユークリッド空間における制約のないベクトル加算であるという強い仮定に基づいています。最近の幾何学的ディープラーニングの観点では、データは高次元空間に埋め込まれた低次元の非線形多様体上を流れると示唆されています。制約のない更新 \(\mathcal{F}(\mathbf{x}_l)\) はしばしば「多様体外」を指し示し、深層層での特徴量の劣化やランクの崩壊につながります。
+</span>
+</p><p>
+Simultaneously, the additive nature implies a “write-only” memory mechanism. It is optimizationally 
+difficult for a network to “erase” information (i.e., learn \(\mathcal{F}(\mathbf{x})\approx −\mathbf{x}\)) when context shifts. This 
+results in the “residual accumulation” problem, where noise accumulates over depth. 
+
+<br><span style="color:blue;">
+同時に、加法的性質は「書き込み専用」の記憶機構を意味します。コンテキストが変化すると、ネットワークが情報を「消去する」（つまり、\(\mathcal{F}(\mathbf{x})\approx −\mathbf{x}\) を学習する）ことは最適化上困難です。これは、深さに応じてノイズが蓄積される「残差蓄積」問題につながります。
+</span>
+</p><p>
+To resolve these dual challenges, we introduce the Manifold-Geometric Transformer (MGT). We 
+propose that an ideal layer update should satisfy two conditions: 
+
+<br><span style="color:blue;">
+これらの二重の課題を解決するために、我々はManifold-Geometric Transformer（MGT）を導入する。
+理想的な層更新は、以下の2つの条件を満たすべきであると提案する。
+</span>
+
+<div class="styleBullet">
+<ul><li>
+1. <strong>Geometric Validity (via mHC)</strong>: The update vector should lie in the tangent space of the 
+current manifold state (TxM). This theoretically prevents the features from collapsing into 
+degenerate subspaces. 
+
+<br><span style="color:blue;">
+<strong>幾何学的妥当性（mHC 経由）</strong>：更新ベクトルは、現在の多様体状態（TxM）の接空間に存在する必要があります。これにより、理論的には、特徴量が退化した部分空間に陥るのを防ぎます。
+</span>
+</li><br><li>
+2. <strong>Dynamic Traversal (via DDL)</strong>: The step size along this tangent direction should be dynamic 
+and reversible, allowing the model to perform “Erasure” (moving backwards) or “Identity” 
+(staying still) operations explicitly. 
+
+<br><span style="color:blue;">
+<strong>動的トラバーサル（DDL経由）</strong>：この接線方向に沿ったステップサイズは動的かつ可逆的であるべきであり、モデルが「消去」（後方への移動）または「同一性」（静止）操作を明示的に実行できるようにする必要があります。
+</span>
+</li></ul></div>
+</p><p>
+Our contributions are formulated as follows: 
+
+<br><span style="color:blue;">
+私たちの貢献は次のように定式化されます。
+</span>
+
+<div class="styleBullet">
+<ul><li>
+• We formulate Manifold-Constrained Hyper-Connections (mHC), a lightweight projection 
+mechanism to regularize the output of Attention/FFN blocks. 
+
+<br><span style="color:blue;">
+Attention/FFNブロックの出力を正規化するための軽量な射影メカニズムであるManifold-Constrained Hyper-Connections（mHC）を定式化します。
+</span>
+</li><br><li>
+• We integrate Deep Delta Learning (DDL) with a dynamic gate β, enabling geometric 
+Householder updates. 
+
+<br><span style="color:blue;">
+ディープデルタラーニング（DDL）と動的ゲートβを統合し、幾何学的なハウスホルダー更新を可能にします。
+</span>
+</li><br><li>
+• We provide a theoretical grounding for the synergy between mHC and DDL, arguing that 
+they act as multipliers for signal integrity. 
+
+<br><span style="color:blue;">
+我々は、mHCとDDLの相乗効果について理論的根拠を示し、それらがシグナルインテグリティの乗数として機能すると主張します。
+</span>
+</li><br><li>
+• We propose a rigorous experimental framework designed to falsify the hypothesis that 
+geometric constraints are essential for scaling Transformers beyond current depth limits. 
+
+<br><span style="color:blue;">
+我々は、幾何学的制約が現在の深度制限を超えてトランスフォーマーをスケーリングするために不可欠であるという仮説を反証するために設計された厳密な実験フレームワークを提案する。
+</span>
+</li></ul></div>
+</p>
+
+<h2>2 RELATED WORK <span style="color:blue;">関連研究</span></h2>
+
+<p>
+<strong>Rank Collapse in Deep Networks</strong>.　Dong et al. (2021) provided seminal theoretical analysis showing 
+that pure self-attention layers lose rank doubly exponentially with depth, fundamentally limiting 
+representational capacity. This collapse occurs even with modern normalization techniques (Ba et al., 
+2016; Xiong et al., 2020), suggesting that architectural modifications beyond optimization tricks 
+are necessary. Recent depth-scaling efforts (Wang et al., 2022; Touvron et al., 2021) have proposed 
+specialized initialization and normalization schemes to train networks exceeding 100 layers, yet these 
+approaches treat symptoms rather than addressing the geometric root cause of collapse. 
+
+<br><span style="color:blue;">
+<strong>深層ネットワークにおけるランク崩壊</strong> Dongら (2021) は、純粋な自己注意層は深度とともに2倍指数関数的にランクを失い、表現能力を根本的に制限することを示す画期的な理論分析を提供しました。このランク崩壊は、最新の正規化手法 (Baら、2016年; Xiongら、2020年) を用いても発生するため、最適化のトリックを超えたアーキテクチャの変更が必要であることが示唆されています。最近の深度スケーリングの取り組み (Wangら、2022年; Touvronら、2021年) では、100層を超えるネットワークを訓練するための特殊な初期化および正規化スキームが提案されていますが、これらのアプローチは、ランク崩壊の幾何学的な根本原因に対処するのではなく、症状を治療するものです。
+</span>
+</p><p>
+<strong>Residual Connections and Depth</strong>.　Since ResNets (He et al., 2016), residual connections have 
+enabled training of deep networks by providing gradient highways. However, the standard formulation \(\mathbf{x}_{l+1}=\mathbf{x}_l+\mathcal{F}(\mathbf{x}_l)\) 
+implicitly assumes additive updates in Euclidean space are universally beneficial. 
+As Touvron et al. (2021) observed, this monotonic accumulation can lead to feature redundancy in 
+very deep networks. Our work addresses this through explicit erasure mechanisms. 
+
+<br><span style="color:blue;">
+<strong>残差接続と深度</strong>：ResNet（He et al., 2016）以降、残差接続は勾配ハイウェイを提供することで
+深層ネットワークの学習を可能にしてきました。しかし、標準的な定式化 \(\mathbf{x}_{l+1}=\mathbf{x}_l+\mathcal{F}(\mathbf{x}_l)\) は、ユークリッド空間における加法的な更新が普遍的に有益であると暗黙的に仮定しています。
+Touvron et al. (2021) が指摘したように、この単調な蓄積は、非常に深いネットワークにおいて特徴量の冗長性につながる可能性があります。本研究では、明示的な消去メカニズムによってこの問題に対処します。
+</span>
+</p><p>
+<strong>Manifold-Constrained Hyper-Connections (mHC)</strong>. The recently proposed mHC framework (Xie 
+et al., 2025) addresses stability in width-scaling by constraining hyper-connections to geometric 
+manifolds (e.g., the Birkhoff polytope), preserving the identity mapping property of ResNets. We 
+adopt this perspective as a “spatial regularizer” that projects updates onto the tangent space TxM 
+of 
+the data manifold. While Xie et al. (2025) focused on connection geometry, we argue that dynamics 
+along these connections require complementary mechanisms for feature redundancy. 
+
+<br><span style="color:blue;">
+<strong>多様体制約ハイパーコネクション（mHC）</strong>。最近提案されたmHCフレームワーク（Xie et al., 2025）は、ハイパーコネクションを幾何学的多様体（例えば、バーコフ多面体）に制約することで、ResNetの恒等写像特性を維持しながら、幅スケーリングにおける安定性に対処します。私たちは、この視点を、データ多様体の接空間TxMに更新を投影する「空間正則化子」として採用します。Xie et al. (2025) はコネクションの幾何学的形状に焦点を当てていましたが、私たちは、これらのコネクションに沿ったダイナミクスには、特徴の冗長性のための補完的なメカニズムが必要であると主張します。
+</span>
+</p><p>
+<strong>Deep Delta Learning (DDL)</strong>.　Our dynamic update law builds on the recent Deep Delta Learning 
+framework (Zhang et al., 2026), which generalizes residual connections via a learnable <strong>Delta 
+Operator</strong>—a rank-1 perturbation parameterized by reflection direction \(k(\mathbf{x})\) and gate \(β(\mathbf{x})\). The key 
+insight is that \(β\) enables interpolation between identity (\(β→0\)), projection (\(β→1\)), and reflection (\(β→2\)), providing an explicit mechanism for information erasure that allows networks to actively 
+forget outdated features. 
+
+<br><span style="color:blue;">
+<strong>ディープデルタラーニング（DDL）</strong>。私たちの動的更新則は、最近のディープデルタラーニングフレームワーク（Zhang et al., 2026）に基づいており、学習可能な<strong>デルタ演算子</strong>（反射方向\(k(\mathbf{x})\)とゲート\(β(\mathbf{x})\)によってパラメータ化されたランク1摂動）を介して残差接続を一般化します。重要な洞察は、\(β\)によって恒等関数（\(β→0\)）、射影関数（\(β→1\)）、反射関数（\(β→2\)）間の補間が可能になり、ネットワークが古い特徴を積極的に忘れることができる情報消去の明示的なメカニズムが提供されることです。
+</span>
+</p><p>
+<strong>Synergizing Geometry and Dynamics</strong>.　While DDL provides erasure capability, applying it in 
+unconstrained Euclidean space risks optimization difficulties. Conversely, mHC provides manifold 
+constraints but lacks backward traversal (erasure) along the manifold. Our MGT architecture unifies 
+these orthogonal contributions: mHC defines valid directions while DDL controls magnitude and 
+sign, achieving stable “Erasure-and-Write” dynamics for ultra-deep scaling. 
+
+<br><span style="color:blue;">
+<strong>幾何学とダイナミクスの相乗効果</strong> DDLは消去機能を提供しますが、制約のないユークリッド空間に適用すると最適化が困難になるリスクがあります。一方、mHCは多様体制約を提供しますが、多様体に沿った後方走査（消去）がありません。私たちのMGTアーキテクチャは、これらの直交する貢献を統合します。mHCは有効な方向を定義し、DDLは大きさと符号を制御し、超深層スケーリングのための安定した「消去と書き込み」ダイナミクスを実現します。
+</span>
+</p>
+
+<h2>3 METHODOLOGY <span style="color:blue;">手法</span></h3>
+<p>
+We formulate the proposed <strong>Manifold-Geometric Transformer (MGT)</strong> block. We begin by establishing 
+the geometric premise of feature propagation in deep networks, followed by the detailed 
+derivation of our two core components. 
+
+<br><span style="color:blue;">
+提案する<strong>多様体幾何学的変換器（MGT）</strong>ブロックを定式化します。まず、深層ネットワークにおける特徴伝播​​の幾何学的前提を確立し、続いて2つのコアコンポーネントの詳細な導出を行います。
+</span>
+</p>
+
+<h3>3.1 ARCHITECTURE OVERVIEW <span style="color:blue;">アーキテクチャー概要</span></h3>
+<p>
+We redesign the fundamental building block of the Transformer to explicitly separate feature generation 
+from feature propagation. As illustrated in Figure 1, the proposed <strong>Manifold-Geometric Transformer (MGT) Block</strong> deviates from the standard Post-LN structure by introducing a geometric 
+processing stage before the residual addition. 
+
+<br><span style="color:blue;">
+Transformerの基本的な構成要素を再設計し、特徴量生成と特徴量伝播を明示的に分離します。図1に示すように、提案する<strong>Manifold-Geometric Transformer (MGT) ブロック</strong>は、残差加算の前に幾何学的処理段階を導入することで、標準的なPost-LN構造から逸脱しています。
+</span>
+
+</p>
+<center><img src="fig1.svg"></center>
+<p>
+Figure 1: <strong>Architecture of the Manifold-Geometric Transformer (MGT) Block</strong>.　The pipeline 
+explicitly separates (1) feature generation, (2) geometric rectification (blue/purple), and (3) dynamic 
+erasure (orange). The dashed orange line illustrates the context-aware gating mechanism derived 
+directly from the input state. 
+
+<br><span style="color:blue;">
+図1：<strong>マニフォールド-ジオメトリック・トランスフォーマー（MGT）ブロックのアーキテクチャ</strong>。パイプラインは、(1) 特徴生成、(2) 幾何学的補正（青/紫）、(3) 動的消去（オレンジ）を明示的に分離します。オレンジ色の破線は、入力状態から直接導出されるコンテキストアウェア・ゲーティング機構を示しています。
+</span>
+
+
+</p><p>
+The forward pass of an MGT layer \(l\) is decomposed into three distinct phases: 
+
+<br><span style="color:blue;">
+MGT層\(l\)のフォワードパスは3つの異なるフェーズに分解されます。
+</span>
+<div class="styleBullet">
+<ul><li>
+1. <strong>Raw Feature Generation</strong>:　First, the input state Xl 
+is normalized and processed by a 
+standard mixing module (Multi-Head Self-Attention or Feed-Forward Network) to generate a candidate update vector \(\mathbf{V}_{raw}\).
+
+<br><span style="color:blue;">
+<strong>生の特徴量生成</strong>：まず、入力状態Xlは正規化され、標準的な混合モジュール（マルチヘッド自己注意またはフィードフォワードネットワーク）によって処理され、候補更新ベクトル\(\mathbf{V}_{raw}\)が生成されます。
+</span>
+</li><br><li>
+
+2. <strong>Geometric Rectification (via mHC)</strong>:　Instead of direct addition, \(\mathbf{V}_{raw}\) is passed through the 
+<strong>Manifold-Constrained Hyper-Connection (mHC)</strong> module. This module acts as a spatial 
+filter, projecting the raw update onto the estimated tangent space of the data manifold. 
+
+<br><span style="color:blue;">
+<strong>幾何学的平行化（mHC経由）</strong>：直接加算する代わりに、\(\mathbf{V}_{raw}\) は
+<strong>多様体制約超接続（mHC）</strong>モジュールに渡されます。このモジュールは空間フィルタとして機能し、生の更新をデータ多様体の推定接空間に投影します。
+</span>
+</li><br><li>
+3. <strong>Delta Dynamics (via DDL)</strong>:　Finally, the <strong>Deep Delta Learning (DDL)</strong> controller computes 
+a dynamic gating scalar \(β\) 
+based on the input context \(\mathbf{X}_l\). This scalar modulates the rectified 
+vector. Crucially, to strictly approximate a geometric reflection, we include a subtraction 
+term proportional to the current state projection, allowing for true “erasure” mechanics. 
+
+<br><span style="color:blue;">
+<strong>デルタダイナミクス（DDL経由）</strong>：最後に、<strong>ディープデルタラーニング（DDL）</strong>コントローラーは、入力コンテキスト\(\mathbf{X}_l\)に基づいて、動的ゲーティングスカラー\(β\)を計算します。このスカラーは、整流されたベクトルを調整します。重要なのは、幾何学的反射を厳密に近似するために、現在の状態投影に比例する減算項を含めることで、真の「消去」メカニズムを可能にすることです。
+</span>
+</li></ul></div>
+</p>
+
+<h3>3.2 PRELIMINARIES: THE MANIFOLD HYPOTHESIS IN DEEP LAYERS <span style="color:blue;">予備的考察：深層における多様体仮説</span></h3>
+<p>
+Let \(\mathcal{X}=\{\mathbf{x}_l\}_{l=0}^L\) denote the sequence of hidden states in a Transformer, where \(\mathbf{x}_l ∈ \mathbb{R}^{S×D}\). We posit that valid semantic representations do not populate the entire Euclidean space \(\mathbb{R}^D\), but rather 
+lie on a lower-dimensional Riemannian manifold \(\mathcal{M}⊂\mathbb{R}^D\). A naive step \(\mathbf{x}_l+\mathbf{v}_l\) often forces the representation off the manifold (\(\mathbf{x}_{l+1}\notin \mathcal{M}\)). To maintain structural integrity, the update vector must 
+be constrained to the local tangent space \(T_{\mathbf{x}_l}\mathcal{M}\). 
+
+<br><span style="color:blue;">
+\(\mathcal{X}=\{\mathbf{x}_l\}_{l=0}^L\) を Transformer の隠れ状態のシーケンスとします。ここで \(\mathbf{x}_l ∈ \mathbb{R}^{S×D}\) です。有効な意味表現はユークリッド空間 \(\mathbb{R}^D\) 全体を占めるのではなく、より低次元のリーマン多様体 \(\mathcal{M}⊂\mathbb{R}^D\) 上に存在すると仮定します。単純なステップ \(\mathbf{x}_l+\mathbf{v}_l\) により、表現が多様体から外れてしまうことがよくあります (\(\mathbf{x}_{l+1}\notin \mathcal{M}\))。構造的完全性を維持するために、更新ベクトルは局所接空間 \(T_{\mathbf{x}_l}\mathcal{M}\) に制約される必要がある。
+</span>
+</p>
+
+<h3>3.3 MANIFOLD-CONSTRAINED HYPER-CONNECTIONS (MHC) <span style="color:blue;">多様体制約付きハイパー接続 (MHC)</span></h3>
+<p>
+The goal of mHC is to rectify the raw update vector vraw 
+generated by the sub-layers (MHSA or FFN). 
+Since computing the exact tangent space via eigendecomposition is computationally prohibitive, we 
+employ an efficient <strong>Soft Subspace Approximation</strong>. 
+
+<br><span style="color:blue;">
+mHCの目的は、サブレイヤー（MHSAまたはFFN）によって生成された生の更新ベクトルvrawを修正することです。
+固有値分解による正確な接空間の計算は計算量的に非常に大きいため、効率的な<strong>ソフトサブスペース近似</strong>を採用します。
+</span>
+</p><p>
+We define the mHC operator \(Ψ(·)\) as a learnable gating mechanism that approximates orthogonal 
+projection: 
+
+<br><span style="color:blue;">
+mHC演算子\(Ψ(·)\)を、直交射影を近似する学習可能なゲーティングメカニズムとして定義します。
+</span>
+
+\[
+\mathbf{v}_{mHC}=\mathbf{v}_{raw}\odot σ(LN(\mathbf{W}_{gate}\mathbf{x}_l)) \tag{1}
+\] 
+
+where \(\mathbf{W}_{gate}\) projects the input to a semantic importance score. While not a strict orthogonal 
+projection in the linear algebra sense, this acts as a soft manifold constraint, suppressing feature 
+dimensions (noise subspace) that deviate from the current semantic trajectory defined by \(\mathbf{x}_l\). 
+
+<br><span style="color:blue;">
+ここで、\(\mathbf{W}_{gate}\) は入力を意味的重要度スコアに射影します。線形代数の意味では厳密な直交射影ではありませんが、これはソフト多様体制約として機能し、\(\mathbf{x}_l\) によって定義された現在の意味的軌跡から逸脱する特徴次元（ノイズ部分空間）を抑制します。
+</span>
+</p>
+
+<h3>3.4 DEEP DELTA LEARNING (DDL): THE GEOMETRIC UPDATE LAW <span style="color:blue;">ディープデルタラーニング（DDL）：幾何学的更新法則</span></h3>
+<p>
+Once the update direction is rectified by mHC, we must determine the update dynamics. Standard 
+connections assume a fixed step size. To enable true erasure (moving backwards along the current 
+state vector), we adopt the generalized Householder form (Zhang et al., 2026). 
+
+<br><span style="color:blue;">
+mHCによって更新方向が整流されたら、更新ダイナミクスを決定する必要があります。標準的な接続では、固定のステップサイズが想定されています。真の消去（現在の状態ベクトルに沿って後方に移動する）を可能にするために、一般化ハウスホルダー形式（Zhang et al., 2026）を採用します。
+</span>
+</p><p>
+We introduce the <strong>Delta Controller</strong> \(β(\mathbf{x}_l)\):
+
+<br><span style="color:blue;">
+<strong>デルタコントローラ</strong> \(β(\mathbf{x}_l)\)を導入します。
+</span>
+
+\[ 
+β =λ·\tanh(\mathcal{G}(\mathbf{x}_l))+ϵ  \tag{2}
+\] 
+
+where \(\mathcal{G}(·)\) is a lightweight linear projection. 
+
+<br><span style="color:blue;">
+ここで\(\mathcal{G}(·)\)は軽量線形投影です。
+</span>
+</p><p>
+<strong>The Generalized Householder Update</strong>:　To strictly implement the geometric capability of “erasing” 
+the current state information, the update rule must include a subtractive term proportional to the 
+current state. We formulate the final update as: 
+
+<br><span style="color:blue;">
+<strong>一般化ハウスホルダー更新</strong>：現在の状態情報を「消去する」という幾何学的機能を厳密に実装するために、更新規則には現在の状態に比例する減算項を含める必要があります。最終的な更新は次のように定式化されます。
+</span>
+
+\[
+\mathbf{x}_{l+1}=\mathbf{x}_l+β\odot(\mathbf{v}_{mHC}−α\cdot 
+Proj_{\mathbf{x}}(\mathbf{x}_l))  \tag{3}
+\] 
+
+In our simplified implementation, we approximate the projection term \(Proj_{\mathbf{x}}(\mathbf{x}_l)\) with the normalized state itself, governed by a learnable scalar \(α\). This formulation allows: 
+
+<br><span style="color:blue;">
+簡略化した実装では、射影項 \(Proj_{\mathbf{x}}(\mathbf{x}_l)\) を、学習可能なスカラー \(α\) によって制御される正規化状態そのもので近似します。この定式化により、以下が可能になります。
+</span>
+
+<div class="styleBullet">
+<ul><li>
+• <strong>Accumulation</strong>:　When \(β\gt 0\) and \(\mathbf{v}_{mHC}\) dominates.
+
+<br><span style="color:blue;">
+<strong>累積</strong>: \(β\gt 0\) と \(\mathbf{v}_{mHC}\) が優勢な場合。
+</span>
+</li><br><li>
+• <strong>Erasure/Reflection</strong>:　When \(β\) scales the negative term \(−α\mathbf{x}_l\), effectively subtracting current 
+features from the residual stream (Householder-like reflection). 
+
+<br><span style="color:blue;">
+<strong>消去/反映</strong>: \(β\) が負の項 \(−α\mathbf{x}_l\) をスケーリングすると、残差ストリームから現在の特徴が効果的に減算されます (ハウスホルダーのような反映)。
+</span>
+</li></ul></div>
+</p>
+
+<h3>3.5 ALGORITHM <span style="color:blue;">アルゴリズム</span></h3>
+<p>
+Algorithm 1 summarizes the forward pass of a single MGT block. The procedure explicitly separates 
+the four computational phases: (1) standard feature extraction via LayerNorm and the mixing sublayer, 
+(2) geometric rectification through the mHC projection, (3) dynamic gate computation via the 
+DDL controller, and (4) the final Householder-style update that combines the rectified features with 
+the erasure term. This modular decomposition enables independent analysis of each component’s 
+contribution and facilitates efficient ablation studies. 
+
+<br><span style="color:blue;">
+アルゴリズム1は、単一のMGTブロックのフォワードパスを要約したものです。この手順は、4つの計算フェーズを明示的に分離します。(1)LayerNormとミキシングサブレイヤーによる標準的な特徴抽出、
+(2)mHC投影による幾何学的補正、(3)DDLコントローラーによる動的ゲート計算、そして(4)補正された特徴と消去項を結合する最終的なハウスホルダー型更新です。このモジュール分解により、各コンポーネントの寄与を独立して分析することができ、効率的なアブレーション研究が可能になります。
+</span>
+
+\[
+\begin{array}{l}
+\hline
+\textbf{Algorithm 1}\quad \text{多様体幾何学的トランスフォーマーブロックの順方向パス}\\
+\hline
+\textbf{Require(入力):}\quad \text{入力状態}\mathbf{X}_l \in \mathbb{R}^{S\times D},\text{サブレイヤー}\mathcal{F}\\
+\textbf{Ensure(出力):}\quad \text{更新された状態}\mathbf{X}_{l+1}\\
+\hline
+\textbf{ 1. RAW GENERATION}\\
+\quad \quad \tilde{\mathbf{X}}_l ← \text{LayerNorm}(\mathbf{X}_l)\\
+\quad \quad \mathbf{V}_{raw} ← \mathcal{F}(\tilde{\mathbf{X}}_l) \\
+\textbf{ 2.mHC PROJECTION (GEOMETRY)}\\
+\quad \quad \mathbf{G}_{manifold} ← σ(\mathbf{X}_l\mathbf{W}_m+\mathbf{b}_m)\\
+\quad \quad \mathbf{V}_{mHC} ← \mathbf{V}_{raw}\odot\mathbf{G}_{manifold}\\
+\textbf{ 3. DDL DYNAMICS (KINEMATICS)}\\
+\quad \quad \mathbf{H}_{geo} ← \mathbf{X}_l\mathbf{W}_d+\mathbf{b}_d\\
+\quad \quad β ← λ\cdot \tanh(\mathbf{H}_{geo})\\
+\textbf{ 4. GEOMETRIC UPDATE (HOUSEHOLDER)}\\
+\quad \quad \mathbf{V}_{delta} ← \mathbf{X}_l+β\odot \mathbf{V}_{delta}\\
+\hline
+\textbf{return }\mathbf{X}_{l+1} \\
+\hline
+\end{array}
+\]
+
+</p>
+
+<h2>4 PROPOSED EVALUATION FRAMEWORK <span style="color:blue;">提案する評価フレームワーク</span></h2>
+<p>
+We design a comprehensive experimental protocol consisting of five experiments to rigorously 
+validate the Manifold-Geometric Transformer (MGT). The goal is not merely to achieve state-of-theart 
+accuracy, but to falsify our core hypothesis: that constraining updates to the tangent space while 
+enabling erasure dynamics leads to superior signal propagation in deep networks. 
+
+<br><span style="color:blue;">
+我々は、Manifold-Geometric Transformer (MGT) を厳密に検証するために、5つの実験からなる包括的な実験プロトコルを設計した。その目標は、最先端の精度を達成することだけでなく、我々の中核仮説、すなわち、接空間への更新を制限しながら消失ダイナミクスを可能にすることで、深層ネットワークにおける優れた信号伝播が実現されるという仮説を反証することである。
+</span>
+</p>
+
+<h3>4.1 EXPERIMENTAL SETUP <span style="color:blue;">実験セットアップ</span></h3>
+<p>
+<strong>Datasets</strong>.　We evaluate on language modeling benchmarks: 
+
+<br><span style="color:blue;">
+<strong>データセット</strong>。言語モデリングのベンチマークに基づいて評価します。
+</span>
+<div class="styleBullet">
+<ul><li>
+• <strong>WikiText-2/103</strong>:　Standard language modeling benchmarks for measuring perplexity and training dynamics. 
+
+<br><span style="color:blue;">
+<strong>WikiText-2/103</strong>: 困惑度を測定し、ダイナミクスをトレーニングするための標準的な言語モデリングベンチマーク。
+</span>
+</li><br><li>
+• <strong>Synthetic Copy Task</strong>:　A controlled task where the model must copy the first half of the 
+sequence to the second half, enabling precise analysis of information flow. 
+
+<br><span style="color:blue;">
+<strong>合成コピータスク</strong>：モデルがシーケンスの前半を後半にコピーする制御されたタスク。これにより、情報フローの正確な分析が可能になります。
+</span>
+</li></ul></div>
+</p><p>
+
+<strong>Baselines</strong>.　To isolate the contribution of MGT components: 
+
+<br><span style="color:blue;">
+<strong>ベースライン</strong>。MGT コンポーネントの寄与を分離するには:
+</span>
+<div class="styleBullet">
+<ul><li>
+• <strong>Standard</strong>:　Post-LN Transformer as the control group. 
+
+<br><span style="color:blue;">
+<strong>標準</strong>: 対照群として後置レイヤー正規化トランスフォーマー。
+</span>
+</li><br><li>
+• <strong>+mHC Only</strong>: Standard Transformer augmented with mHC projection. 
+
+<br><span style="color:blue;">
+<strong>+mHC のみ</strong>: mHC 投影が拡張された標準トランスフォーマー。
+</span>
+</li><br><li>
+• <strong>+DDL Only</strong>: Standard Transformer augmented with DDL dynamics. 
+
+<br><span style="color:blue;">
+<strong>+DDL のみ</strong>: DDL ダイナミクスが拡張された標準トランスフォーマー。
+</span>
+</li><br><li>
+• <strong>MGT (Full)</strong>: Complete architecture with both mHC and DDL. 
+
+<br><span style="color:blue;">
+<strong>MGT (フル)</strong>: mHC と DDL の両方を備えた完全なアーキテクチャー。
+</span>
+</li></ul></div>
+</p>
+
+<h3>4.2 EXPERIMENT 1: RANK EVOLUTION ANALYSIS <span style="color:blue;">実験1：ランク進化分析</span></h3>
+<p>
+This experiment validates our core hypothesis regarding representational collapse in ultra-deep 
+networks. 
+
+<br><span style="color:blue;">
+この実験は、超深層ネットワークにおける表現の崩壊に関する私たちの中核仮説を検証するものです。
+</span>
+</p><p>
+
+<strong>Setup</strong>:　We compare Standard Transformer and MGT across depths \(L∈\{12,24,48,100\}\) with model dimension \(d=256\). Crucially, we measure effective rank on <strong>trained models</strong> (not random 
+initialization) after 50 epochs on WikiText-2, as rank collapse manifests during optimization. 
+
+<br><span style="color:blue;">
+<strong>セットアップ</strong>：モデル次元 \(d=256\) において、深さ \(L∈\{12,24,48,100\}\) にわたって Standard Transformer と MGT を比較します。重要なのは、最適化中にランク崩壊が発生するため、WikiText-2 で 50 エポック後の <strong>学習済みモデル</strong>（ランダム初期化ではない）の有効ランクを測定することです。
+</span>
+</p><p>
+<strong>Metric: Effective Rank</strong>.　We compute the normalized effective rank of the hidden state matrix \(\mathbf{X}_l∈\mathbb{R}^{S×D}\) at layer \(l\): 
+
+<br><span style="color:blue;">
+<strong>メトリック: 実効ランク</strong>。層\(l\)における隠れ状態行列\(\mathbf{X}_l∈\mathbb{R}^{S×D}\)の正規化された実効ランクを計算します。
+</span>
+
+\[
+Rank_{eff}(\mathbf{X}_l)=\frac{\exp(H(σ(\mathbf{X}_l)))}{S} \\tag{4}
+\]
+
+where \(H(σ)= −\sum_i\hat{σ}_i\log\hat{σ}_i\) is the Shannon entropy of the normalized singular values \(\hat{σ}_i=σ_i/\sum_iσ_j\).
+
+<br><span style="color:blue;">
+ここで、\(H(σ)= −\sum_i\hat{σ}_i\log\hat{σ}_i\)は正規化された特異値のシャノンエントロピー\(\hat{σ}_i=σ_i/\sum_iσ_j\)です。
+</span>
+</p><p>
+
+<strong>Hypotheses <span style="color:blue;">仮説</span></strong>: 
+
+<div class="styleBullet">
+<ul><li>
+• <strong>H1</strong>: Standard Transformer exhibits monotonic rank decay, with \(Rank_{eff}→0\) as \(L→100\).
+
+<br><span style="color:blue;">
+<strong>H1</strong>: 標準トランスフォーマーは単調なランク減衰を示し、\(L→100\) のときに \(Rank_{eff}→0\) となる。
+</span>
+</li><br><li>
+• <strong>H2</strong>: MGT maintains \(Rank_{eff} \gt 0.5\)  
+even at 100 layers. 
+
+<br><span style="color:blue;">
+<strong>H2</strong>: MGTは100層でも\(Rank_{eff} \gt 0.5\)を維持します。
+</span>
+</li></ul></div>
+</p><p>
+
+<strong>Derived Metrics</strong>:　We compute the Rank Preservation Ratio \(ρ=Rank_{eff}(L)/Rank_{eff}(0)\) and the 
+Rank Decay Rate as the slope of log-rank vs. depth. Results are averaged over 3 seeds. 
+
+<br><span style="color:blue;">
+<strong>導出指標</strong>：ランク維持率（ρ=Rank_{eff}(L)/Rank_{eff}(0)）とランク低下率（log-rankと深度の傾き）を計算します。結果は3シードで平均化されます。
+</span>
+</p>
+
+<h3>4.3 EXPERIMENT 2: ABLATION STUDY (SYNERGY VERIFICATION) <span style="color:blue;">実験2：アブレーション研究（相乗効果の検証）</span></h3>
+<p>
+This experiment quantifies the individual and combined contributions of mHC and DDL. 
+
+<br><span style="color:blue;">
+この実験では、mHC と DDL の個別および複合的な寄与を定量化します。
+</span>
+</p><p>
+<strong>Setup</strong>:　We train four model variants with \(L=48\)  
+layers on WikiText-2 for 50 epochs with identical 
+hyperparameters (d=256, batch size 64, learning rate 10<sup>−3</sup>). We use 48 layers to ensure rank 
+collapse is observable in the baseline. Results are averaged over 3 seeds (Table 1). 
+
+<br><span style="color:blue;">
+<strong>セットアップ</strong>：WikiText-2を用いて、L=48層からなる4つのモデルバリアントを50エポック、同一のハイパーパラメータ（d=256、バッチサイズ64、学習率10<sup>-3</sup>）で学習した。ベースラインでランク崩壊が観測可能となるように48層を使用した。結果は3シードの平均である（表1）。
+</span>
+</p><p>
+<strong>Synergy Coefficient</strong>.　We define \(\mathcal{S}\) 
+to measure super-additive effects: 
+
+<br><span style="color:blue;">
+<strong>相乗係数</strong>。超加法効果を測定するために、\(\mathcal{S}\) を定義します。
+</span>
+
+\[
+\mathcal{S}=\underbrace{(\mathcal{L}_{base}−\mathcal{L}_{MGT})}_{\text{MGM Gain}}
+−\underbrace{(\mathcal{L}_{base}−\mathcal{L}_{mHC})}_{\text{mHC Gain}}−\underbrace{(\mathcal{L}_{base}−\mathcal{L}_{DDL})}_{\text{DDL Gain}}  \tag{5}
+\]
+
+A positive \(\mathcal{S} \gt 0\) validates the orthogonal synergy hypothesis. 
+
+<br><span style="color:blue;">
+正の\(\mathcal{S} \gt 0\)は直交相乗効果仮説を検証します。
+</span>
+</p><p>
+
+Table 1: <strong>Ablation Protocol</strong>. Four configurations isolate the geometric and dynamic contributions. 
+
+<br><span style="color:blue;">
+表1：<strong>アブレーションプロトコル</strong>。4つの構成により、幾何学的寄与と動的寄与を分離します。
+</span>
+
+\[
+\begin{array}{l|c c|l}
+\textbf{構成} & \textbf{mHC} & \textbf{DDL} & \textbf{期待される挙動}\\
+\hline
+\text{1. 標準} & - & - & \text{対照群。ベースライン損失} \\
+\text{2. +mHCのみ} & \text{✔} & - & \text{安定性が改善する。消去は制限される} \\
+\text{3. +DDLのみ} & - & \text{✔} & \text{消去機能。潜在的にドリフトする}\\
+\text{4. MGT(フル)} & \text{✔} & \text{✔} & \text{最適：安定した幾何構造 ＋ 動的な消去
+}
+\end{array}
+\]
+</p><p>
+
+<h3>4.4 EXPERIMENT 3: BETA DISTRIBUTION ANALYSIS <span style="color:blue;">実験3：ベータ分布分析</span></h3>
+<p>
+This experiment validates that DDL learns meaningful erasure dynamics. 
+
+<br><span style="color:blue;">
+この実験は、DDL が意味のある消去ダイナミクスを学習することを検証します。
+</span>
+</p><p>
+<strong>Setup</strong>:　We train a 100-layer MGT on WikiText-2 for 100 epochs and analyze the distribution of 
+learned β values at epochs {0, 25, 50, 100}. The deep architecture ensures that erasure dynamics have sufficient opportunity to emerge. 
+
+<br><span style="color:blue;">
+<strong>セットアップ</strong>：WikiText-2 を用いて100層MGTを100エポック学習し、エポック{0, 25, 50, 100}における学習済みβ値の分布を分析します。深層アーキテクチャにより、消失ダイナミクスが十分に出現する機会が確保されます。
+</span>
+</p><p>
+
+<strong>Hypotheses (Phase Transition) <span style="color:blue;">仮説（相転移）</span></strong>: 
+
+<div class="styleBullet">
+<ul><li>
+• <strong>Early Layers</strong>:　 \(\mathbb{E}[β]\gt 0\) (accumulation mode for low-level features).
+
+<br><span style="color:blue;">
+<strong>初期層</strong>: \(\mathbb{E}[β]\gt 0\) (低レベルの特徴の蓄積モード)。
+</span>
+</li><br><li>
+• <strong>Deep Layers</strong>:　Significant fraction of \(β \lt 0\) (erasure mode for semantic refinement). 
+
+<br><span style="color:blue;">
+<strong>ディープ レイヤー</strong>: \(β \lt 0\) の重要な割合 (意味の洗練のための消去モード)。
+</span>
+</li><br><li>
+• <strong>Training Dynamics</strong>:　The transition point should sharpen as training progresses. 
+
+<br><span style="color:blue;">
+<strong>トレーニング ダイナミクス</strong>: トレーニングが進むにつれて、移行ポイントが明確になるはずです。
+</span>
+</li></ul></div>
+</p><p>
+
+<strong>Metrics</strong>:　Per-layer statistics including \(\mathbb{E}[β], Var[β]\), and the fraction of negative gates \(P(β\lt 0)\). 
+
+<br><span style="color:blue;">
+<strong>メトリクス</strong>: \(\mathbb{E}[β], Var[β]\) を含むレイヤーごとの統計と、負のゲートの割合 \(P(β\lt 0)\)。
+</span>
+</p>
+
+<h3>4.5 EXPERIMENT 4: DEPTH SCALING <span style="color:blue;">実験4：深度スケーリング</span></h3>
+<p>
+This experiment tests whether MGT scales more favorably with depth than Standard Transformers. 
+
+<br><span style="color:blue;">
+この実験では、MGT が標準トランスフォーマーよりも深度に応じてより有利にスケーリングされるかどうかをテストします。
+</span>
+</p><p>
+<strong>Setup</strong>:　To ensure fair comparison, we fix the total parameter count at ∼20M and vary depth 
+\(L∈\{24,48,100,200\}\), adjusting width accordingly. Each configuration is trained for 50 epochs on 
+WikiText-2 with 3 seeds. We use gradient checkpointing to enable training of 200-layer models on a 
+single A100. 
+
+<br><span style="color:blue;">
+<strong>セットアップ</strong>：公平な比較を行うため、パラメータの総数を約20Mに固定し、深度
+\(L∈\{24,48,100,200\}\) を変化させ、それに応じて幅を調整します。各構成は、WikiText-2で3シードを用いて50エポック学習されます。勾配チェックポイントを用いることで、1つのA100で200層モデルの学習を可能にします。
+</span>
+</p><p>
+<strong>Metrics</strong>: 
+
+<div class="styleBullet">
+<ul><li>
+• <strong>Final Perplexity</strong>: Lower is better. 
+<br><span style="color:blue;">
+<strong>最終的な困惑</strong>: 低いほど良い。
+<br><span style="color:blue;">
+</span>
+</li><br><li>
+• <strong>Convergence Speed</strong>: Epochs to reach target perplexity. 
+
+<br><span style="color:blue;">
+<strong>収束速度</strong>: 目標の複雑度に到達するまでのエポック。
+</span>
+</li><br><li>
+• <strong>Training Stability</strong>: Variance of loss across seeds. 
+
+<br><span style="color:blue;">
+<strong>トレーニングの安定性</strong>: シード間の損失の変動。
+</span>
+</li></ul></div>
+</p><p>
+<strong>Hypothesis</strong>: MGT should exhibit favorable depth scaling, achieving lower perplexity at greater 
+depths where Standard Transformers degrade. 
+
+<br><span style="color:blue;">
+<strong>仮説</strong>: MGT は好ましい深度スケーリングを示し、標準トランスフォーマーが劣化する深度でもより低いパープレキシティを実現するはずです。
+</span>
+</p>
+
+<h3>4.6 EXPERIMENT 5: LANGUAGE MODELING <span style="color:blue;">実験5：言語モデリング</span></h3>
+<p>
+This experiment provides end-to-end validation on a realistic benchmark. 
+
+<br><span style="color:blue;">
+この実験は、現実的なベンチマークでエンドツーエンドの検証を提供します。
+</span>
+</p><p>
+<strong>Setup</strong>: We train both Standard Transformer and MGT on WikiText-103 for 100 epochs with matched 
+architectures (d =512, L=24, h 
+=8, ∼50M parameters). We additionally evaluate on the larger 
+OpenWebText corpus to test scaling behavior. 
+
+<br><span style="color:blue;">
+<strong>セットアップ</strong>：WikiText-103 を用いて、Standard Transformer と MGT の両方を、マッチングされたアーキテクチャ（d = 512、L = 24、h = 8、約 5000 万パラメータ）で 100 エポック学習します。さらに、より大規模な OpenWebText コーパスで評価を行い、スケーリング挙動を検証します。
+</span>
+</p><p>
+
+<strong>Metrics</strong>: 
+
+<div class="styleBullet">
+<ul><li>
+• <strong>Perplexity (PPL)</strong>: Primary evaluation metric on validation set. 
+
+<br><span style="color:blue;">
+<strong>パープレキシティ (PPL)</strong>: 検証セットの主な評価指標。
+</span>
+</li><br><li>
+• <strong>Learning Curves</strong>: Training and validation loss trajectories. 
+
+<br><span style="color:blue;">
+<strong>学習曲線</strong>: トレーニングと検証の損失の軌跡。
+</span>
+</li><br><li>
+• <strong>Parameter Overhead</strong>: mHC adds ～2L･d<sup>2</sup> parameters; DDL adds ～2L・d<sup>2</sup> parameters(total ～25% overhead). 
+
+<br><span style="color:blue;">
+<strong>パラメータのオーバーヘッド</strong>: mHC は ～2L･d<sup>2</sup> 個のパラメータを追加します。DDL は ～2L・d<sup>2</sup> 個のパラメータを追加します (合計 ～25% のオーバーヘッド)。
+</span>
+</li></ul></div>
+</p><p>
+
+<strong>Expected Outcome</strong>: MGT should achieve lower perplexity with improved training stability. The gap 
+should widen with increased depth. 
+
+<br><span style="color:blue;">
+<strong>期待される成果</strong>: MGTは、訓練の安定性が向上し、パープレキシティが低下するはずです。
+この差は、訓練の深さが増すにつれて拡大するはずです。
+</span>
+</p>
+
+<h2>5 CONCLUSION <span style="color:blue;">結論</span></h2>
+<p>
+In this work, we introduced the <strong>Manifold-Geometric Transformer (MGT)</strong>, a theoretical framework 
+that unifies two disparate concepts in deep learning: manifold constraints and residual dynamics. By 
+mathematically formalizing the residual update as a navigation problem on a latent manifold, we 
+derived the need for orthogonal projection (mHC) combined with signed geometric updates (DDL). 
+
+<br><span style="color:blue;">
+本研究では、深層学習における2つの異なる概念、すなわち多様体制約と残差ダイナミクスを統合する理論的枠組みである<strong>多様体-幾何学的変換器（MGT）</strong>を導入しました。残差更新を潜在多様体上のナビゲーション問題として数学的に定式化することで、直交射影（mHC）と符号付き幾何学的更新（DDL）を組み合わせる必要性を導きました。
+</span>
+</p><p>
+While empirical validation is the immediate next step, our theoretical analysis and proposed experimental 
+design suggest that MGT offers a principled solution to the long-standing problems of rank 
+collapse and residual accumulation. We believe this geometric perspective—viewing layer updates as 
+controlled vectors in a tangent bundle—opens new avenues for designing ultra-deep, mathematically 
+robust neural architectures. 
+
+<br><span style="color:blue;">
+経験的検証は直近の次のステップですが、我々の理論分析と提案された実験設計は、MGTがランク崩壊と残差蓄積という長年の課題に対する原理的な解決策を提供することを示唆しています。層の更新を接線束内の制御されたベクトルとして捉えるというこの幾何学的視点は、超深層で数学的に堅牢なニューラルアーキテクチャを設計するための新たな道を開くものと考えています。
+</span>
+</p>
+
+<h2>REFERENCES <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E Hinton. Layer normalization. In arXiv preprint 
+arXiv:1607.06450, 2016. 
+
+<br><span style="color:blue;">
+『レイヤー正規化』
+</span>
+</li><br><li>
+Yihe Dong, Jean-Baptiste Cordonnier, and Andreas Loukas. Attention is not all you need: Pure 
+attention loses rank doubly exponentially with depth. In International Conference on Machine 
+Learning (ICML), pp. 2793–2803. PMLR, 2021. 
+
+<br><span style="color:blue;">
+『注意だけでは十分ではない：純粋な注意は深度とともに指数関数的に順位を失う』
+</span>
+</li><br><li>
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image 
+recognition. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition 
+(CVPR), pp. 770–778, 2016. 
+
+<br><span style="color:blue;">
+『画像認識のための深層残差学習』
+</span>
+</li><br><li>
+Hugo Touvron, Matthieu Cord, Alexandre Sablayrolles, Gabriel Synnaeve, and Herve´ J´
+
+egou. Going 
+deeper with image transformers. In Proceedings of the IEEE/CVF International Conference on 
+Computer Vision (ICCV), pp. 32–42, October 2021. 
+
+<br><span style="color:blue;">
+『画像トランスフォーマーをより深くする』
+</span>
+</li><br><li>
+Hongyu Wang, Shuming Ma, Li Dong, Shaohan Huang, Dongdong Zhang, and Furu Wei. Deepnet: 
+Scaling transformers to 1,000 layers. arXiv preprint arXiv:2203.00555, 2022. 
+
+<br><span style="color:blue;">
+『トランスフォーマーを1,000層へスケールする』
+</span>
+</li><br><li>
+Zhenda Xie, Yixuan Wei, Huanqi Cao, Wenfeng Liang, et al. mhc: Manifold-constrained hyper-
+connections. arXiv preprint arXiv:2512.24880, 2025. URL https://arxiv.org/abs/ 
+2512.24880. 
+
+<br><span style="color:blue;">
+『多様体拘束ハイパー接続』
+</span>
+</li><br><li>
+Ruibin Xiong, Yunchang Yang, Di He, Kai Zheng, Shuxin Zheng, Chen Xing, Huishuai Zhang, 
+Yanyan Lan, Liwei Wang, and Tieyan Liu. On layer normalization in the transformer architecture. 
+In International Conference on Machine Learning (ICML), pp. 10524–10533. PMLR, 2020. 
+
+<br><span style="color:blue;">
+『トランスフォーマーアーキテクチャにおけるレイヤー上の正規化』
+</span>
+</li><br><li>
+Yifan Zhang, Yifeng Liu, Mengdi Wang, and Quanquan Gu. Deep delta learning. 
+arXiv preprint arXiv:TBD, 2026. GitHub: https://github.com/yifanzhang-pro/ 
+deep-delta-learning. 
+
+<br><span style="color:blue;">
+『ディープデルタ学習』
+</span>
+</li></ul></div>
+</p>
+    </body>
+</html>
