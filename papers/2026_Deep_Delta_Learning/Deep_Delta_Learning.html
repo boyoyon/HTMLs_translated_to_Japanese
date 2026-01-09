@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Deep Delta Learning</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+          .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+       .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+       .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 20px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0 25%; /* 幅を25%に設定して4列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Deep Delta Learning <br><span style="color:blue;">深層デルタ学習</span></center></h1>
+
+<center>Yifan Zhang <sup>1</sup>　　Yifeng Liu<sup>2</sup>　　Mengdi Wang<sup>1</sup>　　Quanquan Gu<sup>2</sup></center>
+<center><sup>1</sup>Princeton University　　<sup>2</sup>University of California, Los Angeles </center>
+<center>yifzhang@princeton.edu </center>
+<center>January 1, 2026 </center>
+
+<h2><center>Abstract　<span style="color:blue;">要旨</span></center></h2>
+<p class="margin-abstract">
+
+The efficacy of deep residual networks is fundamentally predicated on the identity shortcut connection. While this mechanism effectively mitigates the vanishing gradient problem, it imposes a strictly additive inductive bias on feature transformations, thereby limiting the network’s capacity to model complex state transitions. In this paper, we introduce <strong>Deep Delta Learning (DDL)</strong>, a novel architecture that generalizes the standard residual connection by modulating the identity shortcut with a learnable, data-dependent geometric transformation. This transformation, termed the <strong>Delta Operator</strong>, constitutes a rank-1 perturbation of the identity matrix, parameterized by a reflection direction vector \(k(\mathbf{X})\) and a gating scalar \(β(\mathbf{X})\). We provide a spectral analysis of this operator, demonstrating that the gate \(β(\mathbf{X})\) enables dynamic interpolation between identity mapping, orthogonal projection, and geometric reflection. Furthermore, we restructure the residual update as a synchronous rank-1 injection, where the gate acts as a dynamic step size governing both the erasure of old information and the writing of new features. This unification empowers the network to explicitly control the spectrum of its layer-wise transition operator, enabling the modeling of complex, non-monotonic dynamics while preserving the stable training characteristics of gated residual architectures. Project Page: <a href="https://github.com/yifanzhang-pro/deep-delta-learning">https://github.com/yifanzhang-pro/deep-delta-learning</a>
+
+<br><span style="color:blue;">
+深層残差ネットワークの有効性は、基本的に恒等ショートカット接続に依存しています。このメカニズムは勾配消失問題を効果的に緩和しますが、特徴変換に厳密に加法的な帰納的バイアスを課すため、複雑な状態遷移をモデル化するネットワークの能力が制限されます。本稿では、学習可能なデータ依存の幾何学的変換を用いて恒等ショートカットを調整することで、標準的な残差接続を一般化する新しいアーキテクチャである<strong>深層デルタ学習 (DDL)</strong>を紹介します。<strong>デルタ演算子</strong>と呼ばれるこの変換は、反射方向ベクトル \(k(\mathbf{X})\) とゲーティングスカラー \(β(\mathbf{X})\) によってパラメータ化された恒等行列のランク1摂動を構成します。本稿ではこの演算子のスペクトル解析を行い、ゲート \(β(\mathbf{X})\) によって恒等写像、直交射影、幾何学的反射間の動的補間が可能になることを実証します。さらに、残差更新を同期ランク1注入として再構築します。ゲートは、古い情報の消去と新しい特徴量の書き込みの両方を制御する動的なステップサイズとして機能します。この統合により、ネットワークは層ごとの遷移演算子のスペクトルを明示的に制御できるようになり、ゲート付き残差アーキテクチャの安定した学習特性を維持しながら、複雑で非単調なダイナミクスをモデル化できるようになります。
+プロジェクトページ: <a href="https://github.com/yifanzhang-pro/deep-delta-learning">https://github.com/yifanzhang-pro/deep-delta-learning</a>
+</span>
+</p>
+ 
+<h2>1 Introduction <span style="color:blue;">はじめに</span></h2>
+<p>
+Deep residual networks (He et al., 2016) represent a paradigm shift in neural network design, enabling the stable training of models with unprecedented depth. Their core mechanism, the identity shortcut connection, reformulates layers to learn a residual function \(\mathbf{F}(\mathbf{X})\) with respect to their input \(\mathbf{X}\). In its canonical form, the residual update is an element-wise addition: 
+
+<br><span style="color:blue;">
+深層残差ネットワーク（He et al., 2016）は、ニューラルネットワーク設計におけるパラダイムシフトを象徴し、これまでにない深度を持つモデルの安定した学習を可能にします。その中核となるメカニズムである恒等ショートカット接続は、層を再定式化することで、入力\(\mathbf{X}\)に関する残差関数\(\mathbf{F}(\mathbf{X})\)を学習します。標準的な形式では、残差更新は要素ごとの加算です。
+</span>
+
+\[
+\mathbf{X}_{l+1} = \mathbf{X}_l + \mathbf{F}(\mathbf{X}_l) \tag{1.1}
+\]
+ 
+You can view this as a forward Euler step (step size 1) for the ODE \(\dot{\mathbf{X}} = \mathbf{F}(\mathbf{X})\). This viewpoint ties deep networks to dynamical systems (Chen et al., 2018). The strictly additive update also puts a strong translation bias on the learned dynamics. The shortcut path keeps a fixed Jacobian equal to the identity operator.
+
+<br><span style="color:blue;">
+これは、常微分方程式 \(\dot{\mathbf{X}} = \mathbf{F}(\mathbf{X})\) の順方向オイラーステップ（ステップサイズ 1）として見ることができます。この観点は、深層ネットワークを動的システムと結び付けています（Chen et al., 2018）。厳密に加法的な更新は、学習されたダイナミクスに強い並進バイアスも与えます。ショートカットパスは、固定されたヤコビアンを恒等演算子と等しく保ちます。
+</span>
+</p><p> 
+This rigidity limits what state transitions the network can represent. Recent work points to the need for more flexible transitions, including ones that realize negative eigenvalues, when modeling patterns like oscillations or oppositional behavior (Grazzi et al., 2024). 
+
+<br><span style="color:blue;">
+この硬直性は、ネットワークが表現できる状態遷移を制限します。最近の研究では、振動や反抗行動などのパターンをモデル化する際に、負の固有値を実現するものを含む、より柔軟な遷移の必要性が指摘されています（Grazzi et al., 2024）。
+</span>
+</p><p> 
+
+To overcome this limitation, we propose a principled generalization of the residual connection rooted in geometric linear algebra. We introduce <strong>Deep Delta Learning (DDL)</strong>, featuring a novel residual block that applies a learnable, rank-1 transformation to the hidden state matrix X ∈ Rd×dv. This formulation aligns the network depth with memory-augmented architectures, effectively treating the hidden state as a dynamic value matrix. This block utilizes a single learned scalar gate β(X) to smoothly interpolate between a standard residual connection, an orthogonal projection operator, and a full geometric reflection. Our contributions are: 
+
+<br><span style="color:blue;">
+この制限を克服するため、我々は幾何学的線​​形代数に根ざした残差接続の原理的な一般化を提案する。本稿では、学習可能なランク1変換を隠れ状態行列X∈Rd×dvに適用する新たな残差ブロックを備えた<strong>深層デルタラーニング（DDL）</strong>を導入する。この定式化は、ネットワークの深さをメモリ拡張アーキテクチャと整合させ、隠れ状態を動的値行列として効果的に扱う。このブロックは、学習済みの単一のスカラーゲートβ(X)を用いて、標準的な残差接続、直交射影演算子、および完全な幾何学的反射の間を滑らかに補間する。本稿の貢献は以下の通りである。
+</span>
+</p><p> 
+
+</div class="styleBullet">
+<ul><li>
+1. We propose the <strong>Delta Residual Block</strong>, a multi-branch architecture that learns to apply a 
+generalized Householder operator to the matrix-valued shortcut connection, parameterized by 
+a learned direction \(\mathbf{k}(\mathbf{X})\) and a learned gate \(β(\mathbf{X})\), which is illustrated in Figure 1. 
+
+<br><span style="color:blue;">
+我々は<strong>デルタ残差ブロック</strong>を提案する。これは、図1に示す学習方向\(\mathbf{k}(\mathbf{X})\)と学習ゲート\(β(\mathbf{X})\)によってパラメータ化された行列値のショートカット接続に一般化ハウスホルダー演算子を適用することを学習するマルチブランチアーキテクチャである。
+</span>
+</li><br><li>
+2. We give a spectral analysis of the <strong>Delta Operator</strong>. We derive its complete eigensystem, and show how \(β(\mathbf{X})\) controls the transformation by shaping its spectrum. 
+
+<br><span style="color:blue;">
+<strong>デルタ作用素</strong>のスペクトル解析を行う。その完全固有値を導出し、\(β(\mathbf{X})\) がスペクトルの形状を変化させることでどのように変換を制御するかを示す。
+</span>
+</li><br><li>
+3. We unify identity mapping, projection, and reflection in one continuously differentiable module. 
+We also show DDL recovers the Delta Rule update, with the gate \(β\) acting like a depth-wise 
+step size. 
+
+<br><span style="color:blue;">
+恒等写像、射影、反射を1つの連続微分可能モジュールに統合します。
+また、DDLがデルタルール更新を復元し、ゲート\(β\)が深さ方向のステップサイズのように機能することを示します。
+</span>
+</li></ul></div>
+</p>
+<center><img src="DeltaResidualBlock.svg"></center>
+<p>
+Figure 1 The Deep Delta Residual Block. The architecture generalizes the standard residual connection. A learnable scalar gate β controls a rank-1 geometric transformation. 
+
+<br><span style="color:blue;">
+図1 (左)深層デルタ残差ブロック。このアーキテクチャは標準的な残差接続を一般化したものである。学習可能なスカラーゲートβはランク1の幾何学的変換を制御する。<br>
+(右：蛇足) ハウスホルダー変換
+</span>
+</p><p> 
+
+<h2>2 The Delta Residual Block <span style="color:blue;">デルタ残差ブロック</span></h2>
+<p>
+We build our method upon the mathematical foundation of the Householder reflection, which we generalize into a learnable, state-dependent operator.
+
+<br><span style="color:blue;">
+私たちは、ハウスホルダー反射の数学的基礎に基づいて手法を構築し、それを学習可能な状態依存演算子に一般化します。
+</span>
+</p>
+ 
+<h3>2.1 Preliminaries: The Householder Transformation <span style="color:blue;">準備：ハウスホルダー変換</span></h3>
+<p>
+<strong>Detion 2.1</strong> (Householder Matrix). For a non-zero vector \(\mathbf{k} ∈ \mathbb{R}^d\), the Householder matrix \(\mathbf{H}_{\mathbf{k}}\) is defined as:
+
+<br><span style="color:blue;">
+<strong>定義 2.1</strong> (ハウスホルダー行列) 非ゼロベクトル \(\mathbf{k} ∈ \mathbb{R}^d\) に対して、ハウスホルダー行列 \(\mathbf{H}_{\mathbf{k}}\) は次のように定義されます。
+</span>
+
+\[ 
+\mathbf{H}_{\mathbf{k}} = \mathbf{I} − 2\frac{\mathbf{kk}^\top}{||\mathbf{k}||_2^2}  \tag{2.1}
+\] 
+
+Geometrically, \(\mathbf{H}_{\mathbf{k}}\) reflects any vector across the hyperplane with normal vector \(\mathbf{k}\).
+
+<br><span style="color:blue;">
+幾何学的には、\(\mathbf{H}_{\mathbf{k}}\) は法線ベクトル \(\mathbf{k}\) を持つ超平面を横切る任意のベクトルを反映します。
+</span>
+</p><p>
+The Householder matrix is a cornerstone of numerical linear algebra and possesses several key properties: it is symmetric (\(\mathbf{H}_{\mathbf{k}} = \mathbf{H}_{\mathbf{k}}^\top\)), orthogonal (\(\mathbf{H}_{\mathbf{k}}^\top \mathbf{H}_{\mathbf{k}}=\mathbf{I}\)), and involutory (\(\mathbf{H}_{\mathbf{k}}^2=\mathbf{I}\)). Its spectrum consists of a single eigenvalue of −1 (eigenvector \(\mathbf{k}\)) and d − 1 eigenvalues of 1 (the eigenspace \(\mathbf{k}^⊥\)).
+
+<br><span style="color:blue;">
+ハウスホルダー行列は数値線形代数の基礎であり、対称行列 (\(\mathbf{H}_{\mathbf{k}} = \mathbf{H}_{\mathbf{k}}^\top\))、直交行列 (\(\mathbf{H}_{\mathbf{k}}^\top \mathbf{H}_{\mathbf{k}}=\mathbf{I}\))、逆行列 (\(\mathbf{H}_{\mathbf{k}}^2=\mathbf{I}\)) といった重要な特性を備えています。そのスペクトルは、-1 の単一の固有値 (固有ベクトル \(\mathbf{k}\)) と 1 の d − 1 個の固有値 (固有空間 \(\mathbf{k}^⊥\)) で構成されます。
+</span>
+</p>
+
+<h3>2.2 Formulation of the Delta Operator <span style="color:blue;">デルタ演算子の定式化</span></h3>
+<p>
+We generalize the Householder matrix by replacing the constant factor of 2 with a learnable, data- dependent scalar gate, \(β(\mathbf{X})\). This leads to the <strong>Delta Residual (Delta-Res)</strong> block. Let the hidden state be a matrix \(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\), where \(d\) is the feature dimension and \(d_v\) denotes the number of value channels. We modify the additive residual to be a rank-1 update aligned with the reflection vector \(\mathbf{k}\). The block output is computed as: 
+
+<br><span style="color:blue;">
+ハウスホルダー行列を一般化し、定数係数2を学習可能なデータ依存スカラーゲート\(β(\mathbf{X})\)に置き換えます。これにより、<strong>デルタ残差（デルタ-Res）</strong>ブロックが生成されます。隠れ状態を行列\(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\)とします。ここで、\(d\)は特徴次元、\(d_v\)は値チャネルの数を表します。加法残差を、反射ベクトル\(\mathbf{k}\)に整列したランク1更新になるように修正します。ブロック出力は次のように計算されます。
+</span>
+
+\[
+\mathbf{X}_{l+1} = \mathbf{A}(\mathbf{X}_l)\mathbf{X}_l + β(\mathbf{X}_l)\mathbf{k}(\mathbf{X}_l)\mathbf{v}(\mathbf{X}_l)^\top  \tag{2.2}
+\]
+ 
+where \(\mathbf{v} ∈ \mathbb{R}^{d_v}\) is the <strong>residual value vector</strong> generated by the branch \(\mathbf{F} : \mathbb{R}^{d×d_v} → \mathbb{R}^{d_v}\). Here, the outer product \(\mathbf{kv}^\top\) constitutes the additive update. Crucially, we apply the gate \(β(\mathbf{X})\) to this constructive term as well, linking the erasure and write operations. The term \(\mathbf{A}(\mathbf{X})\) is the <strong>Delta Operator</strong> acting spatially on the feature dimension \(d\):
+
+<br><span style="color:blue;">
+ここで、\(\mathbf{v} ∈ \mathbb{R}^{d_v}\) は、分岐 \(\mathbf{F} : \mathbb{R}^{d×d_v} → \mathbb{R}^{d_v}\) によって生成される<strong>残差値ベクトル</strong>です。ここで、外積 \(\mathbf{kv}^\top\) は加法更新を構成します。重要なのは、この構成項にもゲート \(β(\mathbf{X})\) を適用し、消去操作と書き込み操作をリンクすることです。項 \(\mathbf{A}(\mathbf{X})\) は、特徴次元 \(d\) に対して空間的に作用する<strong>デルタ演算子</strong>です。
+</span>
+
+\[
+\mathbf{A}(\mathbf{X}) = \mathbf{I} − β(\mathbf{X})\frac{\mathbf{k}(\mathbf{X})\mathbf{k}(\mathbf{X})^\top}{\mathbf{k}(\mathbf{X})^\top\mathbf{k}(\mathbf{X})+\varepsilon}  \tag{2.3}
+\]
+ 
+The architecture learns the reflection direction \(\mathbf{k}(\mathbf{X}) ∈ \mathbb{R}^d\), the value vector \(\mathbf{v}(\mathbf{X}) ∈ \mathbb{R}^{d_v}\), and the reflection intensity \(β(\mathbf{X}) ∈ \mathbb{R}\) through separate, lightweight neural network branches. The constant \(\varepsilon \gt 0\) ensures numerical stability. For the theoretical analysis, we assume \(\mathbf{k}\) is strictly normalized such that \(\mathbf{k}^\top\mathbf{k} = 1\) (see Appendix A for implementation details). Under this condition (\(\varepsilon → 0\)), the operator simplifies to: 
+
+<br><span style="color:blue;">
+このアーキテクチャは、反射方向 \(\mathbf{k}(\mathbf{X}) ∈ \mathbb{R}^d\)、値ベクトル \(\mathbf{v}(\mathbf{X}) ∈ \mathbb{R}^{d_v}\)、反射強度 \(β(\mathbf{X}) ∈ \mathbb{R}\) を、それぞれ独立した軽量ニューラルネットワークブランチを通じて学習します。定数 \(\varepsilon \gt 0\) は数値安定性を保証します。理論解析では、\(\mathbf{k}\) が \(\mathbf{k}^\top\mathbf{k} = 1\) となるように厳密に正規化されていると仮定します (実装の詳細については付録 A を参照)。この条件 (\(\varepsilon → 0\)) では、演算子は次のように簡略化されます。
+</span>
+
+
+\[
+\mathbf{A}(\mathbf{X}) = \mathbf{I} − β(\mathbf{X})\mathbf{k}(\mathbf{X})\mathbf{k}(\mathbf{X})^\top  \tag{2.4}
+\]
+ 
+Since \(\mathbf{X}\) is a matrix, the operator \(\mathbf{A}(\mathbf{X})\) broadcasts across the value dimension \(d_v\), applying the geometric transformation simultaneously to every column of the hidden state. 
+
+<br><span style="color:blue;">
+\(\mathbf{X}\) は行列なので、演算子 \(\mathbf{A}(\mathbf{X})\) は値の次元 \(d_v\) 全体にブロードキャストし、幾何学的変換を隠れ状態のすべての列に同時に適用します。
+</span>
+</p><p>
+Under the same unit-norm assumption, substituting \(\mathbf{A}(\mathbf{X}) = \mathbf{I}−β(\mathbf{X})\mathbf{k}(\mathbf{X})\mathbf{k}(\mathbf{X})\top\) into Eq. (2.2 ) yields an equivalent additive, rank-1 Delta form :
+
+<br><span style="color:blue;">
+同じ単位ノルムの仮定の下で、\(\mathbf{A}(\mathbf{X}) = \mathbf{I}−β(\mathbf{X})\mathbf{k}(\mathbf{X})\mathbf{k}(\mathbf{X})\top\)を式(2.2)に代入すると、等価な加法的なランク1のデルタ形式が得られる。
+</span>
+
+\[ 
+\mathbf{X}_{l+1} = \mathbf{X}_l + β(\mathbf{X}_l)\mathbf{k}(\mathbf{X}_l)\left(\mathbf{v}(\mathbf{X}_l)^\top − \mathbf{k}(\mathbf{X}_l)^\top\mathbf{X}_l\right)  \tag{2.5}
+\]
+ 
+which makes explicit that the same scalar \(β\) modulates both the erasure term \(\mathbf{k}^\top\mathbf{X}\) and the write term \(\mathbf{v}^\top\).
+
+<br><span style="color:blue;">
+これは、同じスカラー\(β\)が消去項\(\mathbf{k}^\top\mathbf{X}\)と書き込み項\(\mathbf{v}^\top\)の両方を調整することを明示的に示しています。
+</span>
+</p><p>
+
+The gating function \(β(\mathbf{X})\) is parameterized to lie in the range [0,2] via a projection of the state features followed by a sigmoid function: 
+
+<br><span style="color:blue;">
+ゲーティング関数\(β(\mathbf{X})\)は、状態特徴の投影とシグモイド関数によって範囲[0,2]に収まるようにパラメータ化されます。
+</span>
+
+\[
+β(\mathbf{X}) = 2 ·σ(Linear(\mathcal{G}(\mathbf{X})))  \tag{2.6}
+\]
+ 
+where \(\mathcal{G}(\cdot)\) is a pooling, convolution, or flattening operation. This specific range is chosen for its rich geometric interpretations, which we analyze next. 
+
+<br><span style="color:blue;">
+ここで、\(\mathcal{G}(\cdot)\) はプーリング、畳み込み、または平坦化演算です。この特定の範囲は、次に示すような豊富な幾何学的解釈のために選択されました。
+</span>
+</p>
+
+<h2>3 Analysis <span style="color:blue;">分析</span></h3>
+<p>
+The expressive power of the Delta-Res block comes from the spectral properties of the operator \(\mathbf{A}(\mathbf{X})\), which are controlled by the learned gate \(β(\mathbf{X})\).
+
+<br><span style="color:blue;">
+Delta-Res ブロックの表現力は、学習されたゲート \(β(\mathbf{X})\) によって制御される演算子 \(\mathbf{A}(\mathbf{X})\) のスペクトル特性から生まれます。
+</span>
+</p>
+ 
+<h3>3.1 Spectral Decomposition of the Delta Operator <span style="color:blue;">デルタ演算子のスペクトル分解</span></h3>
+
+<p>
+<strong>Theorem 3.1</strong> (Spectrum of the Delta Operator). Let \(\mathbf{A} = \mathbf{I} − β\mathbf{kk}^\top\) where \(\mathbf{k} ∈ \mathbb{R}^d\) is a unit vector (\(\mathbf{k}^\top\mathbf{k} = 1\)) and \(β ∈ \mathbb{R}\) is a scalar. The spectrum of \(\mathbb{A}\), denoted \(σ(\mathbf{A})\), is: 
+
+<br><span style="color:blue;">
+<strong>定理 3.1</strong> (デルタ演算子のスペクトル)。 \(\mathbf{A} = \mathbf{I} − β\mathbf{kk}^\top\) とします。ここで、\(\mathbf{k} ∈ \mathbb{R}^d\) は単位ベクトル (\(\mathbf{k}^\top\mathbf{k} = 1\))、\(β ∈ \mathbb{R}\) はスカラーです。 \(\mathbb{A}\) のスペクトルは \(σ(\mathbf{A})\) と表されます。
+</span>
+
+\[
+σ(\mathbf{A}) = \{\underbrace{1,1,..., 1}_{d-1回},1 − β\}  \tag{3.1}
+\]
+ 
+The eigenvector corresponding to the eigenvalue \(λ = 1 − β\) is \(\mathbf{k}\). The eigenspace for the eigenvalue \(λ = 1\) is the orthogonal complement of \(\mathbf{k}\), denoted \(\mathbf{k}^⊥ = \{\mathbf{u} ∈ \mathbb{R}^d | \mathbf{k}^\top\mathbf{u} = 0 \}\).
+
+<br><span style="color:blue;">
+固有値 \(λ = 1 − β\) に対応する固有ベクトルは \(\mathbf{k}\) です。固有値 \(λ = 1\) の固有空間は \(\mathbf{k}\) の直交補数であり、 \(\mathbf{k}^⊥ = \{\mathbf{u} ∈ \mathbb{R}^d | \mathbf{k}^\top\mathbf{u} = 0 \}\) で表されます。
+</span>
+</p><p>
+ 
+Proof. Let \(\mathbf{u}\) be any vector in the hyperplane orthogonal to \(\mathbf{k}\) (i.e., \(\mathbf{u} ∈ \mathbf{k}^⊥\) such that \(\mathbf{k}^\top\mathbf{u} = 0\)). Applying \(\mathbf{A}\) to \(\mathbf{u}\) yields: 
+
+<br><span style="color:blue;">
+証明。\(\mathbf{u}\)を\(\mathbf{k}\)に直交する超平面上の任意のベクトル（つまり、\(\mathbf{u} ∈ \mathbf{k}^⊥\)であって、\(\mathbf{k}^\top\mathbf{u} = 0\)とする。\(\mathbf{A}\)を\(\mathbf{u}\)に適用すると、次の式が得られる。
+</span>
+
+\[
+\mathbf{Au} = (\mathbf{I} − β\mathbf{kk}^\top)\mathbf{u}= \mathbf{Iu} − β\mathbf{k}(\mathbf{k}^\top\mathbf{u}) = \mathbf{u} − β\mathbf{k}(0) = \mathbf{u} = 1 ·\mathbf{u}  \tag{3.2}
+\]
+ 
+Thus, any vector in the (d−1)-dimensional subspace \(\mathbf{k}^⊥\) is an eigenvector with eigenvalue \(λ = 1\).
+
+<br><span style="color:blue;">
+したがって、(d−1)次元部分空間\(\mathbf{k}^⊥\)内の任意のベクトルは、固有値\(λ = 1\)を持つ固有ベクトルです。
+</span>
+</p><p> 
+Now, consider applying \(\mathbf{A}\) to the vector \(\mathbf{k}\) itself: 
+
+<br><span style="color:blue;">
+ここで、ベクトル\(\mathbf{A}\)自体に\(\mathbf{k}\)を適用することを考えてみましょう。
+</span>
+
+\[
+\mathbf{Ak} = (\mathbf{I} − β\mathbf{kk}^\top)\mathbf{k}= \mathbf{Ik} − β\mathbf{k}(\mathbf{k}^\top\mathbf{k}) = \mathbf{k} − β\mathbf{k}(1) = (1 − β)\mathbf{k}  \tag{3.3}
+\]
+ 
+Thus, \(\mathbf{k}\) is an eigenvector with eigenvalue \(λ = 1 − β\). Since we have found \(d\) linearly independent eigenvectors spanning \(\mathbb{R}^d\), we have characterized the full spectrum of \(\mathbf{A}\).
+ 
+<br><span style="color:blue;">
+したがって、\(\mathbf{k}\) は固有値 \(λ = 1 − β\) を持つ固有ベクトルです。\(\mathbb{R}^d\) を張る \(d\) 個の線形独立な固有ベクトルが見つかったので、\(\mathbf{A}\) の全スペクトルを特徴付けました。
+</span>
+</p><p> 
+This theorem provides a clear and powerful interpretation of the gate \(β(\mathbf{X})\). By learning a single scalar, the network can dynamically control the geometry of the residual transformation across all dv columns of the state matrix simultaneously. 
+
+<br><span style="color:blue;">
+この定理は、ゲート\(β(\mathbf{X})\)の明確かつ強力な解釈を提供します。単一のスカラーを学習することで、ネットワークは状態行列のすべてのdv列にわたって同時に残差変換の幾何学を動的に制御できます。
+</span>
+</p><p> 
+
+<strong>Lifting to matrix-valued states</strong>.　The spectral statements above are spatial : they describe the linear map \(\mathbf{u}\mapsto \mathbf{Au}\) on \(\mathbb{R}^d\). Since our hidden state is a matrix \(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\) and the shortcut acts by left-multiplication, each of the \(d_v\) columns is transformed independently by the same \(\mathbf{A}\). Equivalently, under vectorization, the induced linear operator is \(\mathbf{I}d_v ⊗ \mathbf{A}\). Thus the spectrum of the lifted map consists of the eigenvalues of \(\mathbf{A}\) repeated \(d_v\) times, and its determinant equals \(\det(\mathbf{A})^{d_v}\). 
+
+<br><span style="color:blue;">
+<strong>行列値状態へのリフティング</strong>：上記のスペクトル記述は空間的なものであり、\(\mathbb{R}^d\) 上の線形写像 \(\mathbf{u}\mapsto \mathbf{Au}\) を記述します。隠れ状態は行列 \(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\) であり、ショートカットは左乗算によって機能するため、\(d_v\) の各列は同じ \(\mathbf{A}\) によって独立に変換されます。同様に、ベクトル化では、誘導線形演算子は \(\mathbf{I}d_v ⊗ \mathbf{A}\) です。したがって、持ち上げられたマップのスペクトルは、\(\mathbf{A}\) の固有値を \(d_v\) 回繰り返したもので構成され、その行列式は \(\det(\mathbf{A})^{d_v}\) に等しくなります。
+</span>
+</p><p> 
+<strong>Orthogonality condition</strong>.　Because \(\mathbf{A}\) is symmetric, its singular values coincide with the absolute values of its eigenvalues. In particular, \(\mathbf{A}\) is orthogonal if and only if \(|1 − β| = 1\), i.e., \(β ∈ \{0,2\}\) under the unit-norm assumption. For \(β ∈ (0,2)\), \(\mathbf{A}\) performs an anisotropic contraction along \(\mathbf{k}\) (and flips sign along \(\mathbf{k}\) when \(β > 1\)).
+
+<br><span style="color:blue;">
+<strong>直交性条件</strong> \(\mathbf{A}\) は対称なので、その特異値は固有値の絶対値と一致する。特に、\(\mathbf{A}\) が直交するのは、\(|1 − β| = 1\)、すなわち単位ノルム仮定の下で \(β ∈ \{0,2\}\) となる場合のみである。\(β ∈ (0,2)\) の場合、\(\mathbf{A}\) は \(\mathbf{k}\) に沿って異方性収縮を行う（そして \(β > 1\) の場合、\(\mathbf{k}\) に沿って符号を反転する）。
+</span>
+</p><p> 
+ 
+<strong>Corollary 3.2</strong> (Spatial Determinant). The determinant of the Delta Operator \(\mathbf{A}(\mathbf{X})\), acting on the spatial features \(\mathbb{R}^d\), is given by: 
+
+<br><span style="color:blue;">
+<strong>系3.2</strong> (空間行列式) 空間特徴 \(\mathbb{R}^d\) に作用するデルタ演算子 \(\mathbf{A}(\mathbf{X})\) の行列式は次のように与えられる。
+</span>
+
+\[
+\det(\mathbf{A}(\mathbf{X})) = \prod_{i=1}^d λ_i = 1^{d−1}·(1 − β(\mathbf{X})) = 1 − β(\mathbf{X})  \tag{3.4}
+\]
+ 
+Since the shortcut broadcasts across the \(d_v\) value columns, the induced determinant on the full matrix state space \(\mathbb{R}^{d×d_v}\) (equivalently, on \(vec(\mathbf{X}) ∈ \mathbb{R}^{dd_v}\)) is \(\det(\mathbf{A}(\mathbf{X}))^{d_v}= (1 − β(\mathbf{X}))^{d_v}\). Thus \(β(\mathbf{X})\) controls the signed volume change along the spatial direction \(\mathbf{k}(\mathbf{X})\); in particular, \(β(\mathbf{X}) > 1\) introduces a negative spatial eigenvalue (a reflection along \(\mathbf{k}\)), while the global orientation of the lifted state space flips if and only if \(d_v\) is odd. 
+
+<br><span style="color:blue;">
+ショートカットは \(d_v\) 値列全体にブロードキャストするため、完全な行列状態空間 \(\mathbb{R}^{d×d_v}\) (同等に、\(vec(\mathbf{X}) ∈ \mathbb{R}^{dd_v}\)) 上の誘導行列式は \(\det(\mathbf{A}(\mathbf{X}))^{d_v}= (1 − β(\mathbf{X}))^{d_v}\) です。したがって、\(β(\mathbf{X})\) は空間方向 \(\mathbf{k}(\mathbf{X})\) に沿った符号付き体積変化を制御します。特に、\(β(\mathbf{X}) > 1\) は負の空間固有値（\(\mathbf{k}\) に沿った反射）を導入しますが、持ち上げられた状態空間のグローバルな向きは \(d_v\) が奇数の場合にのみ反転します。
+</span>
+</p>
+
+<h3>3.2 Unification of Geometric Operations <span style="color:blue;">幾何学演算の統一</span></h3>
+<p>
+Theorem 3.1 reveals that the range [0,2] for \(β(\mathbf{X})\) allows the operator to interpolate between three fundamental linear transformations. 
+
+<br><span style="color:blue;">
+定理3.1は、\(β(\mathbf{X})\)の範囲[0,2]により、演算子が3つの基本線形変換間を補間できることを明らかにしています。
+</span>
+
+<div class="styleBullet">
+<ul><li>
+• <strong>Identity Mapping (\(β(\mathbf{X})→ 0\))</strong>:　As \(β → 0\), the eigenvalue \(1 − β → 1\). All eigenvalues of \(\mathbf{A}(\mathbf{X})\) become 1, so \(\mathbf{A}(\mathbf{X}) → \mathbf{I}\). Since \(β\) also modulates the injection term \(β\mathbf{kv}^\top\), the entire update 
+vanishes, meaning \(\mathbf{X}_{l+1}\approx \mathbf{X}_l\). This identity behavior is crucial for preserving signal propagation 
+in very deep networks. 
+<br><span style="color:blue;">
+<strong>恒等写像 (\(β(\mathbf{X})→ 0\))</strong>：\(β → 0\) のとき、固有値 \(1 − β → 1\) となる。\(\mathbf{A}(\mathbf{X})\) のすべての固有値は 1 となるため、\(\mathbf{A}(\mathbf{X}) → \mathbf{I}\) となる。\(β\) は注入項 \(β\mathbf{kv}^\top\) も変調するため、更新全体が
+消失し、\(\mathbf{X}_{l+1}\approx \mathbf{X}_l\) となる。この恒等写像は、非常に深いネットワークにおいて信号伝播​​を維持するために重要である。
+</span>
+</li><br><li>
+• <strong>Orthogonal Projection (\(β(\mathbf{X})→ 1\))</strong>:　As \(β → 1\), the eigenvalue \(1 − β → 0\). The operator \(\mathbf{A}(\mathbf{X})\) becomes \(\mathbf{I} − \mathbf{kk}^\top\), an orthogonal projector (rank d − 1) onto the hyperplane \(\mathbf{k}^⊥\). The component of each column of the input state \(\mathbf{X}\) parallel to \(\mathbf{k}\) is explicitly removed (“forgotten”) before 
+the residual is added. The operator becomes singular, and \(\det(\mathbf{A}) → 0\). In terms of the full 
+block (Eq.(2.5)), this regime can be interpreted as replace-along-\(\mathbf{k}\): the shortcut removes the 
+\(\mathbf{k}\)-component, and the rank-1 write injects a new component along \(\mathbf{k}\) specified by \(\mathbf{v}^\top\).
+
+<br><span style="color:blue;">
+<strong>直交射影 (\(β(\mathbf{X})→ 1\))</strong>: \(β → 1\) のとき、固有値 \(1 − β → 0\) となる。演算子 \(\mathbf{A}(\mathbf{X})\) は、超平面 \(\mathbf{k}^⊥\) への直交射影子 (階数 d − 1) である \(\mathbf{I} − \mathbf{kk}^\top\) となる。入力状態 \(\mathbf{X}\) の各列の \(\mathbf{k}\) に平行な成分は、残差が追加される前に明示的に除去 (「忘れられる」) される。演算子は特異となり、\(\det(\mathbf{A}) → 0\) となる。完全なブロック（式（2.5））の観点から見ると、この領域はreplace-along-\(\mathbf{k}\)として解釈できます。つまり、ショートカットは\(\mathbf{k}\)成分を削除し、ランク1書き込みは\(\mathbf{v}^\top\)で指定された\(\mathbf{k}\)に沿って新しい成分を注入します。
+</span>
+</li><br><li> 
+• <strong>Full Reflection (\(β(\mathbf{X}) → 2\))</strong>: As \(β → 2\), the eigenvalue \(1−β → − 1\). The operator \(\mathbf{A}(\mathbf{X})\) becomes \(\mathbf{I} − 2\mathbf{kk}^\top\), a standard Householder matrix. This performs a perfect reflection of each column 
+of \(\mathbf{X}\) across \(\mathbf{k}^⊥\). This is the only case in this range where the transformation is guaranteed 
+to be orthogonal and spatially volume-preserving, with \(\det(\mathbf{A}) → − 1\). The negative spatial 
+determinant signifies a change in orientation (a reflection) of the basis. Together with the identity 
+case (\(β = 0\)), this is the only setting in [0,2] for which the shortcut operator \(\mathbf{A}\) is orthogonal. 
+The full block additionally applies the synchronized rank-1 write term, yielding a reflection of 
+the incoming state followed by a write aligned with \(\mathbf{k}\). 
+
+<br><span style="color:blue;">
+<strong>完全反射 (\(β(\mathbf{X}) → 2\))</strong>: \(β → 2\) のとき、固有値 \(1−β → − 1\)。演算子 \(\mathbf{A}(\mathbf{X})\) は、標準的なハウスホルダー行列である \(\mathbf{I} − 2\mathbf{kk}^\top\) になる。これは、\(\mathbf{X}\) の各列を \(\mathbf{k}^⊥\) にわたって完全に反射する。これは、この範囲で、\(\det(\mathbf{A}) → − 1\) によって、変換が直交かつ空間的に体積保存であることが保証される唯一のケースである。負の空間行列式は、基底の向きの変化（反射）を示す。恒等ケース（\(β = 0\)）と合わせて、これはショートカット演算子\(\mathbf{A}\)が直交する[0,2]における唯一の設定である。
+フルブロックはさらに同期ランク1書き込み項を適用し、入力状態の反射とそれに続く\(\mathbf{k}\)に整列した書き込みを生成する。
+</span>
+</li></ul></div>
+</p>
+
+<h3>3.3 Special Case: Gated Residual Learning <span style="color:blue;">特殊なケース: ゲート付き残差学習</span></h3>
+<p>
+A critical property of Deep Delta Learning is its behavior in the limit of the gating scalar. When the gate vanishes (\(β(\mathbf{X}) → 0\)), the Delta Operator converges to the identity matrix (\(\mathbf{A}(\mathbf{X})→\mathbf{I}\)), and the constructive term vanishes. Consequently, the update rule in Equation (2.2 ) simplifies to: 
+
+<br><span style="color:blue;">
+ディープデルタラーニングの重要な特性は、ゲーティングスカラーの極限における挙動である。ゲートが消滅すると（\(β(\mathbf{X}) → 0\)）、デルタ演算子は単位行列に収束し（\(\mathbf{A}(\mathbf{X})→\mathbf{I}\)）、構成項は消滅する。したがって、式(2.2)の更新則は次のように簡略化される。
+</span>
+
+\[
+\mathbf{X}_{l+1} = \mathbf{X}_l  \tag{3.5}
+\]
+ 
+This recovers the identity mapping, effectively allowing the layer to be skipped entirely. This behavior is consistent with the zero-initialization strategy often required for training very deep networks. Conversely, when \(β\approx 1\), the layer functions as a Gated Rank-1 Matrix ResNet, where \(β\) acts as a learned step size governing the magnitude of the update. This demonstrates that DDL generalizes residual learning by introducing a multiplicative, geometric modulation that is coupled synchronously with the value injection. 
+
+<br><span style="color:blue;">
+これにより恒等写像が復元され、実質的に層全体をスキップすることが可能になります。この動作は、非常に深いネットワークの学習にしばしば必要とされるゼロ初期化戦略と一致しています。逆に、\(β\approx 1\) の場合、層はゲート付きランク1行列ResNetとして機能し、\(β\) は更新の規模を制御する学習済みステップサイズとして機能します。これは、DDLが値の注入と同期して結合された乗法的な幾何学的変調を導入することで、残差学習を一般化していることを示しています。
+</span>
+</p>
+
+<h3>3.4 Diagonal Feature Matrices Case <span style="color:blue;">対角特徴行列のケース</span></h3>
+<p>
+To better understand the mixing properties of the Delta Operator, consider the special case where the input state \(\mathbf{X} ∈ \mathbb{R}^{d×d}\) is a square diagonal matrix, \(\mathbf{X} = diag (λ_1,..., λ_d)\). This represents a state where features are perfectly decoupled across the value dimensions. The application of \(\mathbf{A}\) yields:
+
+<br><span style="color:blue;">
+デルタ演算子の混合特性をより深く理解するために、入力状態\(\mathbf{X} ∈ \mathbb{R}^{d×d}\)が正方対角行列\(\mathbf{X} = diag (λ_1,..., λ_d)\)である特殊なケースを考えてみましょう。これは、特徴が値の次元間で完全に分離された状態を表します。\(\mathbf{A}\)を適用すると、次の式が得られます。
+</span>
+
+\[ 
+(\mathbf{AX})_{ij} = (\mathbf{X} − β\mathbf{kk}^\top\mathbf{X})_{ij} 
+= λ_iδ_{ij} − βλ_jk_ik_j  \tag{3.6}
+\]
+ 
+Specifically, the off-diagonal element (\(i \neq j\)) becomes \(−βλ_ 
+jk_ik_j\), while the diagonal element (\(i = j\)) is scaled to \(λ_i(1 − βk_i^2\)). This implies that the output feature \(i\) is now dependent on the magnitude of the input feature \(j\), scaled by the geometric coherence \(k_ik_j\). This result elucidates a critical function of the Delta block: it induces controlled feature coupling. Even if the incoming features are independent, a non-zero \(β\) forces an interaction between the i-th and j-th modes proportional to the projection of the reflection vector \(\mathbf{k}\).
+
+<br><span style="color:blue;">
+具体的には、非対角要素 (\(i \neq j\)) は \(−βλ_
+jk_ik_j\) になり、対角要素 (\(i = j\)) は \(λ_i(1 − βk_i^2\)) にスケーリングされます。これは、出力特徴 \(i\) が、幾何学的コヒーレンス \(k_ik_j\) でスケーリングされた入力特徴 \(j\) の大きさに依存することを意味します。この結果は、デルタブロックの重要な機能、すなわち制御された特徴結合を誘導する機能を明らかにしています。入力特徴が独立している場合でも、非ゼロの \(β\) は、反射ベクトル \(\mathbf{k}\) の投影に比例する i番目と j番目のモード間の相互作用を強制します。
+</span>
+</p><p>  
+If \(β → 1\) (projection), the shortcut removes the component of each column along \(\mathbf{k}\), mapping the state into \(\mathbf{k}^⊥\) before the write term reinstates a new \(\mathbf{k}\)-component specified by \(\mathbf{v}^\top\). If \(β → 0\), the diagonal structure is preserved. 
+
+<br><span style="color:blue;">
+\(β → 1\)（射影）の場合、ショートカットは\(\mathbf{k}\)に沿った各列の成分を削除し、その状態を\(\mathbf{k}^⊥\)にマッピングします。その後、書き込み項は\(\mathbf{v}^\top\)で指定された新しい\(\mathbf{k}\)成分を復元します。\(β → 0\)の場合、対角構造は保持されます。
+</span>
+</p>
+
+<h3>3.5 Vector Hidden State Dynamics <span style="color:blue;">ベクトル隠れ状態ダイナミクス</span></h3>
+<p>
+While DDL operates on matrix-valued states \(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\), it naturally encapsulates standard vector-based deep learning as a specific limit. We identify two distinct regimes: 
+
+<br><span style="color:blue;">
+DDLは行列値の状態\(\mathbf{X}∈\mathbb{R}^{d×d_v}\)を操作しますが、標準的なベクトルベースの深層学習を特定の極限として自然にカプセル化します。私たちは2つの異なる領域を特定します。
+</span>
+</p><p> 
+<strong>The Scalar Value Limit (\(d_v = 1\))</strong>.　When the value dimension is reduced to unity, the hidden state degenerates to a standard feature vector \(\mathbf{x} ∈ \mathbb{R}^d\). In this limit, the value update \(\mathbf{v}\) becomes a scalar \(v ∈ \mathbb{R}\). The Delta update rule Eq. (2.2) simplifies to:
+
+<br><span style="color:blue;">
+<strong>スカラー値の極限 (\(d_v = 1\))</strong>。値の次元が1に縮小されると、隠れ状態は標準的な特徴ベクトル \(\mathbf{x} ∈ \mathbb{R}^d\) に退化する。この極限において、値の更新 \(\mathbf{v}\) はスカラー \(v ∈ \mathbb{R}\) になる。デルタ更新則式 (2.2) は次のように簡略化される。
+</span>
+
+\[ 
+\mathbf{x}_{l+1} = \mathbf{x}_l + β_l\underbrace{(v_l − \mathbf{k}_l^\top\mathbf{x}_l)}_{γ_l}\mathbf{k}_l  \tag{3.7}
+\]
+ 
+Here, the geometric transformation collapses into a dynamic scalar gating mechanism. The term \(γ_l\) acts as a data-dependent coefficient that couples the update magnitude to the discrepancy between the proposed write value \(v_l\) and the current projection \(\mathbf{k}_l^\top\mathbf{x}_l\). 
+
+<br><span style="color:blue;">
+ここで、幾何学的変換は動的なスカラーゲーティング機構へと収束します。項\(γ_l\)は、更新量と、提案された書き込み値\(v_l\)と現在の投影値\(\mathbf{k}_l^\top\mathbf{x}_l\)との間の差異を結合するデータ依存係数として機能します。
+</span>
+</p><p> 
+
+<strong>The Independent Feature Limit</strong>.　Alternatively, one may view the diagonal case in Section 3.4 as a representation of a vector state embedded in a matrix diagonal. As shown in the diagonal analysis, the Delta Operator introduces feature coupling via the term \(βk_ik_j\). To recover the behavior of standard element-wise vector updates (where features do not mix spatially), the reflection vector \(\mathbf{k}\) must be aligned with the canonical basis (i.e., one-hot). In this regime, the Delta Operator acts as an element-wise gating function, strictly preserving the independence of the feature dimensions. 
+
+<br><span style="color:blue;">
+<strong>独立特徴量限界</strong>　あるいは、セクション3.4の対角線のケースを、行列の対角線に埋め込まれたベクトル状態の表現と見ることもできる。対角線解析で示されているように、デルタ演算子は項\(βk_ik_j\)を介して特徴量結合を導入する。標準的な要素ごとのベクトル更新（特徴量が空間的に混在しない）の挙動を回復するには、反射ベクトル\(\mathbf{k}\)を標準基底（すなわち、ワンホット）に揃える必要がある。この領域では、デルタ演算子は要素ごとのゲーティング関数として機能し、特徴量の次元の独立性を厳密に保持する。
+</span>
+</p>
+
+<h2>4 Connections to Optimization and Delta Architectures <span style="color:blue;">最適化とデルタアーキテクチャへの接続</span></h2>
+<p>
+The terminology Deep Delta Learning reflects a structural homology with the Delta Rule, a funda- mental update mechanism recently popularized in efficient sequence modeling, e.g., DeltaNet (Schlag et al., 2021; Yang et al., 2024). 
+
+<br><span style="color:blue;">
+ディープデルタラーニングという用語は、DeltaNet (Schlag et al., 2021; Yang et al., 2024) などの効率的なシーケンスモデリングで最近普及した基本的な更新メカニズムであるデルタルールとの構造的相同性を反映しています。
+</span>
+</p>
+
+<h3>4.1 The Delta Rule for Residual Learning <span style="color:blue;">残差学習のデルタ則</span></h3>
+<p>
+The standard residual connection, \(\mathbf{X}_{l+1} = \mathbf{X}_l + \mathbf{F}(\mathbf{X}_l)\), imposes a strictly additive inductive bias. Information, once generated by \(\mathbf{F}\), is simply accumulated. This can lead to “residual accumulation”, where noisy or interfering features persist across layers because the network lacks an explicit mechanism to selectively filter the hidden state.
+
+<br><span style="color:blue;">
+標準的な残差接続 \(\mathbf{X}_{l+1} = \mathbf{X}_l + \mathbf{F}(\mathbf{X}_l)\) は、厳密に加法的な帰納的バイアスを課します。\(\mathbf{F}\) によって生成された情報は、単純に蓄積されます。これは「残差蓄積」につながる可能性があり、ネットワークには隠れ状態を選択的にフィルタリングする明示的なメカニズムがないため、ノイズや干渉の原因となる特徴が層を超えて持続します。
+</span>
+</p><p>  
+Deep Delta Learning addresses this by incorporating the Delta Rule structure into the depth dimension. Expanding the Delta Residual update in Equation (2.2 ) using the rank-1 residual definition: 
+
+<br><span style="color:blue;">
+ディープデルタラーニングは、デルタルール構造を深度次元に組み込むことでこの問題に対処します。式(2.2)のデルタ残差更新をランク1残差定義を用いて拡張すると、次のようになります。
+</span>
+
+\[
+\mathbf{X}_{l+1} = \mathbf{X}_l + β_lk_l\left(\underbrace{\mathbf{v}_l^\top}_{Write}-\underbrace{\mathbf{k}_l^\top\mathbf{X}_l}_{Erase}\right)  \tag{4.1}
+\]
+ 
+This formulation exactly recovers the Delta Rule update utilized in fast associative memories and linear attention. The term \(\mathbf{k}_l^\top \mathbf{X}_l\) represents the current projection of the state onto the reflection vector (the “error” or “old memory”). The term (\(\mathbf{v}_l^\top − \mathbf{k}_l^\top\mathbf{X}_l\)) acts as the correction signal. 
+
+<br><span style="color:blue;">
+この定式化は、高速連想記憶や線形注意で利用されるデルタルール更新を正確に再現します。項\(\mathbf{k}_l^\top \mathbf{X}_l\)は、反射ベクトル（「エラー」または「古い記憶」）への現在の状態の投影を表します。項(\(\mathbf{v}_l^\top − \mathbf{k}_l^\top\mathbf{X}_l\))は修正信号として機能します。
+</span>
+</p><p> 
+Since \(\mathbf{X}_l ∈ \mathbb{R}^{d×d_v}\) is a matrix, the term \(\mathbf{k}_l^\top \mathbf{X}_l\) yields a row vector in \(\mathbb{R}^{1×d_v}\), representing the projection of every value column onto \(\mathbf{k}_l\). The update rigidly aligns both the erasure (destructive) and injection (constructive) operations along the geometric direction defined by the projector \(\mathbf{k}_l\), modulated by the step size \(β_l\).
+
+<br><span style="color:blue;">
+\(\mathbf{X}_l ∈ \mathbb{R}^{d×d_v}\) は行列なので、項 \(\mathbf{k}_l^\top \mathbf{X}_l\) は \(\mathbb{R}^{1×d_v}\) の行ベクトルを生成し、すべての値列を \(\mathbf{k}_l\) に射影します。更新は、ステップサイズ \(β_l\) によって調整された射影子 \(\mathbf{k}_l\) によって定義される幾何学的方向に沿って、消去（破壊的）操作と注入（建設的）操作の両方を厳密に調整します。
+</span>
+</p><p>  
+When \(β(\mathbf{X}_l) \approx 1\), this subtractive term acts as an orthogonal projection, effectively erasing the component of the incoming state \(\mathbf{X}_l\) parallel to \(\mathbf{k}(\mathbf{X}_l)\) (forgetting). When \(β(\mathbf{X}_l) \approx 2\), the term subtracts twice the projection, resulting in a sign inversion (reflection). This provides the network with a flexible mechanism to selectively clean or reorient specific feature subspaces layer-by-layer, preventing the accumulation of interference.
+
+<br><span style="color:blue;">
+\(β(\mathbf{X}_l) \approx 1\) の場合、この減算項は直交射影として機能し、入力状態 \(\mathbf{X}_l\) の \(\mathbf{k}(\mathbf{X}_l)\) に平行な成分を実質的に消去します（忘却）。\(β(\mathbf{X}_l) \approx 2\) の場合、この項は射影を2回減算し、結果として符号反転（反射）を引き起こします。これにより、ネットワークは特定の特徴サブスペースを層ごとに選択的に消去または再配置する柔軟なメカニズムを備え、干渉の蓄積を防止します。
+</span>
+</p>
+ 
+<h3>4.2 Relation to DeltaNets and Householder Products <span style="color:blue;">デルタネットとハウスホルダー積との関係</span></h3>
+<p>
+Our work shares a theoretical link with the <strong>DeltaNet</strong> architecture (Schlag et al., 2021), which replaces the additive accumulation of Linear Transformers with a Delta Rule for memory updates. 
+
+<br><span style="color:blue;">
+私たちの研究は、メモリ更新のためのデルタルールで線形トランスフォーマーの加算的蓄積を置き換える <strong>DeltaNet</strong> アーキテクチャ (Schlag et al.、2021) と理論的なつながりを共有しています。
+</span>
+</p><p> 
+We demonstrate that Deep Delta Learning is the depth-wise isomorphism of the DeltaNet recurrence. In DeltaNet, the hidden state (memory) \(\mathbf{S}_t\) evolves over time \(t\). To unify notation with our depth-wise formulation, we present the DeltaNet update using left-multiplication semantics, where the memory state is \(\mathbf{S}_t ∈ \mathbb{R}^{d_k×d_v}\):
+
+<br><span style="color:blue;">
+ディープデルタラーニングはDeltaNetの再帰的性質の深さ方向同型性を示す。DeltaNetでは、隠れ状態（メモリ）\(\mathbf{S}_t\)は時間\(t\)とともに変化する。深さ方向の定式化と表記法を統一するため、メモリ状態を\(\mathbf{S}_t ∈ \mathbb{R}^{d_k×d_v}\)とする左乗法セマンティクスを用いてDeltaNetの更新を示す。
+</span>
+
+\[ 
+\mathbf{S}_t = (\mathbf{I} − β_t\mathbf{k}_t\mathbf{k}_t^\top)\mathbf{S}_{t−1} + β_t\mathbf{k}_t\mathbf{v}_t^\top  \tag{4.2}
+\]
+ 
+Here, the operator acts on the key dimension \(d_k\), which is analogous to the feature dimension \(d\) in DDL. Comparing this to our Deep Delta Layer update Equation (2.2 ) acting over depth \(l\):
+
+<br><span style="color:blue;">
+ここで、演算子はキー次元 \(d_k\) に作用します。これは DDL における特徴次元 \(d\) に類似しています。これを、深度 \(l\) に作用する Deep Delta Layer の更新式(2.2)と比較すると、次のようになります。
+</span>
+
+\[ 
+\mathbf{X}_{l+1} = (\mathbf{I} − β_l\mathbf{k}_l\mathbf{k}_l^\top )\mathbf{X}_l + β_l\mathbf{k}_l\mathbf{v}_l^\top  \tag{4.3}
+\]
+ 
+where \(\mathbf{v}_l\) is the vector output of the value branch.
+
+<br><span style="color:blue;">
+ここで、\(\mathbf{v}_l\) は値ブランチのベクトル出力です。
+</span>
+</p><p> 
+ 
+This reveals a direct structural correspondence: 
+
+<br><span style="color:blue;">
+これにより、直接的な構造的対応が明らかになります。
+</span>
+
+<div class="styleBullet">
+<ul><li>
+• The memory state \(\mathbf{S}_t\) (dimension \(d_k × d_v\)) in DeltaNet corresponds to the feature activation \(\mathbf{X}_l\) 
+(dimension \(d × d_v\)) in DDL. 
+
+<br><span style="color:blue;">
+DeltaNetのメモリ状態\(\mathbf{S}_t\)（次元\(d_k × d_v\)）は、DDLの特徴アクティベーション\(\mathbf{X}_l\)
+（次元\(d × d_v\)）に対応します。
+</span>
+</li><br><li>
+• Both architectures employ the rank-1 Householder operator to selectively reflect or erase subspace 
+components. DeltaNet applies this over time steps t, whereas DDL applies it over network depth \(l\). 
+
+<br><span style="color:blue;">
+どちらのアーキテクチャも、ランク1のハウスホルダー演算子を用いて、部分空間成分を選択的に反射または消去します。DeltaNetはこれを時間ステップtにわたって適用しますが、DDLはこれをネットワークの深さ\(l\)にわたって適用します。
+</span>
+</li><br><li>
+• Our modified residual update \(β_l\mathbf{k}_l\mathbf{v}_l^\top\) aligns perfectly with the DeltaNet write operation. By 
+incorporating \(β_l\) into the constructive term, we interpret \(β_l\) as a layer-wise step size for the 
+depth-wise ODE. This ensures that both the erasure and injection components are modulated 
+synchronously, ensuring the update represents a coherent geometric transformation of the state \(\mathbf{X}\). 
+
+<br><span style="color:blue;">
+修正された残差更新 \(β_l\mathbf{k}_l\mathbf{v}_l^\top\) は、DeltaNet の書き込み操作と完全に一致します。
+\(β_l\) を構成項に組み込むことで、\(β_l\) を深さ方向の常微分方程式の層単位のステップサイズとして解釈します。これにより、消去成分と注入成分の両方が同期して変調され、更新が状態 \(\mathbf{X}\) の一貫した幾何学的変換を表すことが保証されます。
+</span>
+</li></ul></div>
+</p><p>
+
+Thus, DDL can be interpreted as applying the Delta Rule to layer-wise feature evolution, enabling the network to forget or rewrite features from shallow layers as they propagate deeper. 
+
+<br><span style="color:blue;">
+したがって、DDL は、デルタ ルールをレイヤー単位の特徴の進化に適用し、ネットワークが浅いレイヤーの特徴をより深いレイヤーに伝播するときに忘れたり書き換えたりできるようにするものと解釈できます。
+</span>
+</p>
+
+<h2>5 Related Work <span style="color:blue;">関連研究</span></h2>
+<p>
+Our work builds upon several key research themes in deep learning. 
+
+<br><span style="color:blue;">
+私たちの研究は、ディープラーニングにおけるいくつかの重要な研究テーマに基づいています。
+</span>
+</p><p>
+
+<strong>Gated and Invertible Architectures</strong>.　Highway Networks (Srivastava et al., 2015) introduced data- dependent gating to residual networks, but their gates interpolate between the identity path and the function path, rather than modifying the transformation itself. Invertible Residual Networks (i-ResNets) (Behrmann et al., 2019) constrain the Lipschitz constant of \(\mathbf{F}\) to ensure invertibility, which is useful for applications like normalizing flows. Our Delta shortcut operator is invertible whenever \(1 − β \neq 0\)  (in the \(\epsilon → 0\) analysis), and becomes an orthogonal involution at \(β = 2\) (a Householder reflection). DDL does not enforce invertibility globally; instead, it allows the network to learn when a near-invertible transition is beneficial versus when an intentionally singular (projective) transition is useful for controlled forgetting. 
+
+<br><span style="color:blue;">
+<strong>ゲート型および可逆アーキテクチャ</strong>。 ハイウェイネットワーク (Srivastava ら、2015 年) では、残差ネットワークにデータ依存ゲーティングが導入されましたが、そのゲートは変換自体を変更するのではなく、恒等パスと関数パスの間を補間します。可逆残差ネットワーク (i-ResNet) (Behrmann ら、2019 年) は、可逆性を保証するために \(\mathbf{F}\) の Lipschitz 定数を制約します。これは、フローの正規化などのアプリケーションに役立ちます。Delta ショートカット演算子は、\(1 − β \neq 0\) のときはいつでも可逆であり (\(\epsilon → 0\) 解析において)、\(β = 2\) で直交反転になります (ハウスホルダー反射)。DDL は、グローバルに可逆性を強制しません。代わりに、ネットワークは、制御された忘却のために、ほぼ可逆的な遷移がいつ有益なのか、そして意図的に特異な（射影的な）遷移がいつ有用なのかを学習できるようになります。
+</span>
+</p><p>
+<strong>Orthogonal and Unitary Networks</strong>.　A significant body of work has focused on constraining network weights to be orthogonal or unitary to improve gradient stability and preserve geometric structure (Arjovsky et al., 2016; Jing et al., 2017). Householder reflections are a classic method for parameterizing orthogonal matrices. These methods enforce orthogonality as a strict constraint. In contrast, our Delta Residual Network learns to deviate from identity and orthogonality via the gate \(β(\mathbf{x})\), providing a soft, adaptive constraint that can be relaxed to pure projection or reflection. 
+
+<br><span style="color:blue;">
+<strong>直交ネットワークとユニタリネットワーク</strong>。勾配安定性を向上させ、幾何学的構造を維持するために、ネットワークの重みを直交またはユニタリに制約することに焦点を当てた重要な研究が数多く行われてきました (Arjovsky et al., 2016; Jing et al., 2017)。ハウスホルダー反射は、直交行列をパラメータ化する古典的な手法です。これらの手法は、直交性を厳密な制約として強制します。対照的に、私たちのデルタ残差ネットワークは、ゲート \(β(\mathbf{x})\) を介して恒等性と直交性から逸脱することを学習し、純粋な射影または反射に緩和できる柔軟で適応的な制約を提供します。
+</span>
+</p><p>
+
+<strong>Neural Ordinary Differential Equations</strong>.　Neural ODEs (Chen et al., 2018) model the continuous evolution of features. The standard ResNet Eq. (1.1 ) is a discretization of the simple ODE \(\dot{\mathbf{X}} = \mathbf{F}(\mathbf{X})\). Our proposed architecture alters the underlying dynamics to \(\dot{\mathbf{X}}= β(\mathbf{X})\mathbf{k}(\mathbf{X})(\mathbf{v}(\mathbf{X})^\top − \mathbf{k}(\mathbf{X})^\top\mathbf{X})\), introducing a state-dependent projection term applied to the matrix state. This allows for a much richer family of learnable dynamical systems that can exhibit contractive or oscillatory behavior across multiple value dimensions. 
+
+<br><span style="color:blue;">
+<strong>ニューラル常微分方程式</strong>。ニューラルODE（Chen et al., 2018）は、特徴の連続的な進化をモデル化します。標準的なResNet方程式（1.1）は、単純なODE \(\dot{\mathbf{X}} = \mathbf{F}(\mathbf{X})\)を離散化したものです。私たちが提案するアーキテクチャは、基礎となるダイナミクスを\(\dot{\mathbf{X}}= β(\mathbf{X})\mathbf{k}(\mathbf{X})(\mathbf{v}(\mathbf{X})^\top − \mathbf{k}(\mathbf{X})^\top\mathbf{X})\)に変更し、行列状態に適用される状態依存の射影項を導入します。これにより、複数の値の次元にわたって収縮または振動の動作を示すことができる、より豊富な学習可能な動的システム ファミリが可能になります。
+</span>
+</p>
+
+<h2>6 Conclusion <span style="color:blue;">結論</span></h2>
+<p>
+We have introduced Deep Delta Learning, a novel architecture built upon an adaptive, geometric residual connection. Through analysis, we have demonstrated that its core component, the Delta Operator, unifies identity mapping, projection, and reflection into a single, continuously differentiable module. This unification is controlled by a simple learned scalar gate, which dynamically shapes the spectrum of the layer-to-layer transition operator. By empowering the network to learn transformations with negative eigenvalues in a data-dependent fashion, DDL offers a significant and principled increase in expressive power while retaining the foundational benefits of the residual learning paradigm. 
+
+<br><span style="color:blue;">
+適応的な幾何学的残差接続に基づく新しいアーキテクチャ、ディープデルタラーニング（DDL）を導入しました。分析を通して、その中核コンポーネントであるデルタ演算子が、恒等写像、射影、反射を単一の連続微分可能なモジュールに統合することを実証しました。この統合は、層間遷移演算子のスペクトルを動的に形成する、学習済みの単純なスカラーゲートによって制御されます。ネットワークが負の固有値を持つ変換をデータ依存的に学習できるようにすることで、DDLは残差学習パラダイムの基本的な利点を維持しながら、表現力を大幅かつ原理的に向上させます。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Martin Arjovsky, Amar Shah, and Yoshua Bengio. Unitary evolution recurrent neural networks. In International conference on machine learning, pages 1120–1128. PMLR, 2016. 
+
+<br><span style="color:blue;">
+『ユニタリー進化リカレントニューラルネットワーク』(2016)
+</span>
+</li><br><li>
+Jens Behrmann, Will Grathwohl, Ricky TQ Chen, David Duvenaud, and Jörn-Henrik Jacobsen. 
+Invertible residual networks. In International conference on machine learning, pages 573–582. PMLR, 2019. 
+
+<br><span style="color:blue;">
+『可逆残差ネットワーク』(2019)
+</span>
+</li><br><li>
+Ricky TQ Chen, Yulia Rubanova, Jesse Bettencourt, and David K Duvenaud. Neural ordinary differential equations. Advances in neural information processing systems, 31, 2018. 
+
+<br><span style="color:blue;">
+『ニューラル常微分方程式』(2018)
+</span>
+</li><br><li>
+Riccardo Grazzi, Julien Siems, Arber Zela, Jörg KH Franke, Frank Hutter, and Massimiliano 
+Pontil. Unlocking state-tracking in linear rnns through negative eigenvalues. arXiv preprint arXiv:2411.12537, 2024. 
+
+<br><span style="color:blue;">
+『負の固有値を用いた線形RNNにおける状態追跡の解明』(2024)
+</span>
+</li><br><li>
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. Deep residual learning for image recognition. In Proceedings of the IEEE conference on computer vision and pattern recognition, pages 770–778, 2016. 
+
+<br><span style="color:blue;">
+『画像認識のための深層残差学習』(2016)
+</span>
+</li><br><li>
+Li Jing, Yichen Shen, Tena Dubcek, John Peurifoy, Scott Skirlo, Yann LeCun, Max Tegmark, and Marin Soljačić. Tunable efficient unitary neural networks (eunn) and their application to rnns. In International Conference on Machine Learning, pages 1733–1741. PMLR, 2017. 
+
+<br><span style="color:blue;">
+『チューナブルな高効率ユニタリーニューラルネットワーク（EUNN）とそのRNNへの応用』(2017)
+</span>
+</li><br><li>
+Imanol Schlag, Kazuki Irie, and Jürgen Schmidhuber. Linear transformers are secretly fast weight programmers. In International conference on machine learning, pages 9355–9366. PMLR, 2021. 
+
+<br><span style="color:blue;">
+『線形トランスフォーマーは実は高速な重みプログラミングツールである』(2021)
+</span>
+</li><br><li>
+Rupesh Kumar Srivastava, Klaus Greff, and Jürgen Schmidhuber. Highway networks. arXiv preprint arXiv:1505.00387, 2015. 
+
+<br><span style="color:blue;">
+『ハイウェイネットワーク』(2015)
+</span>
+</li><br><li>
+Songlin Yang, Bailin Wang, Yu Zhang, Yikang Shen, and Yoon Kim. Parallelizing linear transformers with the delta rule over sequence length. arXiv preprint arXiv:2406.06484, 2024. 
+
+<br><span style="color:blue;">
+『シーケンス長に関するデルタ則を用いた線形トランスフォーマーの並列化』(2024)
+</span>
+</li></ul></div> 
+</p>
+
+<h1><center>Appendix <span style="color:blue;">付録</span></center></h1>
+<h2>A Implementation and Parameterization Details <span style="color:blue;">実装とパラメータ化の詳細</span></h2>
+<p> 
+The Deep Delta Learning (DDL) framework relies on the efficient estimation of the reflection direction \(\mathbf{k}(\mathbf{X})\), the scalar gate \(β(\mathbf{X})\), and the residual value \(\mathbf{v}(\mathbf{X})\). While the theoretical results hold regardless of the specific topology used to approximate these functions, we outline two primary architectural instantiations for the generator functions: MLP-based and Attention-based parameterizations. 
+
+<br><span style="color:blue;">
+ディープデルタラーニング（DDL）フレームワークは、反射方向\(\mathbf{k}(\mathbf{X})\)、スカラーゲート\(β(\mathbf{X})\)、および残差値\(\mathbf{v}(\mathbf{X})\)の効率的な推定に依存しています。理論的な結果は、これらの関数を近似するために使用される特定のトポロジに関係なく成立しますが、生成関数の2つの主要なアーキテクチャインスタンス、すなわちMLPベースとアテンションベースのパラメータ化について概説します。
+</span>
+</p><p>
+
+Let the hidden state be \(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\). We denote the generator branch for the reflection vector as a function \(\phi_k : \mathbb{R}^{d×d_v} → \mathbb{R}^d\)
+
+<br><span style="color:blue;">
+隠れ状態を\(\mathbf{X} ∈ \mathbb{R}^{d×d_v}\)とする。反射ベクトルの生成枝を関数\(\phi_k : \mathbb{R}^{d×d_v} → \mathbb{R}^d\)で表す。
+</span>
+</p>
+. 
+<h3>A.1 Parameterization of the Reflection Direction \(\mathbf{k}(\mathbf{X})\) <span style="color:blue;">反射方向のパラメータ化 \(\mathbf{k}(\mathbf{X})\)</span></h3>
+
+<p>
+The geometric orientation of the Delta Operator is determined by \(\mathbf{k}\). We propose two distinct mechanisms for \(\phi_k\), allowing for different inductive biases regarding feature interaction. 
+
+<br><span style="color:blue;">
+デルタ演算子の幾何学的方向は\(\mathbf{k}\)によって決定されます。\(\phi_k\)に対して2つの異なるメカニズムを提案し、特徴相互作用に関する異なる帰納的バイアスを考慮します。
+</span>
+</p><p>
+
+<strong>Option 1: MLP Parameterization</strong>.　For architectures prioritizing global feature mixing with low computational overhead, we parameterize \(\mathbf{k}\9 using a Multi-Layer Perceptron (MLP) acting on aggregated statistics of the state matrix.
+
+<br><span style="color:blue;">
+<strong>オプション 1: MLP パラメータ化</strong>。計算オーバーヘッドが低いグローバル特徴混合を優先するアーキテクチャの場合、状態行列の集約された統計に基づいて動作する多層パーセプトロン (MLP) を使用して \(\mathbf{k}\9 をパラメータ化します。
+</span>
+
+\[ 
+\tilde{\mathbf{k}}_{\text{MLP}}= \text{MLP}(\text{Pool}(\mathbf{X})),\quad \mathbf{k}_{\text{MLP}}
+=\frac{\tilde{\mathbf{k}}_{\text{MLP}}}{||\tilde{\mathbf{k}}_{\text{MLP}}||_2 + \epsilon_k} \tag{A.1}
+\]
+ 
+Here, \(\text{Pool}(\cdot)\) is any aggregation that produces a fixed-size vector representation of \(\mathbf{X}\), e.g., column- wise averaging (\(\mathbb{R}^{d×d_v} → \mathbb{R}^d\)) or flattening (\(\mathbb{R}^{d×d_v} → \mathbb{R}^{d·dv}\)), followed by an MLP that outputs \(\mathbb{R}^d\). We enforce \(L_2\) normalization (with a small \(\epsilon_k \gt 0\) for numerical stability) to satisfy the spectral assumptions in Theorem 3.1. 
+
+<br><span style="color:blue;">
+ここで、\(\text{Pool}(\cdot)\)は、\(\mathbf{X}\)の固定サイズのベクトル表現を生成する任意の集約です。例えば、列方向の平均化（\(\mathbb{R}^{d×d_v} → \mathbb{R}^d\)）や平坦化（\(\mathbb{R}^{d×d_v} → \mathbb{R}^{d·dv}\)）に続いて、\(\mathbb{R}^d\)を出力するMLPです。定理3.1のスペクトル仮定を満たすために、\(L_2\)正規化（数値安定性のために小さな\(\epsilon_k \gt 0\)を使用）を適用します。
+</span>
+</p><p>
+
+<strong>Option 2: Attention-based Parameterization</strong>.　To capture more granular dependencies within the value dimension, we can employ attention mechanism. 
+
+<br><span style="color:blue;">
+<strong>オプション 2: アテンションベースのパラメータ化</strong>。値の次元内でより細かい依存関係をキャプチャするために、アテンション メカニズムを使用できます。
+</span>
+</p>
+
+<h3>A.2 Parameterization of the Gate \(β(\mathbf{X})\) and Value \(\mathbf{v}(\mathbf{X})\) <span style="color:blue;">ゲート \(β(\mathbf{X})\) と値 \(\mathbf{v}(\mathbf{X})\) のパラメータ化</span></h3>
+<p>
+<strong>The Gating Branch</strong>.　The scalar gate \(β\) requires a bounded output in [0,2]. We maintain a lightweight design for this estimator: 
+
+<br><span style="color:blue;">
+<strong>ゲーティング分岐</strong>。スカラーゲート\(β\)は[0,2]の範囲で有界な出力を必要とする。この推定器は軽量設計である。
+</span>
+
+\[
+β(\mathbf{X}) = 2·σ\left(\mathbf{w}_β^\top \tanh(\mathbf{W}_{in}\text{Pool}(\mathbf{X}))\right) \tag{A.2}
+\]
+ 
+where \(σ\) is the sigmoid function, ensuring smooth interpolation between identity, projection, and reflection. 
+
+<br><span style="color:blue;">
+ここで、\(σ\) はシグモイド関数であり、恒等関数、投影関数、反射関数の間のスムーズな補間を保証します。
+</span>
+</p><p>
+
+<strong>The Value Branch</strong>.　The residual value vector \(\mathbf{v} ∈ \mathbb{R}^{d_v}\) represents the content update. This branch, \(\mathbf{F} : \mathbb{R}^{d×d_v} → \mathbb{R}^{d_v}\), allows for flexible design choices. In our experiments, we utilize the same architecture chosen for the main backbone (e.g., if DDL is applied in a Transformer, \(\mathbf{F}\) mirrors the Feed-Forward Network or Multi-Head Attention block structure) to ensure capacity alignment. 
+
+<br><span style="color:blue;">
+<strong>値分岐</strong>。残差値ベクトル \(\mathbf{v} ∈ \mathbb{R}^{d_v}\) はコンテンツの更新を表します。この分岐 \(\mathbf{F} : \mathbb{R}^{d×d_v} → \mathbb{R}^{d_v}\) は、柔軟な設計選択を可能にします。私たちの実験では、メインバックボーンに選択したのと同じアーキテクチャ（例えば、DDL が Transformer に適用される場合、\(\mathbf{F}\) は Feed-Forward Network または Multi-Head Attention ブロック構造をミラーリングします）を使用して、容量の整合を確保しています。
+</span>
+
+</p>
+    </body>
+</html>
