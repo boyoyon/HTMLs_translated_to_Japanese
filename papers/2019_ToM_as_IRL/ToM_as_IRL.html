@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Theory of mind as inverse reinforcement learning </title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1>Theory of mind as inverse reinforcement learning <br><span style="color:blue;">逆強化学習としての心の理論</span></h1>
+
+Julian Jara-Ettinger<sup>1,2</sup>
+<br>
+<sup>1</sup> Department of Psychology, Yale University, New Haven, CT, United States
+<sup>2</sup> Department of Computer Science, Yale University, New Haven, CT, United States
+
+<p>
+We review the idea that Theory of Mind—our ability to reason about other people’s mental states—can be formalized as inverse reinforcement learning. Under this framework, expectations about how mental states produce behavior are captured in a reinforcement learning (RL) model. Predicting other people’s actions is achieved by simulating a RL model with the hypothesized beliefs and desires, while mental-state inference is achieved by inverting this model. Although many advances in inverse reinforcement learning (IRL) did not have human Theory of Mind in mind, here we focus on what they reveal when conceptualized as cognitive theories. We discuss landmark successes of IRL, and key challenges in building human-like Theory of Mind.
+
+<br><span style="color:blue;">
+心の理論、つまり他者の精神状態を推論する能力は、逆強化学習として形式化できるという考え方を検証する。この枠組みでは、精神状態がどのように行動を生み出すかという期待が強化学習（RL）モデルに取り込まれる。他者の行動の予測は、仮説的な信念や欲求を持つRLモデルをシミュレートすることで実現され、精神状態の推論はこのモデルを反転させることで実現される。逆強化学習（IRL）における多くの進歩は人間の心の理論を念頭に置いてはいなかったが、本稿では、それらを認知理論として概念化した場合に何が明らかになるかに焦点を当てる。IRLの画期的な成功事例と、人間のような心の理論を構築する上での主要な課題について議論する。
+</span>
+</p>
+
+<h2>Human theory of mind <span style="color:blue;">人間の心の理論</span></h2>
+<p>
+Imagine going to meet a friend for coffee only to ﬁnd yourself sitting alone. You know your friend is scattered, so you start to suspect that she got distracted on the way. Or maybe she lost track of time, or got the date ﬂat-out wrong. As you’re thinking how typical this is of her, you suddenly remember that the coffee shop has a second location right next to your friend’s ofﬁce. Without talking toher,yourealize thatsheprobablyhadtheotherlocation in mind; that (just like you) she forgot the coffee shop had two locations; and that, for all you know, she’s probably sitting there wondering why you didn’t show up.
+
+<br><span style="color:blue;">
+友達とコーヒーを飲みに行ったはずが、一人で座っているのを想像してみてください。友達は気が散りやすいので、途中で何かに気を取られたのではないかと疑い始めます。あるいは、時間を忘れたか、日付をすっかり間違えたのかもしれません。これは彼女らしい行動だと考えていると、ふと、そのコーヒーショップの2号店が友達のオフィスのすぐ隣にあることを思い出します。話しかけることなく、彼女はおそらく別の店のことを考えていたのだろう、（あなたと同じように）コーヒーショップが2号店であることを忘れていたのだろう、そして、もしかしたら彼女はそこに座って、なぜあなたが来なかったのか不思議に思っているかもしれない、と気づきます。
+</span>
+</p><p>
+To make sense of what went wrong, you had to use a mental model of your friend’s mind—what she prefers, what she knows, and what she assumes. This capacity, called a Theory of Mind [1,2], lets us intuit how people we’re familiar with might act in different situations. But, beyondthat,italsolets usinferwhateven strangers mightthink or want based on how they behave. Research in cognitive science suggests that we infer mental states by thinking of other people as utility maximizers: constantly acting to maximize the rewards they obtain while mini-mizing the costs that they incur [3–5]. Using this assump-tion, even children can infer other people’s preferences [6,7], knowledge [8,9], and moral standing [10–12].
+
+<br><span style="color:blue;">
+何がうまくいかなかったのかを理解するためには、友達の心のメンタルモデル、つまり彼女が何を好むのか、何を知っているのか、そして何を想定しているのかを理解する必要があった。心の理論[1,2]と呼ばれるこの能力は、私たちがよく知っている人がさまざまな状況でどのように行動するかを直感的に理解することを可能にする。しかし、それ以上に、見知らぬ人の行動に基づいて、彼らが何を考え、何を望んでいるのかを推測することもできる。認知科学の研究によると、私たちは他の人を効用最大化者、つまり発生するコストを最小化しながら得られる報酬を最大化するように常に行動していると考えることで、精神状態を推測しているようだ[3–5]。この仮定を用いることで、子供でも他人の好み[6,7]、知識[8,9]、道徳的立場[10–12]を推測することができる。
+</span>
+</p>
+
+<h2>Theory of mind as inverse reinforcement learning <span style="color:blue;">逆強化学習としての心の理論</span></h2>
+<p>
+Computationally, our intuitions about how other minds work can be formalized using frameworks developed in a classical area of AI: model-based reinforcement learning (hereafter reinforcement learning or RL)<sup>1</sup> . RL problems focus on how to combine a world model with a reward function to produce a sequence of actions, called a policy, that maximizes agents’ rewards while minimizing their costs. Thus, the principles of RL planning resemble the assumptions that we make about other people’s behavior [5,3,4]. Taking advantage of this similarity, we can for-malize our mental model of other people’s minds as being roughly equivalent to a reinforcement learning model (Figure 1). Under this approach, mental-state inference from observable behavior is equivalent to inverse  rein-forcement learning (IRL): inferring agents’ unobservable model  of  the  world  and  reward  function,  given  some observed actions.
+
+<br><span style="color:blue;">
+計算論的には、他者の心がどのように機能するかについての私たちの直感は、AIの古典的な分野で開発されたフレームワークであるモデルベース強化学習（以下、強化学習またはRL）<sup>1</sup> を使用して形式化できます。RLの問題は、世界モデルと報酬関数を組み合わせて、エージェントの報酬を最大化しながらコストを最小化するポリシーと呼ばれる一連のアクションを生成する方法に焦点を当てています。したがって、RLプランニングの原則は、他の人の行動について行う仮定に似ています[5,3,4]。この類似性を利用して、他の人の心のメンタルモデルを、強化学習モデルとほぼ同等として形式化できます（図1）。このアプローチでは、観測可能な行動からの精神状態の推論は逆強化学習（IRL）と同等です。つまり、いくつかの観測された行動が与えられたときに、エージェントの観測不可能な世界と報酬関数のモデルを推論します。
+</span>
+</p>
+
+<p style="padding-left:4em;">
+
+<sup>1</sup>  The term reinforcement learning emphasizes the learning compo-nent, but the framework also captures how agents act under complete knowledge of the world and the rewards in it.
+
+<br><span style="color:blue;">
+強化学習という用語は学習コンポーネントを強調しますが、このフレームワークは、エージェントが世界とその報酬に関する完全な知識に基づいてどのように行動するかも捉えます。
+</span>
+</p><p>
+
+</p><p>
+
+Figure 1　<span style="color:blue;">図1</span><br>
+<hr>
+</p>
+<center><img src="images/fig1.svg"></center>
+
+<p>
+Simple schematic of how Theory of Mind can be modeled as Inverse Reinforcement Learning. This approach follows a tradition in cognitive science that argues that people make sense of their environment through working mental models [2,13–15]. (a) Core Theory of Mind components. People’s beliefs about the world, combined with their desires, determine what they intend to do. People’s intentions guide their actions, which produce outcomes that change their beliefs about the world. Pink arrows represent mental-state inference. (b) Core model-based reinforcement learning components. A world model combined with the reward function generate a policy via utility maximization. Executing the policy produces state changes, which, in turn, lead the agent to revise its world model. Pink arrows represent inverse reinforcement learning: recovering the latent world model and reward function, given an observed policy execution. In practice, there is little agreement on how to map elements from RL models onto Theory of Mind. [16], for instance, interpreted reward functions as goals, [17 as desires, and [18 as context-specific intentions.
+
+<br><span style="color:blue;">
+心の理論を逆強化学習としてモデル化する方法を示す簡略図。このアプローチは、人々が機能するメンタルモデルを通して環境を理解するという認知科学の伝統[2,13–15]に従っています。(a) 心の理論の中核構成要素。人々の世界についての信念は、彼らの欲求と組み合わさって、彼らが何を意図するかを決定します。人々の意図は彼らの行動を導き、それが世界についての信念を変える結果をもたらします。ピンクの矢印は精神状態の推論を表しています。(b) モデルベースの強化学習の中核構成要素。報酬関数と組み合わされた世界モデルは、効用最大化を介してポリシーを生成します。ポリシーを実行すると状態が変化し、エージェントは世界モデルを修正します。ピンクの矢印は逆強化学習を表しています。これは、観察されたポリシー実行を与えられた場合に、潜在的な世界モデルと報酬関数を復元するものです。実際には、強化学習モデルの要素を心の理論にどのようにマッピングするかについて、ほとんど合意が得られていません。例えば[16]は報酬機能を目標、[17]は欲求、[18]は文脈特有の意図として解釈した。
+</span>
+</p><p>
+
+Inverse Reinforcement Learning problems face a critical challenge: We can often explain someone’s actions by appealing  to  different  combinations  of  mental  states. Returningto the coffeeshop example in the introduction, to make sense of what happened, we did not just settle on the ﬁrst plausible explanation (e.g., maybe your friend lost track of time), but continuously sought more expla-nations,  even  if  the  ones  we  already  had  were  good enough (because, even if they explained your friend’s absence, they could still be wrong). Thus, mental-state inference  requires  tracking  multiple  explanations  and weighting  them  by  how  well  they  explain  the  data. Bayesian inference—a general approach that successfully characterizes how people “invert” intuitive theories in many domains of cognition [19]—has been effective in explaininghowpeopledothis.Insimpletwo-dimensional displays,  IRL  through  Bayesian  inference  produces human-like  judgments  when  inferring  people’s  goals [16], beliefs [17], desires [4], and helpfulness [12].
+
+<br><span style="color:blue;">
+逆強化学習の問題は重大な課題に直面しています。それは、人の行動はしばしば、様々な精神状態の組み合わせに依拠することで説明できるということです。冒頭のコーヒーショップの例に戻ると、何が起こったかを理解するために、私たちは最初に思いついたもっともらしい説明（例えば、友人が時間を忘れたかもしれない）に満足するのではなく、たとえ既存の説明が十分に説得力のあるものであっても、継続的にさらなる説明を模索しました（たとえそれらの説明が友人の不在を説明できたとしても、間違っている可能性もあるからです）。したがって、精神状態の推論には、複数の説明を追跡し、それらがデータをどの程度適切に説明できるかに基づいて重み付けすることが必要になります。ベイズ推論は、認知の多くの領域において人々が直感的な理論を「反転」する方法をうまく特徴付ける一般的なアプローチであり[19]、人々がこれをどのように行うかを説明するのに効果的でした。単純な2次元ディスプレイでは、ベイズ推論によるIRLは、人々の目標[16]、信念[17]、欲求[4]、有用性[12]を推論する際に人間のような判断を生み出します。
+</span>
+</p>
+
+<h2>Inverse reinforcement learning in use <span style="color:blue;">逆強化学習の活用</span></h2>
+<p>
+In Cognitive Science, Theory of Mind has been theoreti-cally and empirically posited as central to a broad array of cognitive activities from language understanding [28,29] to moral reasoning [30–32]. Research in IRL suggests the same (Figure 2). In robotics, RL planners that integrate IRL can predict where pedestrians are headed and pre-emptively adjust their plan to avoid collisions (Figure 2a; [20,21]). Conversely, RL planners can also use IRL on their own actions to ensure that observers will be able to infer the robot’s goal as quickly as possible (Figure 2b; [22–24,33]). Using a similar logic, IRL can also be inte-grated into RL planners to generate pedagogical actions designed   to   help   observers   learn   about   the   world (Figure 2c; [25]). IRL has also been fruitful in solving the problem of aligning a system’s values with our own. Explicitly encoding reward functions into RL planners is prone to errors and oversights. Systems with IRL can instead infer the reward function from a person’s actions, and use it as their own. This allows for easy transfer of rewards  across  agents  (Figure  2d;  [26,27]),  including rewards that encode moral values [34]. More broadly, IRL can jointly infer other agents’ beliefs and desires (including desires to help or hinder others; [12,11]), and even the location of unobservable rewards, by watching other agents navigate the world (Figure 2e; [17,35]).
+
+<br><span style="color:blue;">
+認知科学において、心の理論は、言語理解 [28,29] から道徳的推論 [30–32] まで幅広い認知活動の中心であると理論的かつ経験的に仮定されてきました。 IRL の研究でも同じことが示唆されています (図 2)。 ロボット工学では、IRL を統合した RL プランナーは、歩行者の方向を予測し、衝突を避けるために事前に計画を調整することができます (図 2a; [20,21])。 逆に、RL プランナーは、観察者がロボットの目的をできるだけ早く推測できるように、自身の行動に IRL を使用することもできます (図 2b; [22–24,33])。 同様のロジックを使用して、IRL を RL プランナーに統合して、観察者が世界について学習できるように設計された教育的なアクションを生成することもできます (図 2c; [25])。 IRLは、システムの価値観を人間自身の価値観と一致させるという問題の解決にも効果的です。報酬関数をRLプランナーに明示的にエンコードすると、エラーや見落としが発生しやすくなります。IRLを備えたシステムは、代わりに人の行動から報酬関数を推測し、それを自身の関数として使用できます。これにより、エージェント間での報酬の転送が容易になり（図2d; [26,27]）、道徳的価値観をエンコードした報酬も含まれます[34]。より広くは、IRLは他のエージェントが世界をナビゲートするのを観察することで、他のエージェントの信念や欲求（他者を助けたい、または妨害したいという欲求を含む; [12,11]）、さらには観測できない報酬の場所さえも共同で推測できます（図2e; [17,35]）。
+</span>
+</p><p>
+
+Figure 2　<span style="color:blue;">図2</span><br>
+<hr>
+</p>
+<center><img src="images/fig2.svg"></center>
+
+<p>
+Conceptual illustrations of IRL in use. These schematics capture the key ideas behind each advance, but, for the sake of clarity, diverge from the actual experiments in the cited work. The circuit
+represents a planner with IRL. The gray cube represents a rewarding target and the blue cube represents a non-rewarding potential target. Dotted arrows show valid policies for an RL planner,
+and the gray arrows show preferred paths after IRL is integrated into the planner. (a) IRL can predict crowd movements and adjust policies accordingly [20,21]. (b) IRL can be used to favor
+paths that allows observers to quickly infer its goal (moving upwards is equally efficient than moving rightward, but it would make the agent’s goal temporarily ambiguous) [22–24]. (c) IRL can be
+used to design actions that ‘teach’ about the world, such as detouring to reveal that it is safe to navigate through the blue region [25]. d) IRL can be used to infer and copy another agent’s
+reward function [26,27]. e) IRL infers the location of the gray cube, based on the agent’s actions [17].
+
+<br><span style="color:blue;">
+IRL の使用例の概念図。これらの図は、各進歩の背後にある主要なアイデアを捉えていますが、明瞭性のために、引用文献の実際の実験とは異なります。回路図は
+IRL を備えたプランナーを表しています。灰色の立方体は報酬のあるターゲット、青色の立方体は報酬のない潜在的なターゲットを表しています。点線の矢印は RL プランナーに有効なポリシーを示し、灰色の矢印は IRL がプランナーに統合された後の好ましい経路を示しています。(a) IRL は群衆の動きを予測し、それに応じてポリシーを調整することができます [20,21]。(b) IRL は、観察者が目標を素早く推測できるような経路を優先するために使用できます（上方向への移動は右方向への移動と同等に効率的ですが、エージェントの目標が一時的に曖昧になります）[22–24]。 (c) IRLは、青い領域を安全に通過できることを明らかにするために迂回するなど、世界について「教える」行動を設計するために使用できます[25]。d) IRLは、他のエージェントの報酬関数を推論およびコピーするために使用できます[26,27]。e) IRLは、エージェントの行動に基づいて、灰色の立方体の位置を推論します[17]。
+</span>
+</p><p>
+
+Finally, cognitively-inspired models of language under-standing are not usually conceptualized as IRL because the domain lacks the spatiotemporal properties typical of RL problems. These models, however, share similar key ideas with IRL in that they work by modeling speakers as rational agents that trade off costs with rewards. This approachexplainshowwedeterminethemeaningbehind ambiguousutterances[36];howweinferspeakers’knowl-edge based on their choice of words (e.g., suspecting that thespeaker knowsthere aretwocats ifwehearthemrefer to ‘the big cat’ instead of just ‘the cat’) [37]; how we make sense of non-literal word meanings [38]; and even how speakers  use  prosody  to  ensure  listeners  will  get  the meaning they wish to convey [39] (see [40] for review).
+
+<br><span style="color:blue;">
+最後に、言語理解の認知的モデルは、強化学習（RL）の問題に典型的な時空間特性を欠いているため、通常はIRLとして概念化されない。しかし、これらのモデルは、話者をコストと報酬をトレードオフする合理的なエージェントとしてモデル化するという点で、IRLと類似した重要なアイデアを共有している。このアプローチは、曖昧な発話の背後にある意味をどのように決定するか[36]、話者の単語の選択に基づいて話者の知識をどのように推測するか（例えば、話者が単に「猫」ではなく「大きな猫」​​と言う場合、話者は2匹の猫がいることを知らないと疑う）[37]、非文字的な単語の意味をどのように理解するか[38]、さらには話者が聞き手に伝えたい意味を確実に理解させるために韻律を使用する方法[39]（レビューについては[40]を参照）を説明する。
+</span>
+</p>
+
+<h2>Making inverse reinforcement learning useful <span style="color:blue;">逆強化学習を有用にする</span></h2>
+<p>
+Despite the success of IRL, its practical use is limited because inverting reinforcement learning models is com-putationally expensive. Deep learning—a subclass of AI, historically known for its emphasis on biological, rather than cognitive, plausibility [13,41]—has recently shown a strong advantage in speed over competing approaches, especially in the reinforcement learning domain [42–44]. Recent work has shown that it is also possible to imple-ment IRL in neural networks [45–47], but these imple-mentations   face   challenges characteristic of deep learning: they require vast amounts of labeled examples fortrainingandtheydonotgeneralizewelltonewtasksor environments  [13].  For  instance,  state-of-the-art  IRL through deep learning [47] requires 32 million training examples to perform goal-inference at the capacity of a six-month-old infant [48]. If humans acquired Theory of Mind in a similar way, infants would need to receive almost 175,000 labeled goal-training episodes per day, every day.
+
+<br><span style="color:blue;">
+IRL の成功にもかかわらず、強化学習モデルの反転は計算コストが高いため、その実用化は限られています。ディープラーニングは AI のサブクラスであり、歴史的には認知的妥当性よりも生物学的妥当性に重点を置くことで知られています [13,41]。最近では、特に強化学習領域において、競合するアプローチに対して速度の面で大きな優位性を示しています [42–44]。最近の研究では、ニューラルネットワークで IRL を実装することも可能であることが示されています [45–47]が、これらの実装はディープラーニング特有の課題に直面しています。つまり、トレーニングには膨大な量のラベル付きサンプルが必要であり、新しいタスクや環境にうまく一般化されません [13]。たとえば、ディープラーニングによる最先端の IRL [47] では、生後 6 か月の乳児の能力で目標推論を実行するために 3,200 万のトレーニングサンプルが必要です [48]。もし人間が同じような方法で心の理論を習得するならば、乳児は毎日、1日あたり約175,000回のラベル付き目標訓練エピソードを受ける必要があるだろう。
+</span>
+</p><p>
+
+These challenges are already being mitigated by net-works speciﬁcally designed to implement IRL [49,46,45]. And  meta-learning—algorithms  that,  when  trained  on multiple tasks, learn general properties that reduce the needfordata—willlikelyplayaroleinyearstocome[50– 52]. Yet, deep IRL with the ﬂexibility of more traditional IRL models [17,53] remains distant [13]. One solution that has proved fruitful in other domains is to marry the two approaches [54–57]. A deep net can be trained to quickly transform observed actions into candidate mental states. After this initial guess, a full-blown symbolic RL model can take over to reﬁne these inferences and use them for a variety of tasks including generating predic-tions, producing explanations, and making social evalua-tions. Beyond its practical usefulness, this approach may provide a cognitively-plausible theory that resembles the dichotomy between fast automatic agency detection [58– 60]  and  richer  but  slower  mental-state  reasoning  in humans [61,53,17].
+
+<br><span style="color:blue;">
+これらの課題は、IRL を実装するために特別に設計されたネットワークによってすでに軽減されています [49,46,45]。 また、メタ学習 (複数のタスクでトレーニングすると、データの必要性を減らす一般的な特性を学習するアルゴリズム) は、今後数年間で中心的な役割を果たす可能性があります [50–52]。 しかし、より伝統的な IRL モデル [17,53] の柔軟性を備えたディープ IRL の実現には、まだ遠い道のりがあります [13]。 他の分野で実りあることが証明されている解決策の 1 つは、2 つのアプローチを組み合わせることです [54–57]。 ディープネットは、観察された行動を候補となる精神状態にすばやく変換するようにトレーニングできます。 この最初の推測の後、本格的なシンボリック RL モデルが引き継いでこれらの推論を洗練し、予測の生成、説明の作成、社会的評価の作成など、さまざまなタスクに使用できます。このアプローチは、実用的な有用性を超えて、高速な自動エージェンシー検出[58-60]と、より豊かだが遅い人間の精神状態推論[61,53,17]の二分法に似た、認知的に妥当な理論を提供する可能性がある。
+</span>
+</p>
+
+<h2>Inverse reinforcement learning as theory of mind <span style="color:blue;">心の理論としての逆強化学習</span></h2>
+<p>
+While  Inverse  Reinforcement  Learning  captures  core inferences in human action-understanding, the way this framework has been used to represent beliefs and desires fails to capture the more structured mental-state reason-ing that people use to make sense of others [61,62].
+
+<br><span style="color:blue;">
+逆強化学習は人間の行動理解における中核的な推論を捉えるが、この枠組みが信念や欲求を表現するために使われてきた方法では、人々が他者を理解するために使う、より構造化された精神状態の推論を捉えることができていない[61,62]。
+</span>
+</p>
+
+<h3>Belief representations <span style="color:blue;">信念表現</span></h3>
+<p>
+RL frameworks were historically designed to deal with uncertainty in the broadest sense, including uncertainty about the agent’s own position in space (e.g., a noisy sensor may not correctly estimate a robot’s distance to a wall). IRL often uses RL models called Partially Observ-able Markov Decision Processes [63], where beliefs are represented as probability distributions over every possi-ble state of the world (e.g., [17]). This guarantees that the representation is coherent and complete, but it also lacks structure that human Theory of Mind exploits.
+
+<br><span style="color:blue;">
+強化学習フレームワークは歴史的に、エージェント自身の空間的位置に関する不確実性（例えば、ノイズの多いセンサーはロボットから壁までの距離を正しく推定できない可能性がある）を含む、最も広い意味での不確実性に対処するように設計されてきた。現実世界学習（IRL）では、部分観測可能マルコフ決定過程[63]と呼ばれる強化学習モデルがよく用いられる。このモデルでは、信念は世界のあらゆる可能な状態における確率分布として表現される（例えば、[17]）。これにより、表現の一貫性と完全性が保証されるが、人間の心の理論が活用する構造が欠如している。
+</span>
+</p><p>
+
+When we infer other people’s mental states, we often infer  small  parts  of  what  they  know  or  believe  (e.g., inferring that Sally didn’t know a coffee cup had leftover wine as we see her take a sip and spit it out) without reasoning about beliefs that are clearly true (e.g., is Sally aware that she is standing on her feet?) or irrelevant (e.g., does Sally know the speed of sound?). Yet, current IRL models can only evaluate the plausibility of beliefs that are   complete   descriptions   of   everything   an   agent believes. Intuitively, this is because the only way to tell whether beliefs about some aspect of the world matter, is bytesting ifthey do.Humansappearto solve this problem by assuming that other people’s beliefs are similar to our own in most ways. If so, IRL may become more human-like  if  it  is  initialized  with  an  assumption  that  other people’s beliefs in immediate situations are similar to its own representation of the world, and then, proposals about other people’s beliefs are not meant to provide a full description of what’s in their mind, but rather to capture in what ways their beliefs are critically similar or different from our own.
+
+<br><span style="color:blue;">
+他人の精神状態を推測するとき、私たちはしばしば、彼らが知っていることや信じていることのほんの一部を推測します（例えば、サリーがコーヒーカップに残ったワインを一口飲んで吐き出すのを見て、サリーはそれを知らなかったと推論する）。しかし、現在の IRL モデルは、エージェントが信じていることすべてを完全に記述した信念の妥当性しか評価できません。直感的には、これは、世界のある側面についての信念が重要かどうかを判断する唯一の方法が、重要かどうかをバイトで調べることだからです。人間は、他の人の信念はほとんどの点で私たち自身の信念と似ていると仮定することで、この問題を解決しているようです。もしそうなら、他の人が直接的な状況で抱く信念は、現実世界自身の世界の表現と似ているという仮定で初期設定され、他の人の信念についての提案は、彼らの心の中にあるものを完全に説明するものではなく、彼らの信念がどのような点で私たち自身の信念と決定的に似ているか、あるいは違うかを捉えることを意図したものであれば、現実世界はより人間らしくなるかもしれない。
+</span>
+</p>
+
+<h3>Desire representations <span style="color:blue;">欲望の表象</span></h3>
+<p>
+Current  IRL  models  typically  represent  desires  as  a function that assigns a numerical value to each possible state  of  the  world  (although  note  that  there  is  little agreement on how to map components of RL models onto concepts in human Theory of Mind [17,16,53,18]). While useful for predicting agents’ immediate actions (namely, keep navigating towards inferred high-reward states),  this  formalism  does  not  reveal  where  these rewards come from, and it does not specify how to predict what  the  rewards  may  be in  a  new  environment.  To achieve this, it is critical to recognize that rewards are often  the  combination  of  simpler  desires  working  at different timescales  and levels of abstraction.  Making sense  of  even  the  simplest  actions,  such  as  watching someone   get   coffee,   involves   considering   different sources of rewards (perhaps not only enjoying coffee, but also the company of friends), their tradeoffs (they may have a meeting soon, preventing them from going to the superior coffee shop that is located farther away), and the costs the agent was willing to incur (time, distance, and money). From an observer’s standpoint, actions alone do not contain enough information to reveal how many sourcesof costsand rewards areatplay.This suggests that effective IRL needs strong inductive biases that exploit knowledge about the general types of rewards agents have, the types of rewards that are usually at play in different contexts, and the speciﬁc rewards that different agents act under.
+
+<br><span style="color:blue;">
+現在のIRLモデルは、一般的に、欲求を世界の各可能な状態に数値を割り当てる関数として表現します（ただし、RLモデルの構成要素を人間の心の理論[17,16,53,18]の概念にどのようにマッピングするかについては、ほとんど合意が得られていないことに注意してください）。この形式主義は、エージェントの即時の行動（つまり、推定された高報酬状態に向かって進み続けること）を予測するのには有用ですが、これらの報酬がどこから来るのかを明らかにしておらず、新しい環境における報酬がどのようなものになるかを予測する方法も特定していません。これを実現するには、報酬は多くの場合、異なる時間スケールと抽象化レベルで作用する、より単純な欲求の組み合わせであることを認識することが重要です。誰かがコーヒーを買っているのを見るといった、最も単純な行動でさえも、その意味を理解するには、様々な報酬源（コーヒーを楽しむことだけでなく、友人との交流も含む）、それらのトレードオフ（近いうちに会議があるため、遠くにある高級コーヒーショップに行くことができないかもしれない）、そしてエージェントが負担する意思のあるコスト（時間、距離、金銭）を考慮する必要があります。観察者の視点から見ると、行動だけでは、どれだけのコスト源と報酬源が関係しているかを明らかにするのに十分な情報を含んでいません。これは、効果的なIRLには、エージェントが持つ一般的な報酬の種類、様々な状況で通常作用する報酬の種類、そして様々なエージェントが行動する特定の報酬に関する知識を活用する、強力な帰納的バイアスが必要であることを示唆しています。
+</span>
+</p><p>
+
+A bigger challenge to current approaches is that reward functions failtocapture thelogical andtemporalstructure of desires. When we reason about others, we recognize that their desires can depend on other desires (someone might only enjoy coffee after having eaten something), that they can depend on context (drinking coffee may be more appealing for someone in the morning), and that they can be conjunctive (liking coffee with sugar, but neither in isolation) or disjunctive (liking coffee and milk, but not together). A crucial challenge towards human-like TheoryofMindisdevelopingrewardrepresentationsthat support  expressing  desires  which  can  be  fulﬁlled  in multiple ways, with spatiotemporal constraints, and vary-ing degrees of abstraction. Advances in hierarchical RL may  play  a  critical  role  towards  this  goal  [64,65].  In addition, recent work suggests that representations origi-nally developed to explain how people build complex concepts  by  composing  simpler  ones  [14,66]  may  be useful. Under this approach, desires are represented as propositions  built  by  composing  potential  sources  of rewards, and reward functions are synthesized in each context accordingly. In models like these, mental-state inference corresponds to inferring the agents’ unobserv-able  reward  function,  as  well  as  the  proposition  that generated it [18], and it produces human-like inferences that capture temporal and logical structures of desires.
+
+<br><span style="color:blue;">
+現在のアプローチのより大きな課題は、報酬関数が欲求の論理的・時間的構造を捉えきれないことです。他者について推論する際には、他者の欲求が他の欲求に依存していること（何かを食べた後にしかコーヒーを飲めない人もいる）、文脈に依存していること（朝コーヒーを飲む方が誰かにとって魅力的かもしれない）、そしてそれらが連言的であること（砂糖入りのコーヒーは好きだが、単独では好きではない）、あるいは分離的であること（コーヒーとミルクは好きだが、一緒には好きではない）を認識します。人間のような心の理論を実現するための重要な課題は、時空間的制約と様々な抽象度を伴う、複数の方法で満たされる欲求の表現をサポートする報酬表象を開発することです。階層的強化学習の進歩は、この目標達成に重要な役割を果たす可能性があります[64,65]。さらに、最近の研究では、人が複雑な概念をより単純な概念を組み合わせることで構築する方法を説明するために開発された表象[14,66]が有用である可能性が示唆されています。このアプローチでは、欲求は報酬の潜在的な源泉を組み合わせることで構築される命題として表現され、報酬関数はそれぞれの文脈に応じて合成されます。このようなモデルにおいて、心的状態推論は、エージェントの観測不可能な報酬関数と、それを生み出した命題を推論することに対応し[18]、欲求の時間的・論理的構造を捉える人間のような推論を生み出します。
+</span>
+</p>
+
+<h2>Beyond inverse reinforcement learning <span style="color:blue;">逆強化学習を超えて</span></h2>
+<p>
+Human intuitive theories are often approximations of the phenomena they aim to explain [5,67], allowing us to ignore complexities that are less useful for prediction and explanation, much inthe same way that scientiﬁc theories gain explanatory power through abstraction and simpliﬁ-cation [68,1,69,70]. Theory of Mind in humans may be successful precisely because it only approximates how humans actually make choices. If so, IRL may need to depart from frameworks developed in RL, which focus on the nuances of action production.
+
+<br><span style="color:blue;">
+人間の直感的な理論は、説明しようとする現象の近似値であることが多い[5,67]。これにより、予測や説明にあまり役立たない複雑さを無視することが可能になる。これは、科学理論が抽象化と単純化によって説明力を獲得するのとよく似ている[68,1,69,70]。人間の心の理論が成功しているのは、まさに人間が実際にどのように選択を行うかを近似しているからかもしれない。もしそうなら、現実世界学習（IRL）は、行動生成のニュアンスに焦点を当てた強化学習（RL）で開発された枠組みから逸脱する必要があるかもしれない。
+</span>
+</p><p>
+
+Perhaps the greatest challenge in modeling Theory of Mind as Inverse Reinforcement Learning lies in captur-ing variability in thinking. IRL focuses on recovering the beliefs and desires under the assumption that all agents make choices and take actions in identical ways. Yet, we recognize  that  two  people  with  the  same  beliefs  and desires may still make different reasonable choices and take different reasonable actions. Theory of Mind in the real  world  goes  beyond  mental-state  inference  and includes learning agent-speciﬁc models of how people think.Werecognizethatpeopleforgetandmisremember, that they get impatient, they fail to think of solutions that feel obviousin retrospect, and they experiencefrustration and regret. For IRL as Theory of Mind to succeed, we must build a model that is more human than RL.
+
+<br><span style="color:blue;">
+逆強化学習（IRL）として心の理論をモデル化する上で最大の課題は、思考の変動性を捉えることにあると言えるでしょう。IRLは、すべてのエージェントが同一の選択と行動をとるという仮定のもと、信念と欲求を復元することに重点を置いています。しかしながら、同じ信念と欲求を持つ二人の人間が、異なる合理的な選択を行い、異なる合理的な行動をとる可能性もあることを認識しています。現実世界における心の理論は、精神状態の推論にとどまらず、エージェント固有の思考モデルを学習することも含まれます。人は忘れたり、間違って記憶したり、焦ったり、後から考えれば明白な解決策を思いつかなかったり、フラストレーションや後悔を経験したりすることを認識しています。IRLを心の理論として成功させるには、RLよりも人間的なモデルを構築する必要があります。
+</span>
+</p>
+
+<h2>Acknowledgments <span style="color:blue;">謝辞</span></h2>
+<p>
+This work was supported by a Google Faculty Research Award. Thanks to members of Yale’s Computation and Cognitive Development lab for feedback on an earlier version of this manuscript.
+
+<br><span style="color:blue;">
+この研究はGoogle Faculty Research Awardの支援を受けています。本稿の初期版へのフィードバックを提供してくださったイェール大学計算・認知発達研究室の皆様に感謝申し上げます。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+1. Dennett DC: The intentional stance. MIT Press; 1989.
+
+<br><span style="color:blue;">
+『意図的スタンス』
+</span>
+
+</li><br><li>
+2. Gopnik A, Meltzoff AN, Bryant P: Words, thoughts, and theories. 1997.
+
+<br><span style="color:blue;">
+『言葉、思考、そして理論』
+</span>
+</li><br><li>
+3. Lucas CG, Grifﬁths TL, Xu F, Fawcett C, Gopnik A, Kushnir T, Markson L, Hu J: The child as econometrician: A rational model of preference understanding in children. PLoS ONE 2014, 9: e92160.
+
+<br><span style="color:blue;">
+『計量経済学者としての子ども：子どもの選好理解の合理的モデル』
+</span>
+</li><br><li>
+4. Jern A, Lucas CG, Kemp C: People learn other peoples preferences through inverse decision-making. Cognition 2017, 168:46-64.
+
+<br><span style="color:blue;">
+『人は逆意思決定を通して他者の選好を学ぶ』
+</span>
+</li><br><li>
+5. Jara-Ettinger J, Gweon H, Schulz LE, Tenenbaum JB: The naı¨ve utility calculus: Computational principles underlying commonsense psychology. Trends Cognit Sci 2016, 20:589-604.
+
+<br><span style="color:blue;">
+『ナイーブ効用計算：常識心理学の根底にある計算原理』
+</span>
+</li><br><li>
+6. Jara-Ettinger J, Gweon H, Tenenbaum JB, Schulz LE: Childrens understanding of the costs and rewards underlying rational action. Cognition 2015, 140:14-23.
+
+<br><span style="color:blue;">
+『子どもの合理的行動の根底にあるコストと報酬の理解』
+</span>
+</li><br><li>
+7. Liu S, Ullman TD, Tenenbaum JB, Spelke ES: Ten-month-old infants infer the value of goals from the costs of actions. Science 2017, 358:1038-1041.
+
+<br><span style="color:blue;">
+『生後10ヶ月の乳児は行動のコストから目標の価値を推論する』
+</span>
+</li><br><li>
+8. Jara-Ettinger J, Floyd S, Tenenbaum JB, Schulz LE: Children understand that agents maximize expected utilities. J Exp Psychol: Gen 2017, 146:1574.
+
+<br><span style="color:blue;">
+『子どもは行動主体が期待効用を最大化することを理解する』
+</span>
+</li><br><li>
+9. H. Richardson, C. Baker, J. Tenenbaum, R. Saxe, The development of joint belief-desire inferences, in: Proceedings of the Annual Meeting of the Cognitive Science Society, volume 34.
+
+<br><span style="color:blue;">
+『信念と欲求の統合推論の発達』
+</span>
+</li><br><li>
+10.   Jara-Ettinger J, Tenenbaum JB, Schulz LE: Not so innocent: Toddlers inferences about costs and culpability. Psychol Sci 2015, 26:633-640.
+
+<br><span style="color:blue;">
+『幼児におけるコストと責任に関する推論』
+</span>
+</li><br><li>
+11.   Kiley Hamlin J, Ullman T, Tenenbaum J, Goodman N, Baker C: The mentalistic basis of core social cognition: Experiments in preverbal infants and a computational model. Develop Sci 2013, 16:209-226.
+
+<br><span style="color:blue;">
+『中核的社会認知のメンタリズム的基盤: 言語発達前乳児を用いた実験と計算モデル』
+</span>
+</li><br><li>
+12.   Ullman T, Baker C, Macindoe O, Evans O, Goodman N, Tenenbaum JB: Help or hinder: Bayesian models of social goal inference, in: Advances in neural information processing systems 1874–1882.
+<br><span style="color:blue;">
+『助けになるか、妨げになるか：社会的目標推論のベイズモデル』
+</span>
+</li><br><li>
+13.   Lake BM, Ullman TD, Tenenbaum JB, Gershman SJ: Building machines that learn and think like people. Behav Brain Sci 2017, 40.
+<br><span style="color:blue;">
+『人間のように学習し考える機械の構築』
+</span>
+</li><br><li>
+14.   Goodman ND, Tenenbaum JB, Feldman J, Grifﬁths TL: A rational analysis of rule-based concept learning. Cognit Sci 2008, 32:108-154.
+<br><span style="color:blue;">
+『ルールベース概念学習の合理的分析』
+</span>
+</li><br><li>
+15.   Goodman N, Mansinghka V, Roy DM, Bonawitz K, Tenenbaum JB: Church: a language for generative models, arXiv preprint arXiv:1206.3255 (2012).
+<br><span style="color:blue;">
+『生成モデルのための言語』
+</span>
+</li><br><li>
+16.   Baker CL, Saxe R, Tenenbaum JB: Action understanding as inverse planning. Cognition 2009, 113:329-349.
+<br><span style="color:blue;">
+『逆プランニングとしての行為理解』
+</span>
+</li><br><li>
+17.   Baker CL, Jara-Ettinger J, Saxe R, Tenenbaum JB: Rational quantitative attribution of beliefs, desires and percepts in human mentalizing. Nat Hum Behav 2017, 1:0064.
+<br><span style="color:blue;">
+『人間のメンタライジングにおける信念、欲求、知覚の合理的定量的帰属』
+</span>
+</li><br><li>
+18.   Velez-Ginorio J, Siegel M, Tenenbaum JB, Jara-Ettinger J: Interpreting actions by attributing compositional desires. 2017.
+<br><span style="color:blue;">
+『構成的欲求の帰属による行為の解釈』
+</span>
+</li><br><li>
+19.   Tenenbaum JB, Kemp C, Grifﬁths TL, Goodman ND: How to grow a mind: Statistics, structure, and abstraction. Science 2011, 331:1279-1285.
+<br><span style="color:blue;">
+『心を育てる方法：統計、構造、抽象化』
+</span>
+</li><br><li>
+20.   Kim B, Pineau J: Socially adaptive path planning in human environments using inverse reinforcement learning. Int J Soc Robot 2016, 8:51-66.
+<br><span style="color:blue;">
+『逆強化学習を用いた人間環境における社会的に適応的な経路計画』
+</span>
+</li><br><li>
+21.   Kretzschmar H, Spies M, Sprunk C, Burgard W: Socially compliant mobile robot navigation via inverse reinforcement learning. Int J Robot Res 2016, 35:1289-1307.
+<br><span style="color:blue;">
+『逆強化学習による社会的に順応性のある移動ロボットナビゲーション』
+</span>
+</li><br><li>
+22.   Dragan AD, Lee KC, Srinivasa SS: Legibility and predictability of robot motion.  Proceedings of the 8th ACM/IEEE international conference on Human-robot interaction 2013:301-308.
+<br><span style="color:blue;">
+『ロボット動作の可読性と予測可能性』
+</span>
+</li><br><li>
+23.   Dragan A, Srinivasa S: Generating legible motion. 2013.
+<br><span style="color:blue;">
+『判読可能な動作の生』
+</span>
+</li><br><li>
+24.   Dragan A, Srinivasa S: Integrating human observer inferences into robot motion planning. Autonomous Robots 2014, 37:351-368.
+<br><span style="color:blue;">
+『人間の観察者の推論をロボットの動作計画に統合する』
+</span>
+</li><br><li>
+25.   Ho MK, Littman M, MacGlashan J, Cushman F, Austerweil JL: Showing versus doing: Teaching by demonstration. Adv Neural Inform Process Syst 2016:3027-3035.
+<br><span style="color:blue;">
+『見せることとすること：デモンストレーションによる教育』
+</span>
+</li><br><li>
+26.   Hadﬁeld-Menell D, Russell SJ, Abbeel P, Dragan A: Cooperative inverse reinforcement learning. Adv Neural Inform Process Syst 2016:3909-3917.
+<br><span style="color:blue;">
+『協力的逆強化学習』
+</span>
+</li><br><li>
+27.   D. Malik, M. Palaniappan, J. F. Fisac, D. Hadﬁeld-Menell, S. Russell, A. D. Dragan, An efﬁcient, generalized bellman update for cooperative inverse reinforcement learning, arXiv preprint arXiv:1806.03820 (2018).
+<br><span style="color:blue;">
+『協力的逆強化学習のための効率的で一般化されたベルマン更新』
+</span>
+</li><br><li>
+28.   Rubio-Fernandez P: The director task: A test of theory-of-mind use or selective attention?  Psychonomic Bull Rev 2017, 24:1121-1128.
+<br><span style="color:blue;">
+『ディレクター課題：心の理論利用か選択的注意かのテストか？』
+</span>
+</li><br><li>
+29.   R. X. Hawkins, H. Gweon, N. D. Goodman, Speakers account for asymmetries in visual perspective so listeners don’t have to, arXiv preprint arXiv:1807.09000 (2018).
+<br><span style="color:blue;">
+『話し手は視覚的遠近法の非対称性を考慮するため、聞き手は考慮する必要がない』
+</span>
+</li><br><li>
+30.   Young L, Cushman F, Hauser M, Saxe R: The neural basis of the interaction between theory of mind and moral judgment. Proc Natl Acad Sci 2007, 104:8235-8240.
+<br><span style="color:blue;">
+『心の理論と道徳的判断の相互作用の神経基盤』
+</span>
+</li><br><li>
+31.   Young L, Camprodon JA, Hauser M, Pascual-Leone A, Saxe R: Disruption of the right temporoparietal junction with transcranial magnetic stimulation reduces the role of beliefs in moral judgments. Proc Natl Acad Sci 2010, 107:6753-6758.
+<br><span style="color:blue;">
+『経頭蓋磁気刺激による右側頭頭頂葉接合部の破壊は道徳的判断における信念の役割を低下させる』
+</span>
+</li><br><li>
+32.   Moran JM, Young LL, Saxe R, Lee SM, O’Young D, Mavros PL, Gabrieli JD: Impaired theory of mind for moral judgment in high-functioning autism. Proc Natl Acad Sci 2011, 108:2688-2692.
+<br><span style="color:blue;">
+『高機能自閉症における道徳判断のための心の理論の障害』
+</span>
+</li><br><li>
+33.   D. Strouse, M. Kleiman-Weiner, J. Tenenbaum, M. Botvinick, D. J. Schwab, Learning to share and hide intentions using information regularization, in: Advances in Neural Information Processing Systems 10270-10281.
+<br><span style="color:blue;">
+『意図の共有と隠蔽を学習する』
+</span>
+</li><br><li>
+34.   Kleiman-Weiner M, Saxe R, Tenenbaum JB: Learning a commonsense moral theory. Cognition 2017, 167:107-123.
+<br><span style="color:blue;">
+『常識的な道徳理論の学習』
+</span>
+</li><br><li>
+35.   S. Reddy, A. D. Dragan, S. Levine, Where do you think you’re going?: Inferring beliefs about dynamics from behavior, arXiv preprint arXiv:1805.08010 (2018).
+<br><span style="color:blue;">
+『どこへ行くと思う？：行動からダイナミクスに関する信念を推論する』
+</span>
+</li><br><li>
+36.   Frank MC, Goodman ND: Predicting pragmatic reasoning in language games. Science 2012, 336 998–998.
+<br><span style="color:blue;">
+『言語ゲームにおける実用的推論の予測』
+</span>
+</li><br><li>
+37.   Rubio-Fernandez P, Jara-Ettinger J: Joint inferences of speakers beliefs and referents based on how they speak. 2018.
+<br><span style="color:blue;">
+『話し方に基づく話者の信念と指示対象の同時推論』
+</span>
+</li><br><li>
+38.   Kao JT, Wu JY, Bergen L, Goodman ND: Nonliteral understanding of number words. Proc Natl Acad Sci 2014, 111:12002-12007.
+<br><span style="color:blue;">
+『数詞の非文字的理解』
+</span>
+</li><br><li>
+39.   Bergen L, Goodman ND: The strategic use of noise in pragmatic reasoning. Topics in cognitive science 2015, 7:336-350.
+<br><span style="color:blue;">
+『実用的推論におけるノイズの戦略的利用』
+</span>
+</li><br><li>
+40.   Goodman ND, Frank MC: Pragmatic language interpretation as probabilistic inference. Trends Cognit Sci 2016, 20:818-829.
+<br><span style="color:blue;">
+『確率推論としての語用論的言語解釈』
+</span>
+</li><br><li>
+41.   Hassabis D, Kumaran D, Summerﬁeld C, Botvinick M: Neuroscience-inspired artiﬁcial intelligence. Neuron 2017, 95:245-258.
+<br><span style="color:blue;">
+『神経科学に着想を得た人工知能』
+</span>
+</li><br><li>
+42.   Mnih V, Kavukcuoglu K, Silver D, Rusu AA, Veness J,
+Bellemare MG, Graves A, Riedmiller M, Fidjeland AK, Ostrovski G et al.: Human-level control through deep reinforcement learning. Nature 2015, 518:529.
+<br><span style="color:blue;">
+『深層強化学習による人間レベルの制御』
+</span>
+</li><br><li>
+43.   Silver D, Huang A, Maddison CJ, Guez A, Sifre L, Van Den Driessche G, Schrittwieser J, Antonoglou I, Panneershelvam V, Lanctot M et al.: Mastering the game of go with deep neural networks and tree search. Nature 2016, 529:484.
+<br><span style="color:blue;">
+『深層ニューラルネットワークと木探索による囲碁の制覇』
+</span>
+</li><br><li>
+44.   LeCun Y, Bengio Y, Hinton G: Deep learning, nature 2015, 521:436.
+<br><span style="color:blue;">
+『深層学習』
+</span>
+</li><br><li>
+45.   C. Finn, S. Levine, P. Abbeel, Guided cost learning: Deep inverse optimal control via policy optimization, in: International Conference on Machine Learning, 49-58.
+<br><span style="color:blue;">
+『ガイド付きコスト学習：ポリシー最適化による深層逆最適制御』
+</span>
+</li><br><li>
+46.   M. Wulfmeier, P. Ondruska, I. Posner, Deep inverse reinforcement learning, CoRR, abs/1507.04888 (2015).
+<br><span style="color:blue;">
+『深層逆強化学習』
+</span>
+</li><br><li>
+47.   N. C. Rabinowitz, F. Perbet, H. F. Song, C. Zhang, S. Eslami, M. Botvinick, Machine theory of mind, arXiv preprint arXiv:1802.07740 (2018).
+<br><span style="color:blue;">
+『機械の心の理論』
+</span>
+</li><br><li>
+48.   Woodward AL: Infants selectively encode the goal object of an actor’s reach. Cognition 1998, 69:1-34.
+<br><span style="color:blue;">
+『乳児は行為者の到達目標となる対象を選択的に符号化する』
+</span>
+</li><br><li>
+49.   M. Wulfmeier, P. Ondruska, I. Posner, Maximum entropy deep inverse reinforcement learning, arXiv preprint arXiv:1507.04888 (2015).
+<br><span style="color:blue;">
+『最大エントロピー深層逆強化学習』
+</span>
+</li><br><li>
+50.   A. Santoro, S. Bartunov, M. Botvinick, D. Wierstra, T. Lillicrap, Meta-learning with memory-augmented neural networks, in: International conference on machine learning, 1842-1850.
+<br><span style="color:blue;">
+『メモリ拡張ニューラルネットワークによるメタ学習』
+</span>
+</li><br><li>
+51.   C. Finn, P. Abbeel, S. Levine, Model-agnostic meta-learning for fast adaptation of deep networks, arXiv preprint arXiv:1703.03400 (2017).
+<br><span style="color:blue;">
+『モデルに依存しないメタ学習によるディープネットワークの高速適応』
+</span>
+</li><br><li>
+52.   K. Xu, E. Ratner, A. Dragan, S. Levine, C. Finn, Learning a prior over intent via meta-inverse reinforcement learning, arXiv preprint arXiv:1805.12573 (2018).
+<br><span style="color:blue;">
+『メタ逆強化学習による意図に基づく事前学習』
+</span>
+</li><br><li>
+53.   J. Jara-Ettinger, L. E. Schulz, J. B. Tenenbaum, A naive utility calculus as the foundation of action understanding (under review).
+<br><span style="color:blue;">
+『行動理解の基盤としてのナイーブ効用計算』
+</span>
+</li><br><li>
+54.   Yildirim I, Freiwald W, Tenenbaum J: Efﬁcient inverse graphics in biological face processing. bioRxiv 2018:282798.
+<br><span style="color:blue;">
+『生物学的顔認識における効率的な逆グラフィックス』
+</span>
+</li><br><li>
+55.   I. Yildirim, T. D. Kulkarni, W. A. Freiwald, J. B. Tenenbaum, Efﬁcient and robust analysis-by-synthesis in vision: A computational framework, behavioral tests, and modeling neuronal representations, in: Annual conference of the cognitive science society, volume 1.
+<br><span style="color:blue;">
+『視覚における効率的かつ堅牢な合成分析：計算フレームワーク、行動テスト、そして神経表現のモデリング』
+</span>
+</li><br><li>
+56.   J. Wu, I. Yildirim, J. J. Lim, B. Freeman, J. Tenenbaum, Galileo: Perceiving physical object properties by integrating a physics engine with deep learning, in: Advances in neural information processing systems, 127-135.
+<br><span style="color:blue;">
+『ガリレオ：物理エンジンとディープラーニングの統合による物理物体特性の認識』
+</span>
+</li><br><li>
+57.   P. Moreno, C. K. Williams, C. Nash, P. Kohli, Overcoming occlusion with inverse graphics, in: European Conference on Computer Vision, Springer, 170-185.
+<br><span style="color:blue;">
+『逆グラフィックスによるオクルージョンの克服』
+</span>
+</li><br><li>
+58.   Gao T, McCarthy G, Scholl BJ: The wolfpack effect: Perception of animacy irresistibly inﬂuences interactive behavior. Psychol Sci 2010, 21:1845-1853.
+<br><span style="color:blue;">
+『ウルフパック効果：生物的知覚は対話行動に抗しがたい影響を与える』
+</span>
+</li><br><li>
+59.   van Buren B, Uddenberg S, Scholl BJ: The automaticity of perceiving animacy: Goal-directed motion in simple shapes inﬂuences visuomotor behavior even when task-irrelevant. Psychonomic Bull Rev 2016, 23:797-802.
+<br><span style="color:blue;">
+『アニマシー知覚の自動性：単純な形状における目標指向的な動きは、課題に無関係な場合でも視覚運動行動に影響を与える』
+</span>
+</li><br><li>
+60.   Scholl BJ, Tremoulet PD: Perceptual causality and animacy. Trends Cognit Sci 2000, 4:299-309.
+<br><span style="color:blue;">
+『知覚的因果関係とアニマシー』
+</span>
+</li><br><li>
+61.   Malle BF: How the mind explains behavior: Folk explanations, meaning, and social interaction. MIT Press; 2006.
+<br><span style="color:blue;">
+『心は行動をどのように説明するのか：民間説示、意味、そして社会的相互作用』
+</span>
+</li><br><li>
+62.   Heider F: The psychology of interpersonal relations. Psychology Press; 2013.
+<br><span style="color:blue;">
+『対人関係の心理学』
+</span>
+</li><br><li>
+63.   Sutton RS, Barto AG: Reinforcement learning: An introduction. MIT Press; 2018.
+<br><span style="color:blue;">
+『強化学習：入門』
+</span>
+</li><br><li>
+64.   T. D. Kulkarni, K. Narasimhan, A. Saeedi, J. Tenenbaum, Hierarchical deep reinforcement learning: Integrating temporal abstraction and intrinsic motivation, in: Advances in neural information processing systems, 3675-3683.
+<br><span style="color:blue;">
+『階層的深層強化学習：時間的抽象化と内発的動機の統合』
+</span>
+</li><br><li>
+65.   J. Andreas, D. Klein, S. Levine, Modular multitask reinforcement learning with policy sketches, arXiv preprint arXiv:1611.01796 (2016).
+<br><span style="color:blue;">
+『ポリシースケッチを用いたモジュラーマルチタスク強化学習』
+</span>
+</li><br><li>
+66.   Piantadosi ST, Tenenbaum JB, Goodman ND: The logical primitives of thought: Empirical foundations for compositional cognitive models. Psychol Rev 2016, 123:392.
+<br><span style="color:blue;">
+『思考の論理的プリミティブ：構成的認知モデルの経験的基盤』
+</span>
+</li><br><li>
+67.   Battaglia PW, Hamrick JB, Tenenbaum JB: Simulation as an engine of physical scene understanding. Proc Natl Acad Sci 2013:201306572.
+<br><span style="color:blue;">
+『物理的情景理解のエンジンとしてのシミュレーション』
+</span>
+</li><br><li>
+68.   Pylyshyn ZW: Computation and cognition.  Cambridge, MA: MIT press; 1984.
+<br><span style="color:blue;">
+『計算と認知』
+</span>
+</li><br><li>
+69.   Wimsatt WC, False models as means to truer theories, Neutral models in biology (1987) 23-55.
+<br><span style="color:blue;">
+『偽モデルはより真実の理論への手段である、生物学における中立モデル』
+</span>
+</li><br><li>
+70.   Forster M, Sober E: How to tell when simpler, more uniﬁed, or less ad hoc theories will provide more accurate predictions. Br J Philosophy Sci 1994, 45:1-35.
+<br><span style="color:blue;">
+『より単純で、より統一された、あるいはよりアドホックでない理論がより正確な予測を提供するかどうかを見極める方法』
+</span>
+</li></ul></div>
+</p>
+    </body>
+</html>
