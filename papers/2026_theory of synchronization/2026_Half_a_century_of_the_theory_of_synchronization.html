@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Half a century of the theory of synchronization</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1>Half a century of the theory of synchronization<br><span style="color:blue;">同期理論の半世紀</span></h1>
+
+Yoshiki Kuramoto1<sup>1</sup><br>
+<sup>1</sup> Graduate School of Science, Kyoto University, Kyoto 606-8502, Japan<br>
+<br>
+E-mail:  kuramotoyoshiki@gmail.com<br>
+<br>
+<strong>Keywords</strong>:  complex Ginzburg-Landau equation, phase turbulence, synchronization phase transition, chimera states, dynamical reduction
+
+<hr>
+<h2>Abstract <span style="color:blue;">要旨</span></h2>
+<p>
+This review offers an overview of the development of the theory of coupled oscillators and synchronization over the past half century from a perspective of my own contributions. Among such contributions, the following three specific works will be focused on, serving as some key points to illustrate the field’s evolution. They are the derivation of (1) a simplest partial differential equation exhibiting spatio-temporal chaos (Kuramoto-Sivashinsky equation), (2) a solvable mathematical model describing synchronization phase transition (Kuramoto model), and the discovery of (3) coexistence of coherence and incoherence in nonlocally coupled oscillators (chimera states). It is emphasized that all these works resulted from the phase reduction of the complex Ginzburg-Landau equation (or its variants), i.e. the equation derived with a coworker in 1974 from a certain
+reaction-diffusion model. A quick overview will be given on how the above three works influenced the subsequent development of the field of coupled oscillators and synchronization. Finally, a few comments will be made on how the methods of dynamical reduction, such as the center-manifold reduction and phase reduction, are crucial for exploring this field in depth.
+This article is a largely faithful reproduction of the content presented in my award lecture.
+<br><span style="color:blue;">
+本稿では、過去半世紀にわたる結合振動子と同期理論の発展について、私自身の貢献という観点から概観する。中でも、この分野の発展を示す重要なポイントとして、以下の3つの研究に焦点を当てる。すなわち、(1) 時空間カオスを示す最も単純な偏微分方程式（蔵本-シバシンスキー方程式）の導出、(2) 同期相転移を記述する解ける数学モデル（蔵本モデル）、(3) 非局所的に結合した振動子におけるコヒーレンスとインコヒーレンスの共存（キメラ状態）の発見である。これらの研究はすべて、複素ギンツブルグ-ランダウ方程式（またはその変形）の位相縮約、すなわち1974年に共同研究者とともに特定の反応拡散方程式モデルから導出した方程式から得られたものであることを強調しておく。上記3つの研究が、その後の結合振動子と同期分野の発展にどのように影響を与えたかについて、簡単に概説する。最後に、中心多様体縮約や位相縮約といった力学的縮約法が、この分野を深く探求する上でいかに重要であるかについて、いくつか考察を述べたいと思います。
+<br>
+本稿は、私の受賞講演の内容をほぼ忠実に再現したものです。
+</span>
+</p>
+<hr>
+<h2>1 Introduction <span style="color:blue;">はじめに</span></h2>
+<p>
+It has been about half century since my research on the dynamics of coupled oscillators was started. Over this period, the science of coupled oscillators has developed tremendously far beyond the level expected initially. In this review article, my own research career will be looked back, and from that perspective, some backgrounds of such remarkable growth of this field will be reflected.
+
+<br><span style="color:blue;">
+結合振動子の力学に関する私の研究が始まってから約半世紀が経ちました。この間、結合振動子の科学は当初予想されていたレベルをはるかに超えて飛躍的に発展しました。本稿では、私自身の研究経歴を振り返り、その視点から、この分野の目覚ましい発展の背景について考察します。
+</span>
+</p><p>
+
+My first work on coupled limit-cycle oscillators was a short paper written with Toshio Tsuzuki in 1974 [1], where we derived perturbatively an equation known as the complex Ginzburg-Landau equation (CGL) from a certain reaction-diffusion model.
+
+<br><span style="color:blue;">
+私が結合リミットサイクル振動子について最初に研究したのは、1974年に都築敏夫と共同で書いた短い論文[1]で、そこで私たちはある反応拡散方程式から複素ギンツブルグ・ランダウ方程式（CGL）として知られる方程式を摂動的に導出しました。
+</span>
+</p><p>
+
+In retrospect, it is now realized that most of my subsequent works of relative importance were rooted in this short paper. Among others, the following three works will be focused on in this article. The first is the derivation of the equation called the Kuramoto-Sivashinsky equation [2]. The second work is the proposal of a mathematical model known as the Kuramoto model [3], and the third work is a theoretical finding of a curious pattern of synchronization, which was the first example of the so-called chimera states [4]. Indeed, all these works resulted from CGL or its variants by applying a method called the phase reduction, i.e. a method of approximately describing limit-cycle oscillations only with phase variables. More details on how these works were produced and how they have given impact on the related fields will be developed in the subsequent sections. In the rest of this section, what motivated me to do the CGL work will briefly be described.
+
+<br><span style="color:blue;">
+振り返ってみると、その後の私の比較的重要な研究のほとんどが、この短い論文に端を発していることが今では分かります。中でも、本稿では以下の3つの研究に焦点を当てます。1つ目は、蔵本-シヴァシンスキー方程式と呼ばれる方程式の導出です[2]。2つ目は、蔵本モデルとして知られる数学モデルの提案です[3]。3つ目は、いわゆるキメラ状態の最初の例となった、奇妙な同期パターンの理論的発見です[4]。実際、これらの研究はすべて、位相縮約法、すなわちリミットサイクル振動を位相変数のみで近似的に記述する方法を適用することによって、CGLまたはその派生形から生まれました。これらの研究がどのように生み出され、関連分野にどのような影響を与えたかについての詳細は、以降のセクションで説明します。このセクションの残りの部分では、私がCGLの研究を行う動機について簡単に説明します。
+</span>
+</p><p>
+
+One thing which inspired me was that I came across an oscillatory reaction-diffusion model called the Brusselator [5], a model invented by the Prigogine group of Brussels. Another source of my motivation was that I learned the self-organized wave patterns of the oscillatory
+Belousov-Zhabotinsky reaction [6] which was a topic of great popularity in those days.
+
+<br><span style="color:blue;">
+私にインスピレーションを与えてくれたものの一つは、ブリュッセルのプリゴジン研究グループが考案した、ブリュッセレーター[5]と呼ばれる振動反応拡散モデルに出会ったことでした。もう一つの動機は、当時非常に人気があった振動ベロウソフ・ジャボチンスキー反応[6]の自己組織化波動パターンを学んだことです。
+</span>
+</p><p>
+
+While vaguely thinking about how to interrelate between the Brusselator and the wave patterns of the Belousov-Zhabotinsky reaction, one idea came to me. This idea which seemed rather promising was to focus on the situation near the onset of oscillation, namely the Hopf bifurcation of the Brusselator. It seemed quite probable that the diffusion-coupled Brusselator would then
+become much simpler and hopefully this would lead to a qualitative understanding of the observed wave patterns.
+
+<br><span style="color:blue;">
+ブリュッセレーターとベロウソフ・ジャボチンスキー反応の波動パターンとの関連性を漠然と考えていたとき、あるアイデアが浮かびました。それは、振動開始付近、すなわちブリュッセレーターのホップ分岐に焦点を当てるという、かなり有望なアイデアでした。そうすれば、拡散結合ブリュッセレーターははるかに単純化され、観測された波動パターンの定性的な理解につながる可能性が高いように思われました。
+</span>
+</p><p>
+
+Fortunately, this idea was not wrong, and given shape by applying the perturbative method of Newell and Whitehead [7] who developed it for deriving a small-amplitude envelope equation near the onset of the Rayleigh-B´enard convection. The reduced equation we obtained was CGL. The same equation can of course be derived also from a much more general reaction-diffusion equations by reduction [8, 9], and this type of reduction method is generally called the center-manifold reduction.
+
+<br><span style="color:blue;">
+幸いなことに、この考えは間違っておらず、レイリー・ベナール対流の開始付近で小振幅包絡線方程式を導出するためにニューウェルとホワイトヘッド[7]が開発した摂動法を適用することで形になった。得られた縮約方程式はCGLである。もちろん、同じ方程式は縮約[8, 9]によってはるかに一般的な反応拡散方程式からも導出でき、この種の縮約法は一般に中心多様体縮約と呼ばれる。
+</span>
+</p><p>
+
+Somewhat related to this fact, it would be meaningful here to point out the dual nature of dynamical reduction in general, including the center-manifold reduction and phase reduction. Here the term “dual nature” is used to mean that formally a dynamical reduction is an approximate method but physically it goes far beyond a mere approximation. Indeed, much information may be lost by reduction, but the reward gained will be far richer. This is because the reduction removes so many restrictions imposed on the original specific model, and largely broadens our perspective.
+
+<br><span style="color:blue;">
+この事実と多少関連して、ここでは、中心多様体縮約や位相縮約を含む、動的縮約全般の二重性を指摘しておくことが有意義であろう。ここでいう「二重性」とは、形式的には動的縮約は近似法であるが、物理的には単なる近似をはるかに超えることを意味する。確かに、縮約によって多くの情報が失われるかもしれないが、得られるものははるかに豊かである。これは、縮約によって元の特定のモデルに課せられていた多くの制約が取り除かれ、私たちの視野が大きく広がるからである。
+</span>
+</p><p>
+
+To illustrate such potentiality of dynamical reduction, a simplest phase reduction of CGL will now be touched upon. The result of such reduction is a nonlinear phase diffusion equation with a constant frequency term. The reduction is valid when the spatial variation of the complex field is of suficiently long scale. If necessary, the constant term can be dropped by working with a co-moving frame of reference. In one space dimension, and introducing Gaussian white noise, the equation becomes the famous Kardar-Parisi-Zhang (KPZ) equation of stochastic surface growth [10] which opened up a new research field of KPZ universality [11]. If our nonlinear phase equation is expressed using the spatial derivative of phase, the result is the Burgers equation [12]. There are significant amount of research works on this equation in connection with fluid dynamics and trafic flow [13, 14]. In collaboration with Tomoji Yamada, our nonlinear phase diffusion equation was also studied in two dimensions, by introducing an additional term of localized heterogeneity. This led a successful explanation of the formation of expanding concentric wave patterns and their interaction similar to those observed in the Belousov-Zhabotinsky reaction [15]. These examples imply that the phase reduction of CGL is not a mere approximation of CGL, in much the same way that CGL itself is not a mere approximation of the Brusselator.
+
+<br><span style="color:blue;">
+動的縮約のこのような可能性を示すために、ここでは CGL の最も単純な位相縮約について触れます。この縮約の結果は、定数周波数項を持つ非線形位相拡散方程式です。縮約は、複素場の空間的変動が十分に長いスケールである場合に有効です。必要に応じて、共動座標系を使用することで定数項を省略できます。1 次元空間でガウス白色ノイズを導入すると、この方程式は、KPZ 普遍性 [11] という新しい研究分野を開拓した、有名な Kardar-Parisi-Zhang (KPZ) 確率的表面成長方程式 [10] になります。非線形位相方程式を位相の空間微分で表現すると、結果は Burgers 方程式 [12] になります。流体力学や交通流に関連して、この方程式に関する研究が数多く行われています [13, 14]。To​​moji Yamada 氏との共同研究により、局所的不均一性の追加項を導入することで、非線形位相拡散方程式を 2 次元でも研究しました。これにより、ベロウソフ・ジャボチンスキー反応[15]で観察されたものと同様の、拡大する同心円状の波パターンの形成とその相互作用をうまく説明できた。これらの例は、CGLの位相縮小がCGLの単なる近似ではないことを示唆しており、CGL自体がブリュッセレーターの単なる近似ではないのとよく似ている。
+</span>
+</p>
+
+<h2>2　Kuramoto-Sivashinsky equation <span style="color:blue;">蔵本-シヴァシンスキー方程式</span></h2>
+<p>
+We now proceed to the partial differential equation called the Kuramoto-Sivashinsky (KS) equation. This equation was derived in 1976 as a phase reduction of CGL. As is well known, CGL with suficient spatial extension admits a family of plane wave solutions over the whole range of wavelengths. However, they are not always stable. Generally, longer wavelength implies higher stability. But even the infinite wavelength plane wave, that is, spatially uniform oscillation, can become unstable. This is commonly called the Benjamin-Feir instability; it occurs for a certain range of parameter values of CGL. The instability condition itself had already been known before the derivation of the KS equation [16], although there had been no argument as to what would happen right after the instability. The answer is spatio-temporal chaos governed by the KS equation [17, 18].
+
+<br><span style="color:blue;">
+次に、クラモト・シバシンスキー（KS）方程式と呼ばれる偏微分方程式について説明します。この方程式は、1976 年に CGL の位相縮約として導出されました。周知のように、十分な空間的拡張を持つ CGL は、全波長範囲にわたって平面波解の族を許容します。しかし、それらは常に安定しているわけではありません。一般に、波長が長いほど安定性が高くなります。しかし、無限波長の平面波、つまり空間的に均一な振動でさえ不安定になることがあります。これは一般にベンジャミン・フェイル不安定性と呼ばれ、CGL のあるパラメータ値の範囲で発生します。不安定条件自体は、KS 方程式の導出以前から知られていましたが [16]、不安定の直後に何が起こるかについては議論されていませんでした。答えは、KS 方程式によって支配される時空間カオスです [17, 18]。
+</span>
+</p><p>
+
+The KS equation can in principle be obtained in the following way [2]. Impose the hypothesis that the modulus of the complex field of CGL is given by a functional of the phase, or a function of various space derivatives of phase. Then, make an expansion of the modulus in powers of all its arguments. After substituting this expansion form into CGL, the expansion coeficients are determined. Then, out of various spatial derivatives of phase, single out the most dominant terms assuming that the instability is suficiently weak. In doing this, a scale-invariance argument would be helpful. The resulting equation is the KS equation. After rescaling, the equation becomes parameter free.
+
+<br><span style="color:blue;">
+KS方程式は原理的には次の方法で得られます[2]。CGLの複素場の絶対値が位相の汎関数、または位相のさまざまな空間微分の関数で与えられるという仮説を立てます。次に、絶対値をすべての引数のべき乗で展開します。この展開形式をCGLに代入すると、展開係数が決定されます。次に、不安定性が十分に弱いと仮定して、位相のさまざまな空間微分の中から最も支配的な項を選び出します。これを行うには、スケール不変性の議論が役立ちます。結果として得られる方程式がKS方程式です。再スケーリングすると、方程式はパラメータフリーになります。
+</span>
+</p><p>
+
+Numerical simulation of this parameter-free equation for suficiently large one-dimensional system revealed that the solution behaved chaotically in space and time. Such behavior is called the phase turbulence. Next year, Sivashinsky found the same equation independently [19, 20] as an equation describing weakly unstable flame front of combustion. KS-like equations also appear in other physical contexts such as viscous liquid flowing down on a vertical wall [21], epitaxial growth of solid surface by sputtering [22], and instability of trapped ion mode in plasmas [23, 24].
+
+<br><span style="color:blue;">
+十分に大きな一次元システムに対するこのパラメータフリー方程式の数値シミュレーションにより、解が空間的にも時間的にもカオス的に振る舞うことが明らかになった。このような振る舞いは位相乱流と呼ばれる。翌年、シヴァシンスキーは、燃焼の弱く不安定な火炎面を記述する方程式として、同じ方程式を独立に発見した[19, 20]。KS に似た方程式は、垂直壁に沿って流れる粘性液体[21]、スパッタリングによる固体表面のエピタキシャル成長[22]、プラズマ中の捕捉イオンモードの不安定性[23, 24]など、他の物理的文脈にも現れる。
+</span>
+</p><p>
+
+As is widely known, the late 1970s was the period when the science of chaotic dynamical systems was experiencing a rapid surge. The major target of theoretical study there was ordinary differential equations and discrete maps exhibiting low-dimensional chaos. On the other hand, the phase turbulence we found was a chaotic solution of a partial differential equation, and not ordinary differential equation. A natural question was then raised from mathematics side. The question was “Are ordinary differential equation (ODE) chaos and partial differential equation (PDE) chaos equivalent?” This was answered afirmatively at least for the one-dimensional KS equation with finite system length. To be specific, the existence of the so-called inertial manifold was proved [25]. Inertial manifold is a finite-dimensional globally attracting manifold in which all infinite-time solutions come to be included. Consequently, the dynamics which is taking place within this finite-dimensional manifold becomes mathematically equivalent to ODE dynamics. This shows nothing more than the equivalence between ODE chaos and PDE chaos.
+
+<br><span style="color:blue;">
+周知のとおり、1970年代後半はカオス力学系の科学が急速に発展した時期でした。当時の理論的研究の主な対象は、常微分方程式と低次元カオスを示す離散写像でした。一方、我々が発見した位相乱流は、常微分方程式ではなく、偏微分方程式のカオス解でした。そこで、数学的な観点から自然な疑問が生じました。「常微分方程式（ODE）カオスと偏微分方程式（PDE）カオスは等価か？」という疑問です。この疑問は、少なくとも有限システム長の1次元KS方程式については肯定的に答えられました。具体的には、いわゆる慣性多様体の存在が証明されました[25]。慣性多様体は、すべての無限時間解が含まれる有限次元のグローバル吸引多様体です。したがって、この有限次元多様体内で起こるダイナミクスは、数学的にODEダイナミクスと等価になります。これは、常微分方程式のカオスと偏微分方程式のカオスが等価であることを示しているに過ぎない。
+</span>
+</p><p>
+
+There was another issue raised from physics side. This was how a coherent structure changes to turbulence through successive bifurcations. Indeed, the scenario leading to turbulence had been one major issue of fluid dynamics since the classical theory of Landau [26] who imagined developed turbulence as a high-dimensional torus. However, the case of the Rayleigh-B´enard convection, for instance, clearly contradicted this classical picture, because the existence of low-dimensional chaotic attractor was experimentally confirmed there [27]. Still the subsequent steps leading to developed turbulence remained unclear. In order to gain some insight into this problem, the KS equation was employed as a simplest analogue to the Navier-Stokes equation. Fortunately, the parameter-free one-dimensional KS equation includes only one control parameter, which is the system length L, and this quantity plays an analogous role to the aspect ratio of the
+Rayleigh-B´enard convection. Extensive numerical study of the KS equation revealed [28] the detailed process of successive appearance of higher and higher dimensional chaotic attractors with increasing L, eventually leading to extended spatio-temporal chaos.
+
+<br><span style="color:blue;">
+物理学的な観点から、もう一つ問題が提起されました。それは、連続的な分岐を経て、コヒーレントな構造がどのように乱流へと変化するのかという点です。実際、乱流に至るシナリオは、発達した乱流を高次元トーラスとして想定したランダウの古典理論[26]以来、流体力学における主要な課題の一つでした。しかし、例えばレイリー・ベナール対流の場合、低次元のカオス的アトラクターの存在が実験的に確認されたため[27]、この古典的な描像とは明らかに矛盾していました。それでもなお、発達した乱流に至るその後の過程は不明瞭なままでした。この問題を解明するために、ナビエ・ストークス方程式の最も単純な類似物としてKS方程式が用いられました。幸いなことに、パラメータフリーの一次元KS方程式には、システムの長さLという一つの制御パラメータしか含まれておらず、この量はレイリー・ベナール対流のアスペクト比と同様の役割を果たします。 KS方程式の広範な数値研究により[28]、Lの増加に伴ってより高次元のカオスアトラクターが次々と出現し、最終的に拡張された時空間カオスにつながる詳細なプロセスが明らかになった。
+</span>
+</p><p>
+
+It was also found that the asymptotic statistical properties of the solution of the KS equation as the system length goes to infinity were extremely simple. For instance, the number of positive Lyapunov exponents as well as the attractor dimension defined by the Kaplan-Yorke dimension increased linearly with L [29, 30]. This proved the extensivity of the system similar to that shared by a macroscopic body at thermal equilibrium.
+
+<br><span style="color:blue;">
+また、システムの長さが無限大に近づくにつれて、KS方程式の解の漸近的な統計的性質が非常に単純であることがわかった。例えば、正のリアプノフ指数の数や、カプラン・ヨーク次元で定義されるアトラクター次元は、Lとともに線形に増加した[29, 30]。これは、システムの拡張性が、熱平衡状態にある巨視的な物体が共有するものと同様であることを証明した。
+</span>
+</p><p>
+
+It seems that most of the works on the KS equation in the past have made use of its simplicity as a minimal partial differential equation displaying spatio-temporal chaos. It seems, however, that there is another point of significance of this equation. That is, it represents a concise mathematical manifestation of the fact that diffusion-coupled fields of oscillators can easily display turbulence. This fact had not clearly been recognized before the appearance of the KS equation. Over time, however, numerous works appeared on the turbulent behavior of CGL [31, 32] under the terms such as amplitude turbulence, spiral wave turbulence, and spatio-temporal intermittency.
+
+<br><span style="color:blue;">
+過去のKS方程式に関する研究のほとんどは、空間的時間的カオスを示す最小偏微分方程式としての単純さを利用してきたように思われる。しかし、この方程式には別の重要な点があるように思われる。それは、拡散結合振動場が容易に乱流を示すことができるという事実を簡潔な数学的表現として表しているということである。この事実は、KS方程式が登場する以前には明確に認識されていなかった。しかし、時が経つにつれて、振幅乱流、螺旋波乱流、空間的時間的間欠性などの用語でCGLの乱流挙動に関する多数の研究が発表された[31, 32]。
+</span>
+</p>
+
+<h2>3 Kuramoto model <span style="color:blue;">蔵本モデル</span></h2>
+
+<p>
+The phase oscillator model called the Kuramoto model also has a close connection with CGL. My proposal of this model was inspired by Arthur Winfree’s seminal paper of 1967 entitled “Biological Rhythms and the Behavior of Populations of Coupled Oscillators” [33].
+
+<br><span style="color:blue;">
+クラモトモデルと呼ばれる位相発振器モデルもCGLと密接な関係があります。このモデルの提案は、アーサー・ウィンフリーの1967年の画期的な論文「生物学的リズムと結合発振器集団の挙動」[33]に触発されたものです。
+</span>
+</p><p>
+
+Winfree’s theory gave me a strong impression in the following two ways. The first is that he boldly described a limit-cycle oscillator only with one variable, that is phase, and the pair coupling with two phases. In this way, he successfully created a simple mathematical model for an infinitely large assembly of coupled oscillators. Although it is now commonly known that the phase description of coupled oscillators is applicable whenever the mutual coupling is suficiently
+weak [9, 34], Winfree was the first to apply the same idea to collective dynamics.
+
+<br><span style="color:blue;">
+ウィンフリーの理論は、以下の2つの点で私に強い印象を与えました。1つ目は、彼がリミットサイクル発振器を位相という1つの変数のみで大胆に記述し、ペア結合を2つの位相で記述したことです。このようにして、彼は無限に多くの結合発振器の集合体に対するシンプルな数学モデルを構築することに成功しました。結合発振器の位相記述は、相互結合が十分に弱い場合には適用可能であることは現在では広く知られていますが[9, 34]、ウィンフリーは集団ダイナミクスに同じ考え方を初めて適用した人物でした。
+</span>
+</p><p>
+
+The other point which Winfree’s paper impressed me was that, under the assumption of global coupling, he claimed the existence of a critical condition for the onset of collective oscillation. Unlike macroscopic bodies composed of inactive elements such as atoms and spins, here the components are dynamically active. Having had some experience in the statistical mechanics of the second order phase transition, such a new type of phase transition was a fresh surprise to me. Winfree’s phase transition is also unique in that the randomness comes from the heterogeneity in the natural frequencies of the oscillators and not random noise. Therefore, his model represents a deterministic dynamical system of infinitely high dimension. This point also struck me as quite intriguing.
+
+<br><span style="color:blue;">
+ウィンフリーの論文で私が感銘を受けたもう一つの点は、グローバルな結合を仮定した上で、集団振動の発生に臨界条件が存在すると主張したことです。原子やスピンといった不活性な要素から構成される巨視的な物体とは異なり、ここでは構成要素が動的に活性です。二次相転移の統計力学についてある程度の知識があった私にとって、このような新しいタイプの相転移は新鮮な驚きでした。ウィンフリーの相転移は、ランダム性がランダムノイズではなく、振動子の固有振動数の不均一性から生じるという点でも独特です。したがって、彼のモデルは無限に高い次元の決定論的な力学系を表しています。この点もまた、私にとって非常に興味深いものでした。
+</span>
+</p><p>
+
+Unfortunately, however, Winfree’s argument on the existence of a phase transition was not convincing enough. This moved me to try to modify his model into a mathematically tractable model, preserving the original form as much as possible. The only modification needed was his coupling term which was given by a product of two functions representing influence and sensitivity. At this very point, my preceding work on CGL helped me greatly. The idea which came up with was that if a spatially discretized version of CGL is considered, then the phase reduction of the discretized diffusive coupling would become a simple trigonometric function depending only on the phase difference. Even a cosine component does not appear with vanishing imaginary part of somecoeficients of the discretized CGL. Furthermore, it was assumed that the system size is infinitely large, and that the distribution of the natural frequencies is given by a unimodal symmetric function. The model obtained in this way eventually came to be called the Kuramoto model [35].
+
+<br><span style="color:blue;">
+しかし残念ながら、Winfreeの相転移の存在に関する議論は十分説得力のあるものではありませんでした。そこで私は、彼のモデルを可能な限り元の形式を維持しつつ、数学的に扱いやすいモデルに修正しようと試みました。必要な修正は、影響と感度を表す2つの関数の積で与えられる彼の結合項だけでした。まさにこの点で、CGLに関する私の以前の研究が非常に役立ちました。思いついたアイデアは、CGLの空間的に離散化されたバージョンを考慮すると、離散化された拡散結合の位相縮小は、位相差のみに依存する単純な三角関数になるというものでした。離散化されたCGLのいくつかの係数の虚部がゼロになる場合、コサイン成分さえ現れません。さらに、システムのサイズは無限大であり、固有振動数の分布は単峰性の対称関数で与えられると仮定しました。このようにして得られたモデルは、最終的に蔵本モデル[35]と呼ばれるようになりました。
+</span>
+</p><p>
+
+Thanks to the global coupling and sinusoidal coupling function, this model was handled analytically by applying the elementary idea of the mean field theory similar to that of thermodynamics phase transitions. Actually, this was achieved by introducing a complex order parameter whose amplitude gives a measure of the strength of macroscopic oscillation. Although some nontrivial problems peculiar to the ensemble of heterogeneous dynamical elements were faced with, they were cleared by imposing a certain hypothesis, and a self-consistency equation for the order parameter was obtained. Its solution clearly showed the existence of a critical coupling strength above which a solution of collective oscillation bifurcated from a constant non-oscillatory solution. It seemed quite natural to expect that across the critical point an exchange of stability occurs between these solutions. Yet I could not find any mathematical evidence to support this seemingly obvious fact. In fact, this stability problem was to become one major issue in later years as will be touch upon in a later paragraph.
+
+<br><span style="color:blue;">
+グローバル結合と正弦波結合関数のおかげで、このモデルは熱力学の相転移と同様の平均場理論の基本概念を適用することで解析的に扱うことができました。実際には、これは巨視的振動の強さを表す振幅を持つ複素秩序パラメータを導入することによって実現されました。異質な動的要素の集合に特有のいくつかの非自明な問題に直面しましたが、ある仮説を課すことでそれらは解決され、秩序パラメータの自己無撞着方程式が得られました。その解は、集団振動の解が一定の非振動解から分岐する臨界結合強度の存在を明確に示しました。臨界点を境にこれらの解の間で安定性の交換が起こると予想するのはごく自然なことのように思えました。しかし、この一見明白な事実を裏付ける数学的な証拠は見つかりませんでした。実際、この安定性の問題は、後の段落で触れるように、後年の主要な課題の一つとなりました。
+</span>
+</p><p>
+
+In any case, finishing this work brought me some sense of satisfaction, but nothing more. Thus, what I did was only to present a short talk on this model at a certain international symposium held in Kyoto, and submit a short article for the Proceedings [3]. Naturally, this article remained unnoticed for the subsequent several years. Probably, the first person who discovered it with great enthusiasm was none other than Winfree himself. It seems that he came across my article in his effort of searching for all relevant literatures for his book in progress entitled “The Geometry of Biological Time” [36] which was published in 1980. Encouraged by this, four years later, some details of my model were included in my own book “Chemical Oscillations, Waves, and Turbulence” [9].
+
+<br><span style="color:blue;">
+いずれにせよ、この研究を終えたことで多少の満足感は得られましたが、それ以上のことは何もありませんでした。そこで、京都で開催されたある国際シンポジウムでこのモデルについて短い講演を行い、議事録に短い記事を投稿しただけでした[3]。当然のことながら、この記事はその後数年間誰にも注目されませんでした。おそらく、最初にこの論文を熱心に発見したのは、他ならぬウィンフリー本人だったでしょう。彼は、執筆中の著書「生物学的時間の幾何学」[36]（1980年出版）に関連する文献をすべて探していた際に、私の論文に出会ったようです。これに励まされ、4年後、私のモデルの詳細の一部を私自身の著書「化学的振動、波動、乱流」[9]に含めました。
+</span>
+</p><p>
+
+We now come back to the stability problem of the collective states [37]. Indeed, their stability was not obvious at all. This is because unlike thermodynamic phase transition, our transition has no potential or Lyapunov function like free energy. The conventional bifurcation theory of dynamical systems is also inapplicable. To put the nontrivial nature of the problem shortly, when we try to examine the stability of the incoherent branch of the solution using a standard method, we are faced with a peculiar spectrum such that the spectrum is distributed continuously on the imaginary axis. Formally this implies neutral stability of the incoherent state. However, this seemed contradictory to the asymptotic stability of the corresponding macroscopic state confirmed by numerical simulation. This theoretical dilemma aroused considerable mathematical curiosity. The clue to the solution was to correctly formulate the phase mixing mechanism analogous to the Landau damping of collisionless plasmas [38]. Thanks to the efforts of a number of theorists including Strogatz, Mirollo and Crawford, this issue, including the post-critical dynamics, was basically settled by the end of the last century [37, 39]. Still, it took another 15 years or more until a fully satisfactory mathematical solution was finally given by Hayato Chiba [40].
+
+<br><span style="color:blue;">
+ここで、集団状態の安定性の問題に戻ります[37]。実際、その安定性は全く自明ではありませんでした。これは、熱力学的相転移とは異なり、我々の遷移には自由エネルギーのようなポテンシャルやリアプノフ関数がないためです。力学系の従来の分岐理論も適用できません。この問題の非自明性を簡潔に述べると、標準的な方法を使用して解の非コヒーレント分岐の安定性を調べようとすると、スペクトルが虚軸上に連続的に分布するような特異なスペクトルに直面します。形式的には、これは非コヒーレント状態のニュートラル安定性を意味します。しかし、これは数値シミュレーションによって確認された対応する巨視的状態の漸近安定性と矛盾しているように見えました。この理論的なジレンマは、かなりの数学的好奇心を掻き立てました。解決の手がかりは、衝突のないプラズマのランダウ減衰に類似した位相混合メカニズムを正しく定式化することでした[38]。ストロガッツ、ミロロ、クロフォードなど多くの理論家の努力のおかげで、ポストクリティカルダイナミクスを含むこの問題は、前世紀末までに基本的に解決された[37, 39]。しかし、最終的に千葉逸人によって完全に満足のいく数学的解決策が与えられるまでには、さらに15年以上かかった[40]。
+</span>
+</p><p>
+
+Setting the stability issue aside, since the beginning of this century, the research on the dynamics of coupled oscillators has been given a fresh momentum. The most widely studied model was sinusoidally coupled phase oscillators, often called the Kuramoto oscillators. There were at least two factors which pushed forward such a rapid advancement of this research field. One is the innovative theory of Edward Ott and Thomas Antonsen [41] which appeared in 2008, and the other is the appearance of mathematical models of complex networks. Ott-Antonsen’s theory concerns large assemblies of Kuramoto-type phase oscillators with global coupling and randomly distributed natural frequencies. What is remarkable about their theory is that it achieves a drastic reduction of the dynamics of a large assembly to macroscopic dynamics of extremely low dimension. In particular, for a certain class of frequency distribution, an evolution equation for the order parameter can be written down in a closed form. The impact of the Ott-Antonsen theory was so great, broadening dramatically the class of problems that can be handled analytically.
+
+<br><span style="color:blue;">
+安定性の問題はさておき、今世紀に入ってから、結合振動子のダイナミクスに関する研究は新たな勢いを得ている。最も広く研究されているモデルは、正弦波結合位相振動子、いわゆる蔵本振動子である。この研究分野の急速な進歩を後押しした要因は少なくとも2つある。1つは2008年に発表されたエドワード・オットとトーマス・アントンセンの革新的な理論[41]であり、もう1つは複雑ネットワークの数理モデルの出現である。オット＝アントンセンの理論は、グローバル結合とランダムに分布した固有振動数を持つ蔵本型位相振動子の大規模な集合体に関するものである。彼らの理論の注目すべき点は、大規模な集合体のダイナミクスを極めて低次元のマクロなダイナミクスに劇的に縮小できることである。特に、特定の周波数分布のクラスでは、秩序パラメータの発展方程式を閉じた形で記述することができる。オット＝アントンセンの理論の影響は非常に大きく、解析的に扱うことができる問題の範囲を劇的に拡大した。
+</span>
+</p><p>
+
+The science of complex networks also expanded largely the scope of the dynamics of coupled oscillators. Around the turn of the century, two mathematical models of complex networks were proposed in succession. They are the small-world network of Watts and Strogatz [42], and the other is the scale-free network of Barab´asi and Albert [43].
+
+<br><span style="color:blue;">
+複雑ネットワークの科学は、結合振動子のダイナミクスの範囲を大きく広げた。世紀の変わり目頃に、複雑ネットワークの2つの数学モデルが相次いで提案された。1つはワッツとストロガッツのスモールワールドネットワーク[42]、もう1つはバラバシとアルバートのスケールフリーネットワーク[43]である。
+</span>
+</p><p>
+
+For a long time before the appearance of these network models, over nearly a quarter century, the study of large systems of coupled oscillators had been limited exclusively to the systems of regular connection topology, classified only according to the coupling range, like global coupling, local coupling, and their intermediate. However, with the sudden upsurge of the field of complex networks, the situation changed dramatically. The central issue of concern there was how the relation is between the network topology and the dynamics [44]. A vast number of research works appeared on this issue. They include the study of how the synchronizability is changed with the change of small-world-ness of the network, and, as for scale-free network, how the critical condition for the onset of global synchrony depends on the degree distribution and other network characteristics such as the degree of clustering.
+
+<br><span style="color:blue;">
+これらのネットワーク モデルが登場するずっと以前、四半世紀近くにわたって、結合振動子の大規模システムの研究は、グローバル結合、ローカル結合、およびそれらの中間など、結合範囲によってのみ分類される、規則的な接続トポロジーのシステムに限定されていました。しかし、複雑ネットワークの分野が急激に発展したことで、状況は劇的に変化しました。そこでの中心的な関心事は、ネットワーク トポロジーとダイナミクスの関係がどうなっているかでした [44]。この問題に関する膨大な数の研究論文が発表されました。それらには、ネットワークのスモールワールド性の変化に伴って同期性がどのように変化するかの研究や、スケールフリー ネットワークの場合、グローバル同期の開始の臨界条件が次数分布やクラスタリングの次数などの他のネットワーク特性にどのように依存するかの研究が含まれます。
+</span>
+</p><p>
+
+In parallel with such generalizations from regular to complex topologies, my original phase oscillator model has been generalized in various ways. A few of them are the following. As for the connection scheme, a notable recent generalization is to introduce many-body interaction, or the
+so-called higher-order interaction, in place of the traditional pair coupling [45, 46]. The research on this class of systems seems to be rapidly growing to form an important branch of science of coupled oscillators and other many-body systems in the real world. As a generalization of the coupling function, the importance of time delay in some practical situations was suggested [47]. The intrinsic dynamics of the individual oscillator was also generalized to include the effect of inertia [48]. Another interesting generalization is to extend the phase to a multi-dimensional variable defined on a D-dimensional sphere [49]. These generalizations and those not listed here were partly required from practical purposes. For instance, the effect of inertia was thought necessary for the application to power-grid dynamics [50], and extending the phase to a multi-dimensional variable was intended for the application to such problems as opinion dynamics [51] and even machine learning [52]. As an important consequence of the study of such generalized phase oscillator models, it has become clear that synchronization phase transition is not always continuous, but discontinuous or explosive synchronization occurs rather easily [53]. Regarding practical significance of the explosiveness and the resulting multi-stability, we expect further investigation. All in all, the scope of the application of the phase oscillator models has expanded across a remarkably wide range of scientific disciplines, and it is already far beyond my ability to follow.
+
+<br><span style="color:blue;">
+規則的なトポロジーから複雑なトポロジーへのこうした一般化と並行して、私のオリジナルの位相発振器モデルも様々な方法で一般化されてきました。そのいくつかを以下に示します。接続スキームに関しては、最近の注目すべき一般化として、従来のペア結合の代わりに多体相互作用、いわゆる高次相互作用を導入することが挙げられます[45, 46]。この種のシステムの研究は急速に発展し、現実世界における結合発振器やその他の多体システムの科学の重要な分野を形成しつつあるようです。結合関数の一般化として、いくつかの実際的な状況における時間遅延の重要性が示唆されました[47]。個々の発振器の固有ダイナミクスも、慣性の影響を含めるように一般化されました[48]。もう1つの興味深い一般化は、位相をD次元球面上で定義された多次元変数に拡張することです[49]。これらの一般化、およびここに挙げられていない一般化は、部分的には実用的な目的から必要とされたものです。例えば、慣性効果は電力系統のダイナミクスへの応用に必要であると考えられており[50]、位相を多次元変数に拡張することは、意見ダイナミクス[51]や機械学習[52]といった問題への応用を目的としていた。このような一般化された位相発振器モデルの研究の重要な結果として、同期位相遷移は必ずしも連続的ではなく、不連続または爆発的な同期が比較的容易に発生することが明らかになった[53]。爆発性とそれに伴う多重安定性の実際的な意義については、さらなる研究が期待される。総じて、位相発振器モデルの応用範囲は驚くほど幅広い科学分野に拡大しており、すでに私の理解を超えている。
+</span>
+</p>
+
+<h2>4 Chimera states <span style="color:blue;">キメラ状態</span></h2>
+<p>
+We now move to the issue of chimera states. A chimera state generally refers to a state where coherent and incoherent parts coexist in a system composed of identical oscillators coupled homogeneously. The first example of chimera states was found in 2002 [4] in my joint work with Dorjsuren Battogtokh while studying nonlocally coupled oscillators. Preceding this work, going back seven years or so, my interest had been directed toward nonlocally coupled oscillators, expecting that some new type of dynamics might emerge. From a practical point of view also, nonlocal coupling seemed quite meaningful. For example, consider a mathematical model such that the coupling of uniformly distributed oscillators is mediated by some rapidly diffusing and decaying substance which is being produced from the oscillators themselves. Then, if we eliminate adiabatically this mediator, the effective oscillator coupling becomes nonlocal. Situations similar to this seemed likely to be realized in biological settings. It was also noticed that the mean field theory could be used for nonlocal coupling if we assume that the oscillators are distributed densely enough within the coupling radius.
+
+<br><span style="color:blue;">
+次に、キメラ状態の問題に移ります。キメラ状態とは一般的に、均一に結合した同一の振動子からなるシステムにおいて、コヒーレントな部分とインコヒーレントな部分が共存する状態を指します。キメラ状態の最初の例は、2002年にドルジュレン・バトグトフとの共同研究で、非局所的に結合した振動子を研究していた際に発見されました[4]。この研究に先立つ7年ほど前から、私は非局所的に結合した振動子に興味を持ち、何らかの新しいタイプのダイナミクスが現れるのではないかと期待していました。実用的な観点からも、非局所的な結合は非常に意味のあるものに思えました。例えば、均一に分布した振動子の結合が、振動子自身から生成される急速に拡散し減衰する物質によって媒介される数学モデルを考えてみましょう。この媒介物質を断熱的に除去すると、有効な振動子結合は非局所的になります。このような状況は、生物学的環境でも実現される可能性が高いように思われました。また、振動子が結合半径内に十分に密に分布していると仮定すれば、平均場理論を非局所結合にも適用できることがわかった。
+</span>
+</p><p>
+
+As a simple mathematical model, a nonlocal version of CGL in one dimension with exponential coupling kernel [54] was considered. My first question was what would happen if the Benjamin-Feir instability occurred in this system causing turbulence. As long as the turbulence remained suficiently weak, the phase fluctuations generated would be limited to a wavelength regime much longer than the coupling radius. Then, the nonlocal coupling would practically be the same as local coupling, and nothing new would happen. But how about if the turbulence became stronger and stronger, generating fluctuations with shorter and shorter wavelengths violating finally the coupling range? Well within the coupling range, there is no more characteristic length scale. Consequently, the fluctuations occurred in this scale-free domain were expected to obey self-similar statistics. Numerical simulation confirmed this [55], and its theoretical explanation was also given. This was a joint work with Hiroya Nakao, a graduate student at that time, and also with Battogtokh, who joined us a little later [56, 57].
+
+<br><span style="color:blue;">
+単純な数学モデルとして、指数結合カーネルを持つ一次元CGLの非局所バージョン[54]を検討した。私の最初の疑問は、このシステムで乱流を引き起こすベンジャミン・フェイル不安定性が発生した場合に何が起こるかということだった。乱流が十分に弱い限り、生成される位相変動は結合半径よりもはるかに長い波長領域に限定される。その場合、非局所結合は実質的に局所結合と同じになり、何も新しいことは起こらない。しかし、乱流がますます強くなり、最終的に結合範囲を破るほど波長が短くなる変動を生成したらどうなるだろうか？結合範囲内では、もはや特徴的な長さスケールは存在しない。したがって、このスケールフリー領域で発生する変動は自己相似統計に従うと予想された。数値シミュレーションによってこれが確認され[55]、その理論的説明も与えられた。これは、当時大学院生だった中尾博也氏、そして少し後に加わったBattogtokh氏との共同研究であった[56, 57]。
+</span>
+</p><p>
+
+The phase reduction of the same model was also studied. But, as long as the nature of turbulent fluctuations is concerned, no particularly interesting results were found. In contrast, under a
+non-turbulent condition, something peculiar occurred which later came to be called a chimera state. 
+
+<br><span style="color:blue;">
+同じモデルの位相縮小についても研究が行われた。しかし、乱流変動の性質に関しては、特に興味深い結果は得られなかった。対照的に、非乱流条件下では、後にキメラ状態と呼ばれることになる特異な現象が発生した。
+</span>
+</p><p>
+
+This was numerically found by Battogtokh sometime after he left Kyoto and moved to the
+University of Georgia. The data he sent me showed that nonlocally coupled identical phase oscillators distributed on a ring split into two regions. In one region, the oscillators were completely synchronous, while in the other region, their phases were randomly scattered. In the latter incoherent region, the drift velocities of the phases were distributed but they formed a systematic curve with a single hump. It seemed that such symmetry-breaking behavior could be accounted for in the framework of the mean field theory. For this purpose, a local order parameter was introduced as a space-dependent generalization of the global order parameter, the former being defined by a weighted local average over the coupling range instead of global average. By imposing a hypothesis that the local order parameter is steadily oscillating, a functional self-consistency equation was obtained for this quantity. Numerical analysis of this equation revealed that other than a trivial constant solution of full amplitude corresponding to global synchrony, a spatially nonuniform solution existed. The reason why the latter corresponds to the coexistence of coherence and incoherence is easy to see. According to the mean field picture, the oscillators can be regarded as mutually independent except that they are under the forcing from the mean field. This implies that there should be a critical amplitude in the local order parameter below which the individual oscillators fail to synchronize with the weak forcing of the mean field, implying incoherence, while above which they synchronize with the strong forcing, implying coherence. In consistent with such reasoning, our simulation results were reproduced by the theory [4].
+
+<br><span style="color:blue;">
+これは、バットグトフが京都を離れ、ジョージア大学に移籍した後に数値的に発見された。彼が私に送ってくれたデータによると、リング状に配置された非局所的に結合した同一の位相振動子は、2つの領域に分かれていた。一方の領域では振動子は完全に同期していたが、もう一方の領域では位相がランダムにばらついていた。後者の非コヒーレントな領域では、位相のドリフト速度は分布していたものの、単一のピークを持つ系統的な曲線を描いていた。このような対称性の破れは、平均場理論の枠組みで説明できると考えられた。この目的のために、空間依存的な大域的秩序パラメータの一般化として局所的秩序パラメータが導入された。局所的秩序パラメータは、大域的平均ではなく、結合範囲にわたる重み付き局所平均によって定義される。局所的秩序パラメータが定常的に振動するという仮説を課すことで、この量に対する関数的な自己無撞着方程式が得られた。この方程式の数値解析により、グローバル同期に対応する全振幅の自明な定数解の他に、空間的に不均一な解が存在することが明らかになった。後者がコヒーレンスとインコヒーレンスの共存に対応する理由は容易に理解できる。平均場理論によれば、振動子は平均場からの強制を受けることを除けば、互いに独立しているとみなせる。これは、局所秩序パラメータに臨界振幅が存在し、それ以下では個々の振動子が平均場の弱い強制と同期できず、インコヒーレンスを意味する一方、それ以上では強い強制と同期し、コヒーレンスを意味することを意味する。このような推論と一致して、我々のシミュレーション結果は理論[4]によって再現された。
+</span>
+</p><p>
+
+Our theory attracted the attention of Abrams and Strogatz. And two years later, they presented a more detailed analytical study of the same model as ours except one point that our exponential coupling kernel was replaced with cosine kernel [58]. In the same paper, they coined the term “chimera states” for such coexistence states of coherence and incoherence. This evocative term certainly contributed greatly to the subsequent development of the research field of complex synchronization patterns. Abrams and Strogatz have also made other important contributions about chimera states, but in what follows another contribution on our side will be introduced.
+
+<br><span style="color:blue;">
+私たちの理論はアブラムスとストロガッツの注目を集めました。そして2年後、彼らは私たちのモデルとほぼ同じモデルについて、指数関数的な結合カーネルをコサインカーネルに置き換えた点を除いて、より詳細な解析的研究を発表しました[58]。同じ論文の中で、彼らはこのようなコヒーレンスとインコヒーレンスの共存状態を「キメラ状態」と名付けました。この示唆に富む用語は、複雑な同期パターンの研究分野のその後の発展に大きく貢献したことは間違いありません。アブラムスとストロガッツはキメラ状態に関して他にも重要な貢献をしていますが、以下では私たちの側のもう一つの貢献を紹介します。
+</span>
+</p><p>
+
+This was based on the idea that if a steadily rotating spiral pattern appeared in a nonlocally coupled oscillator field, then this pattern would necessarily include a local group of incoherent oscillators other than a coherent group. The reason is the following. Unlike the case of locally coupled oscillators, the oscillator sitting right at the center of rotation need not have vanishing amplitude. What must vanish at the center is the local order parameter. This implies that the local order parameter in some region around the center of rotation will have small amplitude, and that will be too weak to entrain a certain group of oscillators distributed there, whereas well apart from the center, the local order parameter will be large enough to entrain. Consequently, the pattern will split into two regions, that is, incoherent inner region and coherent outer region. This was actually proved by numerical simulation for the FitzHugh-Nagumo oscillators and also for phase oscillators each with nonlocal coupling. The corresponding mean field theory was also formulated. This work was done by Shin-ichiro Shima and myself in 2004 [59].
+
+<br><span style="color:blue;">
+これは、非局所的に結合した振動子場に安定的に回転する螺旋パターンが現れた場合、このパターンにはコヒーレントな振動子群とは別に、インコヒーレントな振動子の局所的なグループが必ず含まれるという考えに基づいています。その理由は次のとおりです。局所的に結合した振動子の場合とは異なり、回転の中心に位置する振動子は振幅がゼロである必要はありません。中心でゼロになる必要があるのは、局所的な秩序パラメーターです。これは、回転中心付近のある領域における局所秩序パラメーターの振幅が小さく、そこに分布する特定の振動子群を同調させるには弱すぎるのに対し、中心から十分に離れた場所では、局所秩序パラメーターが同調させるのに十分な大きさになることを意味します。結果として、パターンは非干渉的な内側領域と干渉的な外側領域の2つの領域に分裂します。これは実際に、FitzHugh-Nagumo振動子と、それぞれ非局所結合を持つ位相振動子について数値シミュレーションによって証明されました。対応する平均場理論も定式化されました。この研究は、2004年に島慎一郎と私が行いました[59]。
+</span>
+</p><p>
+
+Chimera states were also realized in experiments, for example, in opto-electronic systems [60], photo-sensitive Belousov-Zhabotinsky reaction [61], and mechanical systems such as coupled metronomes and pendulums [62]. Theoretically, chimera states were found in a variety of topological settings, and many variants of chimera states were proposed under different naming [63].
+
+<br><span style="color:blue;">
+キメラ状態は、例えば光電子システム[60]、光感受性ベロウソフ・ジャボチンスキー反応[61]、結合メトロノームや振り子などの機械システム[62]などの実験でも実現されている。理論的には、キメラ状態はさまざまなトポロジー設定で発見されており、さまざまな名前でキメラ状態の多くの変種が提案されている[63]。
+</span>
+</p>
+
+<h2>5 Conclusion <span style="color:blue;">結び</span></h2>
+<p>
+In concluding this article, a few additional comments on dynamical reduction will be made. We have frequently referred to the two reduction schemes. One is the center-manifold reduction by which CGL was derived, and the other is the phase reduction. In the three specific works discussed in this article, these reduction methods were applied in conjunction. That is, CGL and its variants, which are themselves reduced equations, were further reduced to phase equations. As is well known, the phase reduction itself can of course be applied independently to more general class of oscillators [64], not limited to the CGL-like oscillators with good symmetry, and in fact this method alone has produced many fruitful results.
+
+<br><span style="color:blue;">
+この記事の最後に、動的縮約についていくつか補足説明をしたいと思います。これまで、2つの縮約スキームについて頻繁に言及してきました。1つはCGLが導出された中心多様体縮約であり、もう1つは位相縮約です。この記事で議論した3つの具体的な研究では、これらの縮約法が併用されました。つまり、縮約された方程式であるCGLとその変種が、さらに位相方程式に縮約されました。周知のように、位相縮約自体は、対称性の良いCGLのような振動子に限らず、より一般的なクラスの振動子に独立して適用できます[64]。実際、この方法だけでも多くの有益な結果を生み出しています。
+</span>
+</p><p>
+
+In my view, the significance of dynamical reduction is twofold. First, as anyone may agree, it cuts off many details which seem inessential for the basic understanding of the system under study, thus making the analysis far easier. Even when we have to come back to the original complex model to know more details, the analysis of the reduced model may provide a useful guidance. The second point of significance of dynamical reduction is more conceptual than practical, where we are more concerned with a broad class of systems rather than individual specific systems. Indeed, reduction reveals something universal lurking behind apparently different systems and circumstances. Many scientists in nonlinear dynamics and statistical physics have taken attitude along this line of thought. Thanks to this, our modern view of this complex world has been largely broadened and integrated. As for my own phase oscillator model, it may have served as a small piece of such universality. It is an extremely boiled down model as an inevitable result of double reductions, and therefore it could only capture the crudest level of universality. Still, for its extreme simplicity, it leaves much room for various modifications and generalizations which had in fact been achieved over the past half century. The broad class of oscillator models thus produced will be of a great help for further understanding and controlling what is going on in the real world full of oscillations and synchronization.
+
+<br><span style="color:blue;">
+私の見解では、動的縮約の意義は二重です。第一に、誰もが同意するように、研究対象のシステムの基本的な理解に不可欠ではないと思われる多くの詳細を切り捨てることで、分析がはるかに容易になります。より詳細を知るために元の複雑なモデルに戻る必要がある場合でも、縮約されたモデルの分析は有用な指針となる可能性があります。動的縮約の第二の意義は、実用的というより概念的なものであり、個々の特定のシステムよりも、より広範なシステム群に関心を向ける点にあります。実際、縮約は、一見異なるシステムや状況の背後に潜む普遍的な何かを明らかにします。非線形力学や統計物理学の多くの科学者は、この考え方に沿って行動してきました。このおかげで、この複雑な世界に対する私たちの現代的な見方は大きく広がり、統合されてきました。私自身の位相振動子モデルに関しては、それはそのような普遍性の小さな一片として役立ったのかもしれません。それは二重縮約の必然的な結果として極めて簡略化されたモデルであり、したがって、普遍性の最も粗雑なレベルしか捉えることができませんでした。しかし、その極めてシンプルな構造ゆえに、過去半世紀にわたって様々な修正や一般化が実現されてきた。こうして生み出された幅広い種類の発振器モデルは、振動と同期に満ちた現実世界で何が起こっているのかをより深く理解し、制御する上で大いに役立つだろう。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+[1]  Kuramoto Y and Tsuzuki T, Reductive perturbation approach to chemical instabilities, 1974 Prog. Theor. Phys. 52 1399
+<br><span style="color:blue;">化学的不安定性に対する縮約摂動アプローチ</span></li><br><li>
+[2]  Kuramoto Y and Tsuzuki T, Persistent propagation of concentration waves in dissipative media far from thermal equilibrium, 1976 Prog. Theor. Phys. 55 356
+<br><span style="color:blue;">熱平衡から遠い散逸媒体における濃度波の持続的伝播</span></li><br><li>
+[3]  Kuramoto Y, Self-entrainment of a population of coupled non-linear oscillators, 1975 In International symposium on mathematical problems in theoretical physics, Lecture Notes Phys. 39 420
+<br><span style="color:blue;">結合非線形振動子群の自己同調</span></li><br><li>
+[4]  Kuramoto Y and Battogtokh D, Coexistence of coherence and incoherence in nonlocally coupled phase oscillators, 2002 Nonlin. Phenom. Complex Sci. 5 380
+<br><span style="color:blue;">非局所的に結合した位相振動子におけるコヒーレンスとインコヒーレンスの共存</span></li><br><li>
+[5]  Glansdorff P and Prigogine I, Thermodynamic Theory of Structure, Stability, and Fluctuations (Wiley 1971)
+<br><span style="color:blue;">構造、安定性、および変動の熱力学的理論</span></li><br><li>
+[6]  Zaikin AN and Zhabotinsky AM, Concentration wave propagation in two-dimensional liquid-phase self-oscillating systems, 1970 Nature 225 535
+<br><span style="color:blue;">二次元液相自己振動系における濃度波伝播</span></li><br><li>
+[7]  Newell AC and Whitehead JA, Finite bandwidth, finite amplitude convection, 1969 J. Fluid Mech. 38 279
+<br><span style="color:blue;">有限帯域幅、有限振幅対流</span></li><br><li>
+[8]  Kuramoto Y and Tsuzuki T, On the formation of dissipative structures in reaction-diffusion systems:  reductive perturbation approach, 1975 Prog. Theor. Phys. 54 687
+<br><span style="color:blue;">反応拡散系における散逸構造の形成について：縮約摂動アプローチ</span></li><br><li>
+[9]  Kuramoto Y, Chemical Oscillations, Waves, and Turbulence (Springer 1984)
+<br><span style="color:blue;">化学振動、波動、乱流</span></li><br><li>
+[10]  Kardar M, Parisi G and Zhang Y-C, Dynamic scaling of growing interface, 1986 Phys. Rev. Lett. 56 889
+<br><span style="color:blue;">成長する界面の動的スケーリング</span></li><br><li>
+[11]  Takeuchi KA, An appetizer to modern developments on Kardar-Parisi-Zhang universality class, 2018 Physica A 504 77
+<br><span style="color:blue;">普遍性クラスに関する現代的発展への序論</span></li><br><li>
+[12]  Burgers JM, The Nonlinear Diffusion Equation:  Asymptotic Solutions and Statistical Physics (Reidel 1974)
+<br><span style="color:blue;">非線形拡散方程式：漸近解と統計物理学</span></li><br><li>
+[13]  Beck J and Khanin K, Burgers turbulence, 2007 Phys. Rep. 447 1
+<br><span style="color:blue;">Burgers乱流</span></li><br><li>
+[14]  Lighthill MJ and Whitham GB, On kinetic waves II: theory of trafic flow on long crowded roads, 1955 Proc. Roy. Soc. A 229 317
+<br><span style="color:blue;">運動波について II：混雑した長距離道路における交通流の理論</span></li><br><li>
+[15]  Kuramoto Y and Yamada T, Pattern formation in oscillatory chemical reactions, 1976 Prog. Theor. Phys. 56 724
+<br><span style="color:blue;">振動化学反応におけるパターン形成</span></li><br><li>
+[16]  Lange CG and Newell AC, A stability criterion for envelope equations, 1974 SIAM J. Appl. Math. 27 441
+<br><span style="color:blue;">包絡線方程式の安定性基準</span></li><br><li>
+[17]  Yamada T and Kuramoto Y, A reduced model showing chemical turbulence, 1976 Prog. Theor. Phys. 56 681
+<br><span style="color:blue;">化学乱流を示す縮約モデル</span></li><br><li>
+[18]  Kuramoto Y, Diffusion-induced chaos in reaction systems, 1978 Prog. Theor. Phys. Suppl. 64 346
+<br><span style="color:blue;">反応系における拡散誘起カオス</span></li><br><li>
+[19]  Sivashinsky GI, Nonlinear analysis of hydrodynamic instability in laminar flame I: derivation of basic equations, 1977 Acta Astronautica 4 1177
+<br><span style="color:blue;">層流火炎における流体力学的不安定性の非線形解析 I: 基本方程式の導出</span></li><br><li>
+[20]  Sivashinsky GI, On self-turbulization of a laminar flame, 1979 Acta Astronautica 6 569
+<br><span style="color:blue;">層流火炎の自己乱流化について</span></li><br><li>
+[21]  Sivashinsky GI and Michelson DM, On irregular wavy flow of a liquid film down a vertical plane, 1980 Prog. Theor. Phys. 63 2112
+<br><span style="color:blue;">垂直面を流れる液膜の不規則な波状流について</span></li><br><li>
+[22]  Emel’yanov VI, The Kuramoto-Sivashinsky equation for the defect-formation instability of a surface-stress, 2009 Laser Phys. 19 538
+<br><span style="color:blue;">表面応力の欠陥形成不安定性に関する Kuramoto-Sivashinsky 方程式</span></li><br><li>
+
+[23]  LaQuey RE, Mahajan SM, Rutherford PH and Tang WM, Nonlinear saturation of the trapped-ion mode, 1975 Phys. Rev. Lett. 34 391
+<br><span style="color:blue;">トラップイオンモードの非線形飽和</span></li><br><li>
+[24]  Cohen BI, Krommes JA, Tang M and Rosenbluth MN, Nonlinear saturation of the dissipative trapped-ion mode by mode coupling, 1976 Nuclear Fusion 16 971
+<br><span style="color:blue;">モード結合による散逸トラップイオンモードの非線形飽和</span></li><br><li>
+[25]  Foias C, Nicolaenko B, Sell GR and Temam R, Inertial manifold for the Kuramoto-Sivashinsky equation and estimate of their lowest dimension, 1988 J. de Math. Pures et Appl. 67 197
+<br><span style="color:blue;">Kuramoto-Sivashinsky方程式の慣性多様体とその最低次元の推定</span></li><br><li>
+[26]  Landau LD, On the problem of turbulence, 1944 C. R. (Doklady) Acad. Sci. USSR 44 311
+<br><span style="color:blue;">乱流の問題について</span></li><br><li>
+[27]  Libchaber A, Maurer J and He X, Experimental study of the transition to chaos in Rayleigh-B´enard convection, 1980 J. de Phys. 41 515
+<br><span style="color:blue;">レイリー・ベナール対流におけるカオスへの遷移に関する実験的研究</span></li><br><li>
+[28]  Hyman JM and Nicolaenko B, The Kuramoto-Sivashinsky equation:  a bridge between PDE’s and dynamical systems, 1986 Physica D 18 113
+<br><span style="color:blue;">クラモト・シバシンスキー方程式：偏微分方程式と力学系をつなぐ架け橋</span></li><br><li>
+[29]  Manneville P, Lyapunov exponents for the Kuramoto-Sivashinsky model, 1984 In Macroscopic modeling of turbulent flows and fluid mixtures, Lecture Notes Phys. 230 319
+<br><span style="color:blue;">クラモト・シバシンスキーモデルのリアプノフ指数</span></li><br><li>
+[30]  Manneville P, Dissipative Structures and Weak Turbulence (Academic Press 1990)
+<br><span style="color:blue;">散逸構造と弱乱流</span></li><br><li>
+[31]  Egolf DA and Greenside HS, Characterization of the transition from defect to phase turbulence, 1995 Phys. Rev. Lett. 74 1751
+<br><span style="color:blue;">欠陥乱流から位相乱流への遷移の特性評価</span></li><br><li>
+[32]  Shraiman BI, Pumir A, van Saarloos, Hohenberg PC, Chat´e H and Holen M, Spatio-temporal chaos in the one-dimensional complex Ginzburg-Landau equation, 1992 Physica D 57 2451
+<br><span style="color:blue;">一次元複素ギンツブルグ・ランダウ方程式における時空間カオス</span></li><br><li>
+[33]  Winfree AT, Biological rhythms and the behavior of populations of coupled oscillators, 1967 J. Theor. Biol. 16 15
+<br><span style="color:blue;">生物リズムと結合振動子集団の挙動</span></li><br><li>
+[34]  Hoppenstead FG and Izhikevich EM, Weakly Connected Neural Networks (Springer 1997)
+<br><span style="color:blue;">弱結合ニューラルネットワーク</span></li><br><li>
+[35]  Acebro´n JA, Bonilla LL, P´erez Vicente CJ, Ritort F and Spigler SH, The Kuramoto model:  a simple paradigm for synchronization phenomena, 2005 Rev. Mod. Phys. 77 137
+<br><span style="color:blue;">Kuramotoモデル：同期現象の単純なパラダイム</span></li><br><li>
+[36]  Winfree AT, The Geometry of Biological Time (Springer 1980)
+<br><span style="color:blue;">生物学的時間の幾何学</span></li><br><li>
+[37]  Strogatz SH, From Kuramoto to Crawford:  exploring the onset of synchronization in populations of coupled oscillators, 2000 Physica D 143 1
+<br><span style="color:blue;">蔵本からクロフォードへ：結合振動子集団における同期の開始を探る</span></li><br><li>
+[38]  Strogatz SH, Mirollo RE and Matthews PC, Coupled nonlinear oscillators below the synchronization threshold:  relaxation by generalized Landau damping, 1992 Phys. Rev. Lett. 68 2730
+<br><span style="color:blue;">同期閾値以下の結合非線形振動子：一般化ランダウ減衰による緩和</span></li><br><li>
+[39]  Crawford JD and Davies KTR, Synchronization of globally coupled phase oscillators: singularities and scaling for general couplings, 1999 Physica D 125 1
+<br><span style="color:blue;">グローバルに結合した位相振動子の同期：一般的な結合における特異点とスケーリング</span></li><br><li>
+[40]  Chiba H, A proof of the Kuramoto conjecture for a bifurcation structure of the
+infinite-dimensional Kuramoto model, 2015 Ergodic Theory and Dynamical Systems 35 762
+<br><span style="color:blue;">無限次元クラモトモデルの分岐構造に関するクラモト予想の証明</span></li><br><li>
+[41]  Ott E and Antonsen TM, Low-dimensional behavior of large systems of globally coupled oscillators, 2008 Chaos 18 037113
+<br><span style="color:blue;">グローバルに結合した振動子の大規模システムの低次元挙動</span></li><br><li>
+[42]  Watts DJ and Strogatz SH, Collective dynamics of small-world networks, 1998 Nature 393 440
+<br><span style="color:blue;">スモールワールドネットワークの集団ダイナミクス</span></li><br><li>
+[43]  Barab´asi A-L and Albert R, Emergence of scaling in random networks, 1999 Science 286 509
+<br><span style="color:blue;">ランダムネットワークにおけるスケーリングの出現</span></li><br><li>
+[44]  Rodrigues FA, Peron TK, Ji P and Kurths J, The Kuramoto model in complex networks, 2016 Phys. Rep. 610 1
+<br><span style="color:blue;">複雑ネットワークにおけるクラモトモデル</span></li><br><li>
+[45]  Milla´n AP, Torres JJ and Bianconi G, Explosive higher-order Kuramoto dynamics on simplicial complexes, 2020 Phys. Rev. Lett. 124 218301
+<br><span style="color:blue;">単体複体上の爆発的な高次クラモトダイナミクス</span></li><br><li>
+[46]  Skardal PS and Arenas A, Higher-order interactions in complex networks of phase oscillators promote abrupt synchronization switching, 2020 Commun. Phys. 3 218
+<br><span style="color:blue;">位相振動子の複雑ネットワークにおける高次相互作用が急激な同期切り替えを促進する</span></li><br><li>
+[47]  Yeung MKS and Strogatz SH, Time delay in the Kuramoto model of coupled oscillators, 1999 Phys. Rev. Lett. 82 648
+<br><span style="color:blue;">結合振動子のクラモトモデルにおける時間遅延</span></li><br><li>
+
+[48]  Tanaka HA, Lichtenberg AJ and Oishi S, First order phase transition resulting from finite inertia in coupled oscillator systems, 1997 Phys. Rev. Lett. 78 2104
+<br><span style="color:blue;">結合振動子系における有限慣性による一次相転移</span></li><br><li>
+[49]  Chandra S, Girvan M and Ott E, Continuous versus discontinuous transition in the
+D-dimensional generalized Kuramoto model:  odd D is different, 2019 Phys. Rev. X 9 011002
+<br><span style="color:blue;">D次元一般化蔵本モデルにおける連続相転移と不連続相転移：奇数Dは異なる</span></li><br><li>
+[50]  Rohden M, Sorge A, Timme M and Witthaut D, Self-organized synchronization in decentralized power grids, 2012 Phys. Rev. Lett. 109 064101
+<br><span style="color:blue;">分散型電力網における自己組織化同期</span></li><br><li>
+[51]  Zhang Z, Al-Abri S and Zhang F, A generalized Kuramoto model for opinion dynamics on the unit sphere, 2025 Automatica 171 111957
+<br><span style="color:blue;">単位球上の意見ダイナミクスに対する一般化クラモトモデル</span></li><br><li>
+[52]  Miyato T, Lo¨we S, Geiger A and Welling M, Artificial Kuramoto oscillatory neurons, 2024 arXiv:2410.13821
+<br><span style="color:blue;">人工クラモト振動ニューロン</span></li><br><li>
+[53]  Zhang X, Boccaletti S, Guan S and Liu Z, Explosive synchronization in adaptive and multilayer networks, 2015 Phys. Rev. Lett. 114 038701
+<br><span style="color:blue;">適応型および多層ネットワークにおける爆発的同期</span></li><br><li>
+[54]  Tanaka D and Kuramoto Y, Complex Ginzburg-Landau equation with nonlocal coupling, 2003 Phys. Rev. E 68 026219
+<br><span style="color:blue;">非局所結合を持つ複雑なギンツブルグ・ランダウ方程式</span></li><br><li>
+[55]  Kuramoto Y, Scaling behavior of turbulent oscillators with non-local interaction, 1995 Prog. Theor. Phys. 94 321
+<br><span style="color:blue;">非局所相互作用を持つ乱流振動子のスケーリング挙動</span></li><br><li>
+[56]  Kuramoto Y and Nakao H, Origin of power-law spatial correlations in distributed oscillators and maps with nonlocal coupling, 1996 Phys. Rev. Lett. 76 4352
+<br><span style="color:blue;">非局所結合を持つ分布振動子とマップにおけるべき乗則空間相関の起源</span></li><br><li>
+[57]  Kuramoto Y, Battogtokh D and Nakao H, Multiafine chemical turbulence, 1998 Phys. Rev. Lett. 81 3543
+<br><span style="color:blue;">多重微細化学乱流</span></li><br><li>
+[58]  Abrams DM and Strogatz SH, Chimera states for coupled oscillators, 2004 Phys. Rev. Lett. 93 174102
+<br><span style="color:blue;">結合振動子のキメラ状態</span></li><br><li>
+[59]  Shima S and Kuramoto Y, Rotating spiral waves with phase-randomized core in nonlocally coupled oscillators, 2004 Phys. Rev. E 69 036213
+<br><span style="color:blue;">非局所的に結合した振動子における位相ランダム化されたコアを持つ回転螺旋波</span></li><br><li>
+[60]  Hagerstrom AM, Murphy TE, Roy R, H¨ovel P, Omelchenko I and Sch¨oll E, Experimental observation of chimeras in coupled-map lattices, 2012 Nature Physics 8 658
+<br><span style="color:blue;">結合写像格子におけるキメラの実験的観測</span></li><br><li>
+[61]  Tinsley MR, Nkomo S and Showalter K, Chimera and phase-cluster states in populations of coupled chemical oscillators, 2012 Nature Physics 8 662
+<br><span style="color:blue;"></span>結合化学振動子集団におけるキメラと位相クラスター状態</li><br><li>
+[62]  Martens EA, Thutupalli S, Fourri`ere A and Hallatschek O, Chimera states in mechanical oscillator networks, 2013 Proc. Nat. Acad. Sci. 110 10563
+<br><span style="color:blue;">機械振動子ネットワークにおけるキメラ状態</span></li><br><li>
+[63]  Parastesh F, Jafari S, Azarnoush H, Shahriari Z, Wang A, Boccaletti S and Perc M, Chimeras, 2021 Phys. Rep. 898 1
+<br><span style="color:blue;">キメラ</span></li><br><li>
+[64]  Nakao H, Phase reduction approach to synchronization of nonlinear oscillators, 2016 Contemp. Phys. 57 188
+<br><span style="color:blue;">非線形振動子の同期に対する位相縮小アプローチ</span>
+</li></ul></div>
+</p>
+    </body>
+</html>
