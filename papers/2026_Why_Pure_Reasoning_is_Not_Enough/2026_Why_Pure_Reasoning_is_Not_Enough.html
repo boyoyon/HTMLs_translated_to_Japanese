@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Why Pure Reasoning is Not Enough</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+<a href="https://www.youtube.com/watch?v=QXYxHDMymus">
+youtube: “Why Pure Reasoning is Not Enough: Nature as Inspiration for Math Innovation”</a><br>
+
+        <h1><center>Why Pure Reasoning is Not Enough:<br>  Nature as the Source of Mathematical Innovation<br><span style="color:blue;">なぜ純粋な推論だけでは不十分なのか<br>数学的革新の源泉としての自然</span></center></h1>
+
+<center>
+<div class="container">
+<div class="column">Charanjit S. Jutla<br>IBM T. J. Watson Research Center<br>Yorktown Heights, NY 10598</div>
+<div class="column">Vimal Sharma<br>Independent<br>Melbourne, FL 32940</div>
+</div>
+</center>
+<br>
+<center>July 7, 2026</center>
+
+<h2><center>Abstract <span style="color:blue;">要旨</span></center></h2>
+<p class="margin-abstract">
+We advance the hypothesis that human mathematical reasoning, constrained by both the undecidability and the computational intractability of even modest logical fragments, relies fundamentally on pattern matching from domains external to pure deduction.  The most prolific reservoir of such patterns is the natural world, whose physical laws and bio-logical systems have undergone billions of years of “pre-computation”  and already exhibit surprisingly innovative solutions.
+
+<br><span style="color:blue;">
+我々は次のような仮説を提示する。すなわち、人間の数学的推論は、たとえ限定的な論理体系であっても避けられない「決定不能性」や「計算の困難さ」という制約を受けており、純粋な演繹とは異なる領域からのパターン・マッチングに根本的に依存している、というものである。こうしたパターンの最も豊かな源泉は自然界であり、そこでは物理法則や生物学的システムが数十億年にわたる「事前計算」を経て、驚くほど独創的な解決策をすでに提示しているのである。
+</span>
+</p><p>
+
+To ground this claim, we trace the history of the Fourier transform and relevant mathe-matics, from the vibrating string controversy to the heat equation and subsequent formalisms prevalent in mathematics.  At each critical juncture, a physical problem forced the accep-tance or creation of a mathematical tool that pure formal reasoning failed to anticipate or, worse, human reasoning had resisted.
+
+<br><span style="color:blue;">
+この主張を裏付けるために、我々はフーリエ変換および関連する数学の歴史を、弦の振動をめぐる論争から熱伝導方程式、そしてその後に数学界で定着した定式化に至るまで辿ります。その歴史の重要な局面において、純粋に形式的な推論では予見できなかった――あるいは、それどころか人間の思考が抵抗さえしていた――数学的ツールの受容や創出を、物理的な問題が余儀なくさせたのです。
+</span>
+</p><p>
+
+We further survey the landscape of logical complexity, from NP-hard propositional sat-isfiability to the non-elementary decision procedures for monadic second-order theories, to demonstrate that even when a logic is decidable, the resources required for worst-case de-duction are astronomically prohibitive. We argue that these barriers make physics-inspired pattern matching not just a historical accident but a cognitive necessity.  Finally, we draw the  consequence  for  artificial  intelligence:   if  pure  reasoning  is  constitutively  insuficient, then any system aiming at human-level mathematical creativity must embed a vast store of cross-domain patterns rather than rely on deduction alone.  This furnishes a principled justification for the enormous scale of contemporary large language models, and locates their present frontier at the boundary between recombining known patterns and extending the conceptual vocabulary itself.
+
+<br><span style="color:blue;">
+我々はさらに、NP困難な命題論理の充足可能性問題から、単項二階述語論理の非初等的な決定手続きに至るまで、論理的複雑さの全体像を概観し、ある論理が決定可能であっても、最悪の場合の推論に要する計算資源が天文学的な規模に達し、事実上利用不可能であることを示す。そして、こうした障壁こそが、物理学に着想を得たパターンマッチング手法を、単なる歴史的偶然ではなく、認知上の必然たらしめているのだと論じる。最後に、人工知能に対する示唆を導き出す。すなわち、純粋な推論だけでは本質的に不十分である以上、人間レベルの数学的創造性を目指すシステムは、単なる推論に頼るのではなく、領域横断的な膨大なパターンを蓄積・内包していなければならないということである。これは、現代の大規模言語モデルがなぜあれほど巨大な規模を持つのかについて原理的な正当性を与えるものであり、それらのモデルの現在の最前線が、既知のパターンの組み換えと、概念的語彙そのものの拡張との境界にあることを位置づけるものである。
+</span>
+</p>
+
+<h2>1 Introduction: Mathematics by Analogy <span style="color:blue;">はじめに:類推による数学</apsn></h2>
+<p>
+
+Formal mathematical systems are limited by two profound facts:  the existence of undecidable propositions (Gödel, Church, Turing) and the inherent incompleteness of any suficiently power-ful axiomatic framework <sup>1</sup>. A purely deductive “search” for new theorems cannot systematically produce all true statements, nor can it eficiently navigate the vast space of possible proposi-tions.  Yet mathematics progresses with astonishing speed, often by importing structures from the physical world.  We propose that the human mind copes with undecidability by using pat-tern matching: recognising in a natural or physical system a solution that can be abstracted and formalised. Nature, with its eons of evolutionary optimization or possibly due to physical selec-tion (see for instance, the strong anthropic principle [8–10]), has already explored and “solved” countless problems in ways that are highly non-intuitive and effective. The history of science is replete with examples where physics provided the germ of a mathematical innovation that pure logic alone would have been hard-pressed to generate.
+
+<br><span style="color:blue;">
+形式的な数学体系は、二つの重大な事実によって制約を受けています。すなわち、「決定不能な命題」の存在（ゲーデル、チャーチ、チューリング）と、十分な表現力を持つあらゆる公理的枠組みが本質的に抱える「不完全性」です<sup>1</sup>。新しい定理を純粋に演繹的な「探索」によって見つけ出そうとしても、真である命題をすべて体系的に導き出すことはできませんし、膨大な数の命題の可能性が広がる空間を効率的に探索することも不可能です。それにもかかわらず、数学は驚くべき速さで進歩を遂げており、その多くは物理世界から構造を取り入れることによって実現されています。私たちは、人間の精神が「パターン・マッチング」を用いることで、この決定不能性という問題に対処しているのではないかと提案します。つまり、自然界や物理システムの中に、抽象化や形式化が可能な解決策を見出しているという考えです。自然は、気の遠くなるような時間をかけた進化による最適化、あるいは物理的な選択（例えば、強い人間原理 [8–10] を参照）を通じて、直感とは大きく異なるものの極めて有効な方法で、すでに無数の問題を探索し、「解決」してきました。科学の歴史を振り返れば、純粋な論理だけでは生み出すのが困難だったであろう数学的革新の端緒を、物理学が提供した例は枚挙にいとまがありません。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>1</sup> See Section 2 for details of undecidability and seemingly simple fragments of logic that have non-elementary time complexity.
+
+<br><span style="color:blue;">
+決定不能性や、非初等的な時間計算量を持つ一見単純な論理の断片に関する詳細については、第2節を参照してください。
+</span>
+</p><p>
+
+The present paper develops this thesis through a single, exceptionally rich case: the Fourier transform and its progeny. We follow its path from the musical perception of harmony, through the mathematical scandal of representing an arbitrary function as a sum of sinusoids. At every step, the catalyst was a concrete physical question, not an abstract mathematical puzzle.
+
+<br><span style="color:blue;">
+本論文では、極めて豊かな内容を持つ一つの事例――すなわちフーリエ変換とその派生概念――を軸に、この論旨を展開する。我々は、和音に対する音楽的知覚から、任意の関数を正弦波の和として表現するという数学上の「スキャンダル」に至るまで、その歩みをたどっていく。その各段階において推進力となったのは、抽象的な数学のパズルではなく、具体的な物理学的問いであった。
+</span>
+</p><p>
+
+After presenting the historical evidence, we situate our thesis within the existing literature, showing that while many authors have remarked on the physics-first pattern or on the embodied nature of mathematics, the specific link to the undecidability barrier and the resultant cognitive necessity of pattern matching from nature has not been explicitly argued. We then draw a direct corollary for artificial intelligence:  because pure reasoning is insuficient, any system aiming at human-level mathematical and algorithmic creativity must embed vast stores of cross-domain patterns, providing a fundamental justification for the enormous scale of contemporary large language models.   We conclude by outlining the broader implications of this view as well as addressing the computational complexity of pattern matching for theorem proving.
+
+<br><span style="color:blue;">
+歴史的証拠を提示した後、我々の主張を既存の文献の中に位置づけます。多くの研究者が「物理学を先行させる（physics-first）」パターンや数学の「身体性（embodied nature）」について言及してきましたが、「決定不能性」という障壁との具体的な関連や、それに伴い自然界からのパターンマッチングが認知的に不可欠となる点については、これまで明示的に論じられてきませんでした。続いて、人工知能に関する直接的な帰結を導き出します。すなわち、純粋な推論だけでは不十分であるため、人間レベルの数学的・アルゴリズム的創造性を目指すシステムには、領域横断的な膨大なパターンを組み込む必要があり、これが現代の大規模言語モデルの巨大なスケールに対する根本的な正当化の根拠となるのです。最後に、この見解が持つより広範な意義を概説するとともに、定理証明におけるパターンマッチングの計算量についても論じます。
+</span>
+</p><p>
+
+Taken together, the evidence assembled in this paper supports a single, sharp conclusion: pure deductive reasoning is not merely slow but constitutively insuficient as an engine of math-ematical discovery.  The undecidability of first-order logic and the non-elementary cost of even decidable fragments (Section 2) foreclose brute-force search as a viable route to new mathe-matics, while the recurring historical pattern—from the vibrating string to the heat equation to the vector-space concept itself—shows that the decisive innovations were read off from na-ture and only afterwards reconstructed as theorems.  The negative case of axiomatic set theory (Section 3.1) confirms the same law from the other side:  mathematics that severs its physi-cal grounding pays with foundational crises and scientific sterility.  Pattern matching from the physical world is therefore not an incidental heuristic but the mechanism by which mathemat-ical  cognition  circumvents  the  barriers  that  pure  logic  cannot  cross—and  it  is  precisely  this mechanism that any artificial system aspiring to comparable creativity must reproduce at scale.
+
+<br><span style="color:blue;">
+本論文で提示された証拠を総合すると、一つの明確な結論が導き出されます。すなわち、純粋な演繹的推論は、数学的発見の原動力として単に遅いだけでなく、本質的に不十分であるということです。一階述語論理の決定不能性や、決定可能な断片であっても要する計算量が非初等的（極めて膨大）であるという事実（第2節）は、力任せの探索（ブルートフォース・サーチ）が新たな数学を切り拓く現実的な手段にはなり得ないことを示しています。一方で、振動する弦から熱伝導方程式、さらにはベクトル空間という概念そのものに至るまで、歴史上繰り返されてきたパターンは、決定的な革新が自然界から読み取られ、その後に初めて定理として再構築されたものであることを物語っています。公理的集合論の事例（第3節1項）は、この法則を裏側から裏付けています。物理的な基盤を切り離した数学は、基礎論的危機や科学的な不毛さという代償を払うことになるのです。したがって、物理世界からのパターン・マッチングは、単なる付随的なヒューリスティック（発見的手段）ではありません。それは、純粋な論理では越えられない障壁を数学的認知が回避するためのメカニズムであり、同等の創造性を目指すあらゆる人工システムが大規模に再現しなければならないものこそ、まさにこのメカニズムなのです。
+</span>
+</p>
+
+<h3>1.1	Before Fourier:  The Vibrating String and Physical Overtones <span style="color:blue;">フーリエ以前：振動する弦と物理的倍音</span></h3>
+<p>
+The idea that a complex sound can be built from pure tones is an immediate biological experi-ence. The human ear performs a real-time Fourier analysis, and music itself is an exploration of frequency ratios. In the 1740s, this physical reality became a mathematical battlefield.
+
+<br><span style="color:blue;">
+複雑な音が純音から構成され得るという事実は、生物学的に直接感じ取れる経験です。人間の耳はリアルタイムでフーリエ解析を行っており、音楽そのものも周波数比の探求にほかなりません。1740年代、この物理的な現実は数学上の戦場となりました。
+</span>
+</p><p>
+
+D’Alembert [1] derived the one-dimensional wave equation and showed that the shape of a plucked string could be represented as the sum of two travelling waves (see Appendix A for details). Daniel Bernoulli [2] went further: he proposed that any initial shape of the string could be expanded as an infinite sum of simple harmonic modes,
+
+<br><span style="color:blue;">
+ダランベール[1]は一次元波動方程式を導出し、弦をはじいたときの形状は2つの進行波の和として表せることを示した（詳細は付録Aを参照）。ダニエル・ベルヌーイ[2]はさらに進み、弦の任意の初期形状は単純な調和モードの無限和として展開できることを提案した。
+</span>
+
+\[
+y(x,0) = \sum_{n=1}^\infty a_n \sin \left(\frac{nπx}{L}\right),
+\]
+
+just as one hears a superposition of a fundamental and its overtones. This was a purely physical hypothesis, grounded in music and mechanics.
+
+<br><span style="color:blue;">
+ちょうど、基音とその倍音が重なり合った音を耳にするのと同様です。これは、音楽と力学に基づいた、純粋に物理的な仮説でした。
+</span>
+</p><p>
+
+
+The mathematical establishment of the time,  led by Euler [3] and Lagrange [4],  rejected Bernoulli’s claim (see [5,7] for details of this historical episode). They argued that only “analytic” functions, those given by a single closed-form expression, could be represented by a trigonometric series. A triangular pluck was not analytic; therefore, they believed, Bernoulli’s expansion could not hold. The dispute was not resolved by logic but by the stubborn fact that a plucked string does sound like a sum of sinusoidal components<sup>2</sup>. Physics pointed to a truth that the prevailing mathematical ontology could not accommodate.
+
+<br><span style="color:blue;">
+オイラー [3] やラグランジュ [4] を中心とする当時の数学界の主流派は、ベルヌーイの主張を退けました（この歴史的経緯の詳細は [5,7] を参照）。彼らは、単一の閉じた形式の式で表される「解析的」な関数だけが三角級数で表現できると論じたのです。三角形に弾かれた弦の形状は解析的ではなかったため、ベルヌーイの展開は成立し得ないと彼らは考えました。この論争に決着をつけたのは論理ではなく、「弾かれた弦は正弦波成分の和として響く」という動かしがたい事実でした。物理学は、当時の数学的実在観では収まりきらない真理を指し示していたのです。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>2</sup> That nature is replete with periodic phenomenon is obvious, but the formulation of sine and cosine as periodic functions were a direct consequence of observing planetary motions, with the current form of sine and cosine usually attributed to Aryabhata (500 CE) [6].
+
+<br><span style="color:blue;">
+自然界が周期的な現象に満ちていることは明らかですが、正弦（sine）や余弦（cosine）が周期関数として定式化されたのは、惑星の運動を観測したことによる直接的な結果でした。現在のような形の正弦・余弦は、一般にアーリヤバータ（西暦500年）によるものとされています [6]。
+</span>
+</p>
+
+<h3>1.2	Orthogonality and the Emergence of Vector Spaces:  Multiple Gifts from Physics <br><span style="color:blue;">直交性とベクトル空間の創発：物理学からの多岐にわたる贈り物</span></h3>
+
+<p>
+In the vibrating string debate, an equally profound property was hiding in plain sight. The sine functions that Bernoulli used are orthogonal on the interval [0,L]:
+
+<br><span style="color:blue;">
+「振動する弦」をめぐる議論において、同様に極めて重要な性質が、誰の目にも明らかな形でそこに潜んでいました。ベルヌーイが用いた正弦関数は、区間 [0, L] において直交しています。
+</span>
+
+\[
+\int_0^L \sin\left(\frac{nπx}{L}\right)\sin\left(\frac{mπx}{L}\right)dx = 0 \quad for \quad n \neq m
+\]
+
+To a modern mathematician, this is a statement about an inner product on a function space. To an 18th-century physicist, it was a consequence of the fact that different normal modes of a string do not exchange energy; they vibrate independently.  The orthogonality was observed  in nature before it was abstracted into algebra.
+
+<br><span style="color:blue;">
+現代の数学者にとって、これは関数空間上の内積に関する命題です。一方、18世紀の物理学者にとっては、それは弦の異なる基準振動モード間でエネルギーのやり取りがなく、それぞれが独立して振動するという事実から導かれる帰結でした。つまり、この直交性は、代数的な概念として抽象化される以前に、自然界においてすでに観測されていたものなのです。
+</span>
+</p>
+
+<h4>The deeper root:  vector spaces before Grassmann <span style="color:blue;">より深いルーツ：グラスマン以前のベクトル空間</span></h4>
+<p>
+The abstract concept of a vector space — a set closed under addition and scalar multiplication — is often credited to Grassmann’s Ausdehnungslehre (1844) [11], but its essential ingredients were already in widespread use, drawn directly from mechanics and geometry. The parallelogram law for composing forces appears in pseudo-Aristotelian mechanics, is made rigorous by Stevin (1586) and Newton (1687), and becomes standard for engineers throughout the 18th century. Descartes’ analytic geometry (1637), the Argand plane for geometric representation of complex numbers (Wessel 1799, Argand 1806), and Hamilton’s quaternions (1843) each contributed a physically motivated calculus of directed magnitudes.
+
+<br><span style="color:blue;">
+「ベクトル空間」という抽象的な概念（加法とスカラー倍について閉じている集合）の創始は、しばしばグラスマンの『拡大論』（1844年）[11]に帰せられますが、その本質的な要素は、力学や幾何学に直接由来するものとして、すでに広く用いられていました。力の合成に関する「平行四辺形の法則」は、偽アリストテレスの力学書に見られ、ステヴィン（1586年）やニュートン（1687年）によって厳密なものとされ、18世紀を通じて技術者たちの間で標準的な手法となりました。デカルトの解析幾何学（1637年）、複素数を幾何学的に表現するアルガン平面（ヴェッセル 1799年、アルガン 1806年）、そしてハミルトンの四元数（1843年）は、それぞれ、物理的な動機に基づく「向きを持つ量」の計算体系の確立に寄与しました。
+</span>
+</p><p>
+
+Grassmann’s monumental contribution was to abstract these scattered, physically motivated calculi into a single general theory of vector spaces of arbitrary dimension. But his starting point was explicitly geometric and physical: he sought a theory of extension that could handle forces, currents, and crystallographic symmetries, topics on which his father had worked [12]. Thus, the vector space concept itself—like the orthogonality that later gave it an inner product—emerged from the pattern matching of concrete physical and geometric situations,  not from a purely deductive exploration of algebraic axioms.
+
+<br><span style="color:blue;">
+グラスマンの記念碑的な功績は、物理的な考察に端を発するそれら散在的な計算体系を抽象化し、任意の次元のベクトル空間に関する単一の一般理論へと統合したことにあります。しかし、彼の出発点はあくまで幾何学的かつ物理的なものでした。彼は、力、電流、結晶の対称性といった、父が取り組んでいた課題を扱えるような「拡張（extension）」の理論を求めていたのです[12]。したがって、ベクトル空間という概念そのものは――後に内積の導入をもたらすことになる直交性と同様に――代数的な公理から純粋に演繹的に探求された結果ではなく、具体的な物理的・幾何学的状況に見られるパターンの照合から生まれたものだったのです。
+</span>
+</p>
+
+<h3>1.3	Fourier’s Heat:  The Theorem Forged in a Furnace <span style="color:blue;">フーリエの熱――炉の中で鍛え上げられた定理</span></h3>
+<p>
+As mentioned above, Bernoulli had already proposed that the motion of a vibrating string could be written as a superposition of simple harmonic modes, however, he gave no systematic method for determining the coeficients an; his insight remained qualitative, grounded in the physical experience  of  hearing  overtones,  and  he  did  not  assert  the  representation  for  discontinuous functions.
+
+<br><span style="color:blue;">
+前述の通り、ベルヌーイはすでに、振動する弦の運動を単振動モードの重ね合わせとして記述できると提唱していましたが、係数 \(a_n\) を決定するための体系的な手法は提示していませんでした。彼の洞察は、倍音を耳にするという物理的経験に基づく定性的なものにとどまり、不連続関数に対するその表現を主張するまでには至らなかったのです。
+</span>
+</p><p>
+
+The decisive breakthrough came from an entirely different physical domain. In 1807 Joseph Fourier submitted a memoir on the propagation of heat in solid bodies [13].  To solve the heat equation, he separated variables and obtained ordinary differential equations whose solutions were sines and cosines.  The general solution forced him to assert that any initial temperature distribution f(x) could be written as
+
+<br><span style="color:blue;">
+決定的な突破口は、全く異なる物理的領域からもたらされた。1807年、ジョゼフ・フーリエは固体中の熱伝導に関する論文を提出した[13]。熱伝導方程式を解くために、彼は変数分離を行い、解が正弦関数や余弦関数となるような常微分方程式を導き出した。その一般解を導く過程で、彼は、任意の初期温度分布 f(x) は次のように書き表すことができると主張せざるを得なくなった。
+</span>
+
+\[
+f(x) = \sum_{n=0}^\infty \left(a_n \cos(nx) + b_n \sin(nx)\right),
+\]
+
+with the coeficients given by the now-famous integrals. See Appendix B for more details. 
+
+<br><span style="color:blue;">
+係数は、今やよく知られた積分によって与えられる。詳細は付録Bを参照のこと。
+</span>
+</p><p>
+
+Fourier’s  claim  was  revolutionary:   it  included  functions  with  jumps,  corners,  and  other
+“unnatural”  features.  Lagrange, who was present at the 1807 presentation, again objected on grounds of rigour.  Fourier’s reply was quintessentially physical, the heat equation predicted a smooth evolution that matched experiment, and the trigonometric representation was a neces-sary consequence of the physics. The Analytical Theory of Heat (1822) became the cornerstone of Fourier analysis, not because the mathematics was complete, but because nature had spoken. 
+
+<br><span style="color:blue;">
+フーリエの主張は革命的なものでした。それは、不連続な「跳び」や「角（かど）」、その他「不自然」とも言える特徴を持つ関数をも包含していたからです。1807年の発表の場に居合わせたラグランジュは、再び「厳密さ」を理由に異議を唱えました。それに対するフーリエの反論は、極めて物理学的なものでした。すなわち、熱伝導方程式は実験結果と合致する滑らかな変化を予測しており、三角関数を用いた表現はその物理的必然として導かれるものだ、という主張です。こうして『熱の解析的理論』（1822年）はフーリエ解析の礎となりましたが、それは数学的な完全性が確立されていたからではなく、むしろ「自然そのものが答えを示した」からに他なりませんでした。
+</span>
+</p><p>
+
+The statement that every function, including discontinuous, non-differentiable, and later even pathological ones, could be decomposed into perfectly smooth basis functions was so radical that it eventually required a complete rewriting of the concepts of function, integral, and convergence
+(see Appendix C for more pedagogical statements).
+
+<br><span style="color:blue;">
+不連続関数、微分不可能関数、そして後には病的な関数さえも含め、あらゆる関数が完全に滑らかな基底関数に分解できるという主張は、あまりにも革新的であったため、最終的には関数、積分、収束といった概念の全面的な書き換えを必要とした。（より教育的な説明については付録Cを参照。）
+</span>
+</p>
+
+<h3>1.4 Mathematical Rigour Follows the Physics <span style="color:blue;">数学的厳密さは物理に追随する</span></h3>
+<p>
+Once the physical legitimacy of the Fourier series was established, mathematicians were forced to build a formal framework that could justify it.  This process, far from being a triumph of autonomous logic, was a prolonged effort of catching up with nature:
+
+<br><span style="color:blue;">
+フーリエ級数の物理的な妥当性が確立されると、数学者たちはそれを正当化しうる形式的な枠組みを構築せざるを得なくなった。この過程は、決して自律的な論理の勝利などではなく、自然に追いつこうとする息の長い取り組みであった。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+•  Dirichlet (1829) [14] provided the first suficient conditions for convergence of Fourier series (piecewise monotonic, finite number of jumps). His work was directly motivated by the need to give precise meaning to Fourier’s claims.
+
+<br><span style="color:blue;">
+ディリクレ（1829年）[14]は、フーリエ級数の収束に関する最初の十分条件（区分的単調性、有限個の跳躍不連続点）を提示しました。彼の研究は、フーリエの主張に厳密な意味を与える必要性に直接動機づけられたものでした。
+</span>
+</li><br><li>
+
+•  Riemann  (1854)  [15]  developed  his  integral  precisely  to  handle  more  general  Fourier coeficients. In his Habilitation thesis, he investigated the representability of functions by trigonometric series, and his integral was born from the dificulties of defining the Fourier coeficient integrals.
+
+<br><span style="color:blue;">
+リーマン（1854年）[15]は、より一般的なフーリエ係数を扱うために、まさにその積分法を構築しました。彼は教授資格取得論文において、三角級数による関数の表現可能性を研究しましたが、フーリエ係数を求める積分を定義する際に直面した困難から、彼の積分法が生まれたのです。
+</span>
+</li><br><li>
+
+•  Cantor (1872) [16] began studying the sets of points where a trigonometric series might fail to represent a function uniquely; this research ultimately led him to invent set theory.
+
+<br><span style="color:blue;">
+カントール（1872年）[16]は、三角級数が関数を一意に表現できないような点の集合についての研究に着手し、この研究は最終的に彼による集合論の創始へとつながりました。
+</span>
+</li><br><li>
+
+•  Lebesgue (1902) [17] introduced his measure-theoretic integral and the L2  space frame-work, largely motivated by the convergence problems of Fourier series and the emerging needs of physics.
+
+<br><span style="color:blue;">
+ルベーグ（1902年）[17]は、主にフーリエ級数の収束に関する問題や物理学における新たな要請を動機として、自身の測度論的積分およびL²空間の枠組みを導入した。
+</span>
+</li><br><li>
+
+•  Schwartz (1950) [18] created the theory of distributions to give a rigorous home to the Dirac delta function, a “function”  that physicists (and Heaviside before them) had been using with great success in electromagnetism and quantum mechanics. The delta function is the Fourier transform of a pure tone; once again, physical utility forced mathematical extension.
+
+<br><span style="color:blue;">
+シュワルツ（1950年）[18]は、物理学者たち（それ以前にはヘヴィサイドも）が電磁気学や量子力学において大きな成果を上げつつ用いていた「関数」であるディラックのデルタ関数に、数学的に厳密な位置づけを与えるべく、超関数（ディストリビューション）の理論を構築しました。デルタ関数は純音のフーリエ変換にあたるものであり、ここでもまた、物理学上の有用性が数学的な概念の拡張を促したのです。
+</span>
+</li></ul></div>
+<p><p>
+
+In every instance, the physical tool was in active use long before the mathematicians found a logically airtight home for it. The direction of discovery was not from axioms to theorem, but from nature to formalisation.
+
+<br><span style="color:blue;">
+いずれの事例においても、数学者たちがその道具に論理的に隙のない居場所を見出すよりもずっと以前から、その物理的な道具は実際に使用されていました。発見の道筋は、公理から定理へと向かうものではなく、自然から形式化へと向かうものだったのです。
+</span>
+</p>
+
+<h2>2 The Undecidability Connection <span style="color:blue;">決定不能性との関連</span></h2>
+
+<p>
+The  history  we  have  sketched  is  not  merely  a  collection  of  anecdotes.   It  illustrates  a  deep epistemic principle grounded in the logical limits of formal systems.
+
+<br><span style="color:blue;">
+ここで概観した歴史は、単なる逸話の寄せ集めではありません。それは、形式体系の論理的限界に根ざした、認識論上の深遠な原理を例証するものです。
+</span>
+</p>
+
+<h3>2.1 Undecidability and Incompleteness as Real Barriers <br><span style="color:blue;">現実的な障壁としての決定不能性と不完全性</span></h3>
+
+<p>
+Gödel’s incompleteness theorems (1931) demonstrated that any consistent, suficiently expressive formal system contains true statements that cannot be proved within the system.  Church [20] and Turing [19] later showed that even the decision problem for first-order logic is undecidable: no algorithm can determine,  for an arbitrary statement,  whether it is logically valid.   These results are not just philosophical curiosities; they place hard, practical constraints on automated deduction. A theorem prover operating solely on axioms and inference rules cannot, in general, decide the truth of arbitrary mathematical conjectures, and the search space for proofs grows hyper-exponentially even in areas that are decidable.
+
+<br><span style="color:blue;">
+ゲーデルの不完全性定理（1931年）は、無矛盾かつ十分な表現力を持ついかなる形式体系にも、その体系内では証明できない真の命題が存在することを示しました。その後、チャーチ [20] とチューリング [19] は、一階述語論理における決定問題でさえ決定不能であること、すなわち、任意の命題が論理的に妥当であるかどうかを判定するアルゴリズムは存在しないことを明らかにしました。これらの結果は単なる哲学的な興味の対象にとどまるものではなく、自動推論に対して厳格かつ実用的な制約を課すものです。公理と推論規則のみに基づいて動作する定理証明器は、一般に、任意の数学的予想の真偽を判定することはできません。また、決定可能な領域においてさえ、証明の探索空間は超指数関数的に増大します。
+</span>
+</p><p>
+
+<h4>Decidable but intractable: a hierarchy of computational hardness <br><span style="color:blue;">決定可能だが扱いにくい：計算困難性の階層</span></h4>
+
+<p>
+The undecidability of general predicate logic is only the most extreme manifestation of a deeper practical problem:  even among decidable  fragments, the computational resources required to determine truth can be so enormous that purely deductive algorithms become useless for all but the tiniest problems.  A brief tour of the classical complexity hierarchy for logical decision problems makes this painfully clear.
+
+<br><span style="color:blue;">
+一般述語論理の決定不能性は、より根深い実用上の問題が極端な形で現れたものにすぎません。すなわち、決定可能な論理の断片であっても、真偽を判定するために必要な計算資源が膨大になり得るため、純粋な演繹的アルゴリズムは、ごく小規模な問題を除いては役に立たなくなってしまうのです。論理的決定問題に関する古典的な計算量階層を概観すれば、このことは痛いほど明らかになります。
+</span>
+</p>
+
+<h4>Propositional logic:  the base of the tower.<br><span style="color:blue;">命題論理：塔の土台</span></h4>
+<p>
+The  simplest  non-trivial  logic  is  classical propositional  calculus.   The  problem  of  deciding  whether  a  given  propositional  formula  is  a tautology is co-NP-complete, while satisfiability is NP-complete [27].
+
+<br><span style="color:blue;">
+自明ではない最も単純な論理は、古典命題論理である。与えられた命題論理式がトートロジー（恒真式）であるかどうかを判定する問題はco-NP完全であり、一方、充足可能性問題はNP完全である [27]。
+</span>
+</p><p style="padding-left:4em;">
+
+Example. The formula
+
+<br><span style="color:blue;">
+例。公式
+</span>
+
+\[
+((P → Q) ∧ (Q → R)) → (P → R)
+\]
+
+is a tautology; verifying such formulae for an input with hundreds of Boolean vari-ables, however, may require exponential time in the worst case (unless P = NP).
+
+<br><span style="color:blue;">
+はトートロジー（恒真式）ですが、数百個のブール変数を持つ入力に対してそのような式を検証する場合、最悪の場合には（P = NP でない限り）指数時間を要する可能性があります。
+</span>
+</p><p>
+
+Already at this first rung, pure deduction encounters the exponential explosion that limits fully automatic reasoning for large formulas.
+
+<br><span style="color:blue;">
+すでにこの最初の段階において、純粋な演繹は、大規模な論理式に対する完全自動推論を制約する「指数関数的な爆発」に直面します。
+</span>
+</p>
+
+<h4>Quantified Boolean formulas:  PSPACE-completeness.<br><span style="color:blue;">量化ブール式：PSPACE完全性</span></h4>
+<p>
+	If we add universal and existen-tial quantifiers over propositional variables, we obtain the language of <strong>Quantified  Boolean Formulas (QBF)</strong>. Deciding the truth of a QBF sentence is <strong>PSPACE-complete</strong>, believed to be far harder than NP-complete problems because PSPACE is not known to be contained in NP [26].
+
+<br><span style="color:blue;">
+命題変数に対する全称量化子および存在量化子を導入すると、<strong>量化ブール式（QBF）</strong>の言語が得られます。QBF文の真偽判定問題は<strong>PSPACE完全</strong>であり、PSPACEがNPに含まれるかどうかは知られていないため[26]、NP完全問題よりもはるかに困難であると考えられています。
+</span>
+</p>
+<p style="padding-left:4em;">
+Example. The sentence
+
+<br><span style="color:blue;">
+例。文
+</span>
+
+\[
+∀x∃y ∀z ∃w   (x ∧ y) ∨ (¬x ∧ z) ∨ (¬z ∧ w)
+\]
+
+is true, but finding a proof (a winning strategy for the existential player) resembles a game tree of exponential depth.
+
+<br><span style="color:blue;">
+は真だが、その証明（存在量化子に対応するプレイヤーの必勝戦略）を見つけることは、指数関数的な深さを持つゲーム木を扱うことに似ています。
+</span>
+</p><p>
+
+QBF can encode two-player games and many problems in automated planning;  its PSPACE hardness shows that even when decidability is trivial, the proof search is a severe bottleneck.
+
+<br><span style="color:blue;">
+QBFは、2人対戦ゲームや自動計画における多くの問題を符号化することができます。そのPSPACE困難性は、たとえ決定可能性が自明であっても、証明探索が深刻なボトルネックとなり得ることを示しています。
+</span>
+</p>
+
+<h4>Temporal logics:  from PSPACE to EXPTIME.<br><span style="color:blue;">時相論理：PSPACEからEXPTIMEへ</span></h4>
+
+Temporal logics are used to specify the behaviour of reactive systems over linear or branching time.
+
+<br><span style="color:blue;">
+時相論理は、線形時間または分岐時間上でのリアクティブシステムの挙動を仕様記述するために用いられる。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+• <strong> Linear Temporal Logic (LTL)</strong> is <strong>PSPACE-complete.</strong> A typical specification is 
+
+<br><span style="color:blue;">
+<strong>線形時相論理（LTL）</strong>は<strong>PSPACE完全</strong>です。典型的な仕様は
+</span>
+
+\[
+\mathbf{G}(request → \mathbf{F} grant),
+\]
+
+meaning “globally (at all times), a request is eventually followed by a grant.”   Although the model-checking problem for a single finite trace is tractable, the validity problem for arbitrary formulas can require exploring all possible infinite sequences, hence the PSPACE hardness.
+
+<br><span style="color:blue;">
+これは「（常に）リクエストに対して、いずれは許可（グラント）が続く」ということを意味します。単一の有限トレースに対するモデル検査問題は現実的な計算量で解けますが、任意の論理式に対する妥当性判定問題では、あらゆる可能な無限列を探索する必要が生じる場合があり、そのためPSPACE困難となります。
+</span>
+</li><br><li>
+
+• <strong>Computation  Tree  Logic  (CTL)</strong> is <strong>EXPTIME-complete</strong> [24].   A branching-time property like
+
+<br><span style="color:blue;">
+<strong>計算木論理（CTL）</strong>は<strong>EXPTIME完全</strong>である [24]。～のような分岐時間特性は、
+</span>
+
+\[
+\mathbf{AG}(request → \mathbf{AF} grant)
+\]
+
+asserts that along every possible future path, a request will eventually be satisfied (along all possible futures!). The EXPTIME hardness stems from the need to check the formula over the full, exponentially large computation tree.
+
+<br><span style="color:blue;">
+あらゆる可能な将来の経路において、リクエストがいずれ満たされること（つまり、あらゆる可能な将来において！）を主張するものです。EXPTIME困難性（EXPTIME-hardness）が生じるのは、指数関数的な大きさを持つ計算木全体にわたって論理式を検証する必要があるためです。
+</span>
+</li></ul></div>
+</p><p>
+
+Both logics are decidable, yet practical automated reasoning tools (e.g., model checkers) must employ sophisticated heuristics, symbolic representations, and pattern-like abstractions to avoid brute-force deduction.
+
+<br><span style="color:blue;">
+いずれの論理も決定可能ではあるが、実用的な自動推論ツール（モデル検査器など）においては、力任せの推論を回避するために、高度なヒューリスティクス、記号的表現、そしてパターン的な抽象化を採用する必要がある。
+</span>
+</p>
+
+<h4>First-order theories of graphs:  PSPACE completeness and undecidability.<br><span style="color:blue;">グラフの一次理論：PSPACE完全性と決定不能性</span></h4>
+
+<p>
+Restrict-ing to pure first-order logic, even the language of graph theory already exhibits extreme com-plexity.   The validity problem over all finite graphs—determining whether a first-order sentence holds in every  finite graph—is <strong>undecidable</strong> (Trahtenbrot’s theorem).  Thus, even within the relatively weak framework of first-order logic, the structural richness of graphs pushes deduction either into intractable complexity or outright impossibility.
+
+<br><span style="color:blue;">
+純粋な一階述語論理に限定した場合であっても、グラフ理論の言語はすでに極めて高い複雑さを示しています。すべての有限グラフに関する妥当性問題（ある一階述語論理の文が、あらゆる有限グラフにおいて成立するか否かを判定する問題）は**決定不能**です（トラフテンブロートの定理）。したがって、一階述語論理という比較的限定的な枠組みにおいてさえ、グラフが持つ構造的な豊かさゆえに、その推論は手に負えないほどの複雑さを帯びるか、あるいはそもそも不可能となってしまうのです。
+</span>
+</p>
+
+<h4>S1S and S2S: the non-elementary abyss.<br><span style="color:blue;">S1SとS2S：非初等的な深淵</span></h4>
+
+<p>
+The monadic second-order theories of one suc-cessor (S1S) and of two successors (S2S) push complexity to an extreme.
+
+<br><span style="color:blue;">
+1つの後続者を持つ構造のモナディック二階理論（S1S）および2つの後続者を持つ構造のモナディック二階理論（S2S）は、計算量を極限まで高めるものである。
+</span>
+</p>
+<p>
+<div class="styleBullet">
+<ul><li>
+• <strong>S1S</strong> is the theory of natural numbers with the successor function, allowing quantification over both individual numbers and sets of numbers (or equivalently, the second order theory of linear order (N,<)   [21]).  It is decidable, but its decision procedure requires time that grows faster than any elementary function (i.e., non-elementary) [23].
+
+<br><span style="color:blue;">
+<strong>S1S</strong>は、後者関数（successor function）を備えた自然数の理論であり、個々の数と数の集合の双方に関する量化を許容するものです（これは、線形順序 (N, <) に関する二階理論 [21] と同等です）。この理論は決定可能ですが、その決定手続きには、いかなる初等関数よりも急速に増大する時間（すなわち、非初等的な時間）を要します [23]。
+</span>
+<p>
+
+Example.  The well-ordering principle “every non-empty set of natural numbers has a least element” is expressible in S1S.
+
+<br><span style="color:blue;">
+例。「自然数の空でない任意の集合は最小元を持つ」という整列原理は、S1Sで表現可能である。
+</span>
+</p>
+</li><br><li>
+
+•<strong>S2S</strong>  extends  this  to  infinite  binary  trees,  again  with  set  quantifiers.   Rabin  proved  it decidable, but the complexity is still non-elementary [22].
+
+<br><span style="color:blue;">
+<strong>S2S</strong>は、これを（やはり集合量化子を用いて）無限二分木へと拡張したものである。Rabinはこの理論が決定可能であることを証明したが、その計算量は依然として非初等的（non-elementary）である[22]。
+</span>
+<p>
+Example.  König’s infinity lemma, “every infinite, finitely branching tree has an infinite path,” is naturally expressed in S2S.
+
+<br><span style="color:blue;">
+例。「無限かつ有限分岐な木はすべて無限パスを持つ」というケーニッヒの無限の補題は、S2Sにおいて自然に表現される。
+</span>
+</p>
+</li></ul></div>
+</p>
+
+<h4>Why are second-order theories of linear order so hard? <br><span style="color:blue;">なぜ線形順序に関する二階の理論はこれほど難しいののか</span></h4>
+
+<p>
+The root of the non-elementary blow-up lies in the extraordinary expressive power of monadic second-order quantification over a linear order, even one as simple as the natural numbers with the usual “less-than” relation. In monadic second-order logic one can quantify not only over elements but over arbitrary sets of elements.  Over a linear order, a set quantifier essentially allows a formula to name a subset of the domain, which can encode an arbitrary binary sequence or, over a tree, an arbitrary path. A single second-order existential quantifier already requires the decision procedure to guess the set’s characteristic function, and the quantifier alternations are the real killer.
+
+<br><span style="color:blue;">
+非初等的な爆発（non-elementary blow-up）が生じる根本的な原因は、線形順序（通常の「より小さい」関係を持つ自然数のような単純なものであっても）上のモナディック二階量化が持つ並外れた表現力にあります。モナディック二階論理では、要素だけでなく、要素の任意の集合についても量化を行うことができます。線形順序において、集合に関する量化子を用いると、論理式によって領域の任意の部分集合を指定することが可能になります。これにより、任意の二進列を符号化したり、あるいは木構造上であれば任意のパスを符号化したりできるようになります。二階の存在量化子が一つあるだけでも、決定手続きはその集合の特性関数を推測（あるいは「当て」）なければならなくなりますが、量化子の入れ替わり（交代）こそが、計算量を劇的に増大させる真の要因なのです。
+</span>
+</p><p>
+
+For <strong>S1S</strong>,  the  decision  procedure  translates  a  formula  into  a  finite  automaton  on  infinite words (Büchi automaton) [21].  Each time a set quantifier is eliminated, the automaton’s state space undergoes a powerset construction, yielding an exponential blow-up.  With \(k\) alternating quantifiers, the automaton’s size becomes a stack of \(k\) exponentials.  Hence the decision time is at least \(k\)-fold exponential, i.e., non-elementary in the quantifier depth.  In effect, the logic can express arbitrarily deep inductive definitions—for instance, the well-ordering principle or the existence of winning strategies in increasingly long games—and the automaton must keep track of all possibilities.
+
+<br><span style="color:blue;">
+<strong>S1S</strong>の場合、その決定手続きは論理式を無限語上の有限オートマトン（ビュヒ・オートマトン）へと変換します[21]。集合量化子が除去されるたびに、オートマトンの状態空間に対して冪集合構成（powerset construction）が適用され、その結果、状態数が指数関数的に増大します。量化子が \(k\) 個交互に現れる場合、オートマトンのサイズは \(k\) 重の指数関数の積み重ねとなります。したがって、決定に要する時間は少なくとも \(k\) 重指数関数的、すなわち量化子の深さに関して非初等的（non-elementary）なものとなります。実質的に、この論理は任意の深さを持つ帰納的定義（例えば、整列原理や、ますます長くなるゲームにおける必勝戦略の存在など）を表現可能であり、オートマトンはそのすべての可能性を追跡しなければならないのです。
+</span>
+</p><p>
+
+Thus, the underlying reason is that a linear order (or a tree) provides enough combinato-rial structure for monadic second-order logic to encode extremely deep and nested inductive reasoning.  The automata-theoretic decision procedures, while proving decidability, reveal that any brute-force deductive exploration must traverse a stack of exponentials, making the task physically impossible for all but the smallest formulas.
+
+<br><span style="color:blue;">
+その根本的な理由は、線形順序（あるいは木構造）が、モナディック二次論理において極めて深く入れ子になった帰納的推論を符号化するのに十分な組合せ論的構造を提供しているという点にあります。オートマトン理論に基づく決定手続きは、決定可能性を証明する一方で、力任せの演繹的探索を行おうとすれば指数関数の積み重ねをたどる必要が生じ、ごく単純な論理式を除けば、その実行が物理的に不可能であることを明らかにしています。
+</span>
+</p><p>
+
+Thus,  even within the decidable fragment,  a purely deductive machine faces either expo-nential,  doubly exponential,  or non-elementary time demands.   This immense computational landscape  reinforces  our  main  argument:   the  human  mind  does  not—and  cannot—navigate mathematics by brute deduction.  It must rely on the compressed, pre-computed patterns that nature and physics provide.
+
+<br><span style="color:blue;">
+したがって、たとえ決定可能な断片（フラグメント）の範囲内であっても、純粋に演繹的な機械は、指数関数的、二重指数関数的、あるいは非初等的な時間計算量を要する課題に直面することになります。こうした膨大な計算上の状況は、我々の主要な主張を裏付けるものです。すなわち、人間の精神は、力任せの演繹によって数学を扱っているわけではなく、またそうすることも不可能である、ということです。精神は、自然や物理が提供する、圧縮され事前に計算されたパターンに依拠せざるを得ないのです。
+</span>
+</p>
+
+<h4>Nature as the oracle <span style="color:blue;">神託としての自然</span></h4>
+
+<p>
+These barriers force a different strategy. As we have seen with the Fourier transform, the crucial ideas—decomposing an arbitrary function into sinusoids, exploiting orthogonality, constructing the FFT—did not emerge from a systematic logical exploration of function spaces.  They were observed first in physical systems (vibrating strings, heat diffusion, seismic waves, medical imag-ing) and then formalised. The natural world acts as an oracle: it provides concrete instances of solutions that are already “true” in the physical domain, which mathematicians then generalise and axiomatise. In this way, pattern matching from nature circumvents the undecidability bar-rier.  A mathematician does not derive the Fourier series from first principles; she recognises it in the music of a string and then works backwards to a formal justification.
+
+<br><span style="color:blue;">
+こうした障壁は、異なる戦略をとることを余儀なくさせます。フーリエ変換の例に見られるように、任意の関数を正弦波に分解する、直交性を利用する、FFT（高速フーリエ変換）を構築するといった重要な着想は、関数空間に関する体系的かつ論理的な探求から生まれたわけではありません。それらはまず物理的な系（弦の振動、熱拡散、地震波、医用画像など）において観察され、その後に定式化されたのです。自然界は一種の「オラクル（神託）」として機能します。つまり、物理的領域においてすでに「真」である解決策の具体例を自然界が提示し、数学者がそれを一般化・公理化するのです。このように、自然界に見られるパターンを捉えることは、「決定不能性」という障壁を回避する手段となります。数学者は、第一原理からフーリエ級数を導き出すわけではありません。弦の奏でる音色の中にそれを見出し、そこから遡って形式的な正当化を構築していくのです。
+</span>
+</p>
+
+<h2>3 Negative Cases <span style="color:blue;">否定的事例</span></h2>
+<h3>3.1	Axiomatic Set Theory <span style="color:blue;">公理的集合論</span></h3>
+<p>
+The thesis is strengthened by examining what happens when mathematics attempts to advance without  physical  grounding.   Cantor’s  set  theory,  as  noted  in  Section  1.4,  originated  in  the concrete  context  of  Fourier  series.   However,  the  subsequent  programme  of  Hilbert,  Russell, and Zermelo–Fraenkel attempted to place all of mathematics on a purely axiomatic foundation, deliberately severing the connection to physical intuition.
+
+<br><span style="color:blue;">
+物理的な裏付けを欠いたまま数学を発展させようとした際に何が起こるかを検討することは、この論旨を補強するものである。第1.4節で述べたように、カントールの集合論はフーリエ級数という具体的な文脈から生まれた。しかし、その後に続いたヒルベルト、ラッセル、ツェルメロ＝フレンケルらによる計画は、物理的直観とのつながりを意図的に断ち切り、数学のすべてを純粋に公理的な基礎の上に構築しようとするものであった。
+</span>
+</p><p>
+
+The result was instructive. The naive formalism immediately produced paradoxes - Russell’s paradox, the Burali-Forti paradox, the Richard paradox - that could not be resolved by pure deduction and required external heuristics such as the axiom of choice, the axiom of regularity, and Zermelo’s axiom schema to patch. Each of these additions was motivated not by derivation from prior axioms but by informal judgements about what ’should’ be true — a covert form of pattern matching from everyday intuition about collections and size.
+
+<br><span style="color:blue;">
+その結果は示唆に富むものであった。素朴な形式主義は、直ちにラッセルのパラドックス、ブラリ＝フォルティのパラドックス、リシャールのパラドックスといったパラドックスを生じさせた。これらは純粋な演繹だけでは解決できず、修正のために選択公理、正則性公理、ツェルメロの公理図式といった外部からのヒューリスティクスを必要としたのである。こうした追加事項は、いずれも既存の公理からの導出によるものではなく、「何が真であるべきか」という非形式的な判断――すなわち、集合や大きさに関する日常的な直観に基づく、一種の隠れたパターン・マッチング――に動機づけられていた。
+</span>
+</p><p>
+
+Furthermore, the most celebrated results of pure set theory - Gödel’s constructible universe L, the independence of the continuum hypothesis, the large cardinal hierarchy - have produced essentially no tools that practising scientists, engineers, or even most pure mathematicians use. Compare this to Fourier analysis, which underpins signal processing, quantum mechanics, medi-cal imaging, and communications. The difference is precisely the presence or absence of physical grounding. Set theory, when it severed its connection to nature, became locally productive but globally sterile for the purposes of the broader scientific enterprise.
+
+<br><span style="color:blue;">
+さらに、純粋集合論における最も著名な成果――ゲーデルの構成可能宇宙L、連続体仮説の独立性、巨大基数の階層――は、現役の科学者や技術者、さらには大多数の純粋数学者でさえも利用するような道具を、実質的に何一つ生み出してきませんでした。信号処理、量子力学、医用画像処理、通信技術の基盤となっているフーリエ解析と比べてみれば、その違いは明らかです。その違いこそが、物理的な裏付けの有無なのです。集合論は、自然とのつながりを断ち切ったことで、局所的には実りあるものとなりましたが、より広範な科学的営みの観点からは、全体として不毛なものとなってしまいました。
+</span>
+</p><p>
+
+This negative case makes the thesis falsifiable and considerably stronger:  it is not merely that physical inspiration happens to have been present at key moments, but that its absence predicts a characteristic failure mode - foundational crisis followed by patching with informal axioms, and disconnection from scientific practice.
+
+<br><span style="color:blue;">
+こうした否定的な事例の存在は、当該テーゼを反証可能なものにすると同時に、その説得力を著しく高めることになります。つまり、物理学的着想が重要な局面でたまたま存在していたというだけでなく、それが欠如している場合には、特徴的な破綻のパターン――すなわち、基礎の危機に続いて非公式な公理による継ぎ接ぎが行われ、科学的実践から遊離してしまうという事態――が生じると予測されるからです。
+</span>
+</p>
+
+<h3>3.2 The Proof-Assistant Objection <span style="color:blue;">証明支援系に関する異論</span></h3>
+<p>
+A  natural  objection  runs  as  follows.   Modern  proof  assistants,  such  as  Lean,  Coq,  Isabelle, can verify and even discover non-trivial mathematical results by pure deduction from axioms, without any physical input. Does this not refute the thesis?
+
+<br><span style="color:blue;">
+もっともな反論として、次のようなものが挙げられる。Lean、Coq、Isabelleといった現代の証明支援系は、物理的な入力を一切必要とせず、公理からの純粋な演繹によって、自明ではない数学的結果を検証し、さらには発見することさえできる。これは当該テーゼを反証するものではないだろうか。
+</span>
+</p><p>
+
+It does not, for a subtle but decisive reason.  Proof assistants automate the verification of deductive steps; they do not supply the high-level structure of a proof. The lemma decomposi-tion, the choice of intermediate goals, the selection of which definitions to unfold, all of these are provided by a human mathematician who has absorbed, through years of exposure, exactly the cross-domain patterns we describe.  When a proof assistant ’discovers’ a result, it is searching within a space whose architecture was designed by a human who brought physical and geomet-ric intuition to bear. The assistant is an extremely fast checker, not an autonomous discoverer. The recent success of AI-assisted theorem proving (e.g., AlphaProof) is fully consistent with the
+thesis: these systems work by learning from vast corpora of human-written mathematics, which already encodes the physically-grounded patterns accumulated over centuries. They are pattern stores, not deductive engines.
+
+<br><span style="color:blue;">
+そうはなりません。それには、些細なことのように見えて決定的な理由があります。証明支援系は演繹の各ステップの検証を自動化するものであり、証明の全体的な構成（ハイレベルな構造）を提供するわけではないからです。補題への分解、中間目標の設定、どの定義を展開するかの選択といった作業はすべて、人間である数学者が担います。彼らは長年の経験を通じて、私たちが論じているような「領域横断的なパターン」を自らの内に深く取り込んでいるのです。証明支援系がある結果を「発見」する際、それは人間が物理的・幾何学的な直観を駆使して設計した構造を持つ探索空間の中で作業を行っているに過ぎません。つまり、支援系は極めて高速な検証を行うものであって、自律的に何かを発見する主体ではないのです。AI支援による定理証明（AlphaProofなど）が近年成功を収めているという事実は、この主張と完全に整合しています。なぜなら、これらのシステムは、人間が記述した膨大な数学的文書の集合から学習することで機能しているからです。そうした文書には、何世紀にもわたって蓄積されてきた、物理的実在に根ざしたパターンがすでに組み込まれているのです。それらは演繹エンジンではなく、パターンの蓄積体なのです。
+</span>
+</p>
+
+<h3>3.3 Naive Counter-arguments to “Physics First, Abstraction later”.<br><span style="color:blue;">「物理が先、抽象化は後」に対する素朴な反論</span></h3>
+
+<p>
+It has been noted that Kepler obtained elliptical orbits for the planets, whereas the ellipse had al-ready been formulated as an abstract object by Greek mathematicians (Apollonius, ca. 200 BCE) centuries earlier; thus, one may argue that abstraction preceded the physics.  However, this is counter to what actually happened.  The conic sections were available for nearly two millennia, and the Greeks even possessed a serviceable observational model of planetary motion in the epicyclic (circular) constructions of Ptolemy;  yet neither pure reasoning nor the pre-existing abstraction ever attached the ellipse to the heavens.   Kepler himself began from the a priori conviction, inherited from the Greeks and Copernicus, that orbits must  be built from perfect circles.  What forced him off that conviction was not deduction but Tycho Brahe’s naked-eye observations of Mars:  his best circular model fit the data to within eight minutes of arc.  Yet, Kepler rejected it precisely because he trusted Tycho’s measurements more than he trusted the circle, remarking that those eight arcminutes “led the way to the reformation of all of astron-omy”  [28,30].  Only after this, and after a laborious empirical search through ovals and other figures, did the ellipse (with the Sun at one focus) emerge as the shape the data demanded [29]. His path was moreover guided by a physical analogy—a motive force emanating from the Sun, conceived on the model of magnetism (after Gilbert [32]) and of light, which yielded the area law before the ellipse itself [31].  Far from a case of abstraction preceding physics, Kepler is a paradigm of nature overriding pure reason: the abstract object sat idle for two thousand years, and only observation could pick it out and bind it to physical reality. (It was Newton, in 1687, who later derived Kepler’s ellipses from the inverse-square law:  abstraction catching up with a physically established fact, exactly as our thesis predicts.)
+
+<br><span style="color:blue;">
+ケプラーが惑星の楕円軌道を得たことは注目に値するが、楕円はそれより数世紀も前にギリシャの数学者（紀元前200年頃のアポロニウス）によって抽象的な対象として既に定式化されていた。そのため、抽象化が物理学に先行していたと主張する人もいるかもしれない。しかし、これは実際の出来事とは正反対である。円錐曲線は2000年近く前から存在し、ギリシャ人はプトレマイオスの周転円（円）構造によって惑星運動の実用的な観測モデルさえ持っていた。しかし、純粋な推論も、それ以前の抽象化も、楕円を天体と結びつけることはなかった。ケプラー自身も、ギリシャ人やコペルニクスから受け継いだ、軌道は完全な円から構築されなければならないという先験的な確信から出発した。彼がその確信を覆すきっかけとなったのは演繹ではなく、ティコ・ブラーエによる火星の肉眼観測であった。彼の最良の円モデルは、観測データに8分角以内の誤差で適合したのである。しかし、ケプラーは円よりもティコの測定値を信頼していたため、まさにその8分角を否定し、「天文学全体の改革への道を開いた」と述べている[28,30]。その後、楕円やその他の図形を苦労して経験的に探究した結果、データが要求する形状として楕円（太陽を一つの焦点とする）が現れた[29]。さらに、彼の研究は物理的な類推によって導かれた。それは、磁気（ギルバート[32]による）と光のモデルに基づいて考案された、太陽から発せられる原動力であり、楕円そのものよりも先に面積法則を生み出した[31]。抽象化が物理学に先行した事例とは程遠く、ケプラーは純粋理性を凌駕する自然の典型例である。抽象的な対象は2000年間放置され、観測によってのみそれを捉え、物理的現実と結びつけることができたのである。 （1687年にニュートンが逆二乗法則からケプラーの楕円を導き出したのは、まさに我々の論文が予測した通り、抽象化が物理的に確立された事実に追いついた例である。）
+</span>
+</p><p>
+
+Similarly, it is naively argued that Lobachevsky discovered non-Euclidean (hyperbolic) ge-ometry before it found physical application in general relativity, so that here abstraction clearly preceded physics.  Two points blunt this objection.  First, the physical stimulus was not absent but diffuse: hyperbolic geometry arose from the two-thousand-year effort to prove Euclid’s paral-lel postulate, and the postulate itself is an idealisation of physical space distilled from surveying, drawing, and astronomy.  So, the very problem Lobachevsky attacked was rooted in the geom-etry of the physical world.   Second, the negative-curvature geometry Lobachevsky formalised is precisely the one whose closest tangible model, the pseudosphere, was identified only later (by Beltrami [33]), and whose decisive physical employment did indeed wait for relativity.  We therefore do not press Lobachevsky as a positive example of “physics first”; we note only that its physical antecedent (the parallel-postulate problem) is real, and that the case is the exception that the set-theory discussion of Section 3.1 already leads us to expect - abstraction that outran its physical grounding paid for it with a long period of apparent sterility.
+
+<br><span style="color:blue;">
+同様に、ロバチェフスキーが一般相対性理論における物理的応用を見出す前に非ユークリッド（双曲）幾何学を発見したことから、ここでは抽象化が明らかに物理学に先行していたという素朴な議論がなされることがある。しかし、この異論には二つの反証がある。第一に、物理的な刺激が皆無だったわけではなく、それが拡散した形で存在していたということである。双曲幾何学はユークリッドの平行線公理を証明しようとする2000年にわたる試みから生まれたものであり、その公理自体、測量、製図、天文学から抽出された物理空間の理想化にほかならない。したがって、ロバチェフスキーが取り組んだ問題そのものが、物理世界の幾何学に根ざしていたのである。第二に、ロバチェフスキーが定式化した負の曲率を持つ幾何学について言えば、その最も身近な具体的モデルである「擬球」が特定されたのは後になってから（ベルトラミ[33]による）であり、その決定的な物理的応用が相対性理論を待たねばならなかったのも事実である。それゆえ、我々はロバチェフスキーを「物理学先行」の肯定的な例として挙げるわけではない。単に、その物理的な先駆け（平行線公理の問題）が実在したこと、そしてこの事例が、3.1節での集合論に関する議論からすでに予想される通りの「例外」――すなわち、物理的基盤を先取りした抽象化は、長期間にわたる見かけ上の不毛さという代償を払うことになったという例外――であることを指摘するにとどめる。
+</span>
+</p><p>
+
+Representation theory and non-commutative algebra were likewise formalised before being gainfully  employed  in  quantum  mechanics.   But  the  physical  study  of  light  had  long  before supplied the operative pattern:  the composition of successive optical elements (refractions and translations along an axis) is a composition of linear ray-transfer  transformations, and Hamil-ton’s optical–mechanical analogy (1830s) recast both optics and mechanics as a single calculus of transformations acting on a phase space [34].  Non-commutativity, the fact that the order of two operations matters, was thus a tangible feature of composing physical motions and optical maps long before it was axiomatised as an algebraic structure.
+
+
+<br><span style="color:blue;">
+表現論や非可換代数もまた、量子力学において有効に活用されるようになる以前に、すでに定式化されていました。しかし、光に関する物理学的研究は、それよりはるか以前に、作用のあり方を示す典型的なモデルを提示していました。すなわち、一連の光学素子（屈折や軸に沿った並進）の組み合わせは、線形な光線伝達変換の合成として捉えられ、ハミルトンによる光学と力学の類推（1830年代）は、光学と力学の双方を、位相空間上で作用する変換の単一の計算体系として再構築したのです[34]。したがって、2つの操作の順序が結果に影響を及ぼすという「非可換性」は、代数的な構造として公理化されるよりもはるか以前から、物理的な運動や光学的な写像を組み合わせる過程において、すでに具体的な特徴として現れていたのです。
+</span>
+</p>
+
+<h3>3.4 Turing Machines and Recursive Function Theory <span style="color:blue;">チューリング機械と帰納的関数論</span></h3>
+<p>
+The Turing machine formulation and Godel’s recursive function theory is not just a construct to formalize man-made computing machines, but algorithms in general. Note that since millennia, it is known that humans can execute/calculate iteratively and algorithmically<sup>3</sup>.   Having said that, there is reason to believe that there are human innovations that have no counterparts in nature, and possibly even no chain of inspirations. We address this in the next subsection 3.5.
+
+<br><span style="color:blue;">
+チューリング・マシンの定式化やゲーデルの再帰関数論は、単に人工的な計算機械を形式化するための構成物にとどまらず、アルゴリズム全般を対象とするものです。人間が反復的かつアルゴリズム的に実行や計算を行えることは、何千年もの間知られてきた事実である点に留意してください<sup>3</sup>。とはいえ、自然界には対応するものが存在せず、おそらくは着想の連鎖さえも存在しないような人間の革新というものが存在する、と考えるべき根拠もあります。この点については、次節の3.5で論じます。
+</span>
+</p>
+<p style="padding-left:4em">
+<sup>3</sup> The biological functions of animals and even cells can also be seen as computational/algorithmic, however this point of view is more widely accepted only in recent times.
+
+<br><span style="color:blue;">
+動物やさらには細胞の生物学的機能も、計算的あるいはアルゴリズム的なものと見なすことができますが、こうした視点が広く受け入れられるようになったのは、ごく最近のことです。
+</span>
+</p>
+
+<h3>3.5 When the Artefact Has No Direct Natural Precedent <br><span style="color:blue;">人工物に直接的な自然の先例がない場合</span></h3>
+
+<p>
+A natural objection to the thesis that mathematical innovation is driven by pattern-matching from the physical world is the existence of human-made constructs that seem to have no ob-vious counterpart in nature.  Mechanical gears, for instance, are used in automata to replicate sequential labour, yet interlocking toothed wheels do not appear in the natural environment in the same direct way that vibrating strings or diffusing heat do.  At first glance, such artefacts might suggest that human creativity can operate without borrowing from the physical world.
+
+<br><span style="color:blue;">
+数学的革新は物理世界におけるパターン・マッチングによって推進されるという説に対し、自然界には明白な対応物がないように思われる人工的な構成物の存在は、当然ながら一つの反論となり得る。例えば、一連の作業を再現するオートマタ（自動人形）には機械的な歯車が用いられているが、噛み合う歯車というものは、振動する弦や拡散する熱のように自然環境の中に直接的な形で現れるものではない。一見したところ、こうした人工物は、人間の創造性が物理世界から何も借りることなく機能し得ることを示唆しているように思えるかもしれない。
+</span>
+</p><p>
+
+However, a closer look reveals that the pattern-matching underlying these inventions operates at the level of function and motivation rather than at the level of the finished artefact’s surface form. The wheel itself likely emerged from the observation of rolling logs or round fruits; the lever from the experience of lifting objects with a rigid bar. The gear can be seen as a recombination of these two nature-derived primitives—rotation and leverage—driven by the functional goal of transmitting and transforming force,  a goal that itself is inspired by the observation that biological  organisms  (muscles,  limbs)  already  solve  analogous  problems.   The  motivation  to build automata comes directly from watching animals and humans perform repetitive labour; the mechanical solution does not copy the form of a limb, but it borrows the functional pattern of sequential, periodic motion and force amplification.
+
+<br><span style="color:blue;">
+しかし、詳しく見てみると、これらの発明の根底にあるパターンマッチングは、完成した人工物の表面的な形状のレベルではなく、機能や動機のレベルで作用していることがわかります。車輪そのものは、転がる丸太や丸い果実の観察から生まれたと考えられますし、てこは、硬い棒を使って物を持ち上げた経験から生まれたものです。歯車は、これら自然界に由来する二つの基本要素――「回転」と「てこの原理」――を組み合わせて生まれたものと見なすことができます。その組み合わせを促したのは、力を伝達・変換するという機能的な目的であり、この目的自体、生物（筋肉や四肢）がすでに同様の課題を解決しているという観察から着想を得たものです。自動人形（オートマタ）を製作しようとする動機は、動物や人間が反復的な作業を行う様子を観察することから直接的に生まれています。そこでの機械的な解決策は、四肢の形状を模倣するのではなく、一連の周期的な動きや力の増幅といった機能的なパターンを取り入れているのです。
+</span>
+</p><p>
+
+This distinction is precisely the one we draw between vocabulary recombination and vocabu-lary extension. Gears, like many mechanical inventions, are a recombination of existing concepts (wheel, lever, wedge) that already had clear physical antecedents. The invention is creative, but it  stays  within  the  conceptual  space  defined  by  nature-inspired  primitives.   In  contrast,  the truly radical mathematical abstractions discussed in this paper—measure theory, transfinite set theory—required vocabulary extension, the introduction of genuinely new primitives. Even then, the new primitive did not arise in a vacuum:  Lebesgue’s measure abstracted the physical intu-ition of length, and Cantor’s transfinite numbers generalised the intuitive distinction between finite and infinite.
+
+<br><span style="color:blue;">
+この区別は、まさに「語彙の再構成」と「語彙の拡張」の間で我々が設けている区別そのものです。多くの機械的発明と同様に、歯車は、すでに明確な物理的先例が存在していた既存の概念（車輪、てこ、くさび）を再構成したものです。その発明は創造的ではありますが、自然界に由来する基本要素によって定義された概念的空間の枠内に留まっています。対照的に、本論文で論じられる真に急進的な数学的抽象化（測度論や超限集合論など）には、語彙の拡張、すなわち真に新しい基本要素の導入が必要とされました。とはいえ、それらの新しい基本要素も何もないところから突然生まれたわけではありません。ルベーグの測度は「長さ」という物理的直観を抽象化したものであり、カントールの超限数は「有限」と「無限」の直観的な区別を一般化したものでした。
+</span>
+</p><p>
+
+Thus, the apparent counterexample of artefacts without natural precedent actually strength-ens the thesis.  It shows that nature-inspired pattern-matching can be suficiently abstract to operate at the level of function and need, and that the resulting innovation can take a form not directly observed in the physical world, as long as it is built by recombining concepts whose origin is in physical experience. This also explains why current LLMs, which excel at vocabulary recombination, can propose mechanical designs or analogical transfers within a known concep-tual space, but struggle with the kind of vocabulary extension that produced measure theory or set theory: the latter requires a new primitive whose genesis is not merely a recombination, and the oracle of nature in its raw form may be the only source of such primitives.
+
+<br><span style="color:blue;">
+したがって、自然界に前例のない人工物という一見すると反例に思える事例は、実はこの命題を補強するものです。それは、自然に着想を得たパターンマッチングが、機能やニーズというレベルで作用しうるほど十分に抽象的でありうること、そして、物理的経験に由来する概念を組み合わせて構築される限り、そこから生まれるイノベーションは物理世界で直接観察されない形態をとりうることを示しています。このことはまた、語彙の組み換えに長けた現在のLLM（大規模言語モデル）が、既知の概念空間内での機械設計や類推的転用を提案できても、測度論や集合論を生み出したような「語彙の拡張」には苦戦する理由をも説明しています。後者には、単なる組み換えではない起源を持つ新たな「原始的要素（プリミティブ）」が必要であり、そうした要素の源泉となりうるのは、ありのままの姿の「自然というオラクル（神託）」だけかもしれないからです。
+</span>
+</p>
+
+<h2>4 Conclusion <span style="color:blue;">結論</span></h2>
+
+<p>
+We have argued that mathematical innovation is not, at its core, a process of deduction from axioms, but one of pattern matching  from the physical world.  The argument rests on two pil-lars that reinforce one another.   The first is a limitative fact about formal systems:  general
+first-order validity is undecidable,  and even the decidable fragments surveyed in Section 2— from NP-complete propositional satisfiability up to the non-elementary decision procedures for the monadic second-order theories S1S and S2S—demand computational resources so vast that brute-force deductive search is not a physically realisable strategy for discovering new mathe-matics. The second is historical: traced in detail through the Fourier transform and its progeny (Section 1), the decisive conceptual leaps—the representation of an arbitrary function as a sum of sinusoids, the orthogonality that underlies inner-product spaces, the vector-space abstraction itself, and ultimately the passage to the Fourier integral—were each read off from a concrete physical situation and only afterwards reconstructed as rigorous theorems.   In every case the direction of discovery ran from nature to formalisation, not the reverse.
+
+<br><span style="color:blue;">
+我々は、数学における革新とは、その本質において公理からの演繹のプロセスではなく、物理的世界に見られるパターンを照合・認識するプロセスであると論じてきた。この主張は、互いに補強し合う二つの柱に基づいている。第一の柱は、形式体系に関する限界を示す事実である。すなわち、一般的な一階述語論理における妥当性の判定は決定不能であり、第2節で概観した決定可能な断片（NP完全な命題論理の充足可能性問題から、一変数二階述語論理理論S1SやS2Sに対する非初等的な決定手続きに至るまで）でさえ、膨大な計算資源を必要とするため、力任せの演繹的探索は、新たな数学を発見するための物理的に実現可能な戦略とはなり得ないのである。第二の柱は歴史的な事実である。フーリエ変換とその派生手法（第1節）を詳細にたどると、決定的な概念の飛躍――任意の関数を正弦波の和として表現すること、内積空間の基礎となる直交性、ベクトル空間という抽象化そのもの、そして最終的なフーリエ積分への展開――は、いずれも具体的な物理的状況から読み取られたものであり、厳密な定理として再構築されたのは、その後のことであった。いずれの事例においても、発見の方向性は「自然から形式化へ」向かうものであり、その逆ではなかったのである。
+</span>
+</p><p>
+
+The thesis is not merely descriptive but falsifiable, and the negative cases sharpen rather than weaken it. Axiomatic set theory (Section 3.1), having deliberately severed its ties to phys-ical intuition,  exhibited exactly the failure mode the thesis predicts:  foundational paradoxes patched by informally motivated axioms, and a striking disconnection from the working needs of science.  The apparent counterexamples—Kepler’s ellipse, Lobachevsky’s hyperbolic geometry, non-commutative algebra, and the abstract Turing machine—dissolve on inspection into confir-mations:  in each the physical stimulus was present, if sometimes diffuse, and abstraction that outran its physical grounding paid for it with long periods of apparent sterility.  Even artefacts with no direct natural precedent, such as mechanical gears (Section 3.5), turn out to be recom-binations of nature-derived primitives, driven by functional goals that themselves come from observing the physical and biological world.
+
+<br><span style="color:blue;">
+このテーゼは単なる記述にとどまらず反証可能なものであり、反例となる事例はテーゼを弱めるどころか、むしろその輪郭を際立たせるものである。公理的集合論（3.1節）は、物理的直観との結びつきを意図的に断ち切った結果、まさにこのテーゼが予測する通りの失敗を露呈した。すなわち、非公式な動機に基づく公理によって場当たり的に修正された基礎論的パラドックスの発生や、科学の実践的ニーズとの著しい乖離である。一見すると反例に思えるもの――ケプラーの楕円、ロバチェフスキーの双曲幾何学、非可換代数、抽象的チューリングマシン――も、詳しく検討すれば、むしろテーゼを裏付けるものであることがわかる。それらはいずれも、時に漠然としていたとはいえ物理的な刺激を起源としており、物理的基盤を置き去りにして進んだ抽象化は、長期間にわたって一見「実りのない」状態が続くという代償を支払うことになったからである。機械の歯車（3.5節）のように自然界に直接の先例を持たない人工物でさえ、実は自然に由来する要素の組み換えにすぎない。それらは、物理的・生物的世界の観察から導き出された機能的目標によって生み出されているのである。
+</span>
+</p><p>
+
+The most consequential corollary is for artificial intelligence.  If pure reasoning is constitu-tively insuficient—if the engine of mathematical creativity is the recognition and transfer of patterns accumulated from an enormous range of physical and cross-domain experience—then a machine aspiring to human-level mathematical and algorithmic discovery cannot be built as a deductive engine alone. It must instead embody a vast store of such patterns. This is precisely what the scale of contemporary large language models provides, and it furnishes a principled, rather than merely empirical, justification for that scale:  the size of the pattern store is not incidental to the task but demanded by it.  At the same time, the distinction between vocabu-lary recombination and vocabulary extension (Section 3.5) marks the current frontier.  Present systems excel at recombining concepts within a known space, but the genuinely new primitives— measure, the transfinite, the distribution— have historically required an external oracle, namely nature in its raw form.  Whether an artificial system can be given access to such an oracle, or must forever remain a recombiner of patterns it has been shown, is the open question our thesis leaves for future work.
+
+<br><span style="color:blue;">
+このことから導き出される最も重要な帰結は、人工知能に関するものです。もし純粋な推論だけでは本質的に不十分であり、数学的創造性の原動力が、物理的かつ領域横断的な膨大な経験から蓄積されたパターンの認識と転用にあるとするならば、人間レベルの数学的・アルゴリズム的発見を目指す機械を、単なる演繹エンジンとして構築することはできません。むしろ、そうしたパターンを膨大に蓄積・内包するものでなければならないのです。現代の大規模言語モデルが実現しているのはまさにこの点であり、モデルの「規模」に対して、単なる経験的なものではない、原理的な正当性が与えられます。つまり、パターン蓄積の規模は、そのタスクにとって付随的なものではなく、タスク遂行のために不可欠な要件なのです。同時に、「語彙の再構成」と「語彙の拡張」（第3.5節）の区別こそが、現在の最前線となっています。現在のシステムは、既知の空間内での概念の再構成には優れていますが、「測度」「超限（数）」「分布」といった真に新しい構成要素（プリミティブ）の導入には、歴史的に見て、外部の「オラクル（神託）」、すなわちありのままの自然という存在が必要とされてきました。人工システムがそのようなオラクルにアクセスできるようになるのか、それとも提示されたパターンの再構成者にとどまり続けるのか――これこそが、本論文が将来の課題として残す未解決の問いなのです。
+</span>
+</p>
+
+<h2>5 Acknowledgment <span style="color:blue;">謝辞</span></h2>
+
+<p>
+We  used Deepseek  and Opus  Sonnet  to  provide  us  with  historical references  and help  write some of the sections, especially the details in the appendix.  The paper was also reviewed with Opus-4.8 which led to negative cases section, for which we then provided the counterarguments.
+
+<br><span style="color:blue;">
+私たちは、歴史的背景に関する情報を収集し、特に付録の詳細部分を含む一部のセクションを執筆するにあたり、DeepSeek、Opus、およびSonnetを活用しました。また、Opus-4.8を用いたレビューを通じて「否定的な事例（negative cases）」に関するセクションが導き出され、それに対して反論を提示しました。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+
+<p>
+<div class="styleRef">
+<ul><li>
+
+[1]  J.  le  Rond  d’Alembert.   Recherches  sur  la  courbe  que  forme  une  corde  tenduë  mise  en vibration.  Histoire de l’Académie Royale des Sciences et Belles-Lettres de Berlin, 3:214– 219, 1747.
+
+<br><span style="color:blue;">
+『張力を与えられ振動する弦が形成する曲線に関する研究』
+</span>
+</li><br><li>
+
+[2]  D. Bernoulli. Réflexions et éclaircissements sur les nouvelles vibrations des cordes exposées dans les mémoires de l’Académie de 1747 et 1748. Mémoires de l’Académie Royale de Berlin, 9:147–172, 1753.
+
+<br><span style="color:blue;">
+『1747年および1748年のアカデミー紀要で提示された弦の新しい振動に関する考察と解明』
+</span>
+</li><br><li>
+
+[3]  L. Euler. De vibratione chordarum exercitatio. Novi Commentarii Academiae Scientiarum Petropolitanae, 5:76–109, 1749.
+
+<br><span style="color:blue;">
+『弦の振動に関する研究』
+</span>
+</li><br><li>
+
+[4]  J.-L. Lagrange. Recherches sur la nature et la propagation du son. Miscellanea Taurinensia, 1:1–112, 1759.
+
+<br><span style="color:blue;">
+『音の性質と伝播に関する研究』
+</span>
+</li><br><li>
+
+[5]  J. R. Ravetz.   Vibrating strings and arbitrary functions.   American  Journal  of  Physics, 29(8):505–518, 1961.
+
+<br><span style="color:blue;">
+『振動する弦と任意関数』
+</span>
+</li><br><li>
+
+[6]  Divakaran, P. P.   The Sine and Cosine Series.   In Sources and Studies in the History of Mathematics and Physical Sciences(pp. 331–357).   Springer Science and Business Media B.V. (2018)
+
+<br><span style="color:blue;">
+『正弦級数と余弦級数』
+</span>
+</li><br><li>
+
+[7]  M. Kline. Mathematical Thought from Ancient to Modern Times. Oxford University Press, New York, 1972.
+
+<br><span style="color:blue;">
+『古代から現代までの数学的思考』
+</span>
+</li><br><li>
+
+[8]  Weinberg, W. Dreams of a Final Theory. Panthen Books, 1992 Page 220.
+
+<br><span style="color:blue;">
+『最終理論の夢』
+</span>
+</li><br><li>
+
+[9]  Schombert, James. "Anthropic principle". Department of Physics at University of Oregon. Archived: https://web.archive.org/web/20120428004546/ http://abyss.uoregon.edu/∼js/cosmo/lectures/lec24.html
+
+<br><span style="color:blue;">
+『人間原理』
+</span>
+</li><br><li>
+
+[10]  Susskind, Leonard , The Anthropic Landscape of String Theory, 2003, https://arxiv.org/abs/hep-th/0302219
+
+<br><span style="color:blue;">
+『弦理論の人間的景観』
+</span>
+</li><br><li>
+
+[11]  H.  Grassmann.	Die  lineale  Ausdehnungslehre,  ein  neuer  Zweig  der  Mathematik.	Otto Wigand, Leipzig, 1844.
+
+<br><span style="color:blue;">
+『線形拡張理論、数学の新しい一派』
+</span>
+</li><br><li>
+
+[12]  M. J. Crowe. A History of Vector Analysis: The Evolution of the Idea of a Vectorial System. University of Notre Dame Press, Notre Dame, 1967.
+
+<br><span style="color:blue;">
+『ベクトル解析の歴史：ベクトルシステムの概念の進化』
+</span>
+</li><br><li>
+
+[13]  J. Fourier. Théorie analytique de la chaleur. Firmin Didot, Paris, 1822.
+
+<br><span style="color:blue;">
+『熱の解析理論』
+</span>
+</li><br><li>
+
+[14]  P. G. L. Dirichlet. Sur la convergence des séries trigonométriques qui servent à représenter une fonction arbitraire entre des limites données.   Journal für die reine und angewandte Mathematik, 4:157–169, 1829.
+
+<br><span style="color:blue;">
+『与えられた範囲における任意の関数を表すために用いられる三角級数の収束について』
+</span>
+</li><br><li>
+
+[15]  B. Riemann. Über die Darstellbarkeit einer Function durch eine trigonometrische Reihe. Ha-bilitation thesis, Göttingen, 1854. (Published in Abhandlungen der Königlichen Gesellschaft der Wissenschaften zu Göttingen, 13, 1867.)
+
+<br><span style="color:blue;">
+『三角級数による関数の表現可能性について』
+</span>
+</li><br><li>
+
+[16]  G. Cantor. Über die Ausdehnung eines Satzes aus der Theorie der trigonometrischen Reihen. Mathematische Annalen, 5:123–132, 1872.
+
+<br><span style="color:blue;">
+『三角法に関する理論を理解することができる』
+</span>
+</li><br><li>
+
+[17]  H. Lebesgue. Intégrale, longueur, aire. Annali di Matematica Pura ed Applicata (3), 7:231– 359, 1902.
+
+<br><span style="color:blue;">
+『積分、長さ、面積』
+</span>
+</li><br><li>
+
+[18]  L.  Schwartz.   Théorie  des  distributions.   Publications  de  l’Institut  de  Mathématique  de l’Université de Strasbourg, Vol. I–II. Hermann, Paris, 1950–1951.
+
+<br><span style="color:blue;">
+『分配理論』
+</span>
+</li><br><li>
+
+[19]  A. M. Turing. On computable numbers, with an application to the Entscheidungsproblem. Proceedings of the London Mathematical Society, s2-42(1):230–265, 1936–37.
+
+<br><span style="color:blue;">
+『Entscheidungs問題への応用による計算可能な数について』
+</span>
+</li><br><li>
+
+[20]  A. Church.   An unsolvable problem of elementary number theory.   American Journal of Mathematics, 58(2):345–363, 1936.
+
+<br><span style="color:blue;">
+『初等整数論の解けない問題』
+</span>
+</li><br><li>
+
+[21]  J.  R.  Büchi.	On  a  decision  method  in  restricted  second  order  arithmetic.	In  Logic, Methodology  and  Philosophy  of  Science:  Proceedings  of  the  1960  International  Congress (ed. E. Nagel, P. Suppes, A. Tarski), pp. 1–11. Stanford University Press, Stanford, 1962.
+
+<br><span style="color:blue;">
+『制限された二階算術における決定法について』
+</span>
+</li><br><li>
+
+[22]  M. O. Rabin.  Decidability of second-order theories and automata on infinite trees.  Trans-actions of the American Mathematical Society, 141:1–35, 1969.
+
+<br><span style="color:blue;">
+『無限木上のオートマトンと二階理論の決定可能性』
+</span>
+</li><br><li>
+
+[23]  A. R. Meyer.  The inherent computational complexity of theories of order.  Proceedings of the International Congress of Mathematicians, 1974. (Preliminary version: MIT, 1973.)
+
+<br><span style="color:blue;">
+『順序理論の固有の計算複雑性』
+</span>
+</li><br><li>
+
+[24]  E. A. Emerson. Temporal and modal logic. In Handbook of Theoretical Computer Science, Vol. B, pp. 995–1072. Elsevier, 1990.
+
+<br><span style="color:blue;">
+『時間論理と様相論理』
+</span>
+</li><br><li>
+
+[25]  Grandjean, Étienne (1983), "Complexity of the first-order theory of almost all finite struc-tures", Information and Control, 57 (2–3): 180–204
+
+<br><span style="color:blue;">
+『ほぼすべての有限構造の一次理論の複雑性』
+</span>
+</li><br><li>
+
+[26]  C. H. Papadimitriou. Computational Complexity. Addison-Wesley, Reading, MA, 1994.
+
+<br><span style="color:blue;">
+『計算複雑性』
+</span>
+</li><br><li>
+
+[27]  Cook, S.A. The Complexity of Theorem-Proving Procedures. Proceedings of the 3rd Annual ACM Symposium on Theory of Computing, 1971, 151-158.
+
+<br><span style="color:blue;">
+『定理証明手続きの複雑性』
+</span>
+</li><br><li>
+
+[28]  J. Kepler.  Astronomia Nova.  Prague, 1609.  (English translation:  W. H. Donahue, New Astronomy, Cambridge University Press, 1992; the eight-arcminute discussion appears in Ch. 19.)
+
+<br><span style="color:blue;">
+『新天文学』
+</span>
+</li><br><li>
+
+[29]  M. Caspar.  Kepler.  Translated and edited by C. Doris Hellman. Dover Publications, New York,  1993.   (Reprint  of  the  1959  Abelard-Schuman  edition;  German  original  Johannes Kepler, 1948.)
+
+<br><span style="color:blue;">
+『ケプラー』
+</span>
+</li><br><li>
+
+[30]  J. R. Voelkel. The Composition of Kepler’s Astronomia Nova. Princeton University Press, Princeton, 2001.
+
+<br><span style="color:blue;">
+『ケプラーの「新天文学」の構成』
+</span>
+</li><br><li>
+
+[31]  B. Stephenson. Kepler’s Physical Astronomy. Springer-Verlag, New York, 1987. (Reprinted, Princeton University Press, 1994.)
+
+<br><span style="color:blue;">
+『ケプラーの物理天文学』
+</span>
+</li><br><li>
+
+[32]  W. Gilbert. De Magnete. Peter Short, London, 1600. (English translation: P. F. Mottelay, On the Magnet, 1893.)
+
+<br><span style="color:blue;">
+『磁石について』
+</span>
+</li><br><li>
+
+[33]  E. Beltrami.  Saggio di interpretazione della geometria non-euclidea.  Giornale di Matem-atiche, 6:284–312, 1868.
+
+<br><span style="color:blue;">
+『非ユークリッド幾何学の解釈』
+</span>
+</li><br><li>
+
+[34]  W. R. Hamilton. On a general method of expressing the paths of light, and of the planets, by the coeficients of a characteristic function. Dublin University Review, pp. 795–826, 1833.
+
+<br><span style="color:blue;">
+『光と惑星の軌道を特性関数の係数で表す一般的な方法について』
+</span>
+</li></ul></div>
+</p>
+
+<h2>A D’Alembert’s Travelling Wave Solution for the Plucked String <br><span style="color:blue;">弾かれた弦に対するダランベールの進行波解</span></h2>
+
+<p>
+In his 1747 memoir [1], Jean le Rond d’Alembert considered a string of length L fixed at both ends, set into vibration by an initial displacement. Let y(x,t) denote the transverse displacement at position x and time t.  By applying Newton’s second law to an infinitesimal segment of the string and assuming small displacements, he arrived at the one-dimensional wave equation
+
+<br><span style="color:blue;">
+ジャン・ル・ロン・ダランベールは1747年の論文[1]において、両端が固定され、初期変位によって振動させられる長さLの弦について考察した。位置x、時刻tにおける横方向の変位をy(x,t)とする。彼は、弦の微小な部分にニュートンの運動の第2法則を適用し、変位が小さいと仮定することによって、一次元の波動方程式を導き出した。
+</span>
+
+\[
+\frac{∂^2y}{∂t^2} = c^2\frac{∂^2y}{∂x^2} \tag{1}
+\]
+
+where \(c\) is a constant determined by the tension and linear density of the string.
+<br><span style="color:blue;">
+ここで、\(c\) は弦の張力と線密度によって決まる定数である。
+</span>
+</p><p>
+
+
+D’Alembert observed that any function of the form \(f(x + ct)\) or \(g(x − ct)\), when substituted into (1), satisfies the equation identically.  By linearity, the general solution is the sum of two such travelling waves,
+
+<br><span style="color:blue;">
+ダランベールは、\(f(x + ct)\) または \(g(x − ct)\) の形の任意の関数を (1) に代入すると、方程式を恒等的に満たすことを観察した。線形性により、一般解は、そのような 2 つの進行波の和となる。
+</span>
+
+\[
+y(x,t) = f(x + ct) + g(x − ct),	\tag{2}
+\]
+
+where \(f\) and \(g\) are arbitrary functions determined by the initial conditions.
+
+<br><span style="color:blue;">
+ここで、\(f\) および \(g\) は初期条件によって定まる任意の関数である。
+</span>
+</p><p>
+
+For a plucked string released from rest, the initial conditions are
+
+<br><span style="color:blue;">
+静止状態から解放された弦をはじいた場合、初期条件は次のようになる。
+</span>
+
+\[
+y(x,0) = \phi(x), \quad \frac{∂y}{∂t}(x,0) = 0,
+\]
+
+with \(\phi(x)\) describing the initial shape of the string. Substituting \(t = 0\) into (2) gives
+
+<br><span style="color:blue;">
+ここで、\(\phi(x)\) は弦の初期形状を表す。(2) に \(t = 0\) を代入すると、
+</span>
+
+\[
+f(x) + g(x) = \phi(x).
+\]
+
+Differentiating (2) with respect to \(t\) and setting \(t = 0\) yields
+
+<br><span style="color:blue;">
+(2)を\(t\)で微分し、\(t = 0\)とおくと、
+</span>
+
+\[
+cf^\prime(x) − cg^\prime(x) = 0	\Longrightarrow f^\prime(x) = g^\prime(x),
+\]
+
+so \(f(x) = g(x)+\text{constant}\). The fixed endpoints of the string eventually force the constant to be zero, and one obtains \(f(x) = g(x) =  \frac{1}{2}\phi(x)\) (after extending \(\phi\) as an odd periodic function to
+satisfy the boundary conditions). The full solution then becomes
+
+<br><span style="color:blue;">
+したがって、\(f(x) = g(x) + \text{定数}\) となります。弦の両端が固定されているという条件により、最終的にこの定数はゼロとなり、\(f(x) = g(x) = \frac{1}{2}\phi(x)\) が得られます（ただし、\(\phi\) は境界条件を満たすように奇周期関数として拡張されているものとします）。その結果、完全な解は次のようになります。
+</span>
+
+\[
+y(x,t) = \frac{1}{2}\left[\phi(x + ct) + ϕ(x − ct)\right]. \tag{3}
+\]
+
+</p><p>
+
+Equation  (3)  shows  that  the  subsequent  motion  is  the  superposition  of  two  waves,  each preserving the shape of the initial displacement but scaled by one-half, travelling in opposite directions with speed \(c\). D’Alembert therefore demonstrated that any initial shape \(\phi(x)\)—subject only to the physical boundary conditions—can be represented as the sum of two propagating waves.
+
+<br><span style="color:blue;">
+式(3)は、その後の運動が、初期変位の形状を保ちつつ振幅が半分に縮小された2つの波の重ね合わせであり、それらが速度 \(c\) で互いに逆方向に進行するものであることを示しています。したがってダランベールは、物理的な境界条件さえ満たされていれば、任意の初期形状 \(\phi(x)\) を2つの進行波の和として表現できることを示したのです。
+</span>
+</p><p>
+
+This result was groundbreaking:  it provided the first analytical solution of a partial differ-ential equation governing a continuous mechanical system.  However, it also sparked the con-troversy with Euler, Bernoulli, and Lagrange.  D’Alembert, like Euler, believed that the initial function \(\phi(x)\) had to be given by a single “analytic” expression—a smooth, twice-differentiable formula—whereas Bernoulli argued, on physical grounds, that plucked strings with sharp corners (triangular shapes) should also be admissible.  The mathematical community at the time could not reconcile the abstract demand for analyticity with the physical reality of non-differentiable initial data. It was precisely this tension between pure logic and observed nature that foreshad-owed the later vindication of Fourier’s even bolder claim.
+
+<br><span style="color:blue;">
+この結果は画期的なものでした。連続的な力学系を記述する偏微分方程式に対し、初めて解析的な解が与えられたからです。しかし同時に、それはオイラー、ベルヌーイ、ラグランジュとの論争を引き起こすことにもなりました。オイラーと同様に、ダランベールは初期関数 \(\phi(x)\) が単一の「解析的」な式、すなわち滑らかで2回微分可能な式によって与えられなければならないと考えていました。これに対しベルヌーイは、物理的な観点から、鋭い角（三角形の形状）を持つように弾かれた弦の状態も許容されるべきだと主張したのです。当時の数学界は、「解析性」という抽象的な要請と、「微分不可能」な初期データという物理的現実との折り合いをつけることができませんでした。純粋な論理と観測された自然との間に生じた、まさにこの緊張関係こそが、後にフーリエが提示することになる、さらに大胆な主張が正当であると認められることへの先駆けとなっていたのです。
+</span>
+</p>
+
+<h2>B Fourier’s Derivation of the Heat Equation and Its Trigonomet-ric Solution <br><span style="color:blue;">フーリエによる熱伝導方程式の導出とその三角関数による解法</span></h2>
+
+<p>
+Joseph Fourier began his investigation of heat diffusion around 1804,  motivated by practical problems of temperature distribution in solids.  His complete theory appeared in the Théorie analytique  de  la  chaleur  (1822)  [13].   The  following  outlines  his  physical  reasoning  and  the mathematical leaps that gave birth to the Fourier series.
+
+<br><span style="color:blue;">
+ジョゼフ・フーリエは、固体内部の温度分布に関する実際的な問題に動機づけられ、1804年頃から熱拡散の研究に着手しました。彼の理論の全貌は、『熱の解析的理論』（1822年）[13]において示されています。以下では、フーリエ級数を生み出すこととなった彼の物理的考察と数学的飛躍の概要を述べます。
+</span>
+</p>
+
+<h4>The heat equation from physical principles <br><span style="color:blue;">物理的原理に基づく熱伝導方程式</span></h4>
+<p>
+Consider a thin, homogeneous rod of length L with insulated sides, so that heat flows only along the x-direction. Let \(u(x,t)\) be the temperature at position \(x\) and time \(t\). Fourier postulated two fundamental physical laws:
+
+<br><span style="color:blue;">
+側面が断熱され、熱がx方向にのみ流れるような、長さLの薄く均質な棒を考えます。位置x、時刻tにおける温度を\(u(x,t)\)とします。フーリエは、2つの基本的な物理法則を提唱しました。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+
+1. <strong>Newton’s  law  of  cooling</strong> (local form):  The rate of heat flow across a cross-section is proportional to the temperature gradient. Expressed with Fourier’s notation, the heat flux is \(−K\frac{∂u}{∂x}\), where \(K > 0\) is the thermal conductivity.
+
+<br><span style="color:blue;">
+<strong>ニュートンの冷却の法則</strong>（局所形）：断面を通過する熱流の速さは、温度勾配に比例する。フーリエの記法で表すと、熱流束は \(−K\frac{∂u}{∂x}\) となり、ここで \(K > 0\) は熱伝導率である。
+</span>
+</li><br><li>
+
+2. <strong>Conservation of energy</strong>: The net heat influx into a small segment \([x,x+∆x]\) equals the rate of change of its internal energy, which is proportional to  \(\frac{∂u}{∂t}\)  times the heat capacity.
+
+<br><span style="color:blue;">
+<strong>エネルギー保存</strong>：微小領域 \([x, x+\Delta x]\) への正味の熱流入量は、その内部エネルギーの変化率に等しく、この変化率は熱容量と \(\frac{\partial u}{\partial t}\) との積に比例する。
+</span>
+</li></ul></div>
+</p><p>
+
+Balancing these effects for an infinitesimal element and taking \(∆x → 0\) leads to the one-dimensional heat equation
+
+<br><span style="color:blue;">
+微小要素についてこれらの効果の釣り合いを考え、\(∆x → 0\) とすると、一次元の熱伝導方程式が導かれる。
+</span>
+
+\[
+\frac{∂u}{∂t }=α\frac{∂^2 u}{∂x^2}, \tag{4}
+\]
+
+where \(α = K/(ρc)\) is the thermal diffusivity (a constant depending on material properties).
+
+<br><span style="color:blue;">
+ここで、\(α = K/(ρc)\) は熱拡散率（材料特性に依存する定数）である。
+</span>
+</p>
+
+<h4>Separation of variables and the eigenvalue problem <br><span style="color:blue;">変数分離と固有値問題</span></h4>
+<p>
+Fourier sought solutions of (4) on the interval \(0 ≤ x ≤ L\) with fixed boundary conditions, for instance \(u(0,t) = u(L,t) = 0\) (the ends held at zero temperature). He assumed that the solution could be written as a product of a spatial and a temporal part<sup>4</sup>,
+
+<br><span style="color:blue;">
+フーリエは、固定境界条件（例えば \(u(0,t) = u(L,t) = 0\)、すなわち両端を温度ゼロに保つ条件）の下で、区間 \(0 ≤ x ≤ L\) における (4) の解を求めた。彼は、その解を空間部分と時間部分の積として表せると仮定した<sup>4</sup>。
+</span>
+</p>
+<p style="padding-left:4em;">
+<sup>4</sup> Fourier’s crucial step—assuming the solution could be written as a product \(u(x,t) = X(x)T(t)\)—was not a leap into the unknown.  Rather, it was a direct import of a technique already proven successful in the study of vibrating strings.  Daniel Bernoulli (1753) had shown that the motion of a string could be decomposed into normal modes of the form \(\sin(nπx/L)\cos(nπct/L)\), each a product of a spatial shape and a temporal oscillation. The method of separation of variables had become part of the analytical toolkit for linear partial differential equations with constant coeficients.
+
+<br><span style="color:blue;">
+フーリエがとった決定的な一歩――すなわち、解を \(u(x,t) = X(x)T(t)\) という積の形で表せると仮定すること――は、未知の領域への飛躍などではありませんでした。むしろそれは、弦の振動の研究においてすでに有効性が実証されていた手法を、そのまま取り入れたものだったのです。ダニエル・ベルヌーイ（1753年）は、弦の運動が \(\sin(nπx/L)\cos(nπct/L)\) という形の「基準モード」（それぞれ空間的な形状と時間的な振動の積から成る）へと分解できることを示していました。こうして「変数分離法」は、定数係数線形偏微分方程式を扱うための解析的な手法の一つとして定着していたのです。
+</span>
+
+\[
+u(x,t) = X(x)T(t).
+\]
+
+Substituting into (4) and dividing by \(X(x)T(t)\) gives
+
+<br><span style="color:blue;">
+(4)に代入して\(X(x)T(t)\)で割ると、
+</span>
+
+\[
+\frac{T^\prime(t)}{αT(t) }=\frac{X^{\prime\prime}(x)}{X(x)}= −λ,
+\]
+
+where \(λ\) is a separation constant (the negative sign is chosen because physical intuition suggests that temperature decays to an equilibrium). This yields two ordinary differential equations:
+
+<br><span style="color:blue;">
+ここで、\(λ\) は分離定数である（温度が平衡状態に向かって減衰するという物理的直感に基づき、負の符号が選ばれている）。これにより、2つの常微分方程式が得られる。
+</span>
+
+\[
+\begin{align}
+X^{\prime\prime}(x) + λX(x) &= 0, \tag{5} \\
+T^\prime(t) + αλT(t) &= 0. \tag{6}
+\end{align}
+\]
+
+</p><p>
+
+The boundary conditions \(u(0,t) = u(L,t) = 0\) force \(X(0) = X(L) = 0\).  Equation (5) with these homogeneous Dirichlet conditions is a Sturm–Liouville eigenvalue problem. Its non-trivial
+solutions exist only for
+
+<br><span style="color:blue;">
+境界条件 \(u(0,t) = u(L,t) = 0\) により \(X(0) = X(L) = 0\) が課せられる。これらの同次ディリクレ条件を持つ式 (5) はシュトゥルム・リウヴィル固有値問題である。その非自明な解は、以下の条件を満たす場合にのみ存在する。
+</span>
+
+\[
+
+λ = λ_n =\left(\frac{nπ}{L}\right)^2, \quad n = 1,2,3,...
+\]
+
+and the corresponding eigenfunctions are the sine functions 
+
+<br><span style="color:blue;">
+そして、それに対応する固有関数は正弦関数である。
+</span>
+
+\[
+X_n(x) = \sin\left(\frac{nπx}{L}\right).
+\]
+
+</p>,p>
+
+For each \(n\), the temporal equation (6) gives
+
+<br><span style="color:blue;">
+各 \(n\) に対して、時間方程式 (6) は次のようになる。
+</span>
+
+\[
+T_n(t) = e^{−α(nπ/L)^2t}.
+\]
+
+</p>
+
+<h4>The general solution and the trigonometric series <br><span style="color:blue;">一般解と三角級数</span></h4>
+
+<p>
+Since the heat equation is linear, any linear combination of the separated solutions is also a solution.   Fourier therefore proposed that the most general solution satisfying the boundary conditions could be written as an infinite series:
+
+<br><span style="color:blue;">
+熱伝導方程式は線形であるため、変数分離によって得られた解の任意の線形結合もまた解となります。そこでフーリエは、境界条件を満たす最も一般的な解は無限級数として表すことができると提案しました。
+</span>
+
+\[
+u(x,t) = \sum_{n=1}^\infty b_n e^{−α(nπ/L)^2t} \sin\left(\frac{nπx}{L}\right). \tag{7}
+\]
+
+</p>
+
+To match an arbitrary  initial temperature distribution \(u(x,0) = f(x)\), the coeficients bn
+must satisfy
+
+<br><span style="color:blue;">
+任意の初期温度分布 \(u(x,0) = f(x)\) に合わせるためには、係数 \(b_n\) は次を満たさなければならない。
+</span>
+
+\[
+f(x) = \sum_{n=1}^\infty b_n \sin\left(\frac{nπx}{L}\right)
+\]
+
+Fourier now exploited a crucial physical fact which we already discussed in Section 1.2:  the sine functions are orthogonal on \([0,L]\).	Multiplying the series by \(\sin(mπx/L)\),  integrating term-by-term from \(0\) to \(L\),  and assuming that term-wise integration is valid,  all cross-terms vanish and one obtains an explicit formula for each coeficient:
+
+<br><span style="color:blue;">
+ここでフーリエは、第1.2節ですでに論じた重要な物理的事実、すなわち「正弦関数は \([0, L]\) 上で直交する」という性質を利用しました。級数に \(\sin(m\pi x/L)\) を掛け、\(0\) から \(L\) まで項ごとに積分すると（項ごとの積分が可能であると仮定すれば）、すべての交差項（cross-terms）が消え、各係数に対する具体的な公式が得られます。
+</span>
+
+\[
+b_n = \frac{2}{L}\int_0^L f(x)\sin\left(\frac{nπx}{L}\right)dx.\tag{8}
+\]
+</p>
+
+<h4>The full trigonometric series:  general boundary conditions and periodic func-tions <br><span style="color:blue;">完全三角級数：一般的な境界条件と周期関数</span></h4>
+
+<p>
+Fourier did not stop with the sine series. He also considered rods with insulated ends (Neumann boundary conditions, \(\frac{∂u}{∂x} = 0\) at \(x = 0,L)\), which lead to a cosine series:
+
+<br><span style="color:blue;">
+フーリエは正弦級数にとどまらず、両端が断熱された棒（ノイマン境界条件：\(x = 0, L\) において \(\frac{\partial u}{\partial x} = 0\)）についても考察しました。これらは余弦級数へとつながります。
+</span>
+
+\[
+f(x) = \frac{a_0}{2}+\sum_{n=1}^\infty a_n \cos\left(\frac{nπx}{L}\right),\quad a_n = \frac{2}{L} \int_0^L f(x)\cos\left(\frac{nπx}{L}\right)dx.
+\]
+</p><p>
+
+More fundamentally, Fourier recognized that an arbitrary function defined on a symmetric interval \([−L,L]\) and extended periodically can be represented by a combination of sines and cosines, the full Fourier series:
+
+<br><span style="color:blue;">
+より根本的な点として、フーリエは、対称区間 \([-L, L]\) 上で定義され周期的に拡張された任意の関数が、正弦関数と余弦関数の組み合わせ、すなわち完全なフーリエ級数によって表現できることを見出しました。
+</span>
+
+\[
+f(x) = \frac{a_0}{2} + \sum_{n=1}^\infty\left[a_n \cos\left(\frac{nπx}{L}\right)+ b_n \sin\left(\frac{nπx}{L}\right)\right], \tag{9}
+\]
+
+with coeficients
+
+<br><span style="color:blue;">
+係数は以下。
+</span>
+\[
+a_n =  \frac{1}{L}\int_{-L}^L f(x)\cos\left(\frac{nπx}{L}\right)dx,\quad b_n = \frac{1}{L}\int_{-L}^L f(x)\sin\left(\frac{nπx}{L}\right)dx.
+\]
+</p>
+
+<h4>The bold claim and its legacy <br><span style="color:blue;">その大胆な主張と、それが残した遺産</span></h4>
+<p>
+What set Fourier apart from his predecessors was his insistence that the representation (7)–(8) holds for any function \(f(x)\) that is physically admissible as an initial temperature profile—even those with jumps, corners, or pieces defined by different analytic expressions. This was a radical departure from 18th-century notions of a function, which required a single closed-form expres-sion. Lagrange and others objected fiercely, but Fourier’s reply was that the physical success of the heat equation in predicting actual temperature evolutions vindicated the mathematics.
+
+<br><span style="color:blue;">
+フーリエを先人たちと一線を画すものとしたのは、初期温度分布として物理的に許容されるあらゆる関数 \(f(x)\) —たとえ不連続点や折れ曲がり点があったり、異なる解析的式で定義された区分から成っていたりする関数であっても— に対して、式(7)～(8)による表現が成立すると主張した点にありました。これは、単一の閉じた形式（closed-form expression）による式を関数に求めていた18世紀の概念から大きく逸脱するものでした。ラグランジュらは激しく異議を唱えましたが、それに対するフーリエの答えは、熱伝導方程式が実際の温度変化を予測する上で物理的に成功を収めているという事実こそが、その数学的妥当性を裏付けているというものでした。
+</span>
+</p><p>
+
+Fourier’s method not only solved the heat problem but also introduced the general technique of expanding arbitrary functions in orthogonal eigenfunctions of a differential operator.   The integrals (8) are the first instance of what we now call Fourier coeficients, and the series (7) is the first explicit Fourier sine series.  It was this concrete, physically motivated construction that forced mathematicians to generalise the concepts of function, convergence, and integration, ultimately reshaping the entire landscape of analysis.
+
+<br><span style="color:blue;">
+フーリエの手法は、熱伝導の問題を解決しただけでなく、任意の関数を微分作用素の直交固有関数によって展開するという一般的な手法を導入するものでもありました。式(8)の積分は、今日「フーリエ係数」と呼ばれるものの最初の例であり、式(7)の級数は、明示的に示された最初のフーリエ正弦級数です。関数、収束、積分といった概念の一般化を数学者に促し、最終的に解析学の全体像を塗り替えることになったのは、まさにこの、物理的な動機に基づく具体的な構成法でした。
+</span>
+</p>
+
+<h2>C　Beyond the Finite Interval: Periodicity, Decay, and the Fourier Integral <br><span style="color:blue;">有限区間を超えて：周期性、減衰、そしてフーリエ積分</span></h2>
+
+<p>
+The sine and cosine series that Fourier employed to solve the heat equation on a finite rod are, by construction, periodic functions. When one writes
+
+<br><span style="color:blue;">
+有限の長さの棒における熱伝導方程式を解くためにフーリエが用いた正弦級数および余弦級数は、その構成上、周期関数である。以下のようにと書くとき、
+</span>
+
+\[
+f(x) = \sum_{n=1}^\infty b_n \sin\left(\frac{nπx}{L}\right) \quad (0 ≤ x ≤ L),
+\]
+
+the  right-hand  side,  viewed  as  a  function  on  the  whole  real  line,  is  odd  and  periodic  with period \(2L\).  Consequently, the equality holds only for \(x ∈ [0,L]\); outside this interval the series reproduces the periodic extension of \(f\), not the original function (unless f itself already satisfies those symmetry and periodicity conditions).  This is a fundamental limitation:  a trigonometric series cannot represent a function that is genuinely non-periodic over the entire real line, nor can it represent a function defined on an infinite domain without imposing an artificial periodicity.
+
+<br><span style="color:blue;">
+実数直線全体上の関数とみなした場合、右辺は奇関数かつ周期 \(2L\) の周期関数となります。したがって、この等式が成り立つのは \(x ∈ [0,L]\) の範囲に限られます。この区間の外側では、その級数は元の関数ではなく、\(f\) を周期的に拡張したものを再現することになります（ただし、\(f\) 自身がすでにそれらの対称性や周期性の条件を満たしている場合は例外です）。これは根本的な制約です。すなわち、三角級数では、実数直線全体で真に非周期的な関数を表すことはできませんし、人工的な周期性を課すことなく無限領域上の関数を表すこともできないのです。
+</span>
+</p>
+
+<h4>Functions that do not vanish at infinity <br><span style="color:blue;">無限遠で零にならない関数</span></h4>
+
+<p>
+
+A second, related limitation appears when one attempts to represent a function \(f(x)\) defined on the whole real line \((−∞,∞)\) by a trigonometric series of the form \(\sum a_ne^{inx}\).  Such a series is either a function on the circle (if \(x\) is taken modulo \(2π\)) or, if interpreted on \(\mathbb{R}\), it converges to a \(2π\)-periodic function. It cannot represent a non-periodic function, and in particular it cannot represent a function that does not decay to zero as \(|x| → ∞\) unless one allows for a continuous spectrum of frequencies.
+
+<br><span style="color:blue;">
+これに関連する第二の制約は、実数直線全体 \((−∞, ∞)\) 上で定義された関数 \(f(x)\) を、\(\sum a_ne^{inx}\) という形の三角級数で表現しようとする際に生じます。そのような級数は、（\(x\) を \(2π\) を法として考えるならば）円周上の関数となるか、あるいは実数直線 \(\mathbb{R}\) 上で解釈するならば \(2π\) 周期関数に収束するものとなります。したがって、この級数では非周期関数を表現することはできません。特に、連続的な周波数スペクトルを許容しない限り、\(|x| → ∞\) となるにつれてゼロに減衰しない関数を表現することも不可能です。
+</span>
+</p><p>
+
+Fourier himself recognised this dificulty.  In the final chapters of the Théorie analytique de la chaleur [13], he considered the problem of heat diffusion in an infinite solid, where no natural finite interval exists.  He argued heuristically that the discrete sum over integers n should pass to an integral over a continuous frequency variable. Formally, if one takes a function defined on \([−L,L]\) and lets \(L → ∞\), the Fourier series
+
+<br><span style="color:blue;">
+フーリエ自身もこの困難を認識していた。彼は『熱の解析的理論』（Théorie analytique de la chaleur）[13]の最終章において、自然な有限区間が存在しない無限の固体中での熱拡散の問題を考察した。彼は、整数 \(n\) に関する離散和が連続的な周波数変数に関する積分へと移行するはずであると、発見的（ヒューリスティック）に論じた。形式的には、区間 \([-L, L]\) 上で定義された関数をとり、\(L → \infty\) とすると、フーリエ級数は
+</span>
+
+\[
+f(x) =  \sum_{k=-\infty}^\infty c_ke^{ikπx/L}, \quad c_k  =\frac{1}{2L}\int_{-L}^L f(ξ)e^{−ikπξ/L} dξ,
+\]
+
+transforms, under appropriate convergence assumptions, into the Fourier integral representation 
+
+<br><span style="color:blue;">
+適切な収束の仮定の下で、フーリエ積分表現へと変換される
+</span>
+
+\[
+f(x) = \int_{-\infty}^\infty \hat{f}(ω)e^{iωx}\frac{dω}{2π},\quad  \hat{f}(ω) = \int_{-\infty}^\infty f(x)e^{−iωx} dx. \tag{10}
+\]
+
+Here \(\hat{f}(ω)\) is the Fourier transform of \(f\).  This representation holds for a wide class of ab-solutely integrable functions (\(f ∈ L^1(\mathbb{R})\)), and later extensions to square-integrable functions (Plancherel’s theorem) and tempered distributions (Schwartz [18]) made it applicable to phys-ically important objects such as the Dirac delta function, which does not decay at infinity and is not an ordinary function.
+
+<br><span style="color:blue;">
+ここで、\(\hat{f}(ω)\) は \(f\) のフーリエ変換である。この表現は、広範な種類の絶対可積分関数（\(f ∈ L^1(\mathbb{R})\)）に対して成立する。その後、二乗可積分関数（プランシュレルの定理）や緩増加超関数（Schwartz [18]）へと拡張されたことにより、無限遠で減衰せず通常の関数でもないディラックのデルタ関数のような、物理的に重要な対象にも適用可能となった。
+</span>
+</p>
+
+<h4>The periodic versus non-periodic dichotomy <br><span style="color:blue;">周期的か非周期的かという二分法</span></h4>
+<p>
+The dichotomy between Fourier series and the Fourier integral is a manifestation of the under-lying group structure:  periodic functions live on the circle, which is a compact abelian group, while functions on the line live on a non-compact abelian group. The spectral decomposition of a function on a compact group yields a discrete sum (a series), whereas the decomposition on a non-compact group requires a continuous integral.  This distinction was only fully clarified in the 20th century with the development of abstract harmonic analysis (Weil, Pontryagin).
+
+<br><span style="color:blue;">
+フーリエ級数とフーリエ積分の間の二分法は、その背後にある群構造の現れです。すなわち、周期関数はコンパクト・アーベル群である円周上で定義されるのに対し、実数直線上の関数は非コンパクト・アーベル群上で定義されるのです。コンパクト群上の関数のスペクトル分解は離散和（級数）となりますが、非コンパクト群上の分解では連続的な積分が必要となります。この区別が完全に明らかになったのは、20世紀に入り、抽象調和解析（ヴェイユやポントリャーギンらによる）が発展してからのことでした。
+</span>
+</p>
+
+<h4>Significance for the main thesis <br><span style="color:blue;">主要な論旨にとっての意義</span></h4>
+
+<p>
+The historical transition from the Fourier series to the Fourier integral is itself another exam-ple of physics driving mathematical innovation.  Fourier’s need to solve the heat equation on infinite domains forced him to invent what we now call the Fourier transform, a tool whose full justification took over a century and motivated the creation of the Lebesgue integral, the theory of distributions, and ultimately harmonic analysis on locally compact groups.  The pattern is the same:  a concrete physical problem—the cooling of an unbounded solid—exposed the limi-tations of the existing mathematical machinery, and mathematicians followed, formalising the continuous spectral decomposition that nature had already “used” in the propagation of heat.
+
+<br><span style="color:blue;">
+フーリエ級数からフーリエ積分への歴史的移行は、物理学が数学の革新を促した好例の一つです。無限領域における熱伝導方程式を解く必要に迫られたフーリエは、今日「フーリエ変換」と呼ばれる手法を考案しました。この手法の数学的妥当性が完全に裏付けられるまでには1世紀以上を要しましたが、その過程はルベーグ積分や超関数論、さらには局所コンパクト群上の調和解析の創出を促す原動力となりました。ここに見られる構図は一貫しています。すなわち、有限の境界を持たない固体の冷却という具体的な物理的問題が既存の数学的枠組みの限界を露呈させ、それを受けて数学者たちが、熱の伝播という現象の中で自然界がすでに「利用」していた連続スペクトル分解を数学的に定式化していったのです。
+</span>
+</p>
+    </body>
+</html>
