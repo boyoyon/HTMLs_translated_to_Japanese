@@ -11,8 +11,10 @@
         </p>
         <h2>更新項目</h2>
         <p>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2018_Its_Baaack_Twenty_Years_Later/2018_Its_Baaack_Twenty_Years_Later.html">2018 復活だぁっ！20年後</a><br>
+            ---<br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1997_How_Learning_Can_Guide_Evolution/1997_How_Learning_Can_Guide_Evolution.html">1997 学習はいかにして進化を導くか</a><br>
----<br>
+
         </p>
     </body>
 </html>
