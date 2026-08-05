@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Sketchpad</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Sketchpad: A man-machine graphical communication system<br><span style="color:blue;">Sketchpad：人間と機械の間のグラフィカルな対話システム</span></center></h1>
+
+<center>Ivan Edward Sutherland</center>
+<br>
+<center>September 2003</center>
+
+<h2>Chapter II<br>
+HISTORY OF SKETCHPAD <span style="color:blue;">SKETCHPADの歴史</span></h2>
+
+<p>
+When at the end of the summer of 1960 Jack I. Raffel told me that there 
+was considerable interest at Lincoln Laboratory in making a computer “more
+approachable” through advanced use of displays, I paid little heed, but a seed
+had been planted. As work on TX-O computer at MIT during the winter of
+1960-61 brought me some familiarity with using display and light pen, the
+idea began to grow in my mind that application of computers to making line
+drawings would be exciting and might prove fruitful. Late in April, 1961,
+following up Mr. Raffel’s earlier suggestion, I approached Wesley A. Clark,
+then in charge of computer applications in Group 51 of Lincoln Laboratory,
+with the proposal that I use TX-2 in an investigation of computer drawing
+techniques. I owe a great deal to Mr. Clark’s initial enthusiasm and, though I
+didn’t know it at the time, to the many design features [1] he had incorporated
+into TX-2 seemingly with just such a project in mind
+
+<br><span style="color:blue;">
+1960年の夏が終わる頃、ジャック・I・ラフェルから、リンカーン研究所においてディスプレイを高度に活用することでコンピュータを「より親しみやすいもの」にすることへの関心が高まっていると聞かされたとき、私はそれほど気に留めなかったものの、心の中に一つの種が蒔かれていた。1960年から1961年にかけての冬、MITでのTX-Oコンピュータに関する作業を通じてディスプレイやライトペンの使用に慣れ親しむにつれ、コンピュータを使って線画を作成するという試みは刺激的であり、実りあるものになるかもしれないという考えが私の心の中で膨らんでいった。1961年4月下旬、ラフェル氏の以前の提案を受けて、私は当時リンカーン研究所の第51グループでコンピュータ応用を担当していたウェズリー・A・クラークに、コンピュータによる描画技術の研究にTX-2を使用したいという提案を持ちかけた。クラーク氏の当初の熱意、そして（当時は知る由もなかったが）彼がまさにそのようなプロジェクトを念頭に置いてTX-2に組み込んでいた数多くの設計上の特徴[1]のおかげで、私は多大な恩恵を受けることになった。
+</span>
+</p>
+
+<p>
+During the summer of 1960, Herschel H. Loomis had done some preliminary drawing work [6] on TX-2 which he was kind enough to demonstrate for
+me in May, 1961, as my first contact with TX-2. During the summer of 1961
+I devised a curve tracing program and some of the first notions about interlaced and twinkled display. Late in the summer of 1961 a project to connect
+an ink-line-on-paper plotting system to TX-2 was revived. An EAI plotter, [12]
+painted bright red, had been at Lincoln Laboratory for two or three years before, but interest in the project had faded for lack of a user. Throughout the
+Sketchpad effort I havek maintained a collateral interest in the hardware development necessary to get the plotter working. The plotting system has been
+incorporated as a part of the overall Sketchpad system, but of course its development is only incidental to the research embodied in the thesis.
+<br><span style="color:blue;">
+1960年の夏、ハーシェル・H・ルーミス（Herschel H. Loomis）はTX-2を用いた予備的な描画作業[6]を行っており、1961年5月には親切にもそれを私に実演して見せてくれました。これが私にとってTX-2との最初の接点となりました。1961年の夏、私は曲線追跡プログラムを考案し、インターレース表示や「トゥインクル（twinkled）」表示（点滅やちらつきを利用した表示手法）に関する初期の構想を練りました。同年夏の終わり頃、TX-2に紙へのインク描画を行うプロッタ・システムを接続するプロジェクトが再開されました。鮮やかな赤色に塗装されたEAI製プロッタ[12]は、それ以前から2、3年にわたってリンカーン研究所に置かれていましたが、利用者がいなかったためにプロジェクトへの関心は薄れていたのです。Sketchpadの開発に取り組む間、私はプロッタを稼働させるために必要なハードウェア開発にも並行して関心を寄せ続けていました。このプロッタ・システムはSketchpadシステム全体の一部として組み込まれましたが、もちろんその開発は、本論文で詳述する研究に付随する活動に過ぎません。
+</span>
+</p>
+
+<p>
+From the earliest stages of the project development I had had the closest
+contact with Professor Claude E. Shannon whose penetrating questions have
+served as the measuring stick by which I could judge my progress. He agreed
+to supervise the drawing effort as a thesis project in the fall of 1961. In the
+process of contacting faculty members to form a thesis committee I became
+aware that my effort was not unique and that I was not alone in my interest
+and enthusiasm for graphical computer input and output. The availability
+of computer controlled display systems and particularly of light pen devices for manual input made it almost inevitable that computers would one day be
+involved in engineering drawing. People at MIT had long talked of such an
+application. 
+<br><span style="color:blue;">
+プロジェクト開発の極めて初期の段階から、私はクロード・E・シャノン教授と緊密に連絡を取り合っていました。教授の鋭い質問は、私自身の進捗状況を測るための「物差し」のような役割を果たしてくれました。教授は1961年の秋、この図面作成の取り組みを修士論文のプロジェクトとして指導することに同意してくれました。論文審査委員会を構成するために教員たちと接触する中で、私は、自分の試みが決して唯一無二のものではなく、コンピュータによる図形の入出力という点に情熱を注いでいるのが自分一人ではないことに気づきました。コンピュータ制御のディスプレイ・システム、とりわけ手動入力用のライトペンといった装置が利用可能になったことで、コンピュータがいずれ工学製図の分野に関わるようになることは、ある意味で必然的な流れとなっていました。MITの人々の間では、以前からそのような応用について語られていたのです。
+</span>
+</p>
+
+<p>
+Computer application to geometric problems was not new. The APT (Automatically Programmed Tool) development through which a computer is able
+to control a milling machine to produce a complex metal part had evolved
+many useful geometric manipulation techniques. I made contact with the
+Computer Aided Design group at MIT which was composed partly of the people of the MIT Electronic Systems Laboratory (formerly called the Servomechanisms Laboratory) who developed APT and partly of people in the Mechanical Engineering Department who brought a knowledge of the problems faced
+by designers to the project. I had been surprised that so little practical work
+had been done in application of computers to line drawing, especially since
+ displayk systems and light pens were relatively common when my work began. I can see now, however, that I have had a unique opportunity to pursue
+my interest. I was able to visit many separate laboratories for discussion and
+ideas without becoming so attached to any one that I was forced into its way of
+thinking. In particular, members of the Mechanical Engineering Department,
+notably Professor Steven A. Coons, who agreed to serve on my thesis committee, suggested mechanical design problems and applications. Members of
+the Electronic Systems Laboratory, notably Douglas Ross, provided help and
+advice on n-component elements. The Artificial Intelligence group, notably
+Professor Marvin Minsky, another committee member, gave advice and encouragement in the niceties of picture representation and the kind of interest
+aimed more at a fundamental understanding of the processes developed than
+in their practical application. Lincoln Laboratory provided not only advice but
+also technical support including to date about 600 hours of time on the TX-2.
+<br><span style="color:blue;">
+幾何学的な問題へのコンピュータの応用は、決して新しい試みではありませんでした。複雑な金属部品を製造するためにコンピュータでフライス盤を制御する「APT（Automatically Programmed Tool）」の開発過程において、有用な幾何学的操作技術が数多く生み出されていたからです。私はMITのCAD（コンピュータ支援設計）グループと接触を持ちました。このグループは、APTを開発したMIT電子システム研究所（旧サーボメカニズム研究所）のメンバーと、設計者が直面する課題に関する知見をプロジェクトにもたらした機械工学科のメンバーとで構成されていました。私が研究を始めた当時、ディスプレイ・システムやライトペンは比較的普及していたにもかかわらず、線画（ライン・ドローイング）へのコンピュータ応用に関する実践的な研究があまり行われていなかったことには驚かされました。しかし今振り返ると、私は自分の関心を追求する上で、非常に恵まれた独自の機会に恵まれていたのだと分かります。特定の研究所に深く関わりすぎてその思考様式に縛られることなく、多くの異なる研究所を訪れて議論やアイデアの交換を行うことができたからです。特に、私の論文審査委員を務めてくださったスティーブン・A・クーンズ教授をはじめとする機械工学科のメンバーからは、機械設計上の課題や応用例について示唆をいただきました。電子システム研究所のメンバー、とりわけダグラス・ロス氏からは、n成分要素（n-component elements）に関する助言や支援をいただきました。また、同じく審査委員の一人であるマービン・ミンスキー教授を中心とする人工知能グループからは、画像表現の細部に関する助言や励ましをいただいたほか、単なる実用化にとどまらず、開発されたプロセスの根本的な理解を目指すという視点についても示唆をいただきました。さらにリンカーン研究所からは、助言だけでなく技術的な支援も提供され、TX-2コンピュータの利用時間だけでもこれまでに約600時間に及びました。
+</span>
+</p>
+
+<p>
+Whatever success the Sketchpad effort has had can in no small measure
+be traced to the use of TX-2.∗ TX-2’s 70,000 word memory, 64 index registers,
+flexible input-output control and liberal supply of manual intervention facilities such as toggle switches, shaft encoder knobs, and push buttons all contributed to the speed with which ideas could be tried and accepted or rejected.
+Moreover, being an experimental machine it was possible to make minor modifications to TX-2 to match it better to the problem. For example, a push button
+register was installed at my request. Now that we know what drawing on a
+computeris like, much smaller machines can be used for practical applications.
+<br><span style="color:blue;">
+Sketchpadの取り組みが成功を収めた要因の少なからぬ部分は、TX-2の利用に帰することができます。TX-2が備えていた7万語のメモリ、64個のインデックスレジスタ、柔軟な入出力制御、そしてトグルスイッチ、シャフトエンコーダ・ノブ、押しボタンといった手動操作用の豊富な手段は、いずれも、アイデアを試して採用するか否かを判断する際の迅速さに寄与しました。
+さらに、TX-2は実験機であったため、取り組む課題により適した形にするための小規模な改修を行うことも可能でした。例えば、私の要望で押しボタン・レジスタが追加設置されたこともあります。コンピュータ上での描画というものがどのようなものか理解できた今となっては、実用的な用途には、はるかに小規模なマシンを使用することが可能です。
+</span>
+</p>
+
+<h2>RESEARCH PROGRESS <span style="color:blue;">研究の進捗状況</span></h2>
+
+<p>
+Thus it was that in the fall of 1961 work began in earnest on a drawing system
+for TX-2. In the early fall I perfected my light pen tracking programs and
+subroutines for displaying straight lines and presenting a portion of the total
+picture on the display at increased magnification. In early November 1961, my
+first light pen controlled drawing program was working. It is significant that
+at this time a notion of “strong conditions” was used to give geometric nicety to the drawing. For example, lines could be drawn parallel or perpendicular to
+existing lines but carried no permanent trace of the relationship other than the
+accident of their position. This early effort in effect provided the T-square and
+triangle capabilities of conventional drafting. Somewhat before my first effort
+was working, Welden Clark of Bolt, Beranek and Newman demonstrated a
+similar program to me on the PDP-1 computer. [5]
+
+<br><span style="color:blue;">
+こうして1961年の秋、TX-2向けの描画システムの開発が本格的に始まった。初秋には、ライトペンによる追跡プログラムや、直線を表示したり、全体図の一部を拡大して表示したりするためのサブルーチンを完成させた。1961年11月初旬には、ライトペンで制御する最初の描画プログラムが動作するようになった。特筆すべきは、この時点で、描画に幾何学的な整合性を持たせるために「強い条件（strong conditions）」という概念が用いられていたことである。例えば、既存の線に対して平行や垂直な線を描くことはできたが、それらの線は、単に位置関係として偶然そうなったという以上の、その関係性を永続的に保持するような性質は持っていなかった。この初期の試みは、実質的に、従来の製図におけるT定規や三角定規の機能を提供するものであった。私が最初のプログラムを完成させる少し前に、ボルト・ベラネック・アンド・ニューマン社のウェルデン・クラークが、PDP-1コンピュータ上で同様のプログラムを私に実演して見せてくれた。[5]
+</span>
+</p>
+<p>
+Early in December 1961 Professor Shannon visited TX-2 to see the work
+I had been doing. As a result of that visit the entire effort took new form.
+First, Professor Shannon suggested point blank that I include circle capability
+in the system. Second, I realized when he asked for paper to sketch a drawing he intended to enter into the computer that the strong conditions notion
+which simulated the conventional tools of drafting was not adequate for computer drawing. As a result of including circles into the Sketchpad system a
+richness of display experience has been obtained without which the research
+might have been rather dry. As a result of trying to improve upon conventional drafting tools the full new capability of the computer-aided drafting
+system has come into being.
+<br><span style="color:blue;">
+1961年12月初旬、シャノン教授が私の取り組んでいた作業を見るためにTX-2を訪れました。その訪問をきっかけに、プロジェクト全体が新たな展開を見せることになりました。第一に、シャノン教授はシステムに円を描く機能を盛り込むよう、単刀直入に提案されました。第二に、教授がコンピュータに入力する図のスケッチを描くために紙を求められた際、私は、従来の製図用ツールを模倣した「強い拘束条件（strong conditions）」という概念だけでは、コンピュータによる作図には不十分であると気づかされました。Sketchpadシステムに円を描く機能を取り入れた結果、表示上の表現力が豊かになりましたが、もしそれがなければ、この研究は味気ないものになっていたかもしれません。こうして従来の製図ツールを改良しようと試みた結果、コンピュータ支援製図システムが持つ全く新しい能力が実現されるに至ったのです。
+</span>
+</p>
+
+<p>
+In December 1961, and during the first part of 1962, then, I began working 
+on the problems of display generation for cirlces outlined in Chapter V. The
+circle generating subroutine gave great difficulty especially in the details of
+edge detection and closure. At about this same time I started work on the ring
+structure representation of the drawing outlined in Chapter III; the preliminary drawing effort of November 1961 had used conventional table storage.
+By the first of February 1962, the ring structure was in use, but without the
+generic blocks which give it its present flexibility. Intersection programs for
+line, and circle, had been written and debugged, and the second generation
+drawing program could be begun.
+<br><span style="color:blue;">
+1961年12月から1962年前半にかけて、私は第5章で概説した円の表示生成に関する課題に取り組み始めました。特に円生成サブルーチンにおいては、エッジ（輪郭）の検出や図形の閉合といった細部の処理に多大な困難が伴いました。ほぼ同時期に、第3章で述べた図面の「リング構造」による表現方法の開発にも着手しました（1961年11月時点での初期の作図作業では、従来の表形式によるデータ格納が用いられていました）。1962年2月1日までにリング構造の実装は完了していましたが、現在のこの構造に柔軟性をもたらしている「汎用ブロック」の機能はまだ組み込まれていませんでした。直線および円の交差を計算するプログラムの記述とデバッグが完了し、いよいよ第2世代の作図プログラムの開発に着手できる段階となりました。
+</span>
+</p>
+
+<p>
+In making the second generation drawing program, explicit representation of constraints and automatic constraint satisfaction were to be included.
+I learned of the matrix method described in Appendix F for finding the minimum mean square error solution to linear equations from Lester D. Earnest
+of the MITRE Corporation and obtained a macro, SOLVE, from Lawrence G.
+Roberts which did the arithmetic involved. [8] Armed with the tools for representing and doing arithmetic for constraints I went gaily ahead with programming.
+<br><span style="color:blue;">
+第2世代の描画プログラムを作成するにあたり、制約条件の明示的な表現と、制約条件の自動充足機能を組み込む必要がありました。
+
+私は、MITRE社のレスター・D・アーネスト氏から、線形方程式の最小平均二乗誤差解を求めるための行列法（付録Fに記載）について学びました。
+また、関連する計算を行うマクロ「SOLVE」をローレンス・G・ロバーツ氏から入手しました。
+[8] 制約条件の表現と計算を行うためのツールを手に入れた私は、意気揚々とプログラミングを進めました。
+</span>
+</p>
+
+<p>
+In the first crack at representing constraints I made two basic errors which
+have subsequently been corrected. First, I provided that the constraints be
+tied not only to the variables constrained but also to related nonvariables. For
+example, the horizontal constraint not only referred (as it should) to the two
+end points of a line, but also (as has been subsequently removed) to the line
+itself. It was impossible to make points have the same y coordinate without
+having a linek between them; deletion of the line deleted the constraint as well. In more recent work constraints refer only to variables so that lines need not
+be present to make points have the same y coordinate.
+<br><span style="color:blue;">
+制約を表現しようとした当初の試みにおいて、私は2つの基本的な誤りを犯しましたが、それらはその後修正されました。第一に、制約を対象となる変数だけでなく、関連する「変数ではない要素」にも結びつけてしまっていたことです。例えば、水平制約は（本来あるべき姿として）線の両端点を参照するだけでなく、（後に削除されたように）線そのものも参照していました。そのため、線の両端点のy座標を揃えるにはその間に線が存在する必要があり、線を削除すると制約も削除されてしまうという状態でした。より最近の取り組みでは、制約は変数のみを参照するようにしているため、点のy座標を揃えるために線が存在する必要はなくなっています。
+</span>
+</p>
+
+<p>
+The second error in constraint representation was in the numerical computation of the relationship represented by the constraint. At first I insisted
+that for any constrained variable it be possible to compute directly the linear equation of best fit to the constraint. That is, for each constraint on a variable
+the equation of a line could be found along which the constraint would be satisfied or nearly so. Not only was it difficult to compute the equation of such a
+line, requiring a special purpose program for each type of constraint, but also
+my lack of regard for the niceties of the scale factor of the computed equation
+resulted in instabilities in the constraint satisfaction process. Whereas for the
+relaxation procedure to operate properly it is necessary to remove “energy”
+from the system at each stage, my computations for certain cases added energy. It was early summer of 1962 before definition of the mathematical properties of constraint types in terms of a subroutine for computing directly the
+error introduced by a constraint not only cured the instability troubles but also
+made it easy to add new constraint types.
+<br><span style="color:blue;">
+制約表現における2つ目の誤りは、制約が表す関係の数値計算に関するものでした。当初、私は、制約を受ける任意の変数について、その制約に最も適合する線形方程式を直接計算できるべきだと主張していました。つまり、変数に対する各制約について、その制約が（あるいはほぼ）満たされるような直線の式を求められるはずだと考えていたのです。しかし、そのような直線の式を計算することは困難で、制約の種類ごとに専用のプログラムが必要だっただけでなく、計算された式のスケール係数（尺度）の細かな点に配慮しなかったことが、制約充足プロセスにおける不安定さを招く結果となりました。緩和法（リラクゼーション法）が適切に機能するためには各段階でシステムから「エネルギー」を取り除く必要がありますが、私の計算手法では、特定のケースにおいて逆にエネルギーを加えてしまっていたのです。制約の種類が持つ数学的特性を、「制約によって生じる誤差を直接計算するサブルーチン」として定義するようになったのは1962年の初夏のことでした。この変更によって、不安定さの問題が解消されただけでなく、新しい種類の制約を追加することも容易になりました。
+</span>
+</p>
+
+<p>
+Along with the new capabilities of the constraint satisfaction programs and
+the extensive use to be made of constraints, the second generation drawing
+program included for the first time the recursive instance expansion which
+made possible instances within instances. The trials of getting systems to work
+are many; one which stands out in my mind was that instances within in stances rotated in the wrong direction when thek outer instance was rotated.
+Neither were the things I tried to do always correct. For example, the initial
+instance expansion routine forced each instance of a picture to be smaller than
+the master drawing for that instance. I have since come to appreciate the value
+of having some normalizing factor in products so that all fixed point numbers
+can be treated as signed fractions in the range, −1 >= x >= 1, representing
+the fraction of full scale deflection on the coordinate system in question.
+<br><span style="color:blue;">
+制約充足プログラムの新たな機能や制約の広範な活用に加え、第2世代の描画プログラムには「再帰的なインスタンス展開」が初めて導入され、インスタンスの中にさらにインスタンスを配置することが可能になりました。システムを正常に動作させるまでには多くの試行錯誤がありましたが、特に印象に残っているのは、外側のインスタンスを回転させた際に、内側のインスタンスが誤った方向に回転してしまうという問題でした。もちろん、私自身のアプローチが常に正しかったわけではありません。例えば、初期のインスタンス展開ルーチンでは、図形の各インスタンスを、その元となるマスター図面よりも小さくすることを強制していました。その後、製品において何らかの正規化係数を用いることの重要性を理解するようになりました。そうすれば、すべての固定小数点数を、対象となる座標系におけるフルスケール（最大振幅）に対する割合を表す「-1以上1以下の範囲の符号付き小数」として扱うことができるからです。
+</span>
+</p>
+
+<p>
+In late March 1962, I discovered that points could be related to instances
+through the use of two linear equations relating the coordinates of the point
+to the four components of the instance position. Armed with this new information, the difficulties I had been having with attachers on instances yielded
+to the same general format used for other constraints. It became possible for a
+single instance to have as many attachers as desired, each of which could serve
+as attachment point for any number of instances
+<br><span style="color:blue;">
+1962年3月下旬、私は、点の座標とインスタンス位置の4つの成分とを関連付ける2本の線形方程式を用いることで、点とインスタンスを関連付けられることを発見しました。この新たな知見を得たことで、インスタンスへのアタッチャー（接続要素）に関して直面していた困難は解消され、他の拘束条件と同様の一般的な形式で扱えるようになりました。これにより、単一のインスタンスに任意の数のアタッチャーを設けることが可能になり、各アタッチャーを任意の数のインスタンスの接続点として利用できるようになりました。
+</span>
+</p>
+
+<p>
+The first actual programming of the maze-solving high-speed constraint
+satisfaction methods proposed much earlier began about March 1962. I had
+not had enough experience before that time with the ring structure to face
+the extensive ring manipulations which would be required for this part of
+the work. The development of the ring manipulation macros shown in Appendix D was started in connection with the maze solving routines.
+
+<br><span style="color:blue;">
+かなり以前に提案されていた、迷路を解くための高速な制約充足手法について、実際のプログラミングが最初に開始されたのは1962年3月頃のことでした。それ以前の私は、この作業の過程で必要となる大規模なリング操作を扱えるだけの、リング構造に関する十分な経験を積んでいませんでした。付録Dに示されているリング操作用マクロの開発は、迷路を解くためのルーチンに関連して開始されたものです。
+</span>
+</p>
+
+<p>
+By Memorial Day 1962, the second version of Sketchpad was considered
+working well enough that a motion picture was made showing the various
+ drawing manipulations possible. It was possible to draw linek segments and
+circle arcs and point to them to erase them or move the points on which they
+depend. A limited number of constraints were available which could make
+lines horizontal or vertical, force points to lie on lines or circles, and relate
+instances to their attachment points. Constraint satisfaction was primarily by
+relaxation, but for certain simple cases the maze solving methods would give
+more rapid results. It was possible to see that sketching could indeed be done
+on the computer.
+<br><span style="color:blue;">
+1962年のメモリアル・デー（戦没将兵追悼記念日）までには、「Sketchpad」の第2版は十分に実用的な段階に達しており、可能な描画操作の数々を紹介する映像作品も制作されました。線分や円弧を描画できるほか、それらを指定して消去したり、それらの形状を規定する点を移動させたりすることが可能でした。利用可能な拘束条件は限られていましたが、線を水平または垂直にしたり、点を線や円上に配置したり、図形のインスタンスをその取り付け点（アタッチメント・ポイント）に関連付けたりすることができました。拘束条件の充足には主に「緩和法（リラクゼーション法）」が用いられましたが、特定の単純なケースでは、迷路解法を用いる方がより迅速に結果を得ることができました。これにより、コンピュータ上でも実際にスケッチ（描画）を行うことが可能であると実証されました。
+</span>
+</p>
+
+<p>
+Not yet available were display for points or constraints, or any notion of
+digits, text, scalars and dummy variables. It was almost impossible to add
+new constraint types to the system, and even had they been added, the recursive merging and the definition copying capability were not available to apply
+them easily to the object picture. Sketchpad at this stage was a nice demonstration and toy but as yet lacked the richness of detail now available.
+<br><span style="color:blue;">
+当時はまだ、点や拘束を表示する機能や、数値、テキスト、スカラー、ダミー変数といった概念も実装されていませんでした。システムに新しい種類の拘束を追加することは極めて困難であり、仮に追加できたとしても、それらをオブジェクトの図に容易に適用するための「再帰的なマージ」や「定義のコピー」といった機能が備わっていませんでした。この段階のSketchpadは、優れたデモンストレーションや「おもちゃ」としては魅力的でしたが、現在利用可能なような詳細さや豊かさは、まだ欠けていました。
+</span>
+</p>
+
+<p>
+During the late spring of 1962, then, enough experience had been gained
+with computer drawings to realize that more capabilities were needed. It was
+possible for me, armed with photographs of the latest developments, to approach a great many people in an effort to get new ideas to carry the work
+on to a successful conclusion. Out of these discussions came the notions of
+copying definitions and of recursive merging which are, to me, the most important contributions of the Sketchpad system. Also out of these talks came
+the conviction that a generic structure would be necessary if the system were
+to be made easy to expand. On June 9, 1962 all this new information came
+to a head and an entirely new system was begun which has grown with relatively littlek change into the final version described here. Had I the work to do again, I could start afresh with the sure knowledge that generic structure,
+separation of subroutines into general purpose ones applying to all types of
+picture parts and ones specific to particular types of picture parts, and unlimited applicability of functions (e.g. anything should be moveable) would more
+than recompense the effort involved in achieving them. I have great admiration for those people who were able to tell me these things all along, but I,
+personally, had to follow the stumbling trail described in this chapter to become convinced myself. It is to be hoped that future workers can either grasp
+the power of generality at once and strive for it or have the courage to stumble
+along a trail like mine until they achieve it.
+<br><span style="color:blue;">
+1962年の春の終わり頃までには、コンピュータによる図形描画の経験が十分に蓄積され、さらなる機能が必要であると認識されるようになっていました。最新の成果を示す写真などを携え、私は多くの人々に働きかけ、このプロジェクトを成功に導くための新しいアイデアを求めました。そうした議論の中から、「定義のコピー（copying definitions）」や「再帰的マージ（recursive merging）」といった概念が生まれました。これらは、私にとってSketchpadシステムにおける最も重要な貢献だと考えています。また、システムの拡張性を高めるには「汎用的な構造（generic structure）」が必要であるという確信も、こうした対話を通じて得られました。1962年6月9日、それまでに得られた新たな知見が集約され、全く新しいシステムの開発が始まりました。このシステムは、その後大きな変更を加えることなく発展し、本書で詳述する最終版へと至りました。もし今、同じ作業をやり直すとしたら、私は最初から確信を持って取り組むことができるでしょう。汎用的な構造の採用、サブルーチンを「あらゆる図形要素に適用できる汎用的なもの」と「特定の図形要素に固有のもの」に分離すること、そして機能を無制限に適用可能にすること（例えば、あらゆる要素を移動可能にするなど）――これらを実現するための努力は、それによって得られる成果によって十分に報われるはずだからです。当初からこうした指針を示してくれた人々には深く敬意を表しますが、私自身は、自ら確信を得るために、本章で述べたような試行錯誤の道をたどる必要がありました。今後の開発者たちが、「汎用性」が持つ力を即座に理解してそれを追求するか、あるいは私のように試行錯誤を繰り返しながらも、それを実現するまで突き進む勇気を持ってくれることを願っています。
+</span>
+</p>
+
+<p>
+Towards the end of the summer of 1962 the third and final version of
+Sketchpad was beginning to show remarkable power. I had the good fortune
+at this time to obtain the services of Leonard M. Hantman, a Lincoln Laboratory Staff Programmer, who added innumerable service functions, such as
+magnetic tape manipulation routines, to the system. He also cleaned up some
+of the messy programming left over from my rushed efforts at getting things
+working. For example, he shortened and improved my original ring manipulation macros. Also, towards the end of the summer the plotting system began to be able to give useable output. Hantman added plotting programs to
+Sketchpad through which the figures in this paper were made.
+<br><span style="color:blue;">
+1962年の夏の終わり頃、Sketchpadの第3版にして最終版は、目覚ましい能力を発揮し始めていました。幸運なことに、この時期、リンカーン研究所のスタッフ・プログラマーであるレナード・M・ハントマン（Leonard M. Hantman）の協力を得ることができました。彼は、磁気テープ操作ルーチンをはじめとする数多くのユーティリティ機能をシステムに追加してくれました。また、私が急いでシステムを稼働させようとした際に生じた、雑然としたプログラミング部分の整理・修正も行ってくれました。例えば、私が最初に作成したリング操作マクロを短縮し、改良してくれたのです。さらに、夏の終わり頃には、プロッティング・システムが実用的な出力を生成できるようになりました。ハントマンがSketchpadにプロッティング・プログラムを追加してくれたおかげで、本論文に掲載されている図を作成することができたのです。
+</span>
+</p>
+
+<p>
+Computer time began to be spent less and less on program debugging and
+more and more on applications of the system. It was possible to provide preliminary services to other people, and so a user group wask formed and informal instruction was given in the use of Sketchpad. A library tape was obtained and has ever since been collecting pictures for possible future use. The
+user group experience showed that relatively new users with no programming
+knowledge could produce simple drawings with the system if a skilled user
+(myself) prepared the building blocks necessary. For example, a secretary designed and drew an alphabet with the aid of a 10 × 10 raster of points to use
+as end points. Both the raster and the alphabet are now a part of the library.
+<br><span style="color:blue;">
+コンピュータの稼働時間は、プログラムのデバッグに費やされる割合が減り、システムの応用利用に費やされる割合が増えていきました。他者への試験的なサービス提供が可能になったことから、ユーザーグループが結成され、Sketchpadの利用に関する非公式な指導が行われるようになりました。また、ライブラリ用テープを入手し、将来の利用に備えて図形の蓄積を開始しました。
+ユーザーグループでの活動を通じて、プログラミングの知識がない比較的新しいユーザーであっても、熟練ユーザー（私自身）が必要な構成要素をあらかじめ用意しておけば、このシステムを使って簡単な図形を作成できることが明らかになりました。例えば、ある秘書は、端点として利用する10×10の点グリッド（ラスタ）を活用して、アルファベットの文字を設計・描画しました。現在、そのグリッドとアルファベットのデータは、いずれもライブラリの一部となっています。
+</span>
+</p>
+
+<p>
+Even now, however, there are possibilities for application of the system not
+yet even dreamed of. The richness of the possibilities of the definition copying
+function, and the new types of constraints which might easily be added to the
+system for special purposes suggest that further application will bring about a
+new body of knowledge of system application. For example, the bridge design
+examples shown at the end of this paper were not anticipated.
+<br><span style="color:blue;">
+しかし、現在においても、このシステムにはまだ想像もつかないような応用の可能性があります。定義コピー機能が秘める豊かな可能性や、特定の目的のために容易に追加し得る新たな制約の種類を考えると、今後の応用展開によって、システム活用に関する新たな知見がもたらされることが示唆されます。例えば、本論文の末尾に示した橋梁設計の事例は、当初は想定されていなかったものです。
+</span>
+</p>
+
+<p>
+There are, of course, limitations to the system. In the last chapter are suggested the improvements, some just minor changes, but some major additions
+which would change the entire character of the system. It is to be hoped that
+future work will far surpass my effort.
+<br><span style="color:blue;">
+もちろん、このシステムには限界があります。最終章では改善案を提示していますが、それらの中には些細な変更にとどまるものもあれば、システムの性格を一変させるような大幅な追加要素も含まれています。今後の研究が、私の取り組みをはるかに凌ぐものとなることを期待しています。
+</span>
+</p>
+
+    </body>
+</html>

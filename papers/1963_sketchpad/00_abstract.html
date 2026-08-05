@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Sketchpad</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Sketchpad: A man-machine graphical communication system<br><span style="color:blue;">Sketchpad：人間と機械の間のグラフィカルな対話システム</span></center></h1>
+
+<center>Ivan Edward Sutherland</center>
+<br>
+<center>September 2003</center>
+
+<h2>Abstract
+ <span style="color:blue;">要旨</span></h2>
+
+<p>
+The Sketchpad system uses drawing as a novel communication medium for
+a computer. The system contains input, output, and computation programs
+which enable it to interpret information drawn directly on a computer display.
+It has been used to draw electrical, mechanical, scientific, mathematical, and
+animated drawings; it is a general purpose system. Sketchpad has shown the
+most usefulness as an aid to the understanding of processes, such as the notion of linkages, which can be described with pictures. Sketchpad also makes
+it easy to draw highly repetitive or highly accurate drawings and to change
+drawings previously drawn with it. The many drawings in this thesis were all
+made with Sketchpad.
+
+<br><span style="color:blue;">
+Sketchpadシステムは、コンピュータとの新たなコミュニケーション手段として「描画」を利用するものです。このシステムは、入力、出力、および計算を行うプログラムで構成されており、コンピュータのディスプレイ上に直接描かれた情報を解釈することが可能です。電気回路図、機械図面、科学・数学的な図、さらにはアニメーションなど、多岐にわたる図の作成に利用されており、汎用的なシステムと言えます。Sketchpadは、特に「リンク機構（リンク）」の概念のように、図を用いて表現できるプロセスの理解を助ける上で、極めて有用であることが示されています。また、高度な繰り返しや高い精度を要する図面の作成や、一度作成した図面の修正も容易に行えます。本論文に掲載されている多数の図は、すべてSketchpadを用いて作成されたものです。
+</span>
+</p>
+
+<p>
+A Sketchpad user sketches directly on a computer display with a “light
+pen.” The light pen is used both to position parts of the drawing on the display and to point to them to change them. A set of push buttons controls the
+changes to be made such as ”erase,” or “move.” Except for legends, no written
+language is used.
+<br><span style="color:blue;">
+Sketchpadのユーザーは、「ライトペン」を使ってコンピュータのディスプレイ上に直接スケッチを行います。このライトペンは、ディスプレイ上の図形要素を配置したり、それらを指し示して変更を加えたりするために使用されます。一連の押しボタンによって、「消去」や「移動」といった変更操作が制御されます。凡例を除き、文字による記述は一切使用されません。
+</span>
+</p>
+
+<p>
+Information sketched can include straight line segments and circle arcs.
+Arbitrary symbols may be defined from any collection of line segments, circle
+arcs, and previously defined symbols. A user may define and use as many
+symbols as he wishes. Any change in the definition of a symbol is at once seen
+wherever that symbol appears
+<br><span style="color:blue;">
+スケッチされる情報には、直線セグメントや円弧を含めることができます。
+直線セグメント、円弧、および既存のシンボルの任意の組み合わせを用いて、独自のシンボルを定義することが可能です。ユーザーは、任意の数のシンボルを定義し、使用することができます。シンボルの定義を変更すると、そのシンボルが使用されているすべての箇所に、即座に変更が反映されます。
+</span>
+</p>
+
+<p>
+Sketchpad stores explicit information about the topology of a drawing. If
+the user moves one vertex of a polygon, both adjacent sides will be moved. If
+the user moves a symbol, all lines attached to that symbol will automatically
+move to stay attached to it. The topological connections of the drawing are
+automatically indicated by the user as he sketches. Since Sketchpad is able
+to accept topological information from a human being in a picture language
+perfectly natural to the human, it can be used as an input program for computation programs which require topological data, e.g., circuit simulators.
+<br><span style="color:blue;">
+Sketchpadは、描画のトポロジー（位相的構造）に関する明示的な情報を保持しています。ユーザーが多角形の頂点を1つ動かせば、それに隣接する2つの辺も一緒に移動します。また、記号を動かせば、その記号に接続されているすべての線が、接続を維持したまま自動的に追従して移動します。描画におけるトポロジー的な接続関係は、ユーザーがスケッチを行う過程で自動的に指定されます。Sketchpadは、人間にとって極めて自然な「図形言語」を用いてトポロジー情報を受け入れることができるため、回路シミュレーターのようにトポロジーデータを必要とする計算プログラムへの入力用プログラムとして利用可能です。
+</span>
+</p>
+
+<p>
+Sketchpad itself is able to move parts of the drawing around to meet new
+conditions which the user may apply to them. The user indicates conditions
+with the light pen and push buttons. For example, to make two lines parallel, he successively points to the lines withthe light pen and presses a button.
+The conditions themselves are displayed on the drawing so that they may be
+erased or changed with the light pen language. Any combination of conditions
+can be defined as a composite condition and applied in one step.
+
+<br><span style="color:blue;">
+Sketchpad自体、ユーザーが指定する新たな条件を満たすように、描画の一部を移動させることができます。ユーザーはライトペンや押しボタンを使って条件を指定します。例えば、2本の線を平行にする場合、ライトペンでそれらの線を順に指し示し、ボタンを押します。
+条件そのものも図面上に表示されるため、ライトペンによる操作でそれらを消去したり変更したりすることが可能です。任意の条件の組み合わせを「複合条件」として定義し、一度の操作で適用することもできます。
+</span>
+</p>
+
+<p>
+It is easy to add entirely new types of conditions to Sketchpad’s vocabulary.
+Since the conditions can involve anything computable, Sketchpad can be used for a very wide range of problems. For example, Sketchpad has been used to
+find the distribution of forces in the members of truss bridges drawn with it.
+<br><span style="color:blue;">
+Sketchpadの機能（語彙）に、全く新しい種類の条件を容易に追加することができます。
+条件には計算可能なあらゆる要素を組み込めるため、Sketchpadは極めて幅広い問題に適用可能です。例えば、Sketchpadは、描画されたトラス橋の部材にかかる力の分布を求める際にも利用されています。
+</span>
+</p>
+
+<p>
+Sketchpad drawings are stored in the computer in a specially designed
+“ring” structure. The ring structure features rapid processing of topological
+information with no searching at all. The basic operations used in Sketchpad
+for manipulating the ring structure are described.
+<br><span style="color:blue;">
+Sketchpadの図面は、特別に設計された「リング」構造でコンピュータ内に格納されます。このリング構造は、検索を一切必要とせずにトポロジー情報を高速に処理できるという特徴があります。ここでは、Sketchpadにおいてこのリング構造を操作するために用いられる基本操作について説明します。
+</span>
+</p>
+
+
+Thesis Supervisor: Claude E. Shannon<br>
+Title: Donner Professor of Science
+
+    </body>
+</html>

@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Sketchpad</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Sketchpad: A man-machine graphical communication system<br><span style="color:blue;">Sketchpad：人間と機械の間のグラフィカルな対話システム</span></center></h1>
+
+<center>Ivan Edward Sutherland</center>
+<br>
+<center>September 2003</center>
+
+<h2>Chapter VIII<br>
+CONSTRAINT SATISFACTION <span style="color:blue;">制約充足</span></h2>
+
+<p>
+The major feature which distinguishes a Sketchpad drawing from a paper and pencil drawing is the user’s ability to specify to Sketchpad mathematical
+conditions on already drawn parts of his drawing which will be automatically
+satisfied by the computer to make the drawing take the exact shape desired.
+For example, to draw a square, any quadralateral is created by sloppy light
+pen manipulation, closure being assured by the pseudo light pen position and
+merging of points. The sides of this quadralateral may then be specified to
+be equal in length and any angle may be required to be a right angle. Given
+these conditions, the computer will complete a square. Given an additional
+specification, say the length of one side, the computer will create a square of
+the desired size.
+<br><span style="color:blue;">
+Sketchpadによる描画と、紙と鉛筆による描画を区別する大きな特徴は、ユーザーが描画済みの図形要素に対して数学的な条件を指定できる点にあります。これらの条件はコンピュータによって自動的に満たされ、図形はユーザーが意図した通りの正確な形状へと整えられます。例えば正方形を描く場合、まずライトペンを大まかに動かして任意の四角形を作成します（この際、ライトペンの位置情報や点の結合処理によって、図形が確実に閉じられた状態になります）。続いて、その四角形の各辺の長さを等しくしたり、任意の角を直角にしたりするよう条件を指定できます。こうした条件が与えられると、コンピュータは正方形を完成させます。さらに一辺の長さなどを指定すれば、コンピュータは希望するサイズの正方形を作成します。
+</span>
+</p>
+
+<p>
+The process of fixing up a drawing to meet new conditions applied to it after it is already partially complete is very much like the process a designer goes
+through in turning a basic idea into a finished design. As new requirements
+on the various parts of the design are thought of, small changes are made to
+the size or other properties of parts to meet the new conditions. By making
+Sketchpad able to find new values for variables which satisfy the conditions
+imposed it is hoped that designers can be relieved of the need of much mathematical detail. The effort expended in making the definition of constraint
+types as general as possible was aimed at making design constraints as well
+as geometric constraints equally easy to add to the system. To date,k however, 
+Sketchpad is more of a model of the design process than a complete designer’s
+aid both because it is limited to two dimensions and because little advanced
+application has as yet been made of it.
+<br><span style="color:blue;">
+図面がある程度完成した後に新たな条件が適用され、それに対応するよう図面を修正していくプロセスは、デザイナーが基本的なアイデアを完成したデザインへと練り上げていく過程と非常によく似ています。設計の各部分に対して新たな要件が検討されると、それらの条件を満たすために、各部品の寸法やその他の特性に対して細かな変更が加えられます。Sketchpadが、課された条件を満たす変数の新しい値を自動的に見つけ出せるようにすることで、デザイナーを煩雑な数学的計算の負担から解放できると期待されています。拘束（制約）の種類の定義を可能な限り汎用的なものにしようと努めたのは、幾何学的な拘束と同様に、設計上の拘束もシステムに容易に追加できるようにするためでした。しかし、現時点でのSketchpadは、二次元に限定されていることや、高度な応用例がまだほとんどないことから、デザイナーを支援する完全なツールというよりは、むしろ設計プロセスを模したモデルに近いものにとどまっています。
+</span>
+</p>
+
+<p>
+The work on constraint satisfaction has been successful as far as it has been
+taken. The constraint definition and satisfaction programs generalize easily
+to three dimensions; in fact, constraint satisfaction for instances is even now
+treated as a four dimensional problem. The high speed maze solving technique
+for constraint satisfaction described below works well where constraints have
+been specified unredundantly. There is much room for improvement in the
+relaxation process and in making the “intelligent” generalizations that permit
+humans to capitalize on symmetry and eliminate redundancy
+<br><span style="color:blue;">
+制約充足に関する研究は、これまでのところ順調な成果を上げています。制約の定義や充足を行うプログラムは、容易に3次元へと拡張可能です。実際、個々の事例における制約充足は、現在では4次元の問題として扱われることさえあります。以下に述べる制約充足のための高速な迷路解法技術は、制約が冗長性なく指定されている場合に有効に機能します。緩和プロセスや、人間が対称性を活用し冗長性を排除する際に行うような「知的」な一般化の実現については、依然として改善の余地が大きく残されています。
+</span>
+</p>
+<h3>DEFINITION OF A CONSTRAINT TYPE <span style="color:blue;">制約タイプの定義</span></h3>
+<p>
+Each constraint type is entered into the system as a generic block indicating
+the various properties of that particular constraint type. Generic blocks for
+constraints need not be given symbolic programming names since virtually
+no reference is made to particular constraint types in the program. The generic
+block tells how many variables are constrained, which of these variables may
+be changed in order to satisfy the constraint, how many degrees of freedom are
+removed from the constrained variables, and a code letter for human reference
+to this constraint type.
+
+<br><span style="color:blue;">
+各制約タイプは、そのタイプに固有の様々な特性を示す汎用ブロックとしてシステムに入力されます。プログラム内で特定の制約タイプが参照されることは事実上ないため、制約用の汎用ブロックにシンボリックなプログラム名を付ける必要はありません。この汎用ブロックは、制約を受ける変数の数、制約を満たすために変更可能な変数はどれか、制約対象の変数から何自由度が失われるか、そして人間がこの制約タイプを識別するためのコード文字といった情報を示します。
+</span>
+</p>
+
+<p>
+Any number of variables may be related by a constraint, but the display for
+constraints (see Chapter V) will be ambiguous if more than four variables are
+indicated, and so no constraints relate more than four variables. Of these variables, some may be referenced only.k The routine which satisfies the constraint
+by changing the values of some of the variables is forbidden to satisfy the constraint by changing a “for reference only” variable. For example, a constraint
+could be implemented which would make its first variable equal to its second
+by changing the first to match the second, but not the reverse. This kind of
+one-way constraint is useful because it speeds up the relaxation procedure by
+forcing re-evaluation of variables in a specified order. For example, the constraint which makes the value of a number equal to the change in length of
+a bridge beam, thus indicating the force carried by the beam, is one way. It
+would be pointless to have an erroneous value of the indicator affect in any
+way the relaxation procedure for the bridge. Again, the constraint which relates a point to an instance in such a way that the point maintains the same
+relationship to the instance that an original point in the master picture had to
+the master picture, uses the original point “for reference only” to discover just
+what the correct relationship is. Thus the end terminal on a resistor will always
+stay at the end of the resistor. It would be out of keeping with the fixed geometry nature of instances to have the internal details of the instance changed to
+make it fit into some awkward position.
+<br><span style="color:blue;">
+制約によって任意の数の変数を関連付けることは可能ですが、4つを超える変数が指定されると制約の表示（第V章を参照）が不明瞭になってしまうため、4つを超える変数を関連付ける制約は設けられていません。これらの変数のうち、一部は「参照専用（for reference only）」として扱われる場合があります。変数の値を変更することで制約を満たすルーチンは、「参照専用」の変数を変更して制約を満たすことは許されません。例えば、ある変数の値を別の変数に合わせることで両者を等しくする制約を実装する場合、最初の変数を2番目の変数に合わせることはできても、その逆はできないようにすることが可能です。このような一方向の制約は、変数の再評価を指定された順序で行わせることで緩和（リラクゼーション）手順を高速化できるため有用です。一例として、ある数値の値を橋梁の梁（はり）の長さの変化量と等しくし、それによって梁にかかる力を示す制約は一方向のものです。もし、この指標となる数値が誤った値であったとしても、それが橋梁に関する緩和手順に何らかの影響を及ぼすようでは意味がありません。また、ある点（ポイント）をインスタンスに関連付ける際、マスター図形における元の点とマスター図形との関係を維持するように配置する制約では、正しい関係性を特定するために元の点が「参照専用」として利用されます。これにより、例えば抵抗器の端子（ターミナル）は常にその抵抗器の端に位置し続けることになります。インスタンスを不自然な位置に収めるためにその内部構造を変更してしまうことは、インスタンスが持つ「固定された形状（ジオメトリ）」という性質にそぐわないものと言えます。
+</span>
+</p>
+
+<p>
+The one-way type constraint, however, can lead to instabilities in the constraint satisfaction procedure. For example, if two scalars were each specified
+to be twice the value of the other, with reference only made to the smaller,
+<br><span style="color:blue;">
+しかし、一方向型の制約は、制約充足手順の不安定性につながる可能性があります。たとえば、2 つのスカラーがそれぞれ他方の値の 2 倍であると指定されている場合、小さい方の値のみを参照すると、
+</span>
+\[
+\begin{align}
+& A → 2B \\
+\\
+& B → 2A
+\end{align}
+\tag{8-1}
+\]
+
+both variables would grow without bound, assuming, each iteration, values
+four times as big as before. If, however, a similar condition were set up with
+normal two-way constraints, the values of the variables would approach zero,
+a correct and stable result. Since the number of one-way constraints is small
+and they are designed for and used in special applications only, very little
+instability trouble of this kind has been observed. Future users who add oneway constraints, however, are warned to be cautious of the instabilities which
+may result.
+
+<br><span style="color:blue;">
+各反復において値が以前の4倍になるような条件であれば、両方の変数は際限なく増大することになります。しかし、通常の双方向制約を用いて同様の条件を設定した場合、変数の値はゼロに近づき、正しく安定した結果が得られます。一方向制約の数は少なく、それらは特殊な用途向けに設計・使用されているため、この種の不安定性に起因する問題はほとんど確認されていません。とはいえ、今後一方向制約を追加するユーザーは、それによって生じうる不安定性に十分注意する必要があります。
+</span>
+</p>
+<h3>NUMERICAL DEFINITION OF CONSTRAINTS <span style="color:blue;">制約の数値的定義</span></h3>
+<p>
+After the first stumblings of trying to define a constraint type in terms of the
+equations of lines along which the constrained variables should lie to satisfy
+the constraint, the numerical definition of constraints directly in terms of an
+error was devised. By using an error definition and considering the square
+of the error as an energy, one not only reflects directly the intent of the relaxation process, but also makes it easy to write the defining subroutines for new
+constraint types.
+<br><span style="color:blue;">
+拘束変数が満たすべき条件（拘束）を、それらが従うべき直線の式を用いて定義しようとして当初は試行錯誤がありましたが、やがて、誤差を用いて拘束を直接的に数値定義する手法が考案されました。誤差の定義を用い、その誤差の二乗をエネルギーとみなすことで、緩和プロセスの意図を直接的に反映できるだけでなく、新たな種類の拘束を定義するサブルーチンの作成も容易になります。
+</span>
+</p>
+
+<p>
+The defining subroutine for a constraint type is a subroutine which will
+compute, for the existing values of the variables of a particular constraint of
+that type, the error introduced into the system by that particular constraint.
+For example, the defining subroutine for making points have the same x coordinate (to make a line between them vertical) computes the difference in their x
+coordinates. What could be simpler? The computed error is a scalar which the
+constraint satisfaction routine will attempt to reduce to zero by manipulation
+of the constrained variables. The computation of the error may be non-linear
+or time dependent, or it may involve parameters not a part of the drawing
+suchk as the setting of toggle switches, etc. The flexibility of computation subroutines for defining constraints is tremendous.
+<br><span style="color:blue;">
+ある制約タイプを定義するサブルーチンとは、そのタイプの特定の制約に関与する変数の現在の値に基づき、当該制約によってシステムに生じている誤差を算出するサブルーチンのことです。例えば、複数の点のx座標を一致させる（それらを結ぶ線を垂直にする）ための制約定義サブルーチンは、それらの点のx座標の差を算出します。これほど単純なことはないでしょう。算出された誤差はスカラー値であり、制約充足ルーチンは、制約対象の変数を操作することによってこの値をゼロにしようと試みます。誤差の算出処理は、非線形なものや時間に依存するものとなる場合もあれば、トグルスイッチの設定など、図面そのものには含まれないパラメータを用いるものとなる場合もあります。このように、制約を定義する計算サブルーチンには極めて高い柔軟性があります。
+</span>
+</p>
+
+<p>
+In order to avoid overflow difficulties, the partial derivative of the error
+with respect to the value of any of the components of a constrained variable
+must be less than two. In order to make the constraints work well together,
+it is necessary that they be balanced, that is that the partial derivative of error
+with respect to displacement be nearly equal for all constraint types. I have
+arbitrarily tried to make the error subroutines compute an error about proportional to the distance by which a variable is removed from its proper position.
+In other words, many of the existing constraint computation subroutines make
+the partial derivative about unity
+<br><span style="color:blue;">
+オーバーフローの問題を回避するためには、拘束された変数の各成分の値に対する誤差の偏導関数が2未満でなければなりません。また、複数の拘束条件をうまく機能させるには、それらのバランスが取れている必要があります。つまり、すべての種類の拘束条件において、変位に対する誤差の偏導関数がほぼ等しくなるようにするということです。私は、変数が本来あるべき位置からどれだけ離れているかという距離にほぼ比例する誤差を算出するように、誤差計算用サブルーチンを任意に設定してみました。言い換えれば、既存の拘束計算用サブルーチンの多くは、その偏導関数が1程度になるように設計されているのです。
+</span>
+</p>
+<h3>LINEARIZATION OF CONSTRAINTS <span style="color:blue;">制約の線形化</span></h3>
+
+<p>
+The method of finding the least mean squares fit to a group of constraints
+described below requires that a linear equation be given for each constraint.
+To find the linear equation which best approximates the possibly non-linear
+constraint for the present values of the variables, the error computed by the
+subroutine is noted for several slightly different values of the variables. The
+equation,
+<br><span style="color:blue;">
+以下に説明する、一連の制約条件に最小二乗法で適合させる方法には、各制約条件に対して線形方程式を与える必要があります。
+
+変数の現在の値に対して、非線形である可能性のある制約条件を最もよく近似する線形方程式を見つけるために、サブルーチンによって計算された誤差を、変数のいくつかのわずかに異なる値について記録します。
+方程式は、
+</span>
+\[
+\sum\frac{\Delta E}{\Delta x_i}(x_i-x_{io})=-E_0 \tag{8-2}
+\]
+
+where \(x_i\) are the components of the variable, \(E\) is the computed error, and
+subscript \(o\) denotes intial value, is used as the linear best fit. Actually, the
+coefficients computed are 1/2 the values shown in equation (8-2) to permit
+error to be equal to displacement without generating overflow.
+
+<br><span style="color:blue;">
+ここで、\(x_i\) は変数の成分、\(E\) は算出された誤差であり、添字 \(o\) は初期値を表します。これが線形最良適合として用いられます。実際には、オーバーフローを生じさせることなく誤差を変位と等しく扱えるようにするため、算出される係数は式(8-2)に示される値の1/2となっています。
+</span>
+</p>
+
+<p>
+Some constraints may remove more than one degree of freedom from 
+the variables constrained. For example, the constraint which locates one thing exactly mid-way between two others removes two degrees of freedom. Such
+constraints must have as many error computation subroutines as there are degrees of freedom lost since each subroutine results in a single linear equation.
+A subroutine which computes the distance from a variable to its correct location without regard to the number of degrees of freedom being removed will
+cause erratic results. A correct subroutine pair for constraining one thing to lie
+between two others computes both how far out of line the center thing is and,
+separately, 1/2 the difference in the distances from the center object to the two
+outer ones (1/2 is put in to meet the maximum derivative requirement).
+<br><span style="color:blue;">
+ある種の拘束条件は、対象となる変数の自由度を複数奪う場合があります。例えば、ある要素を他の2つの要素のちょうど中間に配置するような拘束条件は、2つの自由度を奪います。各サブルーチンは単一の線形方程式を導き出すため、こうした拘束条件では、失われる自由度の数と同数の誤差計算用サブルーチンが必要となります。もし、失われる自由度の数を考慮せずに、変数から正しい位置までの距離を計算するだけのサブルーチンを用いると、結果が不安定なものになってしまいます。ある要素を他の2つの要素の間に配置するための適切なサブルーチン・ペアは、中央の要素が本来の位置からどれだけずれているかという点と、中央の要素から両端の2つの要素までの距離の差の半分（最大導関数に関する要件を満たすために1/2を乗じます）という、2つの値を個別に計算するものです。
+</span>
+</p>
+<h3>THE RELAXATION METHOD <span style="color:blue;">緩和法</span></h3>
+
+<p>
+When the one pass method of satisfying constraints to be described later on
+fails, the Sketchpad system falls back on the reliable but slow method of relaxation to reduce the errors indicated by the various computation subroutines
+to smaller and smaller values. For simple constructions such as the hexagon
+illustrated in Figure 1.5, page 15 the relaxation procedure is sufficiently fast
+to be useful. However, for complex systems of variables, especially directly
+connected instances, relaxation is unacceptably slow. Fortunately, it is for just
+such directly connected instances that the one pass method shows the most
+striking success.
+
+<br><span style="color:blue;">
+後述する「ワンパス法」による制約充足がうまくいかない場合、Sketchpadシステムは「緩和法（リラクゼーション法）」という手法に切り替えます。これは確実ではあるものの処理が遅い手法であり、各種の計算サブルーチンが示す誤差を段階的に小さくしていくものです。図1.5（15ページ）に示されている六角形のような単純な図形であれば、緩和法でも実用上十分な速さで処理できます。しかし、変数の系が複雑な場合、特に要素同士が直接的に結合しているようなケースでは、緩和法では許容できないほど処理に時間がかかってしまいます。幸いなことに、そのような直接的に結合したケースこそ、ワンパス法が極めて優れた成果を発揮する場面なのです。
+</span>
+</p>
+
+<p>
+The relaxation method of satisfying conditions is as follows:
+
+<br><span style="color:blue;">
+条件を満たすための緩和法は以下の通りです。
+</span>
+</p>
+
+<p style="padding-left:4em;">
+Choose a variable. Re-evaluate it to reduce the total error introduced by all constraints in the system. Choose another variable
+and repeat.
+<br><span style="color:blue;">
+変数を選択します。システム内のすべての制約によって生じる総誤差を低減するように、その変数を再評価します。別の変数を選び、同様の操作を繰り返します。
+</span>
+</p>
+
+<p>
+Note that since each step makes some net reduction of total error, there
+will be monotonic decrease of error and thus stability is assured. Since reevaluating a variable will change only the error introduced by the constraints
+which apply to that variable, only the changes in the errors introduced by
+these constraints need be considered. Other variables and therefore the errors of constraints applying only to them will remain constant. Sketchpad’s
+ring structure makes it easy to consider all constraints applying to a particular
+variable since all such constraints are collected together in a ring whose “hen”
+is in the variable.
+<br><span style="color:blue;">
+各ステップによって総誤差が正味で減少するため、誤差は単調に減少し、したがって安定性が保証されることに留意されたい。ある変数を再評価しても、その変数に適用される制約に起因する誤差しか変化しないため、それらの制約による誤差の変化のみを考慮すればよい。他の変数や、それらの変数のみに適用される制約の誤差は変化しないからである。Sketchpadのリング構造を利用すれば、特定の変数に適用されるすべての制約を容易に考慮できる。なぜなら、そうした制約はすべて、その変数を「起点（hen）」とするリングにまとめられているからである。
+</span>
+</p>
+
+<p>
+It is important in the relaxation method that at each step, the very latest
+computed values of all variables be used for error computations. From the
+point of view of the program, this means that only one value for each variable need be stored, each being updated in turn. Former values not only may,
+but must be discarded. It is also important that the change in error obtained
+by completely satisfying a constraint by moving one of its variables be identical to to the change in error to be obtained by completely satisfying it by
+moving another of its variables. The error computing subroutine definition
+for a constraint computes the same error for a constraint no matter which of
+its variables is to be moved. My original instability troubles with constraint
+satisfaction came from insufficient care in meeting this condition.
+<br><span style="color:blue;">
+緩和法においては、各ステップで誤差を計算する際、すべての変数について最新の計算値を使用することが重要です。プログラムの観点から言えば、これは各変数につき1つの値だけを保持し、それらを順次更新していけばよいことを意味します。古い値は破棄してもよいというだけでなく、破棄しなければなりません。また、ある制約に含まれる変数の1つを動かしてその制約を完全に満たしたときに生じる誤差の変化量が、別の変数を動かして同じ制約を完全に満たしたときに生じる誤差の変化量と一致することも重要です。つまり、ある制約に対する誤差計算サブルーチンは、その制約に含まれるどの変数を動かす場合であっても、同一の誤差を算出するものでなければなりません。私が当初、制約充足において不安定性の問題に直面したのは、この条件を満たすための配慮が不十分だったことに起因していました。
+</span>
+</p>
+<h3>LEAST MEAN SQUARES FIT TO LINEARIZED CONSTRAINTS <span style="color:blue;">線形化された制約への最小二乗適合</span></h3>
+<p>
+In implementing the relaxation method above, it is important to be able to find
+quickly a new value for a variable which reduces the total error introduced
+by the constraints on that variable. In particular, the linearized form of the
+constraints results in a set of linear equationsk for the variable each of which 
+must be met as closely as possible. Unfortunately, there may be any number
+of linear equations applying to a particular variable and these may be either
+independent but incomplete, independent and complete, or redundant and
+overdefining. A general arithmetic macro, SOLVE, for finding the best value
+for a set of equations has been devised.
+<br><span style="color:blue;">
+上記の緩和法を実装する際には、ある変数に対する制約によって生じる総誤差を低減させるようなその変数の新しい値を、迅速に見つけ出せることが重要です。特に、制約を線形化した形式では、その変数に関する一連の線形方程式が導かれますが、それらの方程式はそれぞれ、可能な限り厳密に満たされる必要があります。しかしながら、特定の変数に適用される線形方程式の数は任意であり、それらの方程式は、独立しているが不完全なもの、独立かつ完全なもの、あるいは冗長で過剰な制約を与えるもの（過剰決定系）のいずれかとなり得ます。そこで、これらの方程式の集合に対して最適な値を求めるための汎用的な算術マクロ「SOLVE」が考案されました。
+</span>
+</p>
+
+<p>
+SOLVE converts the given equations into an independent set of equations
+whose solution will be a point of minimum mean squared error for the original
+set. It is not always possible to solve the independent set of equations uniquely,
+and if it is not, SOLVE finds that solution which results in the minimum change
+from the existing value of the variable. The mathematical discussion pertinent
+to SOLVE is given in Appendix F. I am indebted to Lawrence G. Roberts for
+providing me with the basic SOLVE program.
+<br><span style="color:blue;">
+SOLVEは、​​与えられた方程式群を、その解が元の方程式群における平均二乗誤差を最小にするような独立な方程式系へと変換します。この独立な方程式系の解が一意に定まるとは限りませんが、一意に定まらない場合、SOLVEは変数の既存の値からの変化量が最小となるような解を求めます。SOLVEに関する数学的な解説は付録Fに記載されています。SOLVEの基本プログラムを提供してくださったLawrence G. Roberts氏に感謝の意を表します。
+</span>
+</p>
+
+<p>
+Seen from the outside, then, the linearization program and SOLVE make
+it possible for Sketchpad to find a new value for any variable to more closely
+meet the conditions indicated by constraints. Repeated application of these
+programs to variables, in sequence, implements the relaxation process. Application of these programs to selected variables to detect the number and degree
+of independence of constraints is used as an important part of the one pass
+constraint satisfaction method.
+<br><span style="color:blue;">
+外部から見れば、線形化プログラムとSOLVEは、​​Sketchpadが制約によって示される条件をより厳密に満たすような変数の新しい値を求めることを可能にします。これらのプログラムを変数に対して順次繰り返し適用することで、緩和（リラクゼーション）プロセスが実行されます。また、制約の数や独立性の度合いを把握するために特定の変数に対してこれらのプログラムを適用することは、ワンパス制約充足法における重要な要素となっています。
+</span>
+</p>
+<h3>ONE PASS METHOD <span style="color:blue;">１パス法</span></h3>
+<p>
+Sketchpad can often find an order in which the variables of a drawing may
+be re-evaluated to completely satisfy all the conditions on them in just one
+pass. For the cases in which the one pass method works, it is far better than
+relaxation: it gives correct answers at once; relaxationk may not give a correct solution in any finite time. Sketchpad can find an order in which to re-evaluate
+the variables of a drawing for most of the common geometric constructions.
+Ordering is also found easily for the mechanical linkages illustrated in the last
+chapter. Ordering cannot be found for the bridge truss problems illustrated in
+the last chapter.
+<br><span style="color:blue;">
+Sketchpadは、図形の変数を再評価する順序を特定し、それらに対するすべての条件をたった1回のパス（一連の処理）で完全に満たせるようにできることがよくあります。この「1パス法」が適用できる場合、その手法は緩和法（リラクゼーション法）よりもはるかに優れています。すなわち、1パス法は即座に正解を導き出しますが、緩和法では有限時間内に正しい解が得られない可能性があるからです。Sketchpadは、一般的な幾何学的作図の大部分において、変数を再評価する順序を見つけ出すことができます。また、前章で示した機械的なリンク機構についても、その順序を容易に特定できます。一方、前章で取り上げた橋梁トラスの問題については、そのような順序を見つけることはできません。
+</span>
+</p>
+
+<p>
+The way in which the one pass method works is simple in principle and
+was easy to implement as soon as the nuances of the ring structure manipulations were understood. To visualize the one pass method, consider the
+variables of the drawing as places, and the constraints relating variables as
+passages through which one might pass from one variable to another. Variables are adjacent to each other in the maze formed by the constraints if there
+is a single constraint which constrains them both. Variables are totally unrelated if there is no path through the constraints by which one could pass from one to the other.
+<br><span style="color:blue;">
+「ワンパス法」の仕組みは原理的に単純であり、リング構造の操作に関する細かな点さえ理解できれば、実装は容易でした。この手法をイメージするには、図面上の変数を「場所」と見なし、変数間の制約を、ある変数から別の変数へと移動するための「通路」と考えるとよいでしょう。制約によって形成される迷路において、2つの変数が単一の制約によって結び付けられている場合、それらの変数は互いに隣接していることになります。一方、ある変数から別の変数へと制約をたどって移動できる経路が存在しない場合、それらの変数は互いに全く無関係であると言えます。
+</span>
+</p>
+
+<p>
+Suppose that some variable can be found which has so few constraints
+applying to it that it can be re-evaluated to completely satisfy all of them.
+Such a variable we shall call a “free” variable. As soon as a variable is recognized as free, the constraints which apply to it are removed from further
+consideration, because the free variable can be used to satisfy them. Removing these constraints, however, may make adjacent variables free. Recognition
+of these new variables as free removes further constraints from consideration
+and may make other adjacent variables free, and so on throughout the maze
+of constraints. The manner in which freedom spreads is much like the method
+used in Moore’s algorithm [7] to find the shortest path through a maze. Having found that a collection of variables is free, Sketchpad will re-evaluatek
+them in the reverse order, saving the first-found free variable until last. In reevaluating any particular free variable Sketchpad uses only those constraints
+which were present when that variable was found to be free.
+<br><span style="color:blue;">
+ある変数に課せられた制約が極めて少なく、その変数を再評価することでそれらすべての制約を完全に満たせると仮定します。このような変数を、我々は「自由（free）」変数と呼ぶことにします。ある変数が自由であると認識されると、その変数に適用される制約は検討対象から除外されます。なぜなら、その自由変数を用いてそれらの制約を満たすことができるからです。しかし、これらの制約を除外することで、隣接する変数が新たに自由になる可能性があります。そうして新たに自由となった変数が認識されると、さらに制約が検討対象から外れ、別の隣接変数が自由になるかもしれません。このようにして、制約の迷路全体にわたって連鎖的に波及していきます。この「自由」の状態が広がっていく様子は、迷路内の最短経路を求めるムーアのアルゴリズム [7] で用いられる手法とよく似ています。自由な変数の集合が見つかると、Sketchpadはそれらを逆順で再評価します。その際、最初に見つかった自由変数は最後に回されます。特定の自由変数を再評価する際、Sketchpadは、その変数が自由であると判明した時点で存在していた制約のみを使用します。
+</span>
+</p>
+
+<p>
+In the ring structure representation of the drawing all variables found to
+be free are placed in a special ring called the FREEDOMS ring. (Note that
+the FREE ring is used for empty spaces in storage and has nothing to do with
+freedom in the present sense.) Each variable placed on the FREEDOMS ring
+has associated with it, by extra ties, those constraints which it will be used to
+satisfy. In what order variables should appear in the FREEDOMS ring need
+only be computed when the constraint conditions change. For a given set of
+conditions the same ordering will serve for finding many satisfactory values.
+For example, as part of a linkage is moved with the light pen, the ordering first
+set up for the linkage serves until the conditions change.
+<br><span style="color:blue;">
+図面のリング構造表現において、自由であると判定されたすべての変数は、「FREEDOMSリング」と呼ばれる特別なリングに配置されます。（なお、「FREEリング」は記憶領域内の空きスペース用に使用されるものであり、ここでの「自由（freedom）」とは何ら関係がありません。）FREEDOMSリング上の各変数には、その変数が満たすべき制約条件が、追加のリンク（接続）によって関連付けられています。FREEDOMSリング内での変数の並び順を計算する必要があるのは、制約条件が変更された場合だけです。特定の条件セットに対しては、一度決めた並び順をそのまま用いて、条件を満たす値を数多く見つけることができます。例えば、ライトペンを使ってリンク機構の一部を動かす場合、そのリンク機構に対して最初に設定された並び順は、条件が変更されるまで有効に機能します。
+</span>
+</p>
+
+    </body>
+</html>
