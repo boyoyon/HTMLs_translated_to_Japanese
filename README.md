@@ -11,6 +11,7 @@
         </p>
         <h2>更新項目</h2>
         <p>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1990_interface_and_the_evolution_of_pidgins.html">1990 インターフェースと混合語の進化</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1967_the_principle_of_the_hiding_hand.html">1967 「隠し手」の原理</a><br>
             ---<br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1963_sketchpad/2003sketchpad.html">1963(2003) Sketchpad</a><br>
