@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Interface and the Evolution of Pidgins</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Interface and the Evolution of Pidgins:<br>
+Creative Design for the Analytically Inclined<br><span style="color:blue;">インターフェースとピジンの進化：<br>
+分析的思考を持つ人々のための創造的デザイン</span></center></h1>
+
+<center>Thomas D. Erickson</center>
+<center>Human Interface Group</center>
+<center>Apple Computer, Inc.</center>
+
+<p>
+There are many methods of pursuing design. The question of how to get new ideas, or how to
+approach an idea from a different direction, is one that designers must repeatedly answer. There
+are dozens of books on visual thinking, drawing, lateral thinking, creative blockbusting, and other
+ways of better using your neglected right hemisphere. There are even books on how to whack and
+kick yourself into that crazy, flexible, and fun, creative mode. They’re all carefully crafted to coax
+you away from your comfortable, cautious, rational approach to problem-solving.
+
+<br><span style="color:blue;">
+デザインを追求する方法は数多く存在します。新しいアイデアをどう生み出すか、あるいは既存のアイデアにどうすれば別のアプローチで向き合えるか――これらは、デザイナーが絶えず答えを出し続けなければならない問いです。ビジュアル・シンキング（視覚的思考）、ドローイング、ラテラル・シンキング（水平思考）、創造性を阻む壁の打破、そして普段あまり使われていない右脳をより有効に活用する方法など、これらを扱った本は数え切れないほど出版されています。中には、自分自身を強引に揺さぶり、型破りで柔軟、かつ楽しい「クリエイティブ・モード」へと駆り立てるための本さえあります。それらの本はどれも、問題解決における「安易で慎重、かつ理性的」なアプローチから読者をうまく引き離し、新しい視点へと誘うよう、巧みに構成されています。
+</span>
+</p><p>
+
+But what if you don’t want to go?
+
+<br><span style="color:blue;">
+でも、もし行きたくないとしたら？
+</span>
+</p><p>
+
+What if you’re unrepentantly analytic? What if your idea of having a good time is to read the
+dictionary, looking for words you don’t know? What if your verbal and math test scores are off the
+scale, but your attempts at realistic drawings resemble those of two-year-olds? What if your right
+hemisphere was irredeemably damaged in a tragic childhood accident? What if you’re inhibited,
+inflexible, and don’t want to look silly? What if you’ve just got a bad attitude?
+
+<br><span style="color:blue;">
+もしあなたが、徹底して分析的な人間だとしたら？もし「楽しい時間」の過ごし方といえば、辞書を読んで知らない言葉を探すことだとしたら？もし言語や数学のテストの成績は桁外れに良いのに、写実的な絵を描こうとすると2歳児のような出来栄えになってしまうとしたら？もし子供時代の悲惨な事故で右脳に回復不能な損傷を負ってしまったとしたら？もし引っ込み思案で融通が利かず、滑稽な姿をさらしたくないと思っていたら？あるいは、単に態度が悪いだけだとしたら？
+</span>
+</p><p>
+
+Is there no hope?
+
+<br><span style="color:blue;">
+希望はないのでしょうか？
+</span>
+</p><p>
+
+There is hope. This chapter describes a method of pursuing creative design that is pleasing to the
+analytically inclined. To the best of my knowledge, it has no widely known name, since no bestselling books have been written about it. However, for the purposes of this paper, I will call it
+design by symmetry.
+
+<br><span style="color:blue;">
+希望はあります。本章では、分析的な思考を好む人々に適した、創造的なデザインを追求する手法について述べます。私の知る限り、この手法を扱ったベストセラー本などは存在しないため、広く知られた名称はついていません。しかし、本稿ではこれを「対称性によるデザイン（design by symmetry）」と呼ぶことにします。
+</span>
+</p><p>
+
+This chapter plays two roles: it illustrates the conceptual approach of design by symmetry; and, in
+the process, it tosses out some ideas about how the Macintosh interface might evolve.
+
+<br><span style="color:blue;">
+本章は二つの役割を担っています。一つは「対称性によるデザイン」という概念的アプローチを明らかにすること、もう一つは、その過程でMacintoshのインターフェースがどのように進化し得るかについて、いくつかのアイデアを提示することです。
+</span>
+</p>
+
+<h2>Design by Symmetry <span style="color:blue;">対称性によるデザイン</span></h2>
+<p>
+Most approaches to creativity in design advocate throwing out rules and juxtaposing concepts that
+are essentially different in the hope that a new point of view, or a new concept, will serendipitously
+emerge [see Mountford, chapter for examples]. In contrast, this chapter describes the technique of
+applying extended, precise analogies to design problems. Because the term analogy can be used to refer to anything from the vaguest likeness to a mathematically precise relationship [see Polya,
+1957], and because the extended and rigorous nature of the analogies pursued are central to this
+technique, I shall use the word "symmetry" to designate an extended, highly precise analogy.
+
+<br><span style="color:blue;">
+デザインにおける創造性へのアプローチの多くは、既存のルールを捨て、本質的に異なる概念を並置することで、新たな視点や概念が偶然に生まれることを期待するものです（具体例についてはMountfordの章を参照）。これに対し、本章では、デザイン上の課題に対して、拡張された精密な「類推（アナロジー）」を適用する手法について論じます。「類推」という言葉は、極めて曖昧な類似性から数学的に厳密な関係性に至るまで、あらゆるものを指し得る用語であり（Polya, 1957を参照）、また本手法においては、拡張的かつ厳密な性質を持つ類推を用いることが核心となるため、私はそのような拡張された極めて精密な類推を指す言葉として、「対称性（symmetry）」という語を用いることにします。
+</span>
+</p><p>
+
+Design by symmetry works by juxtaposing concepts that are similar at a very deep level–the
+concepts are symmetric in terms of some deep structure or underlying process. Once the
+underlying symmetry is established, the designer attempts to extend the symmetry farther, using
+what is known about one domain to suggest new ideas about the other. Where traditional
+approaches to creative design require playfulness and produce new ideas via inspiration, design by
+symmetry requires analysis and produces new ideas by extrapolation.
+
+<br><span style="color:blue;">
+「対称性によるデザイン」は、極めて深いレベルで類似した概念を並置することによって機能します。つまり、それらの概念は、何らかの深層構造や根底にあるプロセスの観点から見て対称的な関係にあるのです。ひとたびその根底にある対称性が確立されると、デザイナーは、一方の領域について既知の知識をもう一方の領域の新しいアイデアの示唆として活用し、その対称性をさらに拡張しようと試みます。創造的なデザインへの従来のアプローチが遊び心を必要とし、インスピレーションを通じて新しいアイデアを生み出すのに対し、対称性によるデザインは分析を必要とし、外挿（既知の事柄から未知の事柄を推論すること）によって新しいアイデアを生み出します。
+</span>
+</p><p>
+
+This is all rather abstract. Let’s look at an example of how design by symmetry works on a real
+problem. The problem is one that, as you may imagine, many people have been worrying about:
+how ought the Macintosh interface evolve so as to accommodate the increasing demands being
+made of it?
+
+<br><span style="color:blue;">
+これまでの話はかなり抽象的でした。そこで、「対称性に基づく設計（デザイン・バイ・シンメトリー）」が実際の課題に対してどのように機能するのか、具体例を見てみましょう。その課題とは、ご想像の通り、多くの人々が頭を悩ませてきたものです。すなわち、増大する要求に応えるために、Macintoshのインターフェースをどのように進化させるべきか、という点です。
+</span>
+</p>
+
+<h2>Symmetry: The Macintosh Interface as a Language <br><span style="color:blue;">対称性：言語としてのMacintoshインターフェース</span></h2>
+<p>
+In the late 1700’s explorers, traders in sandalwood, and immigrants began to make contact with the
+members of the oceanic culture of the South Pacific islands. Sometimes the contacts were fleeting,
+as in the case of explorers, and sometimes more permanent, as with immigrants and traders. These
+contacts are of interest because they required the members of two radically different cultures to
+communicate, even though there was no common language. A language had to be invented. Such
+languages are variously known as trade languages, contact vernaculars, or pidgins.
+
+<br><span style="color:blue;">
+18世紀後半、探検家や白檀（ビャクダン）の交易業者、そして移民たちが、南太平洋の島々に息づく海洋文化の人々と接触し始めました。探検家の場合のように接触が一過性のものであることもあれば、移民や交易業者のように、より永続的な関係となることもありました。こうした接触は、共通言語を持たない全く異なる二つの文化の人々が意思疎通を図る必要があったという点で、興味深いものです。そこでは、新たな言語を作り出す必要が生じました。そのような言語は、交易言語、接触ヴァナキュラー（接触の場で生じた日常語）、あるいはピジンなど、様々な名称で呼ばれています。
+</span>
+</p><p>
+
+Pidgins–which have developed in many times and places throughout the world–share a number of
+characteristics. First and foremost, pidgins are easy to learn. Ease-of-learning is the raison d’etre
+of a pidgin; its users are typically those who lack the time or inclination to learn a language–they
+simply want to get on with business. The other characteristics shared by pidgins are clearly related
+to their ease of learning. Pidgins employ only simple sentences, with very regular, if awkward,
+syntax. For example, a plural of a word might be formed by repeating it. Pidgins have no
+tenses–all statements are present tense. Pidgins have a very limited vocabulary, which may be
+buttressed by the use of pointing and other gestures. Finally, pidgins typically allow their speakers
+to deal with a very narrow segment of the culture. Though you can’t discuss philosophy, make
+puns, or express the subtilties of the extant culture using a pidgin, you can bargain for food, trade
+for goods, or make travel arrangements.
+
+<br><span style="color:blue;">
+世界各地の様々な時代や場所で発生してきたピジン言語には、いくつかの共通した特徴があります。何よりもまず、ピジン言語は習得が容易であるという点が挙げられます。習得のしやすさこそがピジン言語の存在意義であり、その使用者は通常、言語を学ぶための時間や意欲を持たない人々、つまり単に用件を済ませたいと考えている人々だからです。ピジン言語に見られるその他の特徴も、明らかにこの「習得のしやすさ」と関連しています。ピジン言語では単純な文のみが用いられ、その構文は（ぎこちなさはあるものの）極めて規則的です。例えば、単語を繰り返すことで複数を表すといった具合です。また、ピジン言語には時制がなく、すべての発言は現在形でなされます。語彙も非常に限られていますが、指差しなどの身振りを交えることで補完される場合もあります。最後に、ピジン言語で扱えるのは、通常、文化のごく限られた側面に過ぎません。ピジン言語を使って哲学を論じたり、言葉遊びをしたり、あるいはその文化の持つ微妙なニュアンスを表現したりすることはできませんが、食料の価格交渉や商品の取引、旅行の手配といったことは可能です。
+</span>
+</p><p>
+
+What does this have to do with the Macintosh? The Macintosh interface is very much like a pidgin.
+First and foremost, the Macintosh interface is easy to learn. Ease of learning was the driving force
+behind the development of the Macintosh interface; it was targeted at users who lacked the time or
+inclination to learn about a computer–they simply wanted to get on with business. Like a pidgin,
+the Macintosh interface has a simple, noun-verb, syntax: first you select the object, then you
+specify the action to be carried out. Until relatively recently the Macintosh interface lacked tense.
+That is, everything that could be done on the Macintosh took effect immediately. Only with the
+advent of the “Set Startup” command, where actions to be taken on future startups can be specified,
+did the Macintosh make the first tentative steps towards including the idea of tense. The Macintosh
+interface also has the limited vocabulary characteristic of pidgins, and is extended by using simple
+pointing and dragging gestures. Finally, like a pidgin, the Macintosh interface has distinct
+limitations in its communicative power–you can get your basic tasks done, but that’s about it.
+
+<br><span style="color:blue;">
+これはMacintoshとどのような関係があるのでしょうか？Macintoshのインターフェースは、まさに「ピジン言語」のようなものなのです。
+何よりもまず、Macintoshのインターフェースは習得が容易です。この「習得のしやすさ」こそが、Macintoshのインターフェース開発を推進した原動力でした。それは、コンピュータについて学ぶ時間や意欲を持たないユーザー、単にさっさと仕事を片付けたいと願うユーザーを対象としていたからです。ピジン言語と同様に、Macintoshのインターフェースは「名詞・動詞」という単純な構文を持っています。つまり、まず対象（オブジェクト）を選択し、次に実行すべき動作を指定するのです。比較的最近まで、Macintoshのインターフェースには「時制」の概念が欠けていました。というのも、Macintosh上で行える操作はすべて、即座に反映されるものだったからです。将来の起動時に実行する動作を指定できる「起動設定（Set Startup）」コマンドが登場して初めて、Macintoshは時制の概念を取り入れるための、最初の試みとも言える一歩を踏み出したのです。また、Macintoshのインターフェースはピジン言語に特有の限られた語彙しか持たず、単純なポインティングやドラッグといったジェスチャーを用いることで機能を拡張しています。最後に、ピジン言語と同様に、Macintoshのインターフェースには意思疎通の能力において明確な限界があります。基本的なタスクをこなすことはできますが、それ以上のことはできないのです。
+</span>
+</p><p>
+
+I have made the case for the existence of an underlying symmetry between the Macintosh interface
+and a class of simple languages called pidgins. The next step is to examine other characteristics of
+pidgins, and see what sort of insights they can provide about the Macintosh interface.
+
+<br><span style="color:blue;">
+私はこれまで、Macintoshのインターフェースと「ピジン」と呼ばれる単純な言語群との間に、根底にある対称性が存在することを論じてきました。次の段階として、ピジンの他の特性を検討し、それらがMacintoshのインターフェースについてどのような洞察をもたらし得るかを探ります。
+</span>
+</p>
+
+<h2>Extending the Symmetry <span style="color:blue;">対称性の拡張</span></h2>
+<p>
+Pidgins have another characteristic: under proper circumstances, pidgins spontaneously evolve into
+a more complex type of language called a creole. This is particularly interesting vis a vis the
+Macintosh interface, because the characteristic ways that pidgins evolve into creoles may tell us
+what properties a linguistic system–or an interface–must have for it to become a powerful
+communicative device while remaining relatively simple and easy to learn. First we’ll look at
+when and how pidgins evolve into creoles, and then, extending the symmetry, we’ll examine some
+ways in which the Macintosh interface might evolve.
+
+<br><span style="color:blue;">
+ピジン言語にはもう一つの特徴があります。適切な条件下では、ピジンは「クレオール」と呼ばれる、より複雑な言語へと自然に進化するのです。この点は、Macintoshのインターフェースを考える上で特に興味深いものです。なぜなら、ピジンがクレオールへと進化する際に見られる特徴的なプロセスは、言語システム（あるいはインターフェース）が、比較的単純で習得しやすくありながら、強力なコミュニケーション・ツールとなるためにはどのような特性を備えているべきかを示唆してくれるかもしれないからです。そこで、まずはピジンがいつ、どのようにしてクレオールへと進化するのかを見ていき、続いてその類推を広げる形で、Macintoshのインターフェースが今後どのように進化し得るのかを考察します。
+</span>
+</p><p>
+
+The evolution of pidgins into creoles is relatively rare. It thus behooves us to look at the conditions
+under which such evolution does occur. Creoles develop in two types of situations: pidgin speakers
+may be deprived of the opportunity to use their mother tongue, or pidgin becomes so widely used in
+the community that it becomes natural to use it in the home. The first situation often occurred as a
+result of the slave trade in the Caribbean, when slaves from the same areas were deliberately
+separated to reduce the possibility of an uprising. In more recent times, rapid modernization, such
+as in New Guinea, has resulted in the intermingling of such a large number of linguistically distinct
+groups that no single one emerges as dominant, and a pidgin becomes an important, and high
+status, community language. These and other observations suggest that the prerequisites for the
+evolution of a pidgin into a creole are: 1) lack of a fully-developed common language 2) lack of a
+dominant, ‘full-featured’ language that could become a common language; 3) cultural pressures for
+a more complex communicative system. It is worth noting that parallels to these pressures exist in
+the computer world. There is clearly no interface lingua franca, nor even a clear candidate for one.
+Yet there certainly do seem to be pressures for more power in human-computer communication.
+
+<br><span style="color:blue;">
+ピジン言語がクレオール言語へと発展することは、比較的稀な現象です。したがって、そのような発展が生じる条件に目を向けることは有意義と言えるでしょう。クレオール言語は、主に2つの状況下で形成されます。一つは、ピジン話者が母語を使用する機会を奪われる場合であり、もう一つは、ピジン言語が地域社会で広く使われるようになり、家庭内でもそれを用いることが自然なこととなる場合です。前者の状況は、カリブ海地域における奴隷貿易の結果としてしばしば見られました。そこでは、反乱の可能性を減らすために、同じ地域出身の奴隷たちが意図的に引き離されていたのです。より現代に目を向けると、ニューギニアなどの地域で見られる急速な近代化の結果、言語的に異なる多数の集団が混在し、どの集団の言語も支配的な地位を占めない状況が生まれています。その結果、ピジン言語が重要かつ高い地位を持つ地域共通語としての役割を担うようになっています。こうした事例から、ピジン言語がクレオール言語へと発展するための前提条件として、以下の3点が示唆されます。すなわち、1) 十分に発達した共通語が存在しないこと、2) 共通語となり得るような支配的かつ「完全な機能を備えた」言語が存在しないこと、そして 3) より複雑なコミュニケーション・システムを求める文化的圧力があること、です。注目すべきことに、こうした圧力と同様の状況はコンピュータの世界にも存在します。コンピュータのインターフェースにおいて、共通語（リンガ・フランカ）となるようなものは明らかに存在せず、その候補となるものさえ見当たりません。それにもかかわらず、人間とコンピュータとの間のコミュニケーションにおいて、より高度な能力や機能を求める圧力が確実に存在しているように思われます。
+</span>
+</p><p>
+
+Now let’s look at how a pidgin evolves into a creole. One of the most fascinating aspects of the
+change from pidgin to creole is that–regardless of the sophistication of the adults–the
+transformation from pidgin to creole occurs only in the speech of pidgin-speaking children. Adults
+who are pidgin speakers remain pidgin speakers for life, even in the presence of children who have
+become creole speakers. It is this spontaneous emergence of a more complex language, from the
+mouths of babes, as it were, which suggests that the features of creoles are fundamental to a
+powerful, yet simple, communicative system. The following features spontaneously emerge as part
+of the pidgin to creole evolution: complex syntax–for example, devices for marking relative
+clauses; past and future tenses; and a much larger vocabulary.
+
+<br><span style="color:blue;">
+では、ピジンがいかにしてクレオールへと進化するのかを見てみましょう。ピジンからクレオールへの変化において最も興味深い点の一つは、大人の言語能力の高さにかかわらず、その変化がピジンを話す子供たちの発話においてのみ生じるということです。ピジンを話す大人は、たとえ周囲にクレオールを話す子供たちがいたとしても、生涯にわたってピジンを話し続けます。いわば子供たちの口から、より複雑な言語が自発的に生まれるというこの現象は、クレオールの持つ特徴が、強力でありながらも単純なコミュニケーション・システムにとって根本的なものであることを示唆しています。ピジンからクレオールへの進化の過程では、複雑な統語構造（例えば、関係節を示すための仕組みなど）、過去形や未来形、そして大幅に拡充された語彙といった特徴が自発的に現れます。
+</span>
+</p><p>
+
+The next step is to consider how these characteristics of creoles map onto the Macintosh interface.
+Clearly the Macintosh interface has a very simple syntax, essentially noun-verb. The appearance of
+more complex syntax in pidgin to creole evolution suggests that a more complex syntax is not
+necessarily an evil. For example, one element of syntax which emerges during the evolution of a
+creole is a relative clauses mechanism. While this could be interpreted in several ways, one
+possibility is that since relative clauses allow speakers to embed comments in a sentence, a general
+means of annotating objects would be a useful way of extending the power of the interface without
+over burdening the user.
+
+<br><span style="color:blue;">
+次の段階として、クレオール言語に見られるこうした特性を、Macintoshのインターフェースにどのように当てはめられるかを検討してみましょう。Macintoshのインターフェースの構文が極めて単純であり、基本的には「名詞＋動詞」の形をとっていることは明らかです。しかし、ピジン言語からクレオール言語へと進化する過程でより複雑な構文が現れるという事実は、複雑な構文が必ずしも「悪」ではないことを示唆しています。例えば、クレオール化の過程で新たに生じる構文要素の一つに、関係節の仕組みがあります。これにはいくつかの解釈があり得ますが、一つの可能​​性として次のようなことが考えられます。すなわち、関係節を用いれば文中に補足的な情報を埋め込むことができるため、同様にオブジェクトに対して何らかの注釈を付加する一般的な手段を設ければ、ユーザーに過度な負担をかけることなく、インターフェースの機能を拡張できるのではないか、ということです。
+</span>
+</p><p>
+
+The appearance of tense in creoles is easy to extend into the Macintosh interface. Time should
+become an integral part of the interface. For example, it should be possible to issue a command
+that is for some time in the future–whether it be tied to a particular event, such as start up, or to an
+actual time,as in: ‘Call up applelink and download my mail at 3 am every morning.’
+
+<br><span style="color:blue;">
+クレオール言語に見られる「時制」の概念は、Macintoshのインターフェースにも容易に応用できます。時間は、インターフェースの不可欠な要素となるべきです。例えば、「毎朝午前3時にAppleLinkを起動し、メールをダウンロードする」といったように、特定のイベント（起動時など）や具体的な時刻に関連付けた形で、未来の時点に向けたコマンドを実行できるようにすべきでしょう。
+</span>
+</p><p>
+
+The expanded size of a creole’s vocabulary results from a number of different mechanisms. One
+way creoles expand is that new words are coined. Obviously, new words mean new actions and
+new objects in the Macintosh interface. It also suggests that a useful addition to the interface would
+be a way of dynamically creating new vocabulary; that is, an integrated macro capacity. Such a
+capacity ought to provide for the creation of both objects and actions, and allow them to be used
+just as existing objects and actions are used. Another way a creole’s vocabulary expands is that the
+meanings of existing words become more general–they are used in a wider variety of situations and
+for a wider variety of purposes. This suggests that a natural way of extending the interface is to
+transpose familiar interface objects to new contexts, where they may play similar roles.
+
+<br><span style="color:blue;">
+クレオールの語彙が拡大する背景には、いくつかの異なるメカニズムがあります。その一つは、新しい単語が作り出されることです。言うまでもなく、新しい単語は、Macintoshのインターフェースにおける新しい「アクション（動作）」や「オブジェクト（対象物）」を意味します。このことは、新しい語彙を動的に作成する手段、すなわち統合されたマクロ機能こそが、インターフェースへの有益な追加機能となり得ることを示唆しています。そのような機能は、オブジェクトとアクションの双方を作成できるようにし、かつそれらを既存のオブジェクトやアクションと同様に利用できるようにするものであるべきです。クレオールの語彙が拡大するもう一つの方法は、既存の単語の意味がより一般的になることです。つまり、それらの単語が、より多様な状況や目的で使われるようになるのです。このことは、インターフェースを拡張する自然な方法として、馴染みのあるインターフェース・オブジェクトを新しい文脈へと転用し、そこで同様の役割を担わせることが考えられる、ということを示唆しています。
+</span>
+</p><p>
+
+This symmetry could be extended much further. Our treatment of the roles of syntax, tense, and
+vocabulary expansion in the Macintosh interface has been cursory. There is also more that is
+known about pidgin-creole evolution [e.g., see Holm, 1988] which could be extended into the
+Macintosh domain. However, for the purposes of illustrating design by symmetry, our example is
+sufficient.
+
+<br><span style="color:blue;">
+この対称性は、さらに大きく拡張できる可能性があります。Macintoshのインターフェースにおける統語論、時制、そして語彙の拡張といった要素の役割について、ここでの扱いはあくまで概略的なものにとどまりました。また、ピジン・クレオール言語の進化についてはさらなる知見も存在しており（例：Holm, 1988を参照）、それらをMacintoshの領域にまで適用することも考えられます。しかし、「対称性に基づく設計」を例証するという目的においては、今回取り上げた事例で十分と言えるでしょう。
+</span>
+</p><p>
+
+Note that many of the specific features suggested by this symmetry are already appearing in the
+Macintosh interface; for example, the “Set Startup” command corresponds to an instance of
+allowing tense in the interface. But it is only one instance of tense; many more can be imagined.
+The real value of the design by symmetry method in this case is that it provides a framework for the
+evolution of the interface.
+
+<br><span style="color:blue;">
+この「対称性」が示唆する具体的な機能の多くは、すでにMacintoshのインターフェースに現れていることに注目してください。例えば、「起動ディスク（Set Startup）」コマンドは、インターフェースにおいて「時制（tense）」の概念を取り入れた一例と言えます。しかし、これは時制に関する一例に過ぎず、他にも多くの可能性が考えられます。この場合、「対称性に基づく設計」手法の真の価値は、インターフェースの進化に向けた枠組みを提供してくれる点にあります。
+</span>
+</p>
+
+<h2>Properties of Symmetries <span style="color:blue;">対称性の性質</span></h2>
+
+<p>
+Design by symmetry has three characteristics which distinguish it from most other methods of
+fostering creativity in design. First, as noted above, design by symmetry tends to produce a
+conceptual framework, as well as new ideas and expressions. Since one of the banes of interface
+design is creeping featurism–the proliferation of individually desirable, but collectively
+unmanageable features–a method which encourages a coherent approach to adding features is
+surely of great value.
+
+<br><span style="color:blue;">
+「対称性に基づく設計（Design by symmetry）」には、デザインにおける創造性を高めるための他の多くの手法とは一線を画す3つの特徴があります。第一に、前述の通り、この手法は単に新しいアイデアや表現を生み出すだけでなく、概念的な枠組みをも構築する傾向があります。インターフェース設計における大きな弊害の一つに「クリーピング・フィーチャリズム（機能の肥大化）」、すなわち個々の機能は魅力的であっても全体としては制御不能なほど機能が増殖してしまう現象が挙げられますが、機能追加に対して一貫性のあるアプローチを促すこの手法は、間違いなく極めて価値あるものと言えるでしょう。
+</span>
+</p><p>
+
+Second, design by symmetry is ideally suited for cross-disciplinary work. The Macintoshinterface-as-language symmetry draws upon work in linguistics and anthropology for its substance.
+Other symmetries may draw on other disciplines. For example, Susan Brennan in her chapter
+examines the implications of a symmetry based on research in psycholinguistics: interface-isconversation. She explores how what we understand of human-human conversational interaction
+may be extended to human-computer interaction.
+
+<br><span style="color:blue;">
+第二に、対称性に基づく設計は、学際的な取り組みに理想的です。「言語としてのインターフェース」というMacintoshの対称性は、その実質的な内容において、言語学や人類学の知見を取り入れています。
+他の対称性においては、また別の学問分野の知見が活用されることもあります。例えば、スーザン・ブレナン（Susan Brennan）は自身の章の中で、心理言語学の研究に基づく「会話としてのインターフェース」という対称性が持つ意味合いを考察しています。彼女は、人間同士の会話的相互作用に関する理解を、人間とコンピュータの間の相互作用へとどのように拡張できるかを探求しています。
+</span>
+</p><p>
+
+Third, once a symmetry has been discovered, it has the potential of being extended in many
+directions. For example, the Macintosh-interface-as-language symmetry could also be extended in
+a different direction. It would be interesting to study the cultural conditions which promote the
+evolution of creoles; this might shed light on conditions which would foster the evolution of
+computer interfaces. Lest the notion of cultural effects on interface evolution seem entirely
+academic, note that one reason for the continued consistency of the Macintosh interface across
+products from thousands of developers is that the Macintosh ‘community’–end users, developers,
+reviewers–has bought into the ideas of ease-of-use and consistency. It is likely that sociologists
+and anthropologists could discover quite a bit about what sort of things might promote the health of
+the ‘Macintosh culture’, and thus the health of the interface.
+
+<br><span style="color:blue;">
+第三に、ある種の「対称性」が見出されると、それは多方面へと拡張される可能性を秘めています。例えば、「言語としてのMacintoshインターフェース」という対称性も、また別の方向へと拡張し得るものです。クレオール言語の進化を促す文化的条件を研究することは興味深いでしょう。そうした研究は、コンピュータ・インターフェースの進化を育む条件を明らかにする手がかりになるかもしれません。インターフェースの進化に対する文化の影響という考え方が、単なる学術的な議論に過ぎないように思われないよう、ここで一つ指摘しておきましょう。何千もの開発者による製品群全体でMacintoshインターフェースの一貫性が保たれ続けている理由の一つは、エンドユーザー、開発者、批評家といったMacintoshの「コミュニティ」が、「使いやすさ」や「一貫性」という理念を支持し、受け入れていることにあります。社会学者や人類学者が研究を行えば、「Macintosh文化」の健全性、ひいてはインターフェースそのものの健全性を促進する要因について、多くの知見が得られる可能性が高いでしょう。
+</span>
+</p>
+
+<h2>Creativity in Design <span style="color:blue;">デザインにおける創造性</span></h2>
+
+<p>
+Design by symmetry is just one method of fostering creativity in design. In spite of my tongue-incheek opening comments, I think that all methods–be they left-brained, right-brained, or
+harebrained–can be of immense value to the designer. New ideas and new perspectives are always
+in demand.
+
+<br><span style="color:blue;">
+「対称性」を活かしたデザインは、創造性を育む手法の一つに過ぎません。冒頭では少し冗談めかしたことを言いましたが、左脳的であれ、右脳的であれ、あるいは一見突拍子もない（「ウサギの脳」的な）ものであれ、あらゆる手法がデザイナーにとって極めて有益なものになり得ると私は考えています。新しいアイデアや視点は、常に求められているのですから。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+
+<p>
+Holm, John 1988 Pidgins and Creoles, Volume 1: Theory and Structure Cambridge: Cambridge
+University Press.<br>
+<br>
+
+Polya, G. 1957 How to Solve It, second edition. Princeton: Princeton University Press.
+</p>
+    </body>
+</html>
