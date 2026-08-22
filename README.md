@@ -10,6 +10,7 @@
         </p>
         <h2>更新項目</h2>
         <p>
+             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_math_in_ai_age/2026_MATHEMATICS_IN_THE_AGE_OF_AI.html">2026 AI時代の数学</a><br>
              <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_ON_THE_DEPTH_OF_WILES_PROOF_OF_FERMATS_LAST_THEOREM.html">2026 フェルマーの最終定理に関するワイルズの証明の深さについて</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1940_CONSIDERATIONS_CONCERNING_THE_FUNDAMENTS_OF_THEORETICAL_PHYSICS.html">1940 理論物理学の基礎に関する考察</a><br>
             ---<br>
