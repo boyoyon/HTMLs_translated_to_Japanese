@@ -1,0 +1,1912 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>ON THE DEPTH OF WILES’S PROOF OF FERMAT’S LAST THEOREM</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>ON THE DEPTH OF WILES’S PROOF OF FERMAT’S LAST THEOREM<br><span style="color:blue;">フェルマーの最終定理に関するワイルズの証明の深さについて</span></center></h1>
+
+<center>YONG CHENG AND COLIN MCLARTY</center>
+
+
+<p class="margin-abstract">
+Abstract. What constitutes depth in a mathematical proof? This paper
+addresses this foundational question through a close case study of Andrew
+Wiles’s proof of Fermat’s Last Theorem. We propose a five-criteria framework—Difficulty, Originality, Fruitfulness, Unity, and Explanatory Power—to
+analyze proof depth. By critically examining the limitations of each criterion
+and the intricate interrelations among them, we show that they do not merely
+coexist but capture genuinely complementary aspects of proof depth.
+
+<br><span style="color:blue;">
+要旨：数学的証明における「深さ」とは何によって構成されるのだろうか。本論文では、アンドリュー・ワイルズによるフェルマーの最終定理の証明を詳細に事例研究することで、この根本的な問いに取り組む。我々は、証明の深さを分析するための枠組みとして、「難易度」「独創性」「豊饒さ」「統一性」「説明力」という5つの基準を提案する。各基準の限界とそれらの間の複雑な相互関係を批判的に検討することにより、それらが単に併存しているだけでなく、証明の深さの真に相補的な側面を捉えていることを示す。
+</span><br>
+<br>
+Applying this framework to Wiles’s proof, we then demonstrate that its celebrated depth does not reside in any single virtue, but rather emerges from a
+synthesis of all five criteria. Our analysis thus offers not only a novel lens for
+understanding Wiles’s achievement, but also a flexible framework for evaluating
+depth across mathematical proofs more broadly.
+
+<br><span style="color:blue;">
+この枠組みをワイルズの証明に適用することで、その証明が持つ称賛されるべき「深さ」は単一の美点に由来するものではなく、むしろ5つの基準すべてが融合することによって生み出されていることを明らかにします。したがって、我々の分析は、ワイルズの業績を理解するための新たな視点を提供するだけでなく、より広範な数学的証明における「深さ」を評価するための柔軟な枠組みをも提示するものです。
+</span>
+</p>
+
+<h2><center>1. Introduction　<br><span style="color:blue;">はじめに</span></center></h2>
+<p>
+The term “mathematical depth” is highly valued in the mathematical community as a measure of a mathematician’s work, yet it remains an elusive concept.
+Since 2003, the Abel Prize laureates’ work has been called “deep” nine times
+[Holden and Piene, 2014]; a 2014 special issue of Philosophia Mathematica was
+dedicated to the topic [Ernst et al., 2014].<sup>1</sup>
+
+<br><span style="color:blue;">
+「数学的深さ（mathematical depth）」という言葉は、数学者の業績を測る尺度として数学界で高く評価されていますが、その概念は依然として捉えどころのないものです。
+2003年以降、アーベル賞受賞者の業績が「深い（deep）」と評された例は9回に上り [Holden and Piene, 2014]、2014年には『Philosophia Mathematica』誌の特集号がこのテーマを扱いました [Ernst et al., 2014]。<sup>1</sup>
+</span>
+</p><p style="padding-left:4em;"> 
+<sup>1</sup> The papers in that issue vary in methodology, focus, and conclusions, though they are largely
+complementary.
+<br><span style="color:blue;">
+その号に掲載された論文は、手法、焦点、結論の点ではそれぞれ異なりますが、全体としては互いに補完し合う関係にあります。
+</span>
+</p><p>
+
+
+
+Numerous criteria for assessing mathematical depth have been proposed, primarily focusing on the depth of mathematical theorems [Ernst et al., 2014; Cheng,
+2022]. Currently, there are no universally accepted criteria for characterizing mathematical depth. Existing accounts have emphasized different features, such as
+proof difficulty or complexity, theorem fruitfulness, or the capacity to unify disparate domains.<sup>2</sup> The literature reflects a strong consensus that there is no single
+way to achieve depth [Ernst et al., 2014]; rather, mathematical depth appears to
+be a multifaceted concept with multiple, irreducible manifestations—a perspective
+we develop below under the rubric of “family resemblance” (following Wittgenstein
+[2009]).
+
+<br><span style="color:blue;">
+数学的深さを評価するための基準は数多く提案されてきましたが、それらは主に数学的定理の深さに焦点を当てたものです [Ernst et al., 2014; Cheng, 2022]。現在、数学的深さを特徴づけるための、一般に合意された基準は存在しません。既存の議論では、証明の難しさや複雑さ、定理の豊饒さ、あるいは異なる領域を統合する能力など、それぞれ異なる側面が強調されてきました。<sup>2</sup> 「深さ」に至る単一の道筋は存在しないという点については、文献上でも強い合意が見られます [Ernst et al., 2014]。むしろ数学的深さとは、互いに還元不可能な複数の現れ方を持つ多面的な概念であるように思われます。本稿では、この見方を（ウィトゲンシュタイン [2009] に倣い）「家族的類似性」という概念を用いて展開していきます。
+</span>
+</p><p style="padding-left:4em;">
+<sup>2</sup> See Urquhart [2014], Stillwell [2014], Arana [2015], Tappenden [2012], and Ernst et al. [2014].
+<br><span style="color:blue;">
+Urquhart [2014]、Stillwell [2014]、Arana [2015]、Tappenden [2012]、および Ernst et al. を参照してください。 [2014]。
+</span>
+</p><p>
+
+
+The special issue in Philosophia Mathematica concludes that mathematical depth
+is a complex, multifaceted concept that resists simple definition, yet it remains a rich and legitimate subject for philosophical and methodological inquiry, warranting further study [Ernst et al., 2014].
+
+<br><span style="color:blue;">
+『Philosophia Mathematica』誌の特集号は、数学的深さとは単純な定義を拒む複雑かつ多面的な概念であるものの、哲学的・方法論的探究の対象として豊かで正当なものであり、さらなる研究に値すると結論付けている [Ernst et al., 2014]。
+</span>
+</p><p>
+
+The concept of mathematical depth can apply to various entities, including theorems, proofs, definitions, axioms, fields, methods, and conjectures. We distinguish
+between the depth of a mathematical proof and that of a theorem in two respects.
+First, a theorem’s being deep does not guarantee that every proof of it is deep (a
+theorem may admit multiple proofs that differ significantly in nature, raising the
+question of which, if any, are deep or which is the deepest). Second, the depth of
+a proof does not automatically transfer to the theorem it proves.
+
+<br><span style="color:blue;">
+「数学的な深さ」という概念は、定理、証明、定義、公理、分野、手法、予想など、さまざまな対象に適用され得ます。数学的な証明の深さと定理の深さについては、以下の2つの点で区別されます。第一に、ある定理が深いからといって、その定理のすべての証明が深いとは限らないことです（一つの定理に対して、性質の大きく異なる複数の証明が存在し得るため、それらのうちどれが深いのか、あるいはどれが最も深いのかという問題が生じます）。第二に、証明の深さが、その証明が対象とする定理の深さに自動的に引き継がれるわけではないことです。
+</span>
+</p><p>
+
+This paper focuses on the depth of Wiles’s proof of Fermat’s Last Theorem
+(FLT), not on the theorem itself.<sup>3</sup> Three reasons motivate this focus: (i) no fundamentally different proof of FLT exists; (ii) FLT itself, unlike the Taniyama–Shimura–Weil
+conjecture, yields few consequences [McLarty, 2024]; and (iii) the depth of proofs
+has received less attention than the depth of theorems.
+
+<br><span style="color:blue;">
+本論文は、フェルマーの最終定理（FLT）そのものではなく、ワイルズによるその証明の「深さ」に焦点を当てるものである。<sup>3</sup> このような焦点の当て方には、以下の3つの理由がある。(i) FLTに関して、根本的に異なる証明は存在しないこと。(ii) 谷山・志村・ヴェイユ予想とは異なり、FLTそのものからは導かれる帰結がほとんどないこと [McLarty, 2024]。(iii) 定理の深さに比べて、証明の深さはこれまであまり注目されてこなかったこと。
+</span>
+</p><p style="padding-left:4em;">
+<sup>3</sup> Throughout the paper, we use FLT to refer to Fermat’s Last Theorem.
+<br><span style="color:blue;">
+本論文全体を通して、フェルマーの最終定理を指すために「FLT」という略称を用います。
+</span>
+</p><p>
+
+This paper does not aim to define proof depth, but to establish a synthetic
+framework for its analysis. We propose a five-criteria framework for analyzing
+the depth of mathematical proofs:Difficulty, Originality, Fruitfulness, Unity, and
+Explanatory Power. In Sections 4.1 to 4.5, we examine each criterion, discuss potential drawbacks, and explore their interrelationships. Our framework synthesizes
+these five criteria, capturing proof depth through their distinct roles and mutual
+dependencies.
+
+<br><span style="color:blue;">
+本論文は「証明の深さ」を定義することではなく、その分析のための統合的な枠組みを構築することを目的とする。我々は、数学的証明の深さを分析するための5つの基準――「難易度」「独創性」「豊饒性」「統一性」「説明力」――からなる枠組みを提案する。セクション4.1から4.5では、各基準を検討し、想定される課題を論じるとともに、それらの相互関係を探る。本枠組みはこれら5つの基準を統合するものであり、各基準の固有の役割と相互依存関係を通じて「証明の深さ」を捉えるものである。
+</span>
+</p><p>
+
+We apply our five-criteria framework to Wiles’s proof of FLT. Wiles’s proof has
+been widely described as deep—e.g., as “stunning” by the Norwegian Academy
+of Science and Letters in awarding the 2016 Abel Prize to Wiles, as “one of the
+deepest achievements in the history of mathematics” by the American Mathematical Society,<sup>4</sup>
+and as “extremely deep” by number theorist Andrew Granville.<sup>5</sup> We
+examine the philosophical basis for this judgment.
+
+<br><span style="color:blue;">
+我々は、フェルマーの最終定理（FLT）に関するワイルズの証明に対し、我々が提示した5つの基準からなる枠組みを適用する。ワイルズの証明は、広く「深い」ものと評されてきた。例えば、2016年にワイルズへアーベル賞を授与したノルウェー科学文学アカデミーはこれを「驚くべき（stunning）」と称し、アメリカ数学会は「数学史上、最も深い業績の一つ​​」<sup>4</sup>と評し、数論学者のアンドリュー・グランヴィルは「極めて深い」<sup>5</sup>と述べている。本稿では、こうした評価の哲学的根拠を検討する。
+</span>
+</p><p style="padding-left:4em;">
+<sup>4</sup> American Mathematical Society, “Fermat’s Last Theorem (2-Volume Set)”, AMS Bookstore,
+2014, available at https://bookstore.ams.org/mmono-243-245.
+<br><span style="color:blue;">
+American Mathematical Society, “Fermat’s Last Theorem (2-Volume Set)”, AMS Bookstore,
+2014年, https://bookstore.ams.org/mmono-243-245 にて入手可能。
+</span>
+</p><p style="padding-left:4em;">
+<sup>5</sup> A. Granville, “Fermat’s Last Theorem announcement”, Fermat News, Newton Institute, Cambridge, 1993, available at http://felix.unife.it/Root/d-Mathematics/
+d-Number-theory/d-News/t-Fermat-R.I.P.
+<br><span style="color:blue;">
+A. Granville, “Fermat’s Last Theorem announcement”, Fermat News, Newton Institute, Cambridge, 1993 (http://felix.unife.it/Root/d-Mathematics/d-Number-theory/d-News/t-Fermat-R.I.P. にて閲覧可能)
+</span>
+</p><p>
+
+We explore the question: What constitutes the depth of Wiles’s proof? We
+argue that its depth is best understood as a synthesis of the five proposed criteria. By ‘synthesis’ we mean not merely that Wiles’s proof scores highly on each
+criterion taken separately, but that in this proof the criteria interact and reinforce
+each other in an integrated way. This mutual reinforcement is not a mere correlation; it consists of concrete dependencies among the criteria—for example, unity
+enabling explanatory power, originality and unity generating fruitfulness. We develop the family-resemblance thesis in Section 2, where we explicitly adopt it as
+the philosophical grounding for our five-criteria framework.
+
+<br><span style="color:blue;">
+本稿では、「ワイルズの証明の『深さ』とは何によって構成されるのか」という問いを探求する。我々は、その深さを理解する最善の方法は、提示された5つの基準の「統合」として捉えることだと論じる。ここで言う「統合」とは、単にワイルズの証明が個々の基準において高い評価を得ているということではなく、それらの基準が証明の中で相互に作用し、統合的な形で互いを補強し合っていることを意味する。この相互補強は単なる相関関係ではなく、基準間の具体的な依存関係から成り立っている。例えば、「統一性」が「説明力」を可能にすることや、「独創性」と「統一性」が「豊饒性」を生み出すことなどがその例である。第2節では「家族的類似性」のテーゼを展開し、我々の5つの基準からなる枠組みの哲学的根拠として、これを明示的に採用する。
+</span>
+</p><p>
+
+
+The paper proceeds as follows. Section 2 reviews the literature. Section 3 outlines Wiles’s proof of FLT. Section 4 presents our five-criteria framework. Section
+5 applies this framework to assess the depth of Wiles’s proof. Section 6 concludes.
+
+<br><span style="color:blue;">
+本論文の構成は以下の通りである。第2節では関連文献を概観する。第3節では、ワイルズによるフェルマーの最終定理の証明の概要を述べる。第4節では、我々が提案する5つの基準からなる枠組みを提示する。第5節では、この枠組みを適用してワイルズの証明の深さを評価する。第6節で結論を述べる。
+</span>
+</p>
+
+<h2><center>2. Review of Current Literature<br><span style="color:blue;">最新文献のレビュー</span></center></h2>
+<p>
+We review existing accounts of mathematical depth, pinpoint their limitations,
+and thereby motivate our five-criteria framework.
+
+<br><span style="color:blue;">
+本稿では、数学的「深さ」に関する既存の議論を検討し、その限界を指摘した上で、我々が提案する5つの基準からなる枠組みの妥当性を提示する。
+</span>
+</p><p>
+
+Arana [2015] distinguishes four views of mathematical depth: the Genetic View
+(depth tied to the mathematician’s talent), the Evidentialist View (depth tied to
+proof properties), the Consequentialist View (depth tied to fruitful consequences),
+and the Cosmological View (depth tied to revealing structure).<sup>6</sup> His analysis focuses on the depth of a theorem rather than that of a proof. Arana’s paper [2015]
+is primarily critical, identifying problems with existing views, concluding without
+offering a synthesized perspective or a clear path forward.
+
+<br><span style="color:blue;">
+Arana [2015]は、数学的「深さ」に関する4つの見解を区別している。すなわち、発生的見解（数学者の才能に結びついた深さ）、証拠主義的見解（証明の性質に結びついた深さ）、帰結主義的見解（実りある帰結に結びついた深さ）、そして宇宙論的見解（構造の解明に結びついた深さ）である<sup>6</sup>。彼の分析は、証明の深さではなく、定理の深さに焦点を当てている。Aranaの論文[2015]は主として批判的なものであり、既存の見解の問題点を指摘してはいるものの、統合的な視点や明確な今後の展望を提示することなく結論づけられている。
+</span>
+</p><p style="padding-left:4em;">
+<sup>6</sup> See Arana [2015] for detailed exposition. The Genetic View posits that a theorem is deep
+if proven by exceptionally talented mathematicians—a view criticized for its subjectivity and
+its potential to classify trivial results as deep ([Arana, 2015]). The Evidentialist View claims
+that a theorem’s depth is tied to properties of its proof(s) ([Arana, 2015]). The Consequentialist
+View asserts that a theorem is deep if it has profound, fruitful consequences ([Arana, 2015]).
+The Cosmological View claims that a theorem is deep if it reveals significant order or structure
+([Arana, 2015]). Arana critiques these views using Szemer´edi’s Theorem as a case study, arguing
+that all of them have problems as measures of depth and that depth is a complex, multifaceted
+concept that resists simple definition.
+<br><span style="color:blue;">
+詳細な解説については Arana [2015] を参照されたい。「発生論的見解（Genetic View）」は、並外れた才能を持つ数学者によって証明された定理を「深い」とみなす立場であるが、この見解は、主観的であることや、些細な結果を「深い」と分類してしまう可能性があることから批判されている ([Arana, 2015])。「証拠主義的見解（Evidentialist View）」は、定理の深さはその証明の性質と結びついていると主張する ([Arana, 2015])。「帰結主義的見解（Consequentialist View）」は、深遠かつ実りある帰結をもたらす定理を「深い」とみなす ([Arana, 2015])。「宇宙論的見解（Cosmological View）」は、重要な秩序や構造を明らかにする定理を「深い」とみなす ([Arana, 2015])。Arana は、セメレディの定理（Szemerédi’s Theorem）を事例としてこれらの見解を検討し、いずれも「深さ」の尺度としては問題を抱えていると論じている。そして、深さとは単純な定義には馴染まない、複雑かつ多面的な概念であると主張している。
+</span>
+</p><p>
+
+Stillwell [2014] proposes three types of depth—Historical, Foundational, and
+Logical—each emphasizing different aspects of mathematical practice.<sup>7</sup> However,
+Stillwell’s work, while insightful, remains largely taxonomic and lacks a synthetic
+framework to show how the three types of depth interact or how they might be
+applied comparatively.
+
+<br><span style="color:blue;">
+スティルウェル [2014] は、「歴史的（historical）」、「基礎的（foundational）」、「論理的（logical）」という3種類の「深さ」を提唱しており、それぞれが数学的実践の異なる側面を強調している。<sup>7</sup> しかし、スティルウェルの研究は洞察に富むものであるものの、その内容は主に分類的なものにとどまっており、これら3種類の深さがどのように相互作用するのか、あるいはそれらをどのように比較して適用し得るのかを示すような、統合的な枠組みを欠いている。
+</span>
+</p><p style="padding-left:4em;">
+<sup>7</sup> Historical Depth refers to the cumulative effort of mathematicians over generations, indicating that the underlying ideas were not easily accessible ([Stillwell, 2014]). Foundational Depth
+signifies that a theorem is fundamental and fruitful, supporting a large body of further mathematics ([Stillwell, 2014]). Logical Depth is a more formal measure, often related to the length,
+difficulty, and laboriousness of the shortest or only known proof ([Stillwell, 2014; Arana, 2015;
+Urquhart, 2014]).
+<br><span style="color:blue;">
+「歴史的深さ（Historical Depth）」とは、数学者たちが世代を超えて積み重ねてきた努力を指し、その根底にある着想が容易には到達し得ないものであったことを示しています（[Stillwell, 2014]）。「基礎的深さ（Foundational Depth）」は、ある定理が基本的かつ豊饒（ほうじょう）であり、その後の広範な数学の発展を支えるものであることを意味します（[Stillwell, 2014]）。「論理的深さ（Logical Depth）」はより形式的な尺度であり、多くの場合、最短の証明や唯一知られている証明の長さ、難易度、およびその証明に至るまでの労力に関連しています（[Stillwell, 2014; Arana, 2015; Urquhart, 2014]）。
+</span>
+</p><p>
+
+Gray [2014] characterizes deep mathematics as hidden/difficult,<sup>8</sup>
+structural,<sup>9</sup>
+and
+explanatory.<sup>10</sup> However, Gray’s paper is firmly historical and offers limited discussion of “depth” in a modern context. While it establishes a powerful paradigm, it
+does not explore how well the Gaussian definition of depth holds up in 20th and
+21st-century mathematics.
+
+<br><span style="color:blue;">
+Gray [2014]は、深い数学を、隠されている／困難である<sup>8</sup>、
+構造的である<sup>9</sup>、
+そして
+説明的である<sup>10</sup>と特徴づけている。しかし、Grayの論文は歴史的側面に重きを置いており、現代の文脈における「深さ」についての議論は限定的なものにとどまっている。同論文は強力なパラダイムを確立してはいるものの、
+「深さ」に関するガウスの定義が20世紀および
+21世紀の数学においてどの程度妥当性を保っているかについては、検討していない。
+</span>
+
+</p><p style="padding-left:4em;">
+<sup>8</sup> That is, not immediately accessible; its truths are not surface-level ([Gray, 2014]).
+<br><span style="color:blue;">
+つまり、即座に理解できるものではなく、その真理は表層的なものではないということです（[Gray, 2014]）。
+</span>
+</p><p style="padding-left:4em;">
+<sup>9</sup> It reveals underlying coherence and necessitates a reorganization of existing knowledge ([Gray,
+2014]).
+<br><span style="color:blue;">
+それは根底にある一貫性を明らかにし、既存の知識の再構成を必要とする ([Gray, 2014])。
+</span>
+</p><p style="padding-left:4em;">
+<sup>10</sup> It does not merely prove a fact; it explains why it is true ([Gray, 2014]).
+<br><span style="color:blue;">
+それは単に事実を証明するだけでなく、なぜそれが真であるのかを説明するものである（[Gray, 2014]）。
+</span>
+</p><p>
+
+The afterword in Ernst et al. [2014] identifies five promising criteria for capturing mathematical depth, referred to as “Candidate Criteria”: (1) ties together
+apparently disparate fields; (2) involves impurity;<sup>11</sup> (3) finds order in chaos;<sup>12</sup> (4)
+exhibits organizational or explanatory power; (5) transforms a field or opens a new
+one.<sup>13</sup> These criteria summarize discussions of mathematical depth in various papers from the special issue of Philosophia Mathematica. However, no single paper
+has analyzed mathematical depth using all five criteria.
+
+<br><span style="color:blue;">
+Ernst他 [2014] のあとがきでは、数学的深さを捉えるための有望な基準として、以下の5つの「候補となる基準（Candidate Criteria）」が挙げられています。(1) 一見すると無関係な分野同士を結びつける、(2) 「不純性（impurity）」を伴う<sup>11</sup>、(3) 混沌の中に秩序を見出す<sup>12</sup>、(4) 体系化する力や説明力を持つ、(5) ある分野を変革する、あるいは新たな分野を切り開く<sup>13</sup>。これらの基準は、『Philosophia Mathematica』誌の特集号に掲載された様々な論文における数学的深さに関する議論を要約したものです。しかしながら、これら5つの基準すべてを用いて数学的深さを分析した論文は、これまで存在しません。
+</span>
+</p><p style="padding-left:4em;">
+<sup>11</sup> That is, using concepts from outside the problem’s native domain or from “higher” conceptual strata. An “impure” proof often signifies depth by revealing unexpected connections
+([Arana, 2015; Urquhart, 2014]).
+<br><span style="color:blue;">
+つまり、問題の本来の領域外の概念、あるいは「より高次の」概念層の概念を用いることである。「不純な」証明は、予期せぬ関連性を明らかにすることで、しばしば深みを示す。（[Arana, 2015; Urquhart, 2014]）
+</span>
+</p><p style="padding-left:4em;">
+<sup>12</sup> That is, reveals hidden structure in apparent disorder.
+<br><span style="color:blue;">
+つまり、一見したところ無秩序な状態の中に、隠された構造を明らかにするのです。
+</span>
+</p><p style="padding-left:4em;">
+<sup>13</sup> No examples of deep mathematical theorems that fail to meet any of these criteria have
+been found ([Ernst et al., 2014]).
+<br><span style="color:blue;">
+これらの基準のいずれも満たさないような、深遠な数学的定理の例は見つかっていない ([Ernst et al., 2014])。
+</span>
+</p><p>
+
+None of the existing accounts provides a set of criteria that are simultaneously
+(i) applicable to proofs, (ii) mutually interacting rather than isolated, and (iii)
+accompanied by a clear heuristic for application. These limitations motivate our
+five-criteria framework for proof depth (Section 4), which synthesizes existing insights: Difficulty draws on Evidentialist, Logical, and Historical views; Originality
+refines the Genetic view; Fruitfulness aligns with Consequentialist and Foundational views; Unity extends the Cosmological view; and Explanatory Power builds
+on Lange [2014], Gray [2014], and Steiner [1978].
+
+<br><span style="color:blue;">
+既存の理論はいずれも、以下の条件を同時に満たす基準を提供していません。
+(i) 証明に適用可能、(ii) 互いに独立ではなく相互作用する、(iii)
+適用するための明確なヒューリスティックを伴う。これらの制約が、私たちの
+証明の深さに関する5つの基準からなるフレームワーク（第4節）の動機となっています。このフレームワークは、既存の知見を統合したものです。難しさは、証拠主義、論理主義、歴史的観点に基づいています。独創性は、
+発生論的観点を洗練させたものです。実りの豊かさは、帰結主義的観点と基礎論的観点に合致しています。統一性は、宇宙論的観点を拡張したものです。そして、説明力は、
+Lange [2014]、Gray [2014]、Steiner [1978] の研究に基づいています。
+</span>
+</p><p>
+
+Ernst et al. [2014] conclude that there is no single kind of mathematical depth;
+rather, there are multiple, irreducible ways of being deep, and these different ways
+often come apart—a view that aligns with Wittgenstein’s later notion of family
+resemblance ([Wittgenstein, 2009]). Just as games share overlapping similarities
+rather than a single common property, mathematical depth is constituted by a
+cluster of features that may vary across cases.14 The five criteria we propose are
+those that cluster together in paradigmatic cases—they are not an invariant set
+required for every deep proof.
+
+<br><span style="color:blue;">
+Ernstら [2014] は、数学的深さには単一の種類があるわけではなく、むしろ「深さ」には互いに還元不可能な複数のあり方が存在し、それらはしばしば互いに切り離され得るものであると結論付けています。この見解は、Wittgensteinの後期思想における「家族的類似」の概念（[Wittgenstein, 2009]）と軌を一にするものです。単一の共通の性質ではなく、重なり合う類似性を共有する「ゲーム」と同様に、数学的深さもまた、事例によって異なり得る一連の特徴の集まりによって構成されています。14 我々が提示する5つの基準は、典型的な事例においてまとまって現れるものであり、あらゆる「深い」証明に必須とされる不変の集合ではありません。
+</span>
+</p><p style="padding-left:4em;">
+<sup>14</sup> See Wittgenstein [2009] on “game” as a family-resemblance concept.
+<br><span style="color:blue;">
+「ゲーム」を家族的類似の概念とみなす点については、ウィトゲンシュタイン [2009] を参照のこと。
+</span>
+</p><p>
+
+We explicitly adopt this family-resemblance perspective. It implies that any
+attempt to define “mathematical depth” by a set of necessary and sufficient conditions is misguided. Our five-criteria framework is therefore not a definition but
+a heuristic tool for systematic comparison and philosophical analysis. The five criteria are features that cluster together in paradigmatic cases of deep proofs—such
+as Wiles’ proof of FLT—and they serve as a structured vocabulary for articulating
+why a proof is considered deep. As we argue in Section 4.7, none of the five criteria
+is strictly necessary, nor is any one of them sufficient on its own. Their value lies
+not in providing a checklist for depth, but in capturing the multifaceted nature of
+the concept and facilitating systematic comparison.
+
+<br><span style="color:blue;">
+我々は、この「家族的類似性」という視点を明確に採用する。これは、必要十分条件の集合によって「数学的深さ」を定義しようとする試みがいずれも誤りであることを意味する。したがって、我々が提示する5つの基準からなる枠組みは、定義ではなく、体系的な比較や哲学的分析を行うためのヒューリスティックな（発見的な）ツールである。これら5つの基準は、ワイルズによるフェルマーの最終定理の証明のような「深い証明」の典型例において併存する特徴であり、ある証明がなぜ深いとみなされるのかを説明するための構造化された語彙として機能する。第4.7節で論じるように、これら5つの基準のいずれもが厳密な意味で必要不可欠なわけではなく、また、単独で十分な条件となるものもない。それらの価値は、「深さ」を判定するためのチェックリストを提供することにあるのではなく、この概念の多面的な性質を捉え、体系的な比較を可能にすることにある。
+</span>
+</p><p>
+
+In the course of our argument we also answer a potential objection: if depth is
+a family-resemblance concept, why propose a fixed set of five criteria? The answer
+is that the criteria are not intended to be exhaustive or final. They are salient features extracted from the literature and from mathematical practice, and they
+have proven their utility in the paradigmatic case of Wiles’ proof as we will show
+in Section 5. Other proofs may bring other features to the fore, and the framework
+is open to revision. What matters is that the criteria provide a common ground
+for comparing different instances of depth, not that they capture every possible
+manifestation.
+
+<br><span style="color:blue;">
+本論を進める中で、私たちは予想されるある反論にも答えておきます。それは、「『深さ』が家族的類似性に基づく概念であるならば、なぜ5つの基準を固定的に提示するのか」という問いです。その答えは、これらの基準が網羅的あるいは最終的なものとして意図されているわけではない、という点にあります。これらは文献や数学的実践から抽出された際立った特徴であり、第5節で示すように、ワイルズによる証明という典型的な事例においてその有用性が実証されています。他の証明においては別の特徴が前面に出てくる可能性もあり、この枠組みは修正の余地が開かれています。重要なのは、これらの基準があらゆる現れ方を余すところなく捉えていることではなく、異なる「深さ」の事例を比較するための共通の土台を提供しているという点なのです。
+</span>
+</p>
+
+<h2><center>3. An Outline of Wiles’s Proof of Fermat’s Last Theorem<br><span style="color:blue;">ワイルズによるフェルマーの最終定理の証明の概要</span></center></h2>
+<p>
+We provide an overview of Wiles’s proof of FLT.<sup>15</sup> FLT states that for any
+integer \(n \gt 2\), there are no positive integers \(a, b\) and \(c\) such that \(a^n +b^n = c^n\). First
+conjectured by Fermat in 1637, it was proved by Andrew Wiles in 1995.<sup>16</sup>
+
+<br><span style="color:blue;">
+ワイルズによるフェルマーの最終定理（FLT）の証明の概要を述べる。<sup>15</sup> FLTは、\(n > 2\) である任意の整数 \(n\) に対して、\(a^n + b^n = c^n\) を満たす正の整数 \(a, b, c\) は存在しないと主張するものである。この定理は、1637年にフェルマーによって最初に予想され、1995年にアンドリュー・ワイルズによって証明された。<sup>16</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>15</sup> A vast literature exists on Wiles’s proof, catering to various levels of sophistication. Notably, McLarty [2024] targets philosophers of mathematics, while Mazur [1991] offers insights for
+mathematicians outside number theory. Darmon et al. [1997] is also highly regarded.
+<br><span style="color:blue;">
+ワイルズによる証明については、専門性の度合いに応じて多岐にわたる文献が存在します。特筆すべきものとして、McLarty [2024]は数学の哲学者を対象としており、一方Mazur [1991]は数論以外の分野の数学者に向けた知見を提供しています。Darmonら [1997]もまた、高く評価されています。
+</span>
+</p><p style="padding-left:4em;">
+<sup>16</sup> Pierre de Fermat first proposed this conjecture in the margins of his book Arithmetica
+around 1637.
+<br><span style="color:blue;">
+ピエール・ド・フェルマーは、1637年頃、自分の本『算術』（アルス・アリトメティカ）の余白に、この予想を初めて書き記しました。
+</span>
+</p><p>
+
+We begin by introducing key concepts. Elliptic curves are defined by cubic
+equations in two variables (e.g., \(y^2 = x^3 + ax + b\)) and are fundamental objects in
+number theory with rich geometric and algebraic structures. Modular forms are
+highly symmetric complex functions whose Fourier coefficients encode arithmetic
+data and satisfy numerous symmetry conditions. Before Wiles’s work, modular
+forms primarily resided in complex analysis. An elliptic curve is modular if its
+arithmetic properties match the Fourier coefficients of a modular form. A Galois
+representation captures the intricate symmetries of number systems via linear algebra.<sup>17</sup> This representation serves as a “translation device” that converts abstract
+algebraic problems into concrete matrix problems.
+
+<br><span style="color:blue;">
+まず、重要な概念を導入することから始めましょう。楕円曲線は2変数3次方程式（例：\(y^2 = x^3 + ax + b\)）によって定義され、豊かな幾何学的・代数的構造を持つ、数論における基本的な対象です。モジュラー形式は高度な対称性を持つ複素関数であり、そのフーリエ係数は数論的な情報を内包し、数多くの対称性条件を満たしています。ワイルズの研究以前、モジュラー形式は主に複素解析の領域で扱われていました。ある楕円曲線が「モジュラーである」とは、その数論的性質があるモジュラー形式のフーリエ係数と一致することを意味します。ガロア表現は、線形代数を用いて数体系の複雑な対称性を捉えるものです。<sup>17</sup> この表現は、抽象的な代数の問題を具体的な行列の問題へと変換する「翻訳装置」としての役割を果たします。
+</span>
+</p><p style="padding-left:4em;">
+<sup>17</sup> The Absolute Galois Group of Q, denoted GQ, consists of all symmetries of algebraic numbers that fix the rational numbers. A Galois representation is a continuous group homomorphism
+ρ : GQ → GLn(F), where GLn(F) is the group of invertible n × n matrices over a field F.
+<br><span style="color:blue;">
+有理数体 \(\mathbb{Q}\) の絶対ガロア群（\(G_{\mathbb{Q}}\) と表記される）は、有理数を固定する代数的数のすべての対称変換から成る。ガロア表現とは、連続な群準同型写像
+\(\rho : G_{\mathbb{Q}} \to GL_n(F)\)
+のことである。ここで、\(GL_n(F)\) は体 \(F\) 上の可逆な \(n \times n\) 行列の群である。
+</span>
+</p><p>
+
+Around 1955, Japanese mathematicians G. Shimura and Y. Taniyama conjectured that every elliptic curve defined over the field of rational numbers has an
+associated modular form. This conjecture gained prominence in the West when
+number theorist Andr´e Weil provided supporting evidence, although he did not
+prove it.<sup>18</sup> The conjecture, now known as the Taniyama-Shimura-Weil Conjecture (or Modularity Theorem), asserts that every elliptic curve over the rational
+numbers is modular. This conjecture is fundamentally about arithmetic due to
+its foundational connections to elliptic curves and modular forms, both central to
+number theory.<sup>19</sup>
+
+<br><span style="color:blue;">
+1955年頃、日本の数学者である志村五郎と谷山豊は、有理数体上で定義されたすべての楕円曲線には、それに対応するモジュラー形式が存在するという予想を立てました。この予想は、数論学者アンドレ・ヴェイユが（証明には至らなかったものの）その裏付けとなる証拠を提示したことで、欧米でも広く注目されるようになりました。<sup>18</sup> 現在では「谷山・志村・ヴェイユ予想」（あるいは「モジュラー性定理」）として知られるこの予想は、有理数体上のすべての楕円曲線がモジュラー的であることを主張するものです。数論の核心をなす楕円曲線とモジュラー形式という二つの対象と根本的な関わりを持つことから、この予想は本質的に数論に関わるものと言えます。<sup>19</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>18</sup> By the 1980s, substantial evidence had accumulated, and many papers explored the implications of this conjecture, though it remained unproven at that time.
+<br><span style="color:blue;">
+1980年代までにはかなりの証拠が蓄積され、多くの論文がこの予想の含意を検討していましたが、当時、この予想は未証明のままでした。
+</span>
+</p><p style="padding-left:4em;">
+<sup>19</sup> As Mazur [1991] noted, a subtle issue in formulating the Taniyama-Shimura-Weil Conjecture
+is that, while it is “about arithmetic”, it can be expressed in various ways. For instance, one
+interpretation connects it to integral transforms in complex variable theory, while another relates it to geometry ([Arana, 2025, p. 36]). Its diverse expressions—through integral transforms,
+geometric interpretations, algebraic geometry, and representation theory—highlight its richness
+and the depth of its implications across different mathematical fields
+<br><span style="color:blue;">
+Mazur [1991] が指摘したように、谷山・志村・ヴェイユ予想の定式化における微妙な点は、それが「数論に関するもの」でありながら、様々な形で表現され得るという点にあります。例えば、ある解釈では複素関数論における積分変換と結びつけられる一方で、別の解釈では幾何学と関連づけられます（[Arana, 2025, p. 36]）。積分変換、幾何学的解釈、代数幾何学、表現論といった多様な表現は、この予想の豊かさや、数学の様々な分野にわたるその含意の深さを浮き彫りにしています。
+</span>
+</p><p>
+
+Wiles did not prove FLT directly; instead, he proved the Taniyama-ShimuraWeil Conjecture for a specific class of elliptic curves. His approach was groundbreaking, linking this conjecture to FLT through the work of Gerhard Frey, further refined by Jean-Pierre Serre and Ken Ribet. To date, no direct method for
+proving FLT without involving the Taniyama-Shimura-Weil Conjecture has been
+discovered. The foundational breakthrough came from Gerhard Frey’s innovative
+idea: he proposed that if a counterexample to FLT exists, one could construct
+a special elliptic curve—now known as the Frey curve—from it.<sup>20</sup> Initially, the
+Taniyama-Shimura-Weil conjecture and FLT appeared unrelated. Frey’s insight
+transformed the arithmetic problem of FLT into a geometric one: whether this
+specific Frey curve could be modular. Ken Ribet, building on Jean-Pierre Serre’s
+work, provided the necessary rigor to Frey’s vision, proving that if a Frey curve
+were modular, a sophisticated “level-lowering” argument would lead to a logical
+contradiction. Thus, Frey curves cannot be modular, establishing the critical link:
+the Taniyama-Shimura-Weil conjecture implies FLT, as a counterexample to FLT
+would yield a non-modular elliptic curve, contradicting the conjecture.<sup>21</sup>
+
+<br><span style="color:blue;">
+ワイルズはフェルマーの最終定理（FLT）を直接証明したわけではなく、特定の種類の楕円曲線について谷山・志村・ヴェイユ予想を証明しました。彼のアプローチは画期的なものであり、ゲルハルト・フライの研究（さらにジャン＝ピエール・セールとケン・リベットによって洗練されたもの）を通じて、この予想とFLTを結びつけました。現在に至るまで、谷山・志村・ヴェイユ予想を経由せずにFLTを証明する直接的な方法は発見されていません。根本的な突破口となったのは、ゲルハルト・フライの独創的なアイデアでした。彼は、もしFLTの反例が存在するならば、そこから特別な楕円曲線（現在では「フライ曲線」として知られています）を構成できると提唱したのです。当初、谷山・志村・ヴェイユ予想とFLTは無関係なものに見えました。しかし、フライの洞察によって、FLTという数論的な問題は、「その特定のフライ曲線がモジュラー（保型）であり得るか」という幾何学的な問題へと転換されたのです。ケン・リベットは、ジャン＝ピエール・セールの研究を基盤としつつフライの構想に数学的な厳密さを与え、もしフライ曲線がモジュラーであれば、「レベル降下（level-lowering）」と呼ばれる高度な議論によって論理的矛盾が導かれることを証明しました。したがって、フライ曲線はモジュラーではあり得ないことになり、ここに重要な関連性が確立されました。すなわち、FLTの反例が存在すればモジュラーではない楕円曲線が導かれ、それは谷山・志村・ヴェイユ予想と矛盾するため、同予想がFLTを導く（含意する）ことになるのです。<sup>21</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>20</sup> Hellegouarch [1971] and Demyanenko [1971] connected FLT to the geometry of special elliptic
+curves. Mazur [1977, 1978], not aiming at FLT, found key facts on modular elliptic curves.
+Hellegouarch, Demyanenko, and Mazur all made breakthroughs leading to G. Frey’s discovery.
+<br><span style="color:blue;">
+Hellegouarch [1971] と Demyanenko [1971] は、フェルマーの最終定理（FLT）を特殊な楕円曲線の幾何学と結びつけました。Mazur [1977, 1978] は、FLTの解決を直接の目的とはしていませんでしたが、モジュラー楕円曲線に関する重要な事実を明らかにしました。Hellegouarch、Demyanenko、Mazurはいずれも、G. Freyによる発見へとつながる画期的な成果を挙げました。
+</span>
+</p><p style="padding-left:4em;">
+<sup>21</sup> In 1985, J.P. Serre partially proved that Frey curves are not modular [Cornell et al., 1997].
+Serre did not provide a complete proof, and the missing part is known as the epsilon conjecture.
+In 1986, Ribet successfully proved the epsilon conjecture based on Serre’s partial proof, demonstrating that if the Galois representation associated with an elliptic curve has certain properties
+(which the Frey curve possesses), then the curve cannot be modular [Ribet, 1990].
+<br><span style="color:blue;">
+1985年、J.P. セールは、フライ曲線がモジュラーではないことを部分的に証明しました [Cornell et al., 1997]。
+セールは完全な証明は示しておらず、その未解決部分は「イプシロン予想」として知られています。
+1986年、リベットはセールの部分的な証明に基づきイプシロン予想の証明に成功しました。彼は、ある楕円曲線に関連するガロア表現が特定の性質を持つ場合
+（フライ曲線はその性質を備えています）、その曲線はモジュラーにはなり得ないことを示したのです [Ribet, 1990]。
+</span>
+</p><p>
+
+Wiles proved FLT by contradiction. He first assumed FLT is false, i.e., there
+exists a non-zero solution to \(a^p + b^p = c^p\)
+for some odd prime \(p > 2\). In the mid1980s, G. Frey had the insight to construct an elliptic curve from this hypothetical
+solution: \(y^2 = x(x − a^p)(x + b^p)\), known as the “Frey Curve” [Frey, 1986]. This
+curve is semi-stable and possesses special properties.<sup>22</sup> However, Frey did not
+provide a complete proof that the Frey curve is non-modular. Ribet proved that
+if such a Frey curve exists, it must be non-modular. Thus, from Ribet’s theorem,
+the Frey curve is non-modular.
+
+<br><span style="color:blue;">
+ワイルズは背理法を用いてフェルマーの最終定理（FLT）を証明した。彼はまず、FLTが偽であると仮定した。すなわち、ある奇素数 \(p > 2\) に対して \(a^p + b^p = c^p\) を満たす非零の解が存在すると仮定したのである。1980年代半ば、G. フライはこの仮定された解から楕円曲線 \(y^2 = x(x − a^p)(x + b^p)\) を構成するという着想を得た。この曲線は「フライ曲線」として知られている [Frey, 1986]。この曲線は半安定であり、特別な性質を備えている。<sup>22</sup> しかし、フライは、このフライ曲線が非モジュラーであることの完全な証明は示さなかった。リベットは、そのようなフライ曲線が存在するならば、それは非モジュラーでなければならないことを証明した。したがって、リベットの定理により、フライ曲線は非モジュラーであることになる。
+</span>
+</p><p style="padding-left:4em;">
+<sup>22</sup> The “semi-stable” condition Wiles used is a technical property relating to the number of
+solutions the curve has modulo primes.
+<br><span style="color:blue;">
+ワイルズが用いた「半安定（semi-stable）」という条件は、その曲線が素数を法として持つ解の個数に関連する技術的な性質である。
+</span>
+</p><p>
+Next, Wiles proved the Taniyama-Shimura-Weil conjecture for semi-stable elliptic curves, demonstrating that every semi-stable elliptic curve over the rational
+numbers is modular. This led to a contradiction: if a counterexample to FLT
+exists, then the Frey curve must be semi-stable non-modular (by Ribet), yet Wiles
+proved that every semi-stable elliptic curve (including the Frey curve) is modular.
+Therefore, a counterexample to FLT cannot exist, confirming that FLT is true.
+
+<br><span style="color:blue;">
+次にワイルズは、半安定な楕円曲線について谷山・志村・ヴェイユ予想を証明し、有理数体上のすべての半安定な楕円曲線がモジュラーであることを示しました。これにより矛盾が生じました。すなわち、もしフェルマーの最終定理（FLT）に対する反例が存在するならば、（リベットの結果により）その反例に対応するフライ曲線は「半安定かつ非モジュラー」でなければなりませんが、ワイルズはすべての半安定な楕円曲線（フライ曲線を含む）がモジュラーであることを証明したからです。したがって、FLTに対する反例は存在し得ず、FLTが真であることが確認されました。
+</span>
+</p><p>
+
+
+The key to proving FLT lies in establishing that the Taniyama-Shimura-Weil
+conjecture holds for semi-stable elliptic curves, which is sufficient to encompass
+the Frey curve. On October 24, 1994, Wiles submitted two manuscripts titled
+“Modular Elliptic Curves and Fermat’s Last Theorem” and “Ring Theoretic Properties of Certain Hecke Algebras”, the latter co-authored with R. Taylor (see Wiles
+[1995], Taylor-Wiles [1995]). Both papers were published in the Annals of Mathematics in May 1995, proving that the Taniyama-Shimura-Weil conjecture holds
+for semi-stable elliptic curves and thereby resolving FLT.
+
+<br><span style="color:blue;">
+フェルマーの最終定理（FLT）の証明の鍵は、半安定な楕円曲線に対して谷山・志村・ヴェイユ予想が成立することを示す点にありました。これが示されれば、フライ曲線（Frey curve）を包含するのに十分だからです。1994年10月24日、ワイルズは『モジュラー楕円曲線とフェルマーの最終定理（Modular Elliptic Curves and Fermat’s Last Theorem）』および『ある種のヘッケ環の環論的性質（Ring Theoretic Properties of Certain Hecke Algebras）』と題する2本の論文を提出しました（後者はR.テイラーとの共著；Wiles [1995], Taylor-Wiles [1995] を参照）。これら2本の論文は1995年5月に『Annals of Mathematics』誌に掲載され、半安定な楕円曲線について谷山・志村・ヴェイユ予想が成立することが証明された結果、フェルマーの最終定理が解決されるに至りました。
+</span>
+</p><p>
+
+Wiles’s strategy to prove the Taniyama-Shimura-Weil conjecture for semi-stable
+elliptic curves involved establishing the Modularity Lifting Theorem, which states
+that if the Galois representation of a semi-stable elliptic curve modulo some prime
+p is modular, then the curve itself is modular. This theorem allows for “lifting”
+modularity from a simpler representation modulo a prime to the full structure.
+Wiles proved the Taniyama-Shimura-Weil conjecture for semi-stable elliptic curves
+using an induction argument on prime numbers: he first established the Modularity
+Lifting Theorem and then demonstrated that the Galois representation of a semistable elliptic curve modulo some prime p is modular.
+
+<br><span style="color:blue;">
+半安定楕円曲線に関する谷山・志村・ヴェイユ予想を証明するにあたり、ワイルズは「モジュラリティ・リフティング定理（モジュラリティの持ち上げ定理）」を確立するという戦略をとりました。この定理は、ある素数 $p$ を法とする半安定楕円曲線のガロア表現がモジュラーであれば、その曲線自体もモジュラーであると主張するものです。この定理により、素数を法とするより単純な表現から、曲線全体の構造へとモジュラリティを「持ち上げる（リフトする）」ことが可能になります。ワイルズは素数に関する帰納法を用いて、半安定楕円曲線に対する谷山・志村・ヴェイユ予想を証明しました。すなわち、まずモジュラリティ・リフティング定理を確立し、次いで、ある素数 \(p\) を法とする半安定楕円曲線のガロア表現がモジュラーであることを示したのです。
+</span>
+</p><p>
+
+Wiles’s approach to proving the Modularity Lifting Theorem involved establishing the \(R = T\) Theorem, which asserts that the deformation ring \(R\) is isomorphic
+to the Hecke algebra \(T\). Here, \(R\) serves as a “parameter space” for all possible Galois representations lifting a base representation, while \(T\) serves as a “parameter
+space” for modular forms, encoding their arithmetical properties. The isomorphism \(R \simeq T\) indicates that every Galois representation in \(R\) corresponds to a
+modular form in T, thereby establishing modularity. Proving the \(R = T\) Theorem
+directly establishes the Modularity Lifting Theorem, demonstrating that if the
+base representation is modular, all its “nice” lifts are also modular.
+
+<br><span style="color:blue;">
+ワイルズによるモジュラリティ・リフティング定理の証明は、「\(R = T\) 定理」の確立を伴うものでした。この定理は、変形環 \(R\) がヘッケ環 \(T\) と同型であることを主張するものです。ここで、\(R\) は基底となる表現をリフト（持ち上げ）して得られるあらゆるガロア表現の「パラメータ空間」としての役割を果たし、一方の \(T\) はモジュラー形式の「パラメータ空間」として、それらの数論的性質を符号化する役割を担っています。\(R \simeq T\) という同型関係は、\(R\) 内のすべてのガロア表現が \(T\) 内のモジュラー形式に対応することを示しており、それによってモジュラリティ（モジュラー性）が確立されます。\(R = T\) 定理を証明することは、直ちにモジュラリティ・リフティング定理を確立することにつながり、基底表現がモジュラーであれば、その「適切な（niceな）」リフトもすべてモジュラーであることを示すものとなります。
+</span>
+</p><p>
+
+Proving \(R \simeq T\) directly is technically difficult. Wiles’s \(R = T\) strategy forces this
+isomorphism via a “controlled comparison”: it constructs a surjection \(\varphi : R → T\)
+(associating modular forms with Galois deformations, though possibly with “extra”
+ones in \(R\)), and then proves injectivity to eliminate the extraneous cases.<sup>23</sup>
+
+<br><span style="color:blue;">
+\(R \simeq T\) であることを直接証明するのは、技術的に困難である。ワイルズの \(R = T\) という戦略は、「制御された比較」を通じてこの同型を導くものである。すなわち、まず（モジュラー形式とガロア変形とを対応させる）全射 \(\varphi : R → T\) を構成し（ただし \(R\) 側には「余分な」ものが含まれている可能性がある）、次いで単射性を示すことで、そうした余分なケースを排除するのである。<sup>23</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>23</sup> Injectivity is achieved via the Taylor–Wiles method: auxiliary primes \(Q\) make the isomorphism \(R_Q \simeq T_Q\) accessible in a smoothed setting, and a limiting argument over \(Q\) recovers the
+original \(R \simeq T\).
+<br><span style="color:blue;">
+単射性はテイラー・ワイルズ法によって示されます。すなわち、補助的な素数 \(Q\) を用いることで、滑らかな設定の下で同型 \(R_Q \simeq T_Q\) を導き出し、\(Q\) に関する極限の議論を通じて、元の \(R \simeq T\) を復元するのです。
+</span>
+</p><p>
+
+
+The Modularity Lifting Theorem follows directly from the \(R = T\) Theorem.
+To prove the Taniyama-Shimura-Weil conjecture for semi-stable elliptic curves,
+it suffices to show that the Galois representation of a semi-stable elliptic curve
+modulo some prime p is modular. If the Galois representation of a semi-stable
+elliptic curve modulo \(p = 3\) is irreducible, it has been known since around 1980
+that its Galois representation is always modular. However, proving that the Galois
+representation is modular when the representation modulo p = 3 is reducible poses
+significant challenges.
+
+<br><span style="color:blue;">
+モジュラリティ・リフティング定理は、「R=T定理」から直接導かれます。
+半安定楕円曲線に関する谷山・志村・ヴェイユ予想を証明するには、
+ある素数 \(p\) を法とする半安定楕円曲線のガロア表現がモジュラーであることを示せば十分です。
+素数 \(p=3\) を法とする半安定楕円曲線のガロア表現が既約である場合、
+そのガロア表現は常にモジュラーであることが1980年頃から知られていました。
+しかし、\(p=3\) を法とする表現が可約である場合に、
+そのガロア表現がモジュラーであることを証明することには、大きな困難が伴います。
+</span>
+</p><p>
+
+To address this difficulty, Wiles employed the so-called “3–5 switch” trick. When
+the representation of a semi-stable elliptic curve \(E\) modulo \(p = 3\) is reducible, it
+becomes easier to work with \(p = 5\) and use the Modularity Lifting Theorem to
+demonstrate that the representation of \(E\) modulo \(p = 5\) is modular, rather than
+proving directly that the reducible representation of \(E\) modulo \(p = 3\) is modular.<sup>24</sup>
+
+<br><span style="color:blue;">
+この困難を克服するため、ワイルズはいわゆる「3-5の切り替え（3–5 switch）」という手法を用いた。半安定な楕円曲線 \(E\) の法 \(p=3\) における表現が可約である場合、\(E\) の法 \(p=3\) での可約表現がモジュラーであることを直接証明するのではなく、法 \(p=5\) の場合を扱い、「モジュラリティ・リフティング定理（モジュラー性持ち上げ定理）」を用いて \(E\) の法 \(p=5\) における表現がモジュラーであることを示す方が、扱いやすくなるからである。<sup>24</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>24</sup> Wiles resolves the reducible mod \(3\) case via a switch to \(5\). If the mod \(5\) Galois representation
+\(E[5]\) is reducible, modularity follows directly. If not, he constructs a semi-stable \(F\) with \(F[3]\)
+irreducible and \(E[5] \simeq F[5]\). By Langlands–Tunnell, \(F[3]\) is modular, hence so is \(F\), and the
+mod \(5\) isomorphism transmits this modularity to \(E\).
+<br><span style="color:blue;">
+ワイルズは、mod 3 で可約な場合を mod 5 へ切り替えることで解決している。mod 5 ガロア表現 \(E[5]\) が可約であれば、モジュラリティは直ちに従う。可約でない場合、彼は \(F[3]\) が既約かつ \(E[5] \simeq F[5]\) となる半安定な \(F\) を構成する。ラングランズ・タネルの定理により \(F[3]\) はモジュラーであり、したがって \(F\) もモジュラーとなる。そして、mod 5 での同型写像を通じて、そのモジュラリティが \(E\) にも伝播する。
+</span>
+</p><p>
+
+Thus, Wiles proved that the Galois representation of a semi-stable elliptic curve
+modulo some prime p is modular. By applying the Modularity Lifting Theorem, it
+follows that every semi-stable elliptic curve over the rational numbers is modular,
+thereby completing the proof of the Taniyama-Shimura-Weil conjecture for semistable elliptic curves.
+
+<br><span style="color:blue;">
+こうしてワイルズは、半安定楕円曲線のガロア表現が（ある素数 $p$ を法として）モジュラーであることを証明した。モジュラリティ・リフティング定理を適用することにより、有理数体上のすべての半安定楕円曲線がモジュラーであることが導かれ、それによって半安定楕円曲線に関する谷山・志村・ヴェイユ予想の証明が完結した。
+</span>
+</p>
+
+<h2><center>4. A Five-Criteria Framework for Analyzing Proof Depth<br><span style="color:blue;">証明の深さを分析するための5つの基準からなる枠組み</span></center></h2>
+<p>
+We introduce a heuristic five-criteria framework—Difficulty, Originality, Fruitfulness, Unity, and Explanatory Power—for analyzing the depth of mathematical
+proofs. The framework synthesizes various proposed measures of depth from the
+literature, but it is not a definition of proof depth; rather, it is a tool for comparative assessment.
+
+<br><span style="color:blue;">
+我々は、数学的証明の「深さ」を分析するための、5つの基準（難易度、独創性、豊饒性、統一性、説明力）からなるヒューリスティックな枠組みを提示する。この枠組みは、先行研究で提案された様々な「深さ」の尺度を統合したものであるが、証明の深さそのものを定義するものではなく、あくまで比較評価を行うためのツールである。
+</span>
+</p><p>
+
+Sections 4.1–4.5 examine each criterion and its potential drawbacks. Section 4.6
+compares the criteria by highlighting their key differences and interconnections.
+Section 4.7 evaluates whether the criteria are necessary and sufficient, and Section 4.8 addresses their subjectivity and objectivity. Throughout, our evaluation
+focuses on the relevant mathematical community rather than on individual authors or readers, thereby minimizing subjectivity rooted in personal interests or
+abilities.<sup>25</sup>
+
+<br><span style="color:blue;">
+セクション4.1～4.5では、各基準とその潜在的な欠点を検討する。セクション4.6では、それらの基準の主な相違点と相互の関連性を明らかにしつつ比較を行う。セクション4.7では、それらの基準が必要かつ十分なものであるかを評価し、セクション4.8では、それらの主観性と客観性について論じる。全体を通じて、我々の評価は個々の著者や読者ではなく、当該の数学コミュニティに焦点を当てており、それによって個人的な関心や能力に起因する主観性を最小限に抑えている。<sup>25</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>25</sup> For a proof in a given field, the relevant mathematical community comprises the active
+researchers whose specialized expertise bears directly on its methods and content.
+<br><span style="color:blue;">
+特定の分野におけるある証明について、それに関連する数学コミュニティとは、その証明の手法や内容に直接関わる専門的知見を有する現役の研究者たちによって構成される。
+</span>
+</p>
+
+<h3>4.1. The Criterion of Difficulty. <span style="color:blue;">難易度の基準</span></h3>
+<p>
+ Difficulty is the intrinsic challenge a proof
+presents to an agent with sufficient background, comprising both the conceptual
+obstacle of uncovering underlying ideas and the technical complexity of the reasoning itself. It is a property of the proof as presented, not merely of its historical
+discovery.<sup>26</sup>
+
+<br><span style="color:blue;">
+「難しさ」とは、十分な予備知識を持つ主体に対してある証明が突きつける本質的な課題のことであり、そこには、根底にある着想を解明するという概念的な障壁と、推論そのものが持つ技術的な複雑さの双方が含まれます。それは単に歴史的な発見の過程に付随するものではなく、提示されたその証明自体が持つ性質なのです。<sup>26</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>26</sup> Our criterion synthesizes Arana’s Evidentialist properties, Urquhart’s complexity and nonobviousness, Gray’s hiddenness, and Stillwell’s Logical metrics (Section 2).
+<br><span style="color:blue;">
+我々の基準は、アラナ（Arana）の「証拠主義的」特性、アークハート（Urquhart）の複雑性と非自明性、グレイ（Gray）の隠蔽性、そしてスティルウェル（Stillwell）の論理的指標を統合したものである（第2節）。
+</span>
+</p><p>
+
+Difficulty has two distinct but complementary aspects. Conceptual difficulty
+concerns the intellectual obstacles involved in discovering the necessary principles
+or framing shifts—for instance, recognizing that Fermat’s Last Theorem could be
+recast as a statement about elliptic curves and modular forms. It often demands
+the invention of new ideas (originality is taken up in Section 4.2).
+
+<br><span style="color:blue;">
+「難易度」には、互いに異なりながらも相補的な二つの側面があります。概念的な難易度とは、必要な原理や枠組みの転換を見出す際に直面する知的障壁に関わるものです。例えば、フェルマーの最終定理を、楕円曲線やモジュラー形式に関する命題として捉え直すことなどが挙げられます。こうした難易度を克服するには、しばしば新しいアイデアの創出が求められます（独創性については、4.2節で取り上げます）。
+</span>
+</p><p>
+
+Technical difficulty, by contrast, concerns the complexity of the proof as laid
+out: overall length, the number and diversity of fields employed, the level of prerequisites required, and structural intricacy (e.g., multi-step, layered reasoning). A
+proof drawing on fields with divergent methodologies—say, algebraic geometry and
+analytic number theory—is generally more technically difficult than one confined
+to a single domain.
+
+<br><span style="color:blue;">
+対照的に、技術的な難易度とは、提示された証明の複雑さに関わるものである。具体的には、証明の全体的な長さ、用いられる分野の数や多様性、必要とされる予備知識のレベル、そして構造的な入り組んだ性質（例えば、多段階にわたる推論や階層的な論証など）が挙げられる。一般に、代数幾何学と解析的整数論のように、手法の異なる複数の分野にまたがる証明は、単一の領域に限定された証明よりも技術的な難易度が高い。
+</span>
+</p><p>
+
+These dimensions are analytically distinct but often co-occur. A proof may be
+conceptually difficult yet technically straightforward (Cantor’s diagonal argument:
+a short construction that reorients our understanding of infinity). Conversely,
+a proof may be technically massive yet conceptually shallow (the Appel–Haken
+proof of the Four Color Theorem: an exhaustive case analysis within an existing
+framework). Wiles’s proof of FLT excels in both, exhibiting deep paradigm shifts
+alongside extraordinary technical intricacy (see Section 5). We take conceptual difficulty to be the more philosophically interesting dimension, as it captures the kind
+of creative breakthrough that can fundamentally advance—and in paradigmatic
+cases transform—a field.
+
+<br><span style="color:blue;">
+これらの側面は分析上は区別されるものですが、しばしば併存します。ある証明は、概念的には困難であっても、技術的には平易な場合があります（カントールの対角線論法がその例です。これは、無限に対する私たちの理解のあり方を根本から変える、簡潔な構成による証明です）。逆に、技術的には膨大であっても、概念的には浅い証明もあり得ます（四色定理に対するアッペルとハーケンの証明がこれに当たります。これは、既存の枠組みの中で網羅的な場合分けを行ったものです）。ワイルズによるフェルマーの最終定理の証明は、その両面において傑出しており、並外れて複雑な技術的側面と、深いパラダイム・シフトを伴う概念的側面を併せ持っています（第5節を参照）。私たちは、概念的な難易度こそが哲学的に見てより興味深い側面であると考えます。なぜなら、それはある学問分野を根本的に前進させ、さらにはパラダイムを転換させるような創造的ブレイクスルーを捉えているからです。
+</span>
+</p><p>
+
+Formal measures can serve as objective proxies for technical difficulty, yet they
+diverge from what mathematicians ordinarily mean by “difficulty”. Proof complexity, computational complexity, and logical complexity (as studied in reverse
+mathematics) offer objective metrics, but they are largely independent of perceived
+difficulty.<sup>27</sup> A proof may have low proof complexity and weak axioms yet be conceptually arduous (Cantor), or it may be case-heavy and axiomatically strong
+while resting on a conceptually flat idea (Appel–Haken). Likewise, the fact that
+one proof requires stronger set-theoretic axioms than another does not imply that
+it is more difficult in the sense that matters to mathematical practice.
+
+<br><span style="color:blue;">
+形式的な尺度は、技術的な難しさを示す客観的な指標となり得るものの、数学者が通常「難しさ」と呼ぶものとは乖離しています。証明の複雑さ、計算量、論理的複雑さ（逆数学で研究されるようなもの）は客観的な尺度を提供しますが、それらは「感じられる難しさ」とは概して無関係です。<sup>27</sup> 例えば、証明の複雑さが低く公理系も単純でありながら、概念的には極めて困難な証明（カントールの例）もあれば、逆に、公理系としては強力で場合分けも膨大であるものの、その根底にあるアイデア自体は概念的に平易な証明（アッペルとハーケンの例）もあり得ます。同様に、ある証明が別の証明よりも強力な集合論的公理を必要とするからといって、それが数学の実践において重要な意味での「難しさ」を伴うとは限りません。
+</span>
+</p><p style="padding-left:4em;">
+<sup>27</sup> Proof complexity studies the minimal size of a proof within a formal system, offering insights
+into the proof’s intrinsic logical size. Computational complexity analyzes the time and space
+resources required by algorithms related to the proof. Logical complexity (investigated in Reverse
+Mathematics) examines the strength of the axioms needed to formalize the proof.
+<br><span style="color:blue;">
+証明複雑性（proof complexity）は、形式体系における証明の最小サイズを研究し、その証明が持つ本質的な論理的サイズについての知見を与えるものです。計算複雑性（computational complexity）は、その証明に関連するアルゴリズムに必要とされる時間や空間といったリソースを分析します。論理的複雑性（logical complexity：逆数学において研究される）は、その証明を形式化するために必要な公理の強さを検討するものです。
+
+</span>
+</p><p>
+
+It is also crucial to distinguish difficulty from the historical process of discovery.
+Historical evidence—the duration a problem remained open, the number of failed
+attempts, the cumulative labour of generations—may suggest that a proof is difficult, but it is neither necessary nor sufficient for genuine difficulty. A problem may
+resist solution for centuries simply because the right idea was not yet conceived;
+conversely, a highly technical proof may be found quickly once the requisite machinery is in place. Thus, historical evidence serves at best as a heuristic indicator.
+When we assess Wiles’s proof in Section 5, we will cite the 358-year gap and the
+many failed attempts as supporting evidence for its difficulty, not as a separate
+type of difficulty.
+
+<br><span style="color:blue;">
+「難しさ」と「歴史的な発見のプロセス」を区別することも極めて重要です。問題が未解決のまま残された期間、失敗に終わった試行の数、何世代にもわたる蓄積された労力といった歴史的証拠は、ある証明が困難であることを示唆するかもしれませんが、それらは「真の難しさ」の必要条件でも十分条件でもありません。単に適切なアイデアがまだ思いつかなかったという理由だけで、何世紀にもわたって解決されないままの問題もあり得ますし、逆に、必要な手法が整えば、高度に専門的な証明が短期間で見つかることもあります。したがって、歴史的証拠は、せいぜい発見のヒントとなる指標（ヒューリスティックな指標）としての役割を果たすに過ぎません。第5節でワイルズの証明を評価する際には、358年という歳月や数多くの失敗した試行を、その証明の難しさを示す裏付けとして挙げることになりますが、それらを「難しさ」の別の一形態として扱うわけではありません。
+</span>
+</p><p>
+
+Despite its merits, the difficulty criterion has three main drawbacks: subjectivity
+across evaluators and over time, relativity across mathematical subfields, and a risk
+of undervaluing elegant simplicity. These do not invalidate the criterion, but they require assessments to be relativised to community and context, and they demand
+that simplicity be recognised as an independent virtue (for interactions with other
+criteria, see Section 4.6).
+
+<br><span style="color:blue;">
+「難易度」という基準には利点がある一方で、主に3つの欠点も存在します。すなわち、評価者間や時期による主観性の入り込み、数学の各専門分野間での相対性、そして「洗練された簡潔さ」を過小評価してしまうリスクです。これらの点は基準そのものを無効にするものではありませんが、評価を行う際にはコミュニティや文脈に照らして相対的に判断すること、そして簡潔さを独立した美点として認めることが求められます（他の基準との相互関係については、セクション4.6を参照してください）。
+</span>
+</p>
+
+<h3>4.2. The Criterion of Originality. <span style="color:blue;">独創性の基準</span></h3>
+<p>
+ The originality of a proof consists in the
+introduction of ideas or methods not previously conceived or implemented by the
+relevant mathematical community at the time of presentation.<sup>28</sup> As the community’s knowledge evolves, a proof initially deemed original may be reassessed if
+similar ideas are discovered to have been present elsewhere; conversely, iterations
+of known methods that yield no new conception do not count as original.
+
+<br><span style="color:blue;">
+ある証明の独創性とは、その発表時点で当該の数学者コミュニティによってそれまで考案・実行されていなかった着想や手法を導入することにある。<sup>28</sup> コミュニティの知見が発展するにつれ、当初は独創的とみなされていた証明であっても、同様の着想が他で存在していたことが判明すれば、その評価が見直される場合がある。逆に、既知の手法を繰り返すだけで新たな着想をもたらさないものは、独創的とはみなされない。
+</span>
+</p><p style="padding-left:4em;">
+<sup>28</sup> Our criterion refines Urquhart’s non-obviousness [2014] and Arana’s Genetic View [2015] by
+focusing on the novelty of ideas and methods introduced in the proof itself.
+<br><span style="color:blue;">
+我々の基準は、証明そのものにおいて導入されたアイデアや手法の新規性に焦点を当てることによって、Urquhart [2014] の「非自明性」や Arana [2015] の「遺伝的見解（Genetic View）」を精緻化するものである。
+</span>
+</p><p>
+
+
+We distinguish between invention and creative synthesis. Invention introduces
+genuinely unprecedented ideas or methods. Creative synthesis, by contrast, combines existing ideas or methods to solve a problem that neither could address alone;
+its originality lies not in the novelty of its components but in the unexpected integration that makes the solution possible. Overemphasizing invention risks undervaluing this kind of originality, as a proof may introduce no fundamentally new
+concept yet achieve its result through a brilliant and unforeseen combination of
+established tools. Indicators of such originality include novel concepts, unexpected
+integrations, and significant problem reframings.
+
+<br><span style="color:blue;">
+我々は、「発明」と「創造的統合」を区別します。発明とは、真に前例のないアイデアや手法を導入するものです。対照的に創造的統合とは、既存のアイデアや手法を組み合わせることで、それら単独では解決できなかった問題に対処するものです。その独創性は、構成要素の目新しさにあるのではなく、解決を可能にする「予期せぬ統合」にあります。発明を過度に重視すると、こうした種類の独創性を過小評価する恐れがあります。なぜなら、ある証明が根本的に新しい概念を導入していなくとも、確立された手法を鮮やかかつ予期せぬ形で組み合わせることで、その成果を達成し得るからです。こうした独創性を示す指標としては、斬新な概念、予期せぬ統合、そして問題の捉え方の重要な転換（リフレーミング）などが挙げられます。
+</span>
+</p><p>
+
+The originality criterion has several drawbacks. Determining true originality is
+historically demanding, as an idea may have been developed independently elsewhere; judgments are relative to a mathematical community, so a proof may be
+considered novel in one context but derivative in another; and an overemphasis on
+originality may incentivize contrived, ad-hoc methods when simpler approaches
+would be more effective. For how this criterion interacts with the others, see
+Section 4.6.
+
+<br><span style="color:blue;">
+「独創性」という基準には、いくつかの欠点があります。真の独創性を判断することは、歴史的に見て困難です。なぜなら、あるアイデアが別の場所で独自に考案されていた可能性があるからです。また、その判断は数学コミュニティに依存するため、ある文脈では新規とみなされる証明が、別の文脈では既存の手法の焼き直しとみなされることもあります。さらに、独創性を過度に重視すると、より単純なアプローチの方が効果的であるにもかかわらず、不自然で場当たり的な手法が採用されることを助長しかねません。この基準と他の基準との関係については、セクション4.6を参照してください。
+</span>
+</p>
+
+<h3>4.3. The Criterion of Fruitfulness. <span style="color:blue;">豊饒さの基準</span></h3>
+<p>
+ The fruitfulness of a proof consists in the
+breadth of its consequences—the range of implications, results, or applications
+extending beyond its initial context—and the applicability of its methods to other
+domains.<sup>29</sup> A fruitful proof catalyzes further exploration, enabling its techniques
+to be generalized or adapted, thereby generating new theorems, tools, and crossdomain applications. These indicators collectively signal a proof’s significance and
+its capacity to inspire ongoing mathematical inquiry.
+
+<br><span style="color:blue;">
+ある証明の「豊かさ」は、その帰結の広がり――すなわち、当初の文脈を超えて及ぶ含意や結果、あるいは応用の範囲――や、その手法が他の領域にも適用可能であるかという点にあります。<sup>29</sup> 豊かさを持つ証明はさらなる探究を促す触媒となり、その手法の一般化や応用を可能にすることで、新たな定理やツール、さらには領域横断的な応用を生み出します。こうした要素は総じて、その証明の重要性や、数学的探究を継続的に喚起する力を示しています。
+</span>
+</p><p style="padding-left:4em;">
+<sup>29</sup> This criterion draws on Arana’s Consequentialist View [2015], Stillwell’s Foundational Depth
+[2014], Urquhart’s field-impact emphasis [2014], Tappenden’s notion of productive richness [2012],
+and Ernst et al.’s field-transformation criterion [2014]. Tappenden [2012] defines fruitfulness as
+the capacity of a concept, definition, or theory to generate novel discoveries and connections.
+His central contribution is the notion of “productive richness”, although it lacks a precise definition. Our criterion for fruitfulness encompasses Tappenden’s concept while offering a broader
+interpretation.
+<br><span style="color:blue;">
+この基準は、Aranaの「帰結主義的見解」[2015]、Stillwellの「基礎的深さ」[2014]、Urquhartの「分野への影響の重視」[2014]、Tappendenの「生産的豊かさ」という概念[2012]、そしてErnstらによる「分野の変革」という基準[2014]に基づいています。Tappenden [2012]は、「実り多さ（fruitfulness）」を、概念、定義、あるいは理論が、新たな発見や関連性を生み出す能力であると定義しています。彼の主要な貢献は「生産的豊かさ」という概念の提示にありますが、その正確な定義は示されていません。本研究における「実り多さ」の基準は、Tappendenの概念を包含しつつ、より広範な解釈を提示するものです。
+</span>
+</p><p>
+
+The fruitfulness criterion has several drawbacks. Fruitfulness is often recognized
+only in hindsight, as with Galois’s work on group theory, which was largely ignored
+during his lifetime. Assessments vary across communities: number theorists may
+find Wiles’s proof fruitful, while financial mathematicians may not. There is also
+a field bias favoring prominent areas like number theory or geometry over equally
+significant work in niche fields. Moreover, the boundary between breadth of consequences and applicability of methods is vague, as the two are interconnected
+rather than mutually exclusive. Finally, what counts as a sufficient range of applications for a proof to be deemed fruitful remains undefined. For how this criterion
+interacts with the others, see Section 4.6.
+
+<br><span style="color:blue;">
+「豊饒さ（fruitfulness）」という基準には、いくつかの欠点があります。豊饒さは、ガロアの群論に関する研究（生前はほとんど無視されていました）に見られるように、往々にして後になって初めて認識されるものです。また、その評価は専門分野のコミュニティによって異なります。例えば、ワイルズによる証明は数論の専門家には豊饒なものとみなされるかもしれませんが、金融数学の専門家にはそうではないかもしれません。さらに、ニッチな分野における同様に重要な研究よりも、数論や幾何学といった主要な分野を優遇するような分野間の偏りも存在します。加えて、波及効果の広がりと手法の適用可能性との境界は曖昧です。これら二つは互いに排他的なものではなく、相互に関連し合っているからです。最後に、ある証明が「豊饒」であるとみなされるために必要な適用の範囲がどの程度かという点も、明確に定義されていません。この基準が他の基準とどのように関わり合うかについては、セクション4.6を参照してください。
+</span>
+</p>
+
+<h3>4.4. The Criterion of Unity. <span style="color:blue;">統一性の基準</span></h3>
+<p>
+ The unity of a proof consists in the connections
+it establishes among at least two distinct mathematical domains—objects, theories, or fields—illuminating underlying principles, structures, or methodologies
+that transcend individual areas. Unity is characterized not by the number of domains involved, but by the theoretical importance and cognitive salience of the
+connections revealed. A connection is theoretically important if it enables the
+transfer of problems, methods, or results from one domain to another, or if it reveals previously unrecognized structural isomorphisms. Such connections enhance
+our understanding of the mathematical landscape without requiring an antecedent
+judgment of the proof’s “depth”.<sup>30</sup> Indicators of unity include cross-domain principles, structural connections, and methodological syntheses. Our criterion of unity
+emphasizes a proof’s integrative power—its ability to unify disparate mathematical domains—and draws on Arana’s cosmological view of depth as revealing order
+and structure [2015], Ernst et al.’s candidate criteria of cross-field unification and
+finding order in chaos [2014], and the notion of impurity [Arana, 2015; Ernst et
+al., 2014].
+
+<br><span style="color:blue;">
+ある証明の「統一性」は、少なくとも二つの異なる数学的領域（対象、理論、あるいは分野）の間に確立されるつながりにあり、それによって個々の領域を超越する根本的な原理、構造、あるいは方法論が明らかにされる。この統一性は、関与する領域の数ではなく、明らかにされたつながりが持つ理論的重要さや認識上の際立ちによって特徴づけられる。あるつながりが理論的に重要であると言えるのは、それが問題、手法、あるいは結果を一つの領域から別の領域へと転用することを可能にする場合や、それまで認識されていなかった構造的同型性を明らかにする場合である。こうしたつながりは、その証明の「深さ」に関する事前の判断を必要とすることなく、数学的景観に対する我々の理解を深めるものである。<sup>30</sup> 統一性を示す指標には、領域横断的な原理、構造的なつながり、方法論の統合などが挙げられる。我々の統一性の基準は、証明が持つ統合力――すなわち、異質な数学的領域を統一する能力――を重視するものであり、秩序や構造を明らかにすることとしての「深さ」に関するアラナ（Arana）の宇宙論的見解 [2015]、分野横断的な統一や混沌の中での秩序の発見といったエルンストら（Ernst et al.）による基準案 [2014]、そして「不純性（impurity）」という概念 [Arana, 2015; Ernst et al., 2014] に依拠している。
+</span>
+</p><p style="padding-left:4em;">
+<sup>30</sup> One might worry that “theoretical importance” or “cognitive salience” merely swaps one
+vague term for another. Yet these are pre-theoretic anchors identifiable independently of
+depth—e.g., by cross-field citations, subsequent theorems, or historical testimony. Since unity is
+only one of five interacting criteria, no circular definition of depth is invoked.
+31Arana [2025] argues that purity comprises a cluster of epistemic virtues, identifying five
+types: geographical, topical, syntactic, logical, and elemental purity.
+<br><span style="color:blue;">
+「理論的重要性」や「認知的顕著さ」といった概念は、単に曖昧な用語を別の曖昧な用語に置き換えているに過ぎないのではないか、と懸念する向きもあるかもしれない。しかし、これらは「深さ」とは独立して特定可能な、理論構築に先立つ拠り所（アンカー）である。例えば、分野横断的な被引用数、後続の定理、あるいは歴史的証言などによって特定できるものである。また、「統一性」は相互に関連する5つの基準の一つに過ぎないため、「深さ」の定義が循環に陥ることもない。
+31 Arana [2025] は、「純粋性」が一連の認識論的徳目から構成されると論じ、その5つのタイプとして、地理的、主題的、統語的、論理的、そして要素的な純粋性を挙げている。
+</span>
+</p><p>
+
+Proofs that unify distinct domains frequently exhibit impurity—using tools from
+outside the theorem’s “native” domain. Arana [2025] systematically examines purity, defining a proof as pure if it relies only on elements that are “close”, “intrinsic”, or “native” to the theorem, avoiding “extraneous”, “foreign”, or “remote”
+concepts.31 Despite his emphasis on purity, Arana [2025] acknowledges that impurity can have virtues—unification, discovery, and efficiency among them. Wiles’s
+proof is a paradigmatic case of fruitful impurity: it imported the modularity theorem and Galois representations into number theory, achieving a unification that
+a pure proof could not.
+
+<br><span style="color:blue;">
+異なる領域を統合する証明は、しばしば「不純さ」、すなわちその定理の「本来の」領域外にある手法を用いるという性質を帯びる。Arana [2025] はこの「純粋さ」を体系的に検討し、定理にとって「近しい」「内在的」あるいは「本来の」要素のみに依拠し、「無関係な」「異質な」あるいは「遠い」概念を排除する証明を「純粋な」証明と定義している。Arana [2025] は純粋さを重視しつつも、不純さが持つ利点――統合、発見、効率性など――も認めている。ワイルズ（Wiles）による証明は、実りある不純さの典型例である。彼はモジュラリティ定理やガロア表現を数論に持ち込むことで、純粋な証明では成し得なかった統合を実現したのである。
+</span>
+</p><p>
+
+The unity criterion has several drawbacks. It may reward superficial connections
+that link domains artificially without genuine insight; the value of a connection
+lies in deepening understanding, not merely in the act of connecting. What counts
+as “distinct” depends on human categorization—objects from two domains may
+be seen as belonging to a more abstract, higher-order domain. An emphasis on
+unity may undervalue specialization, favoring horizontal links over vertical breakthroughs within a single domain. It may also devalue purity: a unifying proof can
+be more abstract and harder to grasp than a direct, pure proof, yet this criterion
+risks diminishing the achievement of finding a pure proof. Finally, the criterion
+is qualitative, making it difficult to specify how closely domains must be tied for
+a proof to be considered unified. For how this criterion interacts with the others,
+see Section 4.6.
+
+<br><span style="color:blue;">
+「統一性」という基準には、いくつかの欠点があります。この基準は、真の洞察を伴わずに領域間を人為的に結びつけるような、表層的なつながりを評価してしまう可能性があります。本来、つながりの価値は理解を深めることにあり、単に結びつけるという行為そのものにあるわけではないからです。何をもって「異なる」領域とするかは人間の分類に依存します。つまり、一見異なる二つの領域の対象が、より抽象的で高次の領域に属するものと見なされる場合もあり得るのです。統一性を重視するあまり専門性が軽視され、単一領域内での垂直的なブレイクスルーよりも、領域間の水平的なつながりが優先される恐れもあります。また、純粋さの価値を損なう可能性もあります。統一的な証明は、直接的かつ純粋な証明に比べて抽象度が高く理解しにくいものになりがちですが、この基準は、純粋な証明を見出すという業績の価値を低く見積もってしまうリスクを孕んでいるのです。最後に、この基準は定性的なものであるため、ある証明が「統一的」であると見なされるためには、領域同士がどの程度密接に結びついていなければならないかを具体的に定めるのが困難です。この基準が他の基準とどのように関わり合うかについては、セクション4.6を参照してください。
+</span>
+</p>
+
+<h3>4.5. The criterion of explanatory power. <span style="color:blue;">説明力の基準</span></h3>
+<p>
+ The explanatory power of a proof
+consists in the insights it provides into why the theorem it establishes is true,
+going beyond mere verification to offer genuine understanding.<sup>32</sup> An explanatory
+proof addresses “why” questions by connecting results to foundational principles
+or uncovering essential mechanisms. Steiner [1978] characterizes such proofs as
+relying on a “characterizing property”—a property unique to an entity within a
+relevant domain—and proposes a “deformation test”: a proof is explanatory if, by
+substituting a different characterizing property for a related object in the same
+family, we can generate new related theorems.<sup>33</sup> Lange [2014] argues that mathematical depth is linked to a proof’s ability to answer “why” questions, though his
+account risks circularity: a proof is deep because it is explanatory, and explanatory
+because it uses a salient feature, deemed salient precisely because it aligns with
+deep proofs. To avoid this circle, Lange must provide an independent criterion for
+salience.
+
+<br><span style="color:blue;">
+ある証明が持つ「説明力」とは、その証明が確立する定理がなぜ真であるかについて洞察を与える点にあり、単なる検証を超えて真の理解をもたらすものである。<sup>32</sup> 説明的な証明は、結論を根本的な原理と結びつけたり、本質的なメカニズムを明らかにしたりすることによって、「なぜ」という問いに応える。Steiner [1978] は、こうした証明が「特徴づける性質（characterizing property）」――すなわち、関連する領域内の対象に固有の性質――に依拠していると特徴づけ、「変形テスト（deformation test）」を提案している。そのテストによれば、ある証明が説明的であると言えるのは、同一の族（ファミリー）に属する関連対象について、その「特徴づける性質」を別のものに置き換えることで、新たな関連定理を導き出せる場合である。<sup>33</sup> Lange [2014] は、数学的な「深さ」は証明が「なぜ」という問いに答える能力と結びついていると論じているが、彼の説明には循環論法に陥る危険がある。すなわち、「説明的であるからこそその証明は深く、深い証明と合致するからこそ『際立った（salient）』特徴であるとみなされるような、その際立った特徴を用いているからこそ説明的である」という循環である。この循環を回避するためには、Lange は「際立っていること（salience）」に関する独立した基準を提示しなければならない。
+</span>
+</p><p style="padding-left:4em;">
+<sup>32</sup> This criterion builds on Lange’s emphasis on explanatory power and answering “why” questions [2014], Gray’s explanatory aspect [2014], Steiner’s characterizing property [1978], and Ernst
+et al.’s “explanatory/organizational power” candidate criterion [2014].
+
+<br><span style="color:blue;">
+この基準は、説明力と「なぜ」という問いへの回答を重視するLange [2014]、Grayの「説明的側面」[2014]、Steinerの「特徴づける性質」[1978]、そしてErnstらによる「説明的／組織化する力」という基準候補 [2014] に基づくものである。
+</span>
+</p><p style="padding-left:4em;">
+<sup>33</sup> Steiner’s deformation test operationalizes explanatory power, though it has faced objections
+(see Hafner and Mancosu [2005]). We adopt it here as a working heuristic because it captures
+an important aspect of what mathematicians often cite as explanatory in the context of Wiles’s
+proof.
+<br><span style="color:blue;">
+シュタイナーの変形テストは「説明力」を操作的に定義するものであるが、これに対しては異論も呈されている（Hafner and Mancosu [2005] を参照）。本稿では、ワイルズの証明の文脈において数学者たちがしばしば「説明的」であると指摘する事柄の重要な側面をこのテストが捉えていることから、これを作業的なヒューリスティックとして採用する。
+</span>
+</p><p>
+
+We note that although explanatory proofs are sometimes associated with an
+“Aha!” moment of insight, this phenomenological marker is neither necessary nor
+sufficient—it varies across individuals and communities. Our analysis therefore
+centers on Steiner’s characterizing property and on the proof’s capacity to answer
+“why” questions. Indicators of explanatory power include conceptual reasoning,
+illumination of essence, characterizing properties, and the revelation of underlying
+patterns.
+
+<br><span style="color:blue;">
+「説明的」な証明は、時に「アハ体験（なるほど！というひらめき）」を伴うことがありますが、こうした現象的な特徴は、説明的であるための必要条件でも十分条件でもありません。それは個人や共同体によって異なるからです。したがって、本分析では、シュタイナーが挙げた「特徴づける性質（characterizing property）」と、その証明が「なぜ」という問いに答えうるかという点に焦点を当てます。説明力の指標としては、概念的な推論、本質の解明、「特徴づける性質」、そして根底にあるパターンの提示などが挙げられます。
+</span>
+</p><p>
+
+The explanatory power criterion has several drawbacks. It is subjective: what
+one mathematician finds illuminating, another may find confusing—a category theorist, a combinatorialist, and an analyst may each prefer a different proof of
+the same theorem. It also suffers from vagueness: there is no precise definition
+of what constitutes explanatory insight, which may involve reducing a theorem
+to intuitive axioms, providing a compelling narrative, offering visual intuition,
+presenting a constructive proof over a proof by contradiction, or articulating a
+characterizing property. This lack of clarity complicates consistent application of
+the criterion. For how this criterion interacts with the others, see Section 4.6.
+
+<br><span style="color:blue;">
+「説明力」という基準には、いくつかの欠点があります。まず、この基準は主観的なものです。ある数学者にとって啓発的であるものが、別の数学者にとっては混乱を招くものとなる可能性があります。実際、圏論学者、組合せ論学者、解析学者は、同じ定理に対してそれぞれ異なる証明を好むかもしれません。また、この基準は曖昧さも抱えています。「説明的な洞察」を構成するものが何であるかについて、厳密な定義が存在しないのです。そうした洞察には、定理を直感的な公理に還元すること、説得力のある物語を提示すること、視覚的な直感を与えること、背理法ではなく構成的証明を示すこと、あるいはその定理を特徴づける性質を明確にすることなどが含まれ得ます。こうした明確さの欠如は、この基準を一貫して適用することを困難にしています。この基準が他の基準とどのように関わり合うかについては、セクション4.6を参照してください。
+</span>
+</p><p>
+
+In summary, the five criteria—Difficulty, Originality, Fruitfulness, Unity, and
+Explanatory Power—synthesize diverse perspectives on mathematical depth from
+the literature, offering a framework for analyzing the depth of mathematical proofs
+despite their potential drawbacks.
+
+<br><span style="color:blue;">
+要約すると、「難易度」「独創性」「豊饒性」「統一性」「説明力」という5つの基準は、数学的深さに関する文献上の多様な視点を統合したものであり、いくつかの潜在的な欠点はあるものの、数学的証明の深さを分析するための枠組みを提供するものである。
+</span>
+</p>
+
+<h3>4.6. Interrelations Among the Five Criteria. <span style="color:blue;">5つの基準間の相互関係</span></h3>
+<p>
+ The five criteria are distinct
+but systematically interdependent. Their overlaps, tensions, and causal dependencies—rather than any checklist function—give the framework its analytical
+purchase.
+
+<br><span style="color:blue;">
+これら5つの基準はそれぞれ独立したものでありながら、体系的に相互依存しています。単なるチェックリストとしての機能ではなく、それらの基準が持つ重複や緊張関係、そして因果的な依存関係こそが、この枠組みに分析上の有効性をもたらしているのです。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+• Difficulty correlates with originality and unity, but neither entails the other:
+a proof may be difficult yet unoriginal (brute-force computation) or disunified (a patchwork of unrelated lemmas), while originality or unity can reduce difficulty through clever shortcuts or higher-order syntheses. Difficulty
+also stands in persistent tension with explanatory power, since excessive
+technical intricacy can obscure the very understanding that explanation
+demands.
+
+<br><span style="color:blue;">
+「難易度」は独創性や統一性と相関関係にありますが、一方が他方を必然的に伴うわけではありません。例えば、ある証明は難しくても独創性に欠ける（力任せの計算によるものなど）場合や、統一性を欠く（無関係な補題の寄せ集めであるなど）場合があります。一方で、独創性や統一性が、巧みな近道や高次の統合を通じて「難しさ」を軽減することもあり得ます。また、「難しさ」は説明力とも常に緊張関係にあります。なぜなら、技術的な複雑さが過度になると、説明が本来目指すべき「理解」そのものをかえって妨げてしまう恐れがあるからです。
+</span>
+</li><br><li>
+
+• Originality reliably generates fruitfulness, as novel methods tend to be
+adaptable across domains. The pursuit of unity frequently stimulates originality, and an original framing can enhance explanatory power by dissolving prior obscurities.
+
+<br><span style="color:blue;">
+独創性は確実に実りをもたらします。なぜなら、斬新な手法は往々にして、異なる領域間でも応用が利くからです。統一性の追求はしばしば独創性を刺激しますし、独創的な枠組みは、それまで不明瞭だった点を解消することで、説明力を高めることができます。
+</span>
+</li><br><li>
+
+• Fruitfulness is orthogonal to difficulty—simple proofs can be enormously
+fruitful—and often depends on originality for its generative reach; it overlaps with unity when cross-domain links open new applications, though it
+can also remain confined to a single field.
+
+<br><span style="color:blue;">
+「豊饒性」は「難易度」とは独立した性質であり、単純な証明であっても極めて大きな成果をもたらし得ます。その波及力や展開力はしばしば独創性に依存しますが、異なる領域を結びつけることで新たな応用が開かれる場合には「統一性」とも重なり合います。もっとも、単一の分野にとどまる場合もあり得ます。
+</span>
+</li><br><li>
+
+• Unity generally demands originality, since recognizing cross-domain connections is an inventive act; it promotes fruitfulness by enabling methodtransfer across fields and supports explanatory power by supplying structural overview, yet a proof may unify without explaining (if the connection
+is technically opaque) or explain without unifying (if it clarifies a single
+domain through internal insight).
+
+<br><span style="color:blue;">
+「統一」には一般に独創性が求められます。なぜなら、異なる領域間のつながりを認識することは創造的な行為だからです。統一は、分野を超えた手法の移転を可能にすることで成果を豊かにし、構造的な全体像を提示することで説明力を高めます。しかし、ある証明が「統一」をもたらしても説明にはならない場合（つながりの仕組みが技術的に不透明な場合）もあれば、逆に「説明」にはなっても統一にはつながらない場合（ある領域の内部的な洞察を通じてその領域を明確にする場合）もあり得ます。
+</span>
+</li><br><li>
+
+• Explanatory power often stands in inverse relation to difficulty, as clarity
+typically requires stripping away unnecessary complexity; it can arise without originality or fruitfulness, and it is frequently delivered through unity,
+overlapping with both in making a theorem’s content intelligible.
+
+<br><span style="color:blue;">
+説明力はしばしば難解さとは逆の相関関係にあります。なぜなら、明快さには通常、不必要な複雑さを削ぎ落とすことが求められるからです。説明力は独創性や豊かさを伴わずとも生じ得ますが、しばしば「統一性」を通じて発揮され、定理の内容を理解可能にするという点において、それら（独創性や豊かさ）とも重なり合っています。
+</span>
+</li></ul></div>
+</p><p>
+
+The criteria thus form a family of features that cluster in paradigmatic cases,
+and their value lies not in any single necessary condition but in the structured
+comparisons they enable across different proofs.
+
+<br><span style="color:blue;">
+したがって、それらの基準は典型的な事例においてまとまりを示す一連の特性を形成しており、その価値は単一の必要条件にあるのではなく、異なる証明間での構造化された比較を可能にする点にあります。
+</span>
+</p>
+
+<h3>4.7. Are the Criteria Necessary and Sufficient? <br><span style="color:blue;">　その基準は必要かつ十分なものか？</span></h3>
+<p>
+ Consistent with the familyresemblance view introduced in Section 2, we do not claim that any of the five
+criteria is strictly necessary or individually sufficient for a proof to be considered
+deep. A proof that lacks some of difficulty, originality, fruitfulness, unity, or explanatory power might still be regarded as deep, while one that fails to satisfy any
+of the five is unlikely to be considered deep by reasonable standards. A proof that
+scores highly on originality and fruitfulness, for instance, may be judged deep even
+if its difficulty, unity, or explanatory power are only moderate.<sup>34</sup>
+
+<br><span style="color:blue;">
+第2節で導入した「家族的類似性」の観点に照らせば、ある証明が「深い」とみなされるために、これら5つの基準のいずれかが厳密に必要であったり、あるいは単独で十分であったりすると主張するわけではない。難しさ、独創性、豊饒性、統一性、説明力のいずれかを欠く証明であっても「深い」とみなされることはあり得るが、これら5つの基準を一つも満たさない証明が、妥当な基準に照らして「深い」とみなされることはまずないだろう。例えば、独創性と豊饒性の点で高い評価を受ける証明は、難しさ、統一性、説明力が中程度であっても、「深い」と判断される可能性がある。<sup>34</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>34</sup> Two further candidates sometimes mentioned in the literature—beauty and influence—deserve brief mention. Beauty, we suggest, is an experiential by-product that arises when
+several of our criteria converge (e.g., a proof that unifies, explains, and is original is often felt as
+beautiful), not a conceptually independent dimension of depth (see Inglis and Aberdein [2015];
+Thomas [2017, fn. 6]). Influence, while undeniably valuable, largely supervenes on fruitfulness,
+unity, and originality, and thus risks redundancy as a separate criterion.
+<br><span style="color:blue;">
+文献において他に候補として挙げられることのある「美」と「影響力」についても、簡単に触れておく価値があるでしょう。我々の見解では、「美」とは、いくつかの基準が合致した際に生じる経験的な副産物（例えば、統合性・説明力・独創性を兼ね備えた証明は、しばしば「美しい」と感じられます）であり、概念的に独立した「深さ」の次元ではありません（Inglis and Aberdein [2015]、Thomas [2017, 注6] を参照）。一方、「影響力」は間違いなく価値あるものですが、その大部分は「豊饒性（fruitfulness）」、「統合性」、「独創性」に付随して生じるものであり、したがって独立した基準として設けるには冗長となる恐れがあります。
+</span>
+</p><p>
+
+Developing a comprehensive list of criteria to measure the depth of mathematical proofs is challenging, if not impossible. Our five-criteria framework establishes
+a robust heuristic for analysis, acknowledging the distinctions and interconnections
+among the criteria. While the criteria are neither necessary nor sufficient individually, they offer a balanced and structured vocabulary for comparing proofs and
+for articulating why some proofs are widely regarded as deep—with Wiles’s proof
+serving as a paradigmatic case, as we will show in Section 5.
+
+<br><span style="color:blue;">
+数学的証明の「深さ」を測るための包括的な基準リストを作成することは、不可能ではないにせよ、困難な課題です。本稿で提示する5つの基準からなる枠組みは、各基準間の差異や相互の関連性を踏まえつつ、分析のための堅牢なヒューリスティック（経験則）を確立するものです。これらの基準は、個々には必要条件でも十分条件でもありませんが、証明同士を比較したり、なぜ特定の証明が「深い」と広く見なされるのかを説明したりするための、バランスの取れた体系的な語彙を提供します。なお、その典型例として、第5節ではワイルズによる証明を取り上げます。
+</span>
+</p><p>
+
+As a family-resemblance concept, depth may manifest in patterns very different
+from Wiles’s case; our framework is therefore not a general theory of proof depth,
+but a case-specific analytical grid calibrated to the paradigmatic example that
+motivates it. For other proofs, different criteria may be more salient, and the
+framework should be adapted accordingly.
+
+<br><span style="color:blue;">
+「家族的類似性」に基づく概念として、「深さ」はワイルズの事例とは大きく異なるパターンで現れる可能性があります。したがって、我々の枠組みは「証明の深さ」に関する一般理論ではなく、その着想の源となった典型的な事例に合わせて調整された、事例特有の分析的枠組みなのです。他の証明においては別の基準がより重要となる場合があり、その際は枠組みを適宜調整する必要があります。
+</span>
+</p>
+
+<h3>4.8. The Issue of Objectivity and Subjectivity. <span style="color:blue;">客観性と主観性の問題</span></h3>
+<p>
+ A recurring theme in the
+literature is whether judgments of depth can be objective.<sup>35</sup> Three main perspectives emerge: the objectivist view, which holds that depth is an objective feature
+of proofs revealing real patterns independent of human perception; the subjectivist
+view, which treats depth as a tool for organizing mathematics on the basis of our
+interests and cognitive limitations; and the intermediate view, which allows that
+although depth may depend on our interests and abilities, it can still be objectively
+assessed using specific criteria (Ernst et al. [2014]). Our framework adopts this
+intermediate view. For instance, explanatory power may be judged differently by
+number theorists (who value high-level unification) and arithmetic geometers (who
+demand fine-grained intelligibility), yet both judgments are evidence-responsive. By treating explanatory power as graded and multi-faceted, and by allowing that
+different epistemic values may lead experts to weigh the same evidence differently,
+the framework provides a structured space for reasoned debate without collapsing
+into relativism.
+
+<br><span style="color:blue;">
+関連する文献において繰り返し論じられているテーマの一つに、「深さ（depth）」に関する判断が客観的であり得るかという問題があります<sup>35</sup>。これに関しては、主に3つの視点が見受けられます。すなわち、深さとは人間の知覚から独立した実在のパターンを明らかにする証明の客観的な性質であるとする「客観主義的見解」、深さとは我々の関心や認知的制約に基づいて数学を体系化するための道具であるとする「主観主義的見解」、そして、深さは我々の関心や能力に依存し得るものの、特定の基準を用いれば客観的に評価可能であるとする「中間的見解」（Ernst et al. [2014]）です。本研究の枠組みは、この中間的見解を採用しています。例えば、「説明力」に対する判断は、高次の統一性を重視する数論学者と、詳細にわたる理解可能性を求める算術幾何学者とでは異なる可能性がありますが、いずれの判断も証拠に基づいたものです。説明力を段階的かつ多面的なものとして捉え、異なる認識論的価値観によって専門家が同一の証拠に対して異なる重み付けを行うことを許容することで、本枠組みは、相対主義に陥ることなく、論理的根拠に基づく議論のための構造化された場を提供します。
+</span>
+</p><p style="padding-left:4em;">
+<sup>35</sup> Lange [2014] argues that mathematical depth is context-dependent yet objective, while
+Urquhart [2014] concludes that depth is relative to audience and historical context.
+<br><span style="color:blue;">
+Lange [2014]は、数学的な「深さ」は文脈に依存しつつも客観的なものであると論じているのに対し、
+Urquhart [2014]は、その深さは受け手や歴史的文脈に相対的なものであると結論づけている。
+</span>
+</p><p>
+
+Each of the five criteria is context-dependent yet contains objective elements
+that can be assessed within fixed constraints. Difficulty is influenced by cognitive limitations and historical context—a proof in advanced category theory may
+daunt a combinatorialist but be routine for a topologist—yet certain aspects, such
+as formal complexity, admit objective measurement. Originality is relative to
+a community’s state of knowledge, but within a fixed historical context one can
+objectively assess whether the ideas introduced had already been conceived. Fruitfulness depends on our interests and abilities, yet some consequences—such as the
+number of theorems a proof generates—exist independently of human perception.
+Unity involves connections between domains that can exist independently of perception, though what counts as “distinct” is subject to categorization; given a
+fixed set of domains, the connections can be objectively assessed. Explanatory
+power varies across individuals and communities—what one mathematician finds
+illuminating another may find opaque—and there is no universal standard for a
+“good” explanation, though some aspects (clarity of logic, characterizing properties) admit partial objectification. Judgments of proof depth, then, are neither
+wholly objective nor merely subjective; they occupy an intermediate ground.
+
+<br><span style="color:blue;">
+5つの基準はそれぞれ文脈に依存するものではありますが、同時に、一定の制約下で評価可能な客観的要素も備えています。「難易度」は認知的な限界や歴史的文脈に左右されます（例えば、高度な圏論における証明は、組合せ論の専門家をたじろがせるかもしれませんが、トポロジーの専門家にとっては日常的なものかもしれません）。しかし、形式的な複雑さといった側面については、客観的な測定が可能です。「独創性」は、あるコミュニティの知識の状態に相対的なものですが、特定の歴史的文脈においては、提示されたアイデアがすでに考案されていたかどうかを客観的に評価できます。「実り多さ（豊饒さ）」は私たちの関心や能力に依存しますが、その帰結の一部――例えば、ある証明から導き出される定理の数など――は、人間の認識とは独立して存在します。「統一性」は、認識とは独立して存在しうる領域間のつながりに関わるものですが、何をもって「別個の」領域とみなすかは分類の仕方に左右されます。それでも、領域の集合が固定されていれば、それらのつながりを客観的に評価することは可能です。「説明力」は個人やコミュニティによって異なります（ある数学者にとって啓発的な説明が、別の数学者には不明瞭に映ることもあります）。また、「優れた」説明に関する普遍的な基準も存在しませんが、論理の明快さや特徴づける性質といった側面については、部分的に客観化することが可能です。したがって、証明の「深さ」に関する判断は、完全に客観的なものでもなければ単に主観的なものでもなく、その中間に位置するものと言えます。
+</span>
+</p><p>
+
+The depth of a proof is thus evaluated through a combination of criteria, some
+rooted in mathematics itself and others influenced by human perspectives. Some
+proofs once considered deep may no longer hold that status today (e.g., the proof
+of the irrationality of √
+2 was once profound but is now straightforward). Yet
+this does not imply that depth is entirely subjective: while academic evaluations contain subjective elements, the mathematical evidence supporting them
+can be objective. Our intermediate perspective thus transcends simplistic objectivist/subjectivist dichotomies by recognizing the historical and communal nature
+of judgments on proof depth while still upholding criteria for reasoned debate.
+
+<br><span style="color:blue;">
+したがって、証明の「深さ」は、数学そのものに根ざす基準と、人間の視点に影響される基準を組み合わせることによって評価されます。かつては深いと見なされていた証明が、今日ではもはやそうした評価を受けないこともあります（例えば、√2の無理性の証明は、かつては深遠なものとされていましたが、現在では平易なものと見なされています）。しかし、これは「深さ」が完全に主観的なものであることを意味するわけではありません。学術的な評価には主観的な要素が含まれるものの、それらを裏付ける数学的根拠は客観的であり得るからです。このように、私たちの採る中立的な視点は、証明の深さに関する判断が持つ歴史的・共同体的な性質を認めつつ、同時に論理的な議論のための基準を堅持することで、客観主義と主観主義という単純な二項対立を超越するものなのです。
+</span>
+</p>
+
+<h2><center>5. Assessing the Depth of Wiles’s Proof<br><span style="color:blue;">ワイルズの証明の深さを評価する</span></center></h2>
+<p>
+We evaluate the depth of Wiles’s proof of FLT using the five criteria introduced
+above. By “synthesis” we mean two things: first, that the proof strongly satisfies
+each criterion individually; second, and more fundamentally, that the criteria are
+not independent here. The features that make the proof original also contribute
+to its unity, and its explanatory power derives partly from the way it unifies
+disparate fields. Our central thesis is that Wiles’s proof exemplifies a non-additive
+interaction of these dimensions—a mutually reinforcing structure, not a checklist
+of independent virtues. The following subsections (Sections 5.1-5.5) examine the
+evidence for each criterion in turn, highlighting the most significant mathematical
+considerations without attempting exhaustive justification.
+
+<br><span style="color:blue;">
+本稿では、前述の5つの基準を用いて、ワイルズによるフェルマーの最終定理（FLT）の証明の深さを評価する。ここで「統合」という言葉には2つの意味が込められている。第一に、その証明が個々の基準をいずれも高いレベルで満たしていること。第二に、より根本的な点として、それらの基準が互いに独立したものではないことである。その証明を独創的なものにしている特徴は、同時にその統一性にも寄与しており、その説明力は、異質な諸分野を統合するあり方に一部由来している。我々の主要な主張は、ワイルズの証明がこれら諸側面の「非加法的」な相互作用――単なる独立した美点のチェックリストではなく、互いに強化し合う構造――を体現しているという点にある。続く各節（5.1節～5.5節）では、網羅的な正当化を試みるのではなく、最も重要な数学的考察に焦点を当てつつ、各基準に関する根拠を順に検討していく。
+</span>
+</p>
+
+<h3>5.1. The Difficulty of Wiles’s Proof. <span style="color:blue;">ワイルズの証明の難易度</span></h3>
+<p>
+ Historical evidence, while not itself constitutive of difficulty, strongly indicates the proof’s conceptual and technical demands. FLT remained unsolved for 358 years despite sustained efforts by generations of mathematicians, including substantial partial results for many exponents and related developments such as Faltings’s Theorem (1983) and the HeathBrown–Granville “almost all” result (1984).<sup>36</sup> Yet none of these advances yielded
+a complete proof or supplied the methods Wiles would later deploy—the critical
+link to Frey curves had not yet been discovered. The problem was even listed in
+the Guinness World Records as the “hardest mathematical problem” prior to its
+resolution.
+
+<br><span style="color:blue;">
+歴史的な経緯を見れば、それ自体が「難しさ」の正体というわけではないものの、この証明がいかに概念的・技術的に高い要求を伴うものであったかが強く示唆されます。フェルマーの最終定理（FLT）は、何世代にもわたる数学者たちの絶え間ない努力にもかかわらず、358年間未解決のままでした。その間、多くの指数に対する重要な部分的成果や、ファルティングスの定理（1983年）やヒース・ブラウンとグランヴィルによる「ほとんどすべての（指数について成り立つ）」という結果（1984年）といった関連する進展はあったものの、<sup>36</sup> いずれの成果も完全な証明には至らず、また後にワイルズが用いることになる手法をもたらすこともありませんでした。つまり、フライ曲線との決定的なつながりが、まだ発見されていなかったのです。解決に至る前には、この問題はギネス世界記録に「最も難しい数学の問題」として掲載されたことさえありました。
+</span>
+</p><p style="padding-left:4em;">
+<sup>36</sup> For surveys of these partial results, see Buhler et al. [1993], Faltings [1983] and McLarty
+[2024].
+<br><span style="color:blue;">
+これらの部分的な結果に関する概説については、Buhler et al. [1993]、Faltings [1983]、および McLarty [2024] を参照されたい。
+</span>
+</p><p>
+
+The proof’s technical difficulty is evident from its reliance on diverse fields—number
+theory, algebraic geometry, complex analysis, Galois representations, deformation theory, and commutative algebra—each demanding deep specialized expertise. Wiles deployed sophisticated techniques including Galois deformation theory, Hecke algebras, the R = T strategy, the Taylor–Wiles method, and the “3–5
+switch”. The proof spans ninety pages with a 98-entry bibliography, and the
+discovery of a significant gap during initial peer review further underscores its
+intricacy.
+
+<br><span style="color:blue;">
+この証明の技術的な難易度は、数論、代数幾何学、複素解析、ガロア表現、変形理論、可換代数といった、それぞれ高度な専門知識を要する多岐にわたる分野を駆使している点から明らかです。ワイルズは、ガロア変形理論、ヘッケ環、「R=T」戦略、テイラー・ワイルズ法、「3-5スイッチ」などの洗練された手法を駆使しました。証明は90ページに及び、参考文献は98件にのぼります。また、当初の査読段階で重大な不備が見つかったという事実は、この証明がいかに複雑なものであるかをさらに浮き彫りにしています。
+</span>
+</p><p>
+
+Conceptually, the proof marks a revolutionary departure. Traditional attempts
+confined themselves to elementary or algebraic number theory; Wiles instead reframed FLT as a special case of the Taniyama–Shimura–Weil conjecture, establishing a profound structural unity between elliptic curves and modular forms. This
+paradigm shift proved indispensable—no proof of FLT has been found without
+it. The methods he introduced to prove the modularity theorem—the modularity
+lifting theorem, the R = T strategy, and the Taylor–Wiles method—have since
+become foundational.
+
+<br><span style="color:blue;">
+概念的に見れば、この証明は革命的な転換を画するものでした。従来のアプローチは初等整数論や代数的整数論の枠内にとどまっていましたが、ワイルズはフェルマーの最終定理を「谷山・志村・ヴェイユ予想」の特殊なケースとして捉え直すことで、楕円曲線とモジュラー形式の間に深遠な構造的統一性を見出したのです。このパラダイムシフトは不可欠なものであり、これなしにはフェルマーの最終定理の証明は成し遂げられなかったでしょう。彼がモジュラー性定理の証明のために導入した手法――モジュラー性持ち上げ定理、「R=T」戦略、そしてテイラー・ワイルズ法――は、その後、この分野における基礎的な手法となりました。
+</span>
+</p>
+
+<h3>5.2. The Originality of Wiles’s Proof. <span style="color:blue;">ワイルズの証明の独創性</span></h3>
+<p>
+ Wiles’s proof exemplifies originality
+through both invention and creative synthesis. He transformed FLT from an isolated problem into a corollary of the Taniyama–Shimura–Weil conjecture, linking
+it to a deeper unifying principle.<sup>37</sup> This reframing is itself a hallmark of originality.
+
+<br><span style="color:blue;">
+ワイルズの証明は、独創的な着想と創造的な統合の双方を通じて、その独創性を体現している。彼はフェルマーの最終定理を、孤立した問題から谷山・志村・ヴェイユ予想の系（系譜的な帰結）へと変貌させ、より深遠な統一原理へと結びつけたのである。<sup>37</sup> このように問題を捉え直したこと自体が、独創性の証左にほかならない。
+</span>
+</p><p style="padding-left:4em;">
+<sup>37</sup> The crucial link between FLT and the conjecture was established by Frey and Ribet, but
+Wiles was the first to prove the conjecture with the aim of proving FLT.
+<br><span style="color:blue;">
+フェルマーの最終定理（FLT）と当該予想との間の極めて重要な関連性はフライとリベットによって確立されましたが、FLTの証明を目指してその予想を最初に証明したのはワイルズでした。
+</span>
+</p><p>
+
+In proving the modularity lifting theorem, Wiles reformulated the modularity problem via the R = T strategy, turning it into a manageable ring-theoretic
+question. The Taylor–Wiles method—introducing auxiliary primes, proving isomorphisms in a smoothed setting, and recovering the original via a limiting argument—represents another technical innovation that has become fundamental in
+number theory.
+
+<br><span style="color:blue;">
+ワイルズは、モジュラリティ・リフティング定理の証明において、「R = T」戦略を用いてモジュラリティ問題を再定式化し、扱いやすい環論的な問題へと転換させました。補助的な素数の導入、滑らかに整えられた設定での同型の証明、そして極限論法による元の問題への復元という手順を含む「テイラー・ワイルズ法」は、数論において不可欠なものとなった、もう一つの重要な技術的革新です。
+</span>
+</p><p>
+
+His use of the “3–5 switch” to initiate the induction argument further demonstrates originality: rather than proving modularity directly for the reducible mod-3 case, he related it to the mod-5 representation, where modularity was easier to establish, thereby securing the base case.
+
+<br><span style="color:blue;">
+帰納法の議論の出発点として「3–5の切り替え（3–5 switch）」を用いた点にも、彼の独創性がさらに表れています。すなわち、法3で可約な場合について直接モジュラリティを証明するのではなく、モジュラリティの確立がより容易な法5の表現に関連付けることで、帰納法の「基底段階（base case）」を確実なものとしたのです。
+</span>
+</p><p>
+
+Beyond these innovations, Wiles’s proof achieves a remarkable creative synthesis, integrating decades of work across number theory, algebraic geometry, complex
+analysis, commutative algebra, and deformation theory. A pivotal instance was
+his combination of Iwasawa theory and the Kolyvagin–Flach method. Individually, both techniques proved inadequate for bounding the Selmer group—Iwasawa
+theory failed in the non-abelian context, and the Kolyvagin–Flach Euler system
+lacked sufficient control. Wiles recognized that their deficiencies were mutually
+offsetting; by constructing a hybrid framework combining the structural reach of
+Iwasawa theory with the precise machinery of Kolyvagin–Flach, he leveraged the
+strengths of each to compensate for the other’s weaknesses. This novel integration
+yielded the critical bound, closed the gap that had stalled the proof for over a
+year, and completed the modularity theorem for semistable elliptic curves.
+
+<br><span style="color:blue;">
+こうした革新に加え、ワイルズの証明は、数論、代数幾何学、複素解析、可換代数、変形理論といった多岐にわたる分野で数十年にわたり積み重ねられてきた研究成果を統合し、驚くべき創造的融合を実現したものでした。その極めて重要な一例が、岩澤理論とコリヴァギン・フラッハ法の組み合わせです。個々の手法だけではセルマー群の大きさを抑える（評価する）には不十分でした。岩澤理論は非可換な状況には適用できず、コリヴァギン・フラッハのオイラー系は制御能力が不十分だったのです。ワイルズは、これら二つの手法の欠点が互いに補い合えることに気づきました。岩澤理論の持つ構造的な射程と、コリヴァギン・フラッハ法の精密な手法を組み合わせたハイブリッドな枠組みを構築することで、それぞれの長所を活かし、互いの弱点を補完したのです。この独創的な統合により、決定的な評価が得られ、一年以上にわたって証明の進展を阻んでいた障壁が取り除かれ、半安定な楕円曲線に関するモジュラー性定理が完成しました。
+</span>
+</p>
+
+<h3>5.3. The Fruitfulness of Wiles’s Proof. <span style="color:blue;">ワイルズの証明の豊饒さ</span></h3>
+<p>
+ The fruitfulness of Wiles’s proof consists in the breadth of its consequences and the applicability of its methods. Unlike FLT itself—easy to state but limited in implications (McLarty [2024])—the
+Taniyama–Shimura–Weil conjecture has numerous corollaries.
+
+<br><span style="color:blue;">
+ワイルズによる証明の豊かさは、その帰結の広がりと手法の適用可能性にあります。フェルマーの最終定理（FLT）そのものは、主張こそ単純ですがその含意は限られたものでした（McLarty [2024]）。それとは対照的に、谷山・志村・ヴェイユ予想からは数多くの系が導かれます。
+</span>
+</p><p>
+
+First, Wiles’s proof provides a powerful framework for translating problems
+about elliptic curves into questions about modular forms and vice versa, a bridge
+with far-reaching applications that has since been extended well beyond the semistable
+case.
+
+<br><span style="color:blue;">
+まず、ワイルズの証明は、楕円曲線に関する問題をモジュラー形式に関する問いへと（あるいはその逆へと）翻訳するための強力な枠組み、すなわち広範な応用可能性を持つ「架け橋」を提供しました。この枠組みはその後、半安定な場合にとどまらず、さらに大きく拡張されています。
+</span>
+</p><p>
+
+Second, the methods introduced in Wiles’s proof have inspired subsequent generations to tackle more complex problems. His proof established a powerful modular
+lifting technique, laying the groundwork for a complete proof of the Taniyama–Shimura–Weil
+conjecture—a development that has proved crucial for further advances in mathematics. The methods Wiles introduced were rapidly generalized: within six years,
+Conrad–Diamond–Taylor–Breuil extended the modularity theorem to all elliptic
+curves over the rationals, and subsequent work has extended the scope to real
+quadratic fields and beyond.
+
+<br><span style="color:blue;">
+第二に、ワイルズの証明で導入された手法は、後続の世代がより複雑な問題に取り組むための刺激となりました。彼の証明は強力な「モジュラー・リフティング（モジュラー性持ち上げ）」の手法を確立し、谷山・志村・ヴェイユ予想の完全な証明への道筋をつけました。この進展は、その後の数学の発展において極めて重要な役割を果たしています。ワイルズが導入した手法は急速に一般化されました。わずか6年のうちに、コンラッド、ダイアモンド、テイラー、ブルイユによってモジュラー性定理が有理数体上のすべての楕円曲線へと拡張され、その後の研究では実二次体やさらにその先へと適用範囲が広げられています。
+</span>
+</p><p>
+
+Third, Wiles’s proof establishes the \(R = T\) strategy, which reframes modularity
+problems as ring isomorphisms. This strategy translates the abstract question of
+whether a Galois representation is modular into the concrete algebraic problem of
+proving that the deformation ring \(R\) is isomorphic to the Hecke algebra \(T\). The
+\(R = T\) strategy links properties of Hecke algebras to those of Galois representations using commutative algebra. It has since become a powerful tool in algebraic
+number theory and a standard method for proving modularity lifting theorems
+[McLarty, 2024].
+
+<br><span style="color:blue;">
+第三に、ワイルズの証明は「\(R = T\)」という戦略を確立しました。これは、モジュラリティ（保型性）に関する問題を環の同型に関する問題として捉え直すものです。この戦略は、「あるガロア表現がモジュラーであるか否か」という抽象的な問いを、「変形環 \(R\) がヘッケ環 \(T\) と同型であることを証明する」という具体的な代数的問題へと置き換えるものです。\(R = T\) 戦略は、可換代数を用いることで、ヘッケ環の性質とガロア表現の性質を結びつけます。この手法は、その後、代数的整数論における強力なツールとなり、モジュラリティ・リフティング定理（保型性持ち上げ定理）を証明するための標準的な方法となりました [McLarty, 2024]。
+</span>
+</p><p>
+
+Fourth, the Taylor-Wiles method introduces auxiliary primes to “smooth” a
+deformation problem, proving an isomorphism in a more flexible setting, and then
+employs a limiting process to return to the original problem. This method has become a fundamental technique in the Langlands program, essential for proving
+many modularity lifting theorems for higher-dimensional Galois representations.<sup>38</sup>
+
+<br><span style="color:blue;">
+第四に、テイラー・ワイルズ法は、変形問題を「滑らかにする」ために補助的な素数を導入してより柔軟な設定の下で同型性を証明し、その後、極限操作を用いて元の問題へと立ち返るという手法をとる。この手法はラングランズ・プログラムにおける基本的な技法となっており、高次元ガロア表現に関する多くのモジュラリティ・リフティング定理を証明する上で不可欠なものである。<sup>38</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>38</sup> Edward Frenkel describes the Langlands program as “a grand unified theory of mathematics”, aiming to construct a comprehensive framework that connects number theory with harmonic
+analysis and geometry [Gelbart, 1997].
+<br><span style="color:blue;">
+エドワード・フレンケルはラングランズ・プログラムを「数学の統一理論」と表現し、数論を調和解析や幾何学と結びつける包括的な枠組みの構築を目指している [Gelbart, 1997]。
+</span>
+</p><p>
+
+Fifth, building on earlier work, Wiles developed Galois deformation theory into
+a central tool. This framework studies families of Galois representations by classifying all possible lifts of a base representation through the “deformation ring”.
+This theory is now indispensable in modern number theory, serving as the primary language for formulating and proving results about the modularity of Galois
+representations, and it is crucial for ongoing work in the Langlands program.
+
+<br><span style="color:blue;">
+第五に、ワイルズは先行研究を発展させ、ガロア変形理論を主要な手法へと築き上げました。この枠組みでは、「変形環」を介して基底となる表現のあらゆる可能な「持ち上げ（リフト）」を分類することにより、ガロア表現の族を研究します。現在、この理論は現代の数論において不可欠なものとなっており、ガロア表現のモジュラリティに関する成果を定式化・証明するための主要な言語として機能するとともに、ラングランズ・プログラムにおける継続的な研究においても極めて重要な役割を果たしています。
+</span>
+</p><p>
+
+In summary, Wiles’s proof acts as a catalyst for ongoing mathematical exploration by establishing deep connections between elliptic curves and modular forms.
+These connections offer a versatile framework that has resolved numerous mathematical problems and opened new research avenues. Moreover, the methods employed—the modularity lifting technique, the R = T strategy, the Taylor-Wiles
+method, and Galois deformation theory—have provided the mathematical community with a powerful and lasting toolkit.
+
+<br><span style="color:blue;">
+要約すれば、ワイルズの証明は、楕円曲線とモジュラー形式の間に深い関連性を確立することで、継続的な数学的探究の触媒としての役割を果たしています。
+こうした関連性は、数多くの数学的難問を解決し、新たな研究の道を切り開く多用途な枠組みをもたらしました。さらに、そこで用いられた手法――モジュラリティ・リフティング（モジュラリティの持ち上げ）技法、「R=T」戦略、テイラー・ワイルズ法、そしてガロア変形理論――は、数学界に強力かつ永続的な「道具箱」を提供したのです。
+</span>
+</p>
+
+<h3>5.4. The Unity of Wiles’s Proof. <span style="color:blue;">ワイルズの証明の統一性</span></h3>
+<p>
+ The unity of Wiles’s proof manifests at three
+interconnected levels: unifying mathematical objects, connecting mathematical
+fields, and situating the result within the Langlands program.
+
+<br><span style="color:blue;">
+ワイルズの証明の統一性は、相互に関連する3つのレベルにおいて現れています。すなわち、数学的対象の統一、数学の諸分野の連結、そしてラングランズ・プログラムにおける当該結果の位置づけです。
+</span>
+</p><p>
+
+First, the proof establishes a connection between elliptic curves and modular
+forms, encoding the arithmetic data of an elliptic curve—such as the number of
+solutions modulo various primes—in the Fourier coefficients of its associated modular form. This allows problems in one domain to be translated into the other
+and solved there. The \(R = T\) theorem integrates diverse mathematical objects
+(e.g., elliptic curve, Galois representation, the deformation ring \(R\), and the Hecke
+algebra \(T\)) into a cohesive ring-theoretic framework, showing that \(R \simeq T\) via the
+Taylor–Wiles method—a powerful tool that simultaneously manages both rings to
+establish the isomorphism.<sup>39</sup>
+
+<br><span style="color:blue;">
+まず、この証明は楕円曲線とモジュラー形式の間に結びつきを確立するものであり、楕円曲線の算術的データ（様々な素数を法とする解の個数など）を、それに対応するモジュラー形式のフーリエ係数へと符号化するものである。これにより、一方の領域における問題を他方の領域の問題へと翻訳し、そこで解決することが可能になる。「R=T」定理は、多様な数学的対象（楕円曲線、ガロア表現、変形環R、ヘッケ環Tなど）を首尾一貫した環論的枠組みへと統合するものであり、テイラー・ワイルズ法（両方の環を同時に扱うことで同型を確立する強力な手法）を用いてR ≃ Tであることを示している。<sup>39</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>39</sup> All information about the elliptic curve and its Galois representations is encoded in the
+universal deformation ring R, while the corresponding modular forms are captured by the Hecke
+Algebra \(T\).
+<br><span style="color:blue;">
+楕円曲線とそのガロア表現に関するすべての情報は普遍変形環 \(R\) に符号化されている一方、対応するモジュラー形式はヘッケ環 \(T\) によって捉えられる。
+</span>
+</p><p>
+
+
+Second, the proof exemplifies interdisciplinary synthesis, revealing connections
+among number theory, geometry, analysis, and algebra:
+
+<br><span style="color:blue;">
+第二に、この証明は学際的な統合の好例であり、数論、幾何学、解析学、代数学の間のつながりを明らかにしています。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+• From arithmetic to geometry: The proof transforms the purely arithmetical
+problem of Fermat’s equation (\(a^n + b^n = c^n\) into a geometric problem
+concerning the properties of a constructed elliptic curve (the Frey curve).<sup>40</sup>
+
+<br><span style="color:blue;">
+算術から幾何学へ：この証明は、フェルマーの方程式（\(a^n + b^n = c^n\)）に関する純粋に算術的な問題を、構築された楕円曲線（フライ曲線）の性質をめぐる幾何学的な問題へと変換するものである。<sup>40</sup>
+</span>
+</li></ul></div>
+</p><p style = "padding-left:4em;">
+
+<sup>40</sup>This shift aligns with the historical association between geometric proofs and depth in
+number theory, noted by mathematicians such as Riemann [1859], Hilbert and Hurwitz [1890],
+and Poincar´e [1901].
+
+<br><span style="color:blue;">
+この転換は、リーマン [1859]、ヒルベルトとフルヴィッツ [1890]、ポアンカレ [1901] といった数学者たちが指摘した、幾何学的証明と数論における「深さ」との歴史的な関連性と整合するものである。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+
+• From geometry to analysis: Wiles’s proof of the modularity theorem connects geometry and analysis, demonstrating an intrinsic link between semistable elliptic curves and modular forms.
+
+<br><span style="color:blue;">
+幾何学から解析学へ：ワイルズによるモジュラー性定理の証明は、幾何学と解析学を結びつけ、半安定な楕円曲線とモジュラー形式の間に内在的なつながりがあることを示しました。
+</span>
+</li><br><li>
+
+• The algebraic machinery: Wiles’s proof relies on algebraic structures, particularly Galois representations, which serve as a “translation device” that
+converts the abstract symmetries of number fields into the concrete language of linear algebra. This approach forges a link between numbertheoretic objects and algebraic structures, utilizing Mazur’s theory of Galois representation deformations [McLarty, 2024].
+
+<br><span style="color:blue;">
+代数的な手法：ワイルズの証明は代数的構造、とりわけガロア表現に依拠しています。これらは、数体の抽象的な対称性を線形代数という具体的な言語へと変換する「翻訳装置」としての役割を果たします。このアプローチは、マズールによるガロア表現の変形理論を活用することで、数論的対象と代数的構造との間に結びつきを築くものです [McLarty, 2024]。
+</span>
+</li><br><li>
+
+• Integration of concepts from various fields: Wiles’s proof synthesizes concepts from number theory (Fermat’s Last Theorem, elliptic curves, Galois groups), algebraic geometry (schemes, cohomology), complex analysis
+(modular forms), commutative algebra (Hecke algebras, deformation rings),
+and representation theory (Galois representations).
+
+<br><span style="color:blue;">
+多岐にわたる分野の概念の統合：ワイルズの証明は、数論（フェルマーの最終定理、楕円曲線、ガロア群）、代数幾何学（スキーム、コホモロジー）、複素解析（モジュラー形式）、可換代数（ヘッケ環、変形環）、および表現論（ガロア表現）の概念を統合したものである。
+</span>
+</li></ul></div>
+</p><p>
+
+Third, the proof exemplifies the Langlands program, a broader vision for unifying mathematics.<sup>41</sup> The Langlands program encompasses profound conjectures
+about the connections between number theory, analysis, and geometry. The modularity theorem itself is a non-abelian case of more general conjectures proposed
+by R. Langlands, which seek to associate an automorphic form or representation (a
+generalization of a modular form) with objects in arithmetic algebraic geometry,
+such as every elliptic curve over a number field. The proof of the modularity theorem serves as a crucial step toward realizing the broader goals of the Langlands
+program. By connecting Galois representations generated from elliptic curves with
+those from modular forms through the \(R = T\) theorem, the proof exemplifies the
+unity that the Langlands program aims to achieve.
+
+<br><span style="color:blue;">
+第三に、この証明は、数学の統一を目指すより広範な構想であるラングランズ・プログラムを体現するものである。<sup>41</sup> ラングランズ・プログラムは、数論、解析学、幾何学の間の関連性に関する深遠な予想を包含している。モジュラー性定理それ自体は、R. ラングランズが提唱したより一般的な予想の非可換な場合にあたる。その予想は、保型形式や表現（モジュラー形式の一般化）を、数体上の楕円曲線といった数論的代数幾何学の対象と結びつけようとするものである。モジュラー性定理の証明は、ラングランズ・プログラムのより広範な目標を実現する上で極めて重要な一歩となる。「R=T定理」を用いて、楕円曲線から生じるガロア表現とモジュラー形式から生じるガロア表現を結びつけることによって、この証明は、ラングランズ・プログラムが達成しようとしている統一性を具体的に示している。
+</span>
+</p><p style="padding-left:4em;">
+<sup>41</sup> Scholars across various fields—such as number theory, harmonic analysis, geometry, representation theory, and mathematical physics—have engaged with the Langlands program, revealing similar unified phenomena even though they focus on different mathematical objects.
+<br><span style="color:blue;">
+数論、調和解析、幾何学、表現論、数理物理学といった様々な分野の研究者がラングランズ・プログラムに取り組んできており、それぞれ異なる数学的対象を扱っていながらも、類似した統一的現象を明らかにしています。
+</span>
+</p>
+
+<h3>5.5. The Explanatory Power of Wiles’s Proof. <span style="color:blue;">ワイルズの証明の説明力</span></h3>
+<p>
+ The explanatory power of
+Wiles’s proof lies in two key aspects. First, it situates FLT not as an isolated
+anomaly but as a specific consequence of the deeper modularity theorem. It clarifies the truth of FLT by showing that a counterexample would violate a fundamental principle of mathematics, thereby reframing the question from “Are there
+any numbers that satisfy this equation?” to “Can a coherent mathematical object
+like the Frey curve exist?” The answer is no: a counterexample would create a
+“monster” curve that undermines the essential connection between elliptic curves
+and modular forms established by the modularity theorem.
+
+<br><span style="color:blue;">
+ワイルズによる証明が持つ説明力は、主に2つの点にあります。第一に、この証明はフェルマーの最終定理（FLT）を孤立した例外的な問題としてではなく、より深遠な「モジュラー性定理」の帰結の一つとして位置づけています。反例の存在が数学の根本原理に反することを示すことでFLTの真実性を明らかにし、それによって問いの立て方を、「この方程式を満たす数は存在するのか？」というものから、「フライ曲線のような整合性のある数学的対象は存在しうるのか？」というものへと転換させたのです。その答えは「否」です。もし反例が存在するとすれば、それはモジュラー性定理によって確立された楕円曲線とモジュラー形式との本質的な結びつきを根底から覆すような、「怪物」のごとき曲線を生み出してしまうことになるからです。
+</span>
+</p><p>
+
+
+This approach not only resolved FLT but also advanced the understanding of
+elliptic curves and modular forms. Furthermore, Wiles’ proof identifies its characterizing property in the sense of Steiner [1978], revealing that the absence of
+solutions to Fermat’s equation (\(a^n + b^n = c^n\)) for \(n ≥ 3\) stems from the fact that a counterexample would correspond to a non-modular semi-stable elliptic
+curve, contradicting the modularity theorem. Thus, Wiles’ proof re-contextualizes
+FLT—from a mere curiosity about integers to a necessary outcome of structural
+unity.
+
+<br><span style="color:blue;">
+このアプローチは、フェルマーの最終定理（FLT）を解決しただけでなく、楕円曲線やモジュラー形式に関する理解をも深めるものでした。さらに、ワイルズの証明は、シュタイナー（Steiner [1978]）のいう意味での「特徴づける性質」を明らかにしています。すなわち、\(n \ge 3\) の場合にフェルマーの方程式（\(a^n + b^n = c^n\)）が解を持たないのは、もし反例が存在するとすれば、それはモジュラー的ではない半安定楕円曲線に対応することになり、モジュラー性定理と矛盾してしまうという事実に基づいているのです。こうしてワイルズの証明は、FLTを単なる整数論上の好奇の対象から、構造的な統一性における必然的な帰結へと、その位置づけを塗り替えたのです。
+</span>
+</p><p>
+
+Second, Wiles’ proof provides a generative blueprint for understanding through
+its core mechanism, the \(R = T\) strategy. This strategy elucidates the effectiveness
+of the modularity lifting technique. The isomorphism between the deformation
+ring \(R\) and the Hecke algebra \(T\), established by the \(R = T\) theorem, reveals the
+underlying pattern linking elliptic curves and modular forms. The Taylor-Wiles
+method further clarifies how to establish this isomorphism between \(R\) and \(T\).
+
+<br><span style="color:blue;">
+第二に、ワイルズの証明は、その中核となるメカニズムである \(R=T\) 戦略を通じて、理解のための生成的な指針を提示しています。この戦略は、モジュラリティ・リフティング（保型性持ち上げ）手法の有効性を明らかにするものです。\(R=T\) 定理によって確立された変形環 \(R\) とヘッケ環 \(T\) との間の同型性は、楕円曲線と保型形式を結びつける根底にあるパターンを浮き彫りにします。さらに、テイラー・ワイルズ法は、\(R\) と \(T\) の間のこの同型性をいかにして確立するかを明確に示しています。
+</span>
+</p>
+
+<h3>5.6. The Synthetic Character of Depth.　<span style="color:blue;">深さの総合的性格</span></h3>
+<p>
+ The preceding subsections show
+Wiles’s proof satisfies each of the five criteria to a high degree. Yet the depth
+of this proof is not the sum of five independently obtained high scores. The criteria do not merely co-occur; they mutually reinforce one another in a non-additive,
+structural way. In a merely additive sense, a proof could score highly on each
+criterion without any internal relation among them. In Wiles’s proof, by contrast,
+the criteria are not independent dimensions.
+
+<br><span style="color:blue;">
+これまでの節で示したように、ワイルズの証明は5つの基準のそれぞれを高度に満たしている。しかし、この証明の深さは、単に5つの基準で個別に高い評価を得た結果を足し合わせたものではない。それらの基準は単に併存しているのではなく、非加法的かつ構造的な仕方で互いに補強し合っているのである。単なる加法的な意味で言えば、各基準において高い評価を得ていながら、それらの間に何ら内部的な関連性を持たない証明というものもあり得るだろう。対照的に、ワイルズの証明においては、これらの基準は独立した次元ではないのである。
+</span>
+</p><p>
+
+To make this mutual reinforcement concrete, consider three specific couplings
+in Wiles’ proof:
+
+<br><span style="color:blue;">
+この相互補強を具体的に示すために、ワイルズの証明における3つの具体的な結びつきを考えてみましょう。
+</span>
+</p><p>
+<div class="styleBullet">
+<ul><li>
+• Unity enables explanatory power (Section 5.4–5.5): By reducing FLT to
+the Modularity Theorem, the proof does not merely verify the theorem
+but explains why a counterexample cannot exist. Without this unifying
+strategy, no such explanation would be available.
+
+<br><span style="color:blue;">
+「統一」は説明力を可能にする（第5.4～5.5節）。フェルマーの最終定理をモジュラリティ定理に帰着させることで、その証明は単に定理の正しさを検証するだけでなく、なぜ反例が存在し得ないのかを説明するものとなる。こうした統一的な戦略がなければ、そのような説明は得られなかったであろう。
+</span>
+</li><br><li>
+
+• Unity and originality together generate fruitfulness (Section 5.2–5.4): The
+\(R = T\) strategy is both a unifying framework (connecting deformation
+rings and Hecke algebras) and an original invention. Precisely because it
+achieves this structural unification in a novel way, it generalizes far beyond
+FLT to become a standard tool in the Langlands program. Neither unity
+alone nor originality alone would have sufficed; their combination produces
+fruitfulness.
+
+<br><span style="color:blue;">
+統一性と独創性が相まって、豊かな成果がもたらされる（第5.2～5.4節）。
+\(R = T\) 戦略は、統一的な枠組み（変形環とヘッケ環を結びつけるもの）であると同時に、独創的な発明でもある。まさにこの構造的な統一を斬新な手法で実現しているからこそ、この戦略はフェルマーの最終定理（FLT）の枠をはるかに超えて一般化され、ラングランズ・プログラムにおける標準的なツールとなったのである。統一性だけでも、あるいは独創性だけでも不十分であり、両者が組み合わさることで初めて、豊かな成果が生まれるのである。
+</span>
+</li><br><li>
+
+• Originality explains the nature of the proof’s difficulty (Section 5.1–5.2):
+The conceptual difficulty of Wiles’ proof arises precisely from the need for
+genuine breakthroughs in ideas and methods.
+
+<br><span style="color:blue;">
+独創性は、その証明の難しさの性質を説明するものである（第5.1～5.2節）。
+ワイルズの証明における概念的な難しさは、まさに、着想や手法の面で真のブレイクスルーが必要とされたことに起因している。
+</span>
+</li></ul></div>
+<p><p>
+
+These couplings are what we mean by ‘synthesis’ – a non-additive interdependence, not merely high scores on independent dimensions.
+
+<br><span style="color:blue;">
+こうした結合こそが、我々の言う「統合（シンセシス）」の意味するところです。それは単に独立した次元において高いスコアを示すことではなく、非加法的な相互依存関係なのです。
+</span>
+</p><p>
+
+One might object that if mathematical depth is a family-resemblance concept,
+then attributing Wiles’s depth specifically to his integrative synthesis seems to
+reintroduce an essence. This objection is misguided. The synthesis in question
+is not a definitional property of depth but a paradigm—a case in which the five
+hallmark features (difficulty, originality, fruitfulness, unity, and explanatory power)
+converge and become mutually reinforcing. Other deep proofs may exhibit different
+convergence patterns. Wiles’s proof stands out not because it satisfies a fixed checklist, but because these dimensions cohere into a single, tightly integrated
+whole. That whole represents one node in the family-resemblance network, not
+the essence of depth.
+
+<br><span style="color:blue;">
+「数学的な深さ」が「家族的類似」の概念であるならば、ワイルズの証明の深さをとりわけその「統合的総合」に帰することは、本質という概念を再導入することになるのではないか、という反論があり得るかもしれない。しかし、この反論は的外れである。ここで問題となっている総合は、「深さ」を定義する属性ではなく、一つのパラダイム――すなわち、深さの5つの主要な特徴（難易度、独創性、豊饒さ、統一性、説明力）が収束し、互いに補強し合うような事例――なのである。他の「深い」証明においては、これらとは異なる収束のパターンが見られるかもしれない。ワイルズの証明が際立っているのは、それが固定されたチェックリストの項目を満たしているからではなく、むしろ、それらの側面が整合し、一つの緊密に統合された全体を形成しているからである。その全体は、「家族的類似」のネットワークにおける一つの結節点をなすものであって、「深さ」の本質そのものではない。
+</span>
+</p><p>
+
+In sum, the depth of Wiles’ proof resides in the non-additive, mutually reinforcing relations among the five criteria. This synthetic character distinguishes Wiles’
+achievement from a merely difficult, merely original, or merely unifying proof. It
+is precisely because the criteria interact and reinforce each other that the proof is
+widely regarded as a paradigm of mathematical depth.
+
+<br><span style="color:blue;">
+要するに、ワイルズの証明の深みは、5つの基準の間に見られる、単なる加算的ではない相互補強的な関係性にあります。こうした統合的な性質こそが、ワイルズの業績を、単に難解であるとか、単に独創的であるとか、あるいは単に諸概念を統一しただけの証明とは一線を画すものにしています。まさにそれら基準が互いに作用し合い、補強し合っているからこそ、この証明は数学的な深みの典型例として広く見なされているのです。
+</span>
+</p>
+
+<h2><center>6. Conclusion<br><span style="color:blue;">結論</span></center></h2>
+<p>
+Adopting the family-resemblance perspective, we have treated proof depth not
+as a definable essence but as a cluster of overlapping, paradigmatically co-occurring
+features. Our five-criterion framework—Difficulty, Originality, Fruitfulness, Unity,
+and Explanatory Power—operationalizes this model as a structured heuristic rather
+than a checklist of necessary and sufficient conditions. This synthesis moves beyond the existing literature by integrating disparate evaluative measures into a
+coherent analytical grid.
+
+<br><span style="color:blue;">
+我々は「家族的類似性」の視点を採用し、証明の「深さ」を定義可能な本質としてではなく、互いに重なり合い、典型的に共起する諸特徴の集合体として捉えました。難易度、独創性、豊饒性、統一性、説明力という5つの基準からなる我々の枠組みは、このモデルを、必要十分条件のチェックリストではなく、構造化されたヒューリスティック（発見的指針）として機能させるものです。こうした統合的なアプローチは、個別に存在していた評価尺度を整合性のある分析的枠組みへとまとめることで、既存の研究の到達点をさらに一歩進めるものです。
+</span>
+</p><p>
+
+The criteria are not merely discrete lenses; their interrelations are constitutive
+of proof depth itself. While each captures a distinct facet, their overlap is nonredundant: omitting any one dimension risks a caricature of mathematical significance. Depth emerges synergistically—excellence across all five marks a proof as
+deep, whereas isolated virtuosity in one or two, however brilliant, falls short.
+
+<br><span style="color:blue;">
+これらの基準は単なる個別の視点にとどまるものではなく、それらの相互関係こそが「証明の深さ」そのものを構成する要素となっています。各基準はそれぞれ異なる側面を捉えていますが、それらの重複は決して冗長なものではありません。いずれか一つの側面を欠けば、その証明が持つ数学的な意義を歪めて捉えてしまう恐れがあります。「深さ」とは相乗的に生み出されるものです。すなわち、5つの基準すべてにおいて卓越していることこそが証明を「深い」ものにするのであり、たとえ一部において際立った才気を示したとしても、それだけでは不十分なのです。
+</span>
+</p><p>
+
+Applied to Wiles’s proof, this framework yields a substantive philosophical account. Wiles’s achievement exemplifies depth precisely because it satisfies all five
+criteria in mutual reinforcement, rather than through unilateral virtuosity. We
+do not claim exhaustiveness, yet the framework effectively demarcates the core
+evaluative dimensions of mathematical proofs, reconciling their distinctness with
+their interdependence.
+
+<br><span style="color:blue;">
+この枠組みをワイルズの証明に適用すると、実質的な哲学的説明が導き出されます。ワイルズの業績が深い意義を持つのは、単なる卓越した手腕によるものではなく、5つの基準すべてが相互に補強し合う形で満たされているからにほかなりません。網羅性を主張するわけではありませんが、この枠組みは数学的証明を評価する上での核心的な側面を明確に区分し、それらの個別の性質と相互依存性とを調和させるものです。
+</span>
+</p><p>
+
+The framework serves as a robust tool for paradigmatic case studies—as illustrated by our analysis of Wiles’s proof—offering a structured vocabulary for
+philosophical and methodological reflection. Although qualitatively articulated
+and eschewing quantification, this is not a methodological deficit but a philosophical necessity: mathematical depth is an inherently evaluative, context-sensitive
+property that resists metric reduction. Far from hindering consistent application,
+this very openness enhances the framework’s adaptability for probing borderline
+and contested judgments. Thus, our work does not purport to offer a final taxonomy but rather a fertile starting point for a more nuanced discourse on what
+constitutes depth in mathematical proofs.
+
+<br><span style="color:blue;">
+この枠組みは、ワイルズの証明に関する我々の分析が示すように、典型的な事例研究のための強力なツールとして機能し、哲学的かつ方法論的な考察を行うための体系的な語彙を提供します。定量的手法を避け、質的な記述に依拠している点は、方法論上の欠陥ではなく、哲学的な必然性によるものです。なぜなら、数学的「深さ」とは、本質的に評価を伴う文脈依存的な性質であり、単なる数値的尺度へと還元することには馴染まないものだからです。こうした性質は、一貫した適用を妨げるどころか、むしろ境界領域にある判断や議論の的となっている判断を検討する際の適応性を高めるものとなります。したがって、我々の研究は、数学的証明における「深さ」の構成要素について、最終的な分類体系を提示しようとするものではありません。むしろ、より繊細な議論を展開していくための、実りある出発点を提供しようとするものなのです。
+</span>
+</p>
+
+<h2><center>Acknowledgments<br><span style="color:blue;">謝辞</span></center></h2>
+<p>
+We are grateful to the editor and the anonymous reviewers for their valuable
+time and efforts. We particularly appreciate the reviewers’ insightful comments
+and valuable suggestions, which have substantially strengthened this manuscript.
+
+<br><span style="color:blue;">
+貴重な時間と労力を割いてくださった編集者および匿名の査読者の皆様に、心より感謝申し上げます。特に、査読者の方々からいただいた洞察に富んだご指摘や有益なご提案は、本稿を大幅に充実させるものとなりました。
+</span>
+</p>
+
+<h2><center>References<br><span style="color:blue;">参考文献</span></center></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Arana, A. [2015]: ‘On the depth of Szemer´edi’s theorem’, Philosophia Mathematica (3) 23, 163–176. DOI: https://doi.org/10.1093/philmat/nku036
+
+<br><span style="color:blue;">
+『セメレディの定理の深さについて』
+</span>
+</li><br><li>
+
+Arana, A. [2025]: Elements of Purity, Cambridge University Press.
+
+<br><span style="color:blue;">
+『純粋性の要素』
+</span>
+</li><br><li>
+
+Buhler, J.; Crandell, R.; Ernvall, R.; Mets¨ankyl¨a, T. [1993]: ‘Irregular primes
+and cyclotomic invariants to four million’, Mathematics of Computation, Vol. 61,
+No. 203, pp. 151-153. DOI: https://doi.org/10.1090/S0025-5718-1993-1197511-5
+
+<br><span style="color:blue;">
+『不規則素数および円分不変量（400万まで）』
+</span>
+</li><br><li>
+
+Cheng, Y. [2022]: ‘On the depth of G¨oedel’s incompleteness theorems’, Philosophia
+Mathematica, Volume 30, Issue 2, pp. 173-199. DOI: https://doi.org/10.1093/
+philmat/nkab034
+
+<br><span style="color:blue;">
+『ゲーデルの不完全性定理の深さについて』
+</span>
+</li><br><li>
+
+Cornell, G.; Silverman, J. H. and Stevens, G. [1997]: Modular forms and Fermat’s Last Theorem, Springer-Verlag.
+
+<br><span style="color:blue;">
+『モジュラー形式とフェルマーの最終定理』
+</span>
+</li><br><li>
+
+Darmon, H.; Diamond, F.; and Taylor, R. [1997]: ‘Fermat’s Last Theorem’, In
+Coates, J. and Yau, S.-T., editors, Elliptic Curves, Modular Forms and Fermat’s
+Last Theorem, pages 2–140. International Press, Somerville Massachussetts.
+
+<br><span style="color:blue;">
+『楕円曲線、モジュラー形式、そしてフェルマーの最終定理』
+</span>
+</li><br><li>
+
+Demyanenko, V. [1971]: ‘The points of finite order of elliptic curves’, Acta Arith,
+19:185–194
+
+<br><span style="color:blue;">
+『楕円曲線の有限位数の点』
+</span>
+</li><br><li>
+
+Ernst M.; Heis, J.; Maddy, P.; McNulty, B.M.; Weatherall, O. J. [2014]: ‘Foreword to Special Issue on Mathematical Depth’, ‘Afterword to Special Issue on
+Mathematical Depth’, Philosophia Mathematica, Volume 23, Issue 2. DOI: https:
+//doi.org/10.1093/philmat/nkv003; DOI: https://doi.org/10.1093/philmat/
+nkv002
+
+<br><span style="color:blue;">
+『「数学的深み」特集号への序文、「数学的深み」特集号へのあとがき』
+</span>
+</li><br><li>
+
+Faltings G. [1983]: ‘Endlichkeitssatze f¨ur abelsche Variet¨aten¨uber Zahlk¨orpern’,
+Invent Math 73:349–366. DOI: https://doi.org/10.1007/BF01388432
+
+<br><span style="color:blue;">
+『数体上のアーベル多様体に関する相似定理』
+</span>
+</li><br><li>
+
+Frey, G. [1986]: ‘Links between stable elliptic curves and certain Diophantine
+equations’, Number 1 in Annales Universitatis Saraviensis. Series Mathematicae.
+Saarlande University, Saarbr¨ucken.
+
+<br><span style="color:blue;">
+『安定な楕円曲線とある種のディオファントス方程式との関連』
+</span>
+</li><br><li>
+
+Gelbart, S. [1997]: ‘Three lectures on the modularity of ρe,3 and the Langlands
+reciprocity conjecture’, In: Cornell G, Silverman J, Stevens G (eds), Modular forms
+and Fermat’s last theorem, Springer, New York, pp 155–191.
+
+<br><span style="color:blue;">
+『ρe,3のモジュラリティとラングランズの相互法則予想に関する3つの講義』
+</span>
+</li><br><li>
+
+Gray, J. [2014]: ‘Depth—A Gaussian Tradition in Mathematics’, Philosophia
+Mathematica, Volume 23, Issue 2, 177–195. DOI: https://doi.org/10.1093/
+philmat/nku035
+
+<br><span style="color:blue;">
+『深さ――数学におけるガウスの伝統』
+</span>
+</li><br><li>
+
+Hafner, J., and Mancosu, P. [2005]: ‘The varieties of mathematical explanation’, in P. Mancosu (ed.), Visualization, Explanation and Reasoning Styles in
+Mathematics, Springer, pp. 215–250.
+
+<br><span style="color:blue;">
+『数学的説明の諸相』『数学における可視化・説明・推論様式』所収
+</span>
+</li><br><li>
+
+Hellegouarch, Y. [1971]: ‘Points d’ordre fini sur les courbes elliptiques’, CRAS
+Paris, 273:54–43.
+
+<br><span style="color:blue;">
+『楕円曲線上の有限位数の点』
+</span>
+</li><br><li>
+
+Hilbert, D. and Hurwitz, A. [1890]: ‘Uber die diophantischen Gleichungen vom ¨
+Geschlecht Null’, Acta Mathematica, 14:217–224. DOI: https://doi.org/10.
+1007/BF02413323
+
+<br><span style="color:blue;">
+『種数0のディオファントス方程式について』
+</span>
+</li><br><li>
+
+Holden, H.; Piene, R. [2014]: The Abel Prize 2008–2012, Springer Science+Business
+Media B.V.
+
+<br><span style="color:blue;">
+『アーベル賞 2008–2012』
+</span>
+</li><br><li>
+
+Inglis, M.; Aberdein, A. [2015]: ‘Beauty Is Not Simplicity: An Analysis of
+Mathematicians’ Proof Appraisals’, Philosophia Mathematica, Volume 23, Issue 1,
+pp. 87–109. DOI: https://doi.org/10.1093/philmat/nku014
+
+<br><span style="color:blue;">
+『美しさは単純さにあらず：数学者に関する分析』
+</span>
+</li><br><li>
+
+Lange, M. [2014]: ‘Depth and Explanation in Mathematics’, Philosophia Mathematica, Volume 23, Issue 2, 1–19. DOI: https://doi.org/10.1093/philmat/
+nku022
+
+<br><span style="color:blue;">
+『数学における深さと説明』
+</span>
+</li><br><li>
+
+Mazur, B. [1977]: ‘Modular curves and the Eisenstein ideal’, Publ. Math. IHES,
+47:133–86. DOI: https://doi.org/10.1007/BF02684339
+
+<br><span style="color:blue;">
+『モジュラー曲線とアイゼンシュタイン・イデアル』
+</span>
+</li><br><li>
+
+Mazur, B.; Goldfeld, D. [1978]: ‘Rational isogenies of prime degree’, Inventiones
+mathematicae, 44:129–62. DOI: https://doi.org/10.1007/BF01390348
+
+<br><span style="color:blue;">
+『素数次有理同種写像』
+</span>
+</li><br><li>
+
+Mazur, B. [1991]: ‘Number theory as gadfly’, American Mathematical Monthly,
+98: 593–610. DOI: https://doi.org/10.1080/00029890.1991.11995762
+
+<br><span style="color:blue;">
+『あぶ(うるさ型)としての数論』
+</span>
+</li><br><li>
+
+McLarty, C. [2024]: ‘Fermat’s last theorem’, In Sriraman, B., editor, Handbook
+of the History and Philosophy of Mathematical Practice, Springer, pp. 2011–2033.
+
+<br><span style="color:blue;">
+『フェルマーの最終定理』
+</span>
+</li><br><li>
+
+Poincar´e, H. [1901]: ‘Sur les propri´et´es arithm´etiques des courbes alg´ebriques’,
+Journal des Math´ematiques, 7:161–233.
+
+<br><span style="color:blue;">
+『代数曲線の算術的性質について』
+</span>
+</li><br><li>
+
+Ribet, K. [1990]: ‘On modular representations of Gal(Q/Q) arising from modular forms’, Inventiones Mathematicae, 100 (2): 431–476. DOI: https://doi.org/
+10.1007/BF01231195
+
+<br><span style="color:blue;">
+『モジュラー形式から生じる Gal(Q/Q) のモジュラー表現について』
+</span>
+</li><br><li>
+
+Riemann, B. [1859]: Ueber die Anzahl der Primzahlen unter einer gegebenen
+Gr¨osse, Handwritten note, reprinted in Harold Edwards Riemann’s zeta function,
+Dover Publications 2001, among other places.
+
+<br><span style="color:blue;">
+『与えられた大きさ未満の素数の個数について（手書きのメモ）』
+</span>
+</li><br><li>
+
+Stillwell, J. [2014]: ‘What Does ‘Depth’ Mean in Mathematics?’, Philosophia
+Mathematica, Volume 23, Issue 2, 215–232. DOI: https://doi.org/10.1093/
+philmat/nku033
+
+<br><span style="color:blue;">
+『数学における「深さ」とはどういう意味か？』
+</span>
+</li><br><li>
+
+Steiner, M. [1978]: ‘Mathematical Explanation’, Philosophical Studies, 34(2),
+135–151. DOI: https://doi.org/10.1007/BF00354494
+
+<br><span style="color:blue;">
+『数学的説明』
+</span>
+</li><br><li>
+
+Tappenden, J. [2012]: ‘Fruitfulness as a Theme in the Philosophy of Mathematics’, The Journal of Philosophy, Vol. 109, No. 1/2, pp. 204-219. DOI:
+https://doi.org/10.5840/jphil20121091/27
+
+<br><span style="color:blue;">
+『数学の哲学におけるテーマとしての「豊饒性」』
+</span>
+</li><br><li>
+
+Thomas, R. S. D. [2017]: ‘Beauty is not all there is to Aesthetics in Mathematics’, Philosophia Mathematica, Volume 25, Issue 1, pp. 116–127. DOI:
+https://doi.org/10.1093/philmat/nkw019
+
+<br><span style="color:blue;">
+『数学における美学のすべてが「美」であるわけではない』
+</span>
+</li><br><li>
+
+Urquhart, A. [2014]: ‘Mathematical Depth’, Philosophia Mathematica, Volume
+23, Issue 2, 233–241. DOI: https://doi.org/10.1093/philmat/nkv004
+
+<br><span style="color:blue;">
+『数学的深み』
+</span>
+</li><br><li>
+
+Wiles, A. [1995]: ‘Modular elliptic curves and Fermat’s Last Theorem’, Annals
+of Mathematics, 141:443–551. DOI: https://doi.org/10.2307/2118559
+
+<br><span style="color:blue;">
+『モジュラー楕円曲線とフェルマーの最終定理』
+</span>
+</li><br><li>
+
+Wittgenstein, L. [2009]: Philosophical Investigations (G. E. M. Anscombe, P.
+M. S. Hacker, & J. Schulte, Trans., 4th ed.). Wiley-Blackwell.
+
+<br><span style="color:blue;">
+『哲学探究』
+</span>
+</li></ul></div>
+</p>
+    </body>
+</html>
