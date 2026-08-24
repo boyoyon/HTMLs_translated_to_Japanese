@@ -1,0 +1,1619 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Hermann Minkowski and the special theory of relativity</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1>Hermann Minkowski and the special theory of relativity<br><span style="color:blue;">ヘルマン・ミンコフスキーと特殊相対性理論</span></h1>
+
+Alberto T. P´erez<sup>1,a</sup>,　Jos´e Ferreir´os<sup>2</sup>,　and 　Mar´ıa de Paz<sup>2</sup><br>
+<sup1</sup> Departamento de Electr´onica y Electromagnetismo, Universidad de Sevilla, Seville, Spain <br>
+<sup>2</sup> Departamento de Filosof´ıa y L´ogica y Filosof´ıa de La Ciencia, Universidad de Sevilla, Seville, Spain<br>
+
+<p>
+Abstract The special theory of relativity as we understand it today owes much to the figure of Hermann Minkowski. His
+are several fundamental concepts that appear in current textbooks. However, his contributions are not always recognized.
+Furthermore, some historians of science judge him with a certain severity, undermining the importance of his contributions.
+He himself provoked this attitude to some extent by arguing in his articles that mathematicians were in a better position
+than physicists to understand the new theory. This article is devoted to the figure of Minkowski in two aspects. On the one
+hand, we analyze the status of Minkowski’s original ideas in the special theory of relativity as currently studied and taught.
+We show that some textbooks of reference in physics do not properly acknowledge the contributions of Minkowski. On the
+other hand, we will illustrate with some examples how the figure of Minkowski is perceived by historians. We see that even
+today he has his supporters and detractors.
+<br><span style="color:blue;">
+要旨：今日我々が理解している特殊相対性理論は、ヘルマン・ミンコフスキーの存在に負うところが大きい。現代の教科書に見られる基本的な概念のいくつかは、彼によるものである。しかし、彼の貢献が常に正当に評価されているわけではない。それどころか、一部の科学史家は彼に対して厳しい評価を下し、その貢献の重要性を過小評価することさえある。彼自身、論文の中で「物理学者よりも数学者の方が、この新しい理論を理解するのに適した立場にある」と主張したことで、ある程度こうした見方を招いてしまった面もある。本論文では、ミンコフスキーという人物について二つの側面から考察する。第一に、現在研究・教育されている特殊相対性理論において、ミンコフスキーの独創的なアイデアがどのような位置を占めているかを分析する。その中で、物理学の主要な教科書の中には、ミンコフスキーの貢献を適切に認めていないものがあることを指摘する。第二に、歴史家たちがミンコフスキーをどのように捉えているか、いくつかの例を挙げて示す。今日においてもなお、彼には支持者と批判者の双方が存在していることが見て取れる。
+</span>
+</p>
+
+<h2>1 Introduction <span style="color:blue;">はじめに</span></h2>
+<p>
+Hermann Minkowski was one of the founders of the special theory of relativity. His concept of space–time is a
+fundamental part of the theory as we understand it today, along with the mathematical formalism he devised.
+However, his contributions are not always recognized. In addition, his standing is the subject of debate among
+historians of science, some of whom judge him with a certain severity. Perhaps not unrelated to all this is the
+fact that Minkowski himself maintained in his talks and writings that mathematicians were better prepared than
+physicists to understand the conceptual implications of the theory.
+
+<br><span style="color:blue;">
+ヘルマン・ミンコフスキーは、特殊相対性理論の創始者の一人である。彼が考案した数学的定式化と並び、彼の「時空」という概念は、今日我々が理解している同理論の根幹をなすものである。しかし、彼の貢献が常に正当に評価されているわけではない。それどころか、科学史家の間では彼の位置づけをめぐって議論があり、中には彼を厳しく評価する者もいる。こうした状況と無関係ではないかもしれないが、ミンコフスキー自身、講演や著作の中で、同理論が持つ概念的な意味合いを理解する上では、物理学者よりも数学者の方が適していると主張していた。
+</span>
+</p><p>
+
+In this article, we examine the public perception of Minkowski’s contributions today, among educated public,
+including physicists themselves. Our purpose is not to provide a new historical reconstruction, nor to critically
+examine the work of historians. Rather, our focus is on the way physical ideas are presented and transmitted,
+especially in textbooks, and secondarily in amateur historical work (of the kind typically encountered in physics
+journals, or in work by science writers). Thus, we pursue two objectives. On the one hand, we review what remains
+of Minkowski’s original ideas in the special theory of relativity as it is currently studied and taught. On the other
+hand, we illustrate with some examples how the figure of Minkowski is perceived by scientists, science writers, and
+historians. Although Minkowski spacetime is always referred to in any text on relativity, we will show that some
+other of his contributions are not always properly acknowledged. Moreover, one can see that, even today, he has
+his supporters and detractors.
+
+<br><span style="color:blue;">
+本稿では、物理学者自身を含む知識層の間で、今日ミンコフスキーの貢献がどのように認識されているかを検討する。我々の目的は、新たな歴史的再構築を提示することでも、歴史家の業績を批判的に検証することでもない。むしろ、物理学的な概念がいかに提示され、伝達されているか――特に教科書において、また二次的には（物理学の専門誌や科学ライターの著作などで典型的に見られるような）アマチュアによる歴史的記述において――という点に焦点を当てる。したがって、本稿では二つの目的を追求する。第一に、現在研究・教育されている特殊相対性理論の中に、ミンコフスキーの当初の概念がどのような形で残っているかを概観する。第二に、科学者、科学ライター、歴史家によってミンコフスキーという人物がどのように捉えられているかを、いくつかの例を挙げて示す。相対性理論に関するあらゆる文献で「ミンコフスキー時空」について言及されてはいるものの、彼の他の貢献については必ずしも適切に評価されていないことを明らかにする。さらに、今日においても彼には支持者と批判者の双方が存在していることも見て取れるだろう。
+</span>
+</p><p>
+
+We begin by giving some background information on Minkowski’s life and work. Antecedents that refer both
+to the theory of relativity itself and to the intellectual environment of G¨ottingen, the university where he carried
+out his work on the subject. After a chronological review, we list Minkowski’s original contributions to the theory
+of relativity. From what we find in various current physics textbooks, we see what remains of these contributions
+in the current theory. We dedicate a section to show how historically several unfair attributions have been made,
+attributing to others, especially Einstein, what were Minkowski’s contributions. In a separate section, we analyze
+the controversy concerning physics and mathematics that Minkowski himself fueled. Finally, we see how various
+historians value his figure today.
+
+<br><span style="color:blue;">
+まず、ミンコフスキーの生涯と業績に関する背景を説明することから始めます。そこでは、相対性理論そのものに関する経緯に加え、彼がこの理論の研究を行ったゲッティンゲン大学の知的環境についても触れます。時系列に沿った概観の後、相対性理論に対するミンコフスキー独自の貢献を列挙します。そして、現代の物理学の教科書などを参照しつつ、それらの貢献が現在の理論の中でどのように受け継がれているかを確認します。また、ミンコフスキーの貢献が（特にアインシュタインなど）他者に帰せられるという不当な評価が歴史的になされてきた経緯について、一つの節を設けて論じます。さらに別の節では、ミンコフスキー自身が火付け役となった、物理学と数学をめぐる論争について分析します。最後に、今日の歴史家たちが彼の人物像をどのように評価しているかを見ていきます。
+</span>
+</p>
+
+<h2>2 Background <span style="color:blue;">背景</span></h2>
+<p>
+Hermann Minkowski (1864–1909) arrived at G¨ottingen in 1902 (Rowe, 2018). David Hilbert had persuaded Felix
+Klein to convince the minister of the advisability of creating for him, “out of nothing”, a professorship. Minkowski
+had previously been in Zurich, where he was Einstein’s mathematics teacher. His main works until then had
+been purely mathematical, although Minkowski had always been interested in physics. Already in 1888, he was
+publishing on mathematical physics (hydrodynamics), and during his time in Bonn (1887 to 1894) he was seduced
+by physics, in particular, by the ideas of Heinrich Hertz. According to his own testimony, he would have worked
+more in physics if Hertz had not died so prematurely (Hertz died in 1894, at the age of 36). In a letter to Hilbert,
+1890, we find this interesting passage:
+
+<br><span style="color:blue;">
+ヘルマン・ミンコフスキー（1864–1909）は1902年にゲッティンゲンに赴任した（Rowe, 2018）。ダヴィト・ヒルベルトはフェリックス・クラインを説得し、クラインを通じて担当大臣に働きかけ、ミンコフスキーのために「無から」教授職を新設することの妥当性を認めさせたのである。ミンコフスキーはそれ以前チューリッヒに在籍しており、そこでアインシュタインに数学を教えていた。それまでの彼の主要な業績は純粋数学の分野のものであったが、彼は以前から物理学に関心を抱いていた。実際、1888年にはすでに数理物理学（流体力学）に関する論文を発表しており、ボン在籍中（1887–1894年）には物理学、とりわけハインリヒ・ヘルツの思想に強く惹きつけられていた。彼自身の述懐によれば、もしヘルツがあれほど若くして亡くなっていなければ（ヘルツは1894年に36歳で死去）、彼は物理学の分野でさらに多くの研究を行っていただろうという。1890年にヒルベルトに宛てた手紙の中に、次のような興味深い一節が見られる。
+</span>
+</p><p style="padding-left:4em;">
+
+“That I am now almost entirely immersed in physics may be largely due to the fact that, as a pure mathematician, I would currently be the only sentient being among the larvae here. . . . In order to have some
+common ground with other mortals, I have therefore, for the time being, devoted myself entirely to magic, I
+mean, to physics. I have my practical exercises at the physics institute; at home I study Thomson, Helmholtz,
+and their likes; indeed, from the end of next week onward, I will even be working several days a week in a
+blue lab coat at an institute for the manufacture of physical instruments—a practical student of the most
+shameful kind you could possibly imagine.” (H¨anel, 2025, p. 219).
+
+<br><span style="color:blue;">
+「私が今、物理学にほぼ完全に没頭しているのは、純粋数学者である私にとって、ここにいる『幼虫』たちの中でまともに思考できる唯一の存在が自分一人になってしまうから、という事情が大きいのかもしれません……。そこで、他の人間たちと何らかの共通の土台を持つために、私は当面の間、魔法に――いや、物理学に――身を捧げることにしました。物理学研究所で実習を行い、自宅ではトムソンやヘルムホルツといった人々の著作を学んでいます。それどころか、来週の終わりからは、物理実験器具の製造所にて、青い実験衣を身にまとい、週に数日働くことにもなっています。想像しうる限り最も恥ずべき種類の実習生として、です」（Hänel, 2025, p. 219）。
+</span>
+</p><p>
+
+But it was in G¨ottingen that he gave free rein to these interests. It is worth mentioning that in the Encyklop¨adie
+der mathematischen Wissenschaften, a very ambitious project edited by Klein et al., Minkowski was commissioned
+to write the article on capillarity.
+
+<br><span style="color:blue;">
+しかし、彼がこうした関心を思う存分追求したのは、ゲッティンゲンにおいてであった。特筆すべきは、クラインらが編集した極めて野心的なプロジェクトである『数理科学百科事典（Encyklopädie der mathematischen Wissenschaften）』において、ミンコフスキーが毛細管現象に関する項目の執筆を任されたことである。
+</span>
+</p><p>
+
+The interest in physics and electromagnetism in G¨ottingen came from afar. Carl F. Gauss and Wilhelm Weber
+made notable contributions to the study of magnetism and geomagnetism in the 1830s. This interest continued
+with Riemann, Klein and others, and around the turn of the century, Emil Wiechert, Carl Runge, and Arnold
+Sommerfeld were in G¨ottingen. All of them worked on the problems posed by Maxwell’s theory of electromagnetism.
+Later, Minkowski was in G¨ottingen at the same time as Max Abraham and Walter Kauffman.
+
+<br><span style="color:blue;">
+ゲッティンゲンにおける物理学や電磁気学への関心は、遠くから寄せられたものでした。1830年代には、カール・F・ガウスとヴィルヘルム・ヴェーバーが磁気や地磁気の研究に多大な貢献をしました。こうした関心はリーマンやクラインらにも受け継がれ、世紀の変わり目頃には、エミール・ヴィーヘルト、カール・ルンゲ、アルノルト・ゾンマーフェルトがゲッティンゲンに在籍していました。彼らは皆、マクスウェルの電磁気学理論が提起した諸問題に取り組んでいました。その後、ミンコフスキーも、マックス・アブラハムやヴァルター・カウフマンと同時期にゲッティンゲンに滞在しました。
+</span>
+</p><p>
+
+In G¨ottingen, the work of two of the great mathematicians of the time stood out: Felix Klein and David Hilbert.
+Klein’s work included the famous ‘Erlangen program’ that connected the different geometries with the study of
+groups of transformations. Minkowski transferred this idea to relativity. For his part, Hilbert published in 1899 the
+celebrated Foundations of Geometry. In this work he offered an axiomatic reconstruction of Euclidean geometry
+from elementary notions such as point, line, and plane, and 21 axioms. Hilbert was a close friend of Minkowski,
+and they influenced each other. Perhaps Hilbert became interested in physics through Minkowski.
+
+<br><span style="color:blue;">
+ゲッティンゲンでは、当時を代表する二人の数学者、フェリックス・クラインとダフィット・ヒルベルトの業績が際立っていました。
+クラインの業績には、様々な幾何学と変換群の研究を結びつけた有名な「エアランゲン・プログラム」が含まれます。ミンコフスキーはこの考え方を相対性理論へと応用しました。一方、ヒルベルトは1899年に名著『幾何学基礎論』を出版しました。この著作において彼は、点、直線、平面といった基本的な概念と21の公理に基づき、ユークリッド幾何学を公理系として再構築しました。ヒルベルトとミンコフスキーは親しい友人であり、互いに影響を及ぼし合っていました。ヒルベルトが物理学に関心を持つようになったのも、おそらくミンコフスキーの影響によるものでしょう。
+</span>
+</p><p>
+
+At the International Congress of Mathematicians in Paris (1900), Hilbert presented his list of 23 unsolved
+problems as the challenge that mathematicians had to face in the new century (Gray, 2000). The sixth of these
+problems was the axiomatization of physics: Would it be possible to make an axiomatic formulation of physical
+laws? In this respect, electromagnetic theory was presented as a field more favorable than other fields of physics.
+The theory, in the synthesis made by Lorentz, Hertz, and others, presented a closed set of equations that, in
+principle, were exact. In other domains of physics, such as hydrodynamics or thermodynamics, approximations
+and empirical relationships were more prevalent. Surely driven by this idea, Minkowski and Hilbert organized a
+seminar on the theory of the electron in G¨ottingen in 1905 (Corry, 2004; Pyenson, 1979). According to Hilbert’s
+own testimony, modern electrodynamic theories were what most attracted Minkowski in physics at the time.
+
+<br><span style="color:blue;">
+パリで開催された国際数学者会議（1900年）において、ヒルベルトは、新しい世紀に数学者が取り組むべき課題として、23の未解決問題からなるリストを提示した（Gray, 2000）。その第6の問題は物理学の公理化、すなわち物理法則を公理系として定式化することは可能か、というものであった。この点に関して、電磁気学は他の物理学分野よりも適した領域として挙げられた。ローレンツやヘルツらによって統合されたこの理論は、原理的に厳密な一連の方程式から成る閉じた体系を提示していたからである。一方、流体力学や熱力学といった物理学の他の領域では、近似や経験的な関係式がより一般的であった。こうした考えに動かされたことは間違いないが、ミンコフスキーとヒルベルトは1905年にゲッティンゲンで電子論に関するセミナーを組織した（Corry, 2004; Pyenson, 1979）。ヒルベルト自身の証言によれば、当時の物理学においてミンコフスキーの関心を最も強く惹きつけていたのは、現代の電気力学理論であった。
+</span>
+</p><p>
+
+Minkowski was no stranger to Hilbert’s choice of the sixth problem. He had discussed with Hilbert the content
+of his talk and read and made suggestions on the draft. In his approach to the theory of relativity, Minkowski was
+to give priority to the geometric approach. And he defined concepts such as event (point in spacetime) or world
+line, which are reminiscent of the elementary notions of point and line that Hilbert used in his foundations of
+geometry. Probably both thought that this was the way to an axiomatic formulation of physics.
+
+<br><span style="color:blue;">
+ヒルベルトが「第6問題」を選定したことについて、ミンコフスキーは決して無関係な立場にはなかった。彼はヒルベルトと講演内容について議論を重ね、その草稿を読んで助言も行っていたのである。相対性理論への取り組みにおいて、ミンコフスキーは幾何学的なアプローチを重視する姿勢をとった。そして彼は、「事象」（時空上の点）や「世界線」といった概念を定義したが、これらはヒルベルトが幾何学の基礎付けにおいて用いた「点」や「線」という初歩的な概念を彷彿とさせるものであった。おそらく両者とも、これこそが物理学を公理系として定式化する道であると考えていたのだろう。
+</span>
+</p><p>
+
+In the following years, Hilbert dealt with various physical problems, highlighting among them his deduction of
+the equations of the gravitational field in general relativity. As for Minkowski, his untimely death deprived him of
+fully developing his ideas about the mathematical foundations of physics. Also, one should pause to consider that
+early death may have had a role in his contributions being less noticed than they deserved, as we shall see.<sup>1</sup>
+
+<br><span style="color:blue;">
+その後数年間、ヒルベルトは様々な物理学的問題に取り組んだが、中でも特筆すべきは、一般相対性理論における重力場の方程式を導出したことである。一方ミンコフスキーについては、早すぎる死が、物理学の数学的基礎に関する自身の構想を十分に展開することを妨げてしまった。また、後述するように、その早すぎる死が、彼の業績が本来受けるべき評価を得られなかった一因となった可能性についても、改めて考えてみる必要があるだろう。<sup>1</sup>
+</span>
+</p><p style="padding-left:4em;"> 
+<sup>1</sup> We thank an anonymous referee for having insisted on the relevance of this point. She or he mentioned, as examples in
+the same field worth comparing, Alexander Friedman and Karl Schwarzschild.
+
+<br><span style="color:blue;">
+この点の重要性を強調してくださった匿名の査読者に感謝いたします。同氏が比較対象として挙げた同分野の例には、アレクサンダー・フリードマンとカール・シュヴァルツシルトが含まれていました。
+</span>
+</p>
+
+<h2>3 Chronology <span style="color:blue;">年表</span></h2>
+<p>
+Before entering the analysis of Minkowski’s writings on the theory of relativity, it is convenient to situate them
+chronologically. Although Lorentz had been working on his theory of the electron for many years, it was in 1904 that he published an article in the proceedings of the Academy of Sciences in Amsterdam in which he presented
+the definitive form of the Lorentz transformations and several fully relativistic results (Lorentz, 1904). Among
+them, the formulas for the transformation of the electric and magnetic fields stand out. These transformations
+leave Maxwell’s equations unchanged. In addition, he deduced the relativistic equation of motion for small speeds.
+
+<br><span style="color:blue;">
+ミンコフスキーによる相対性理論に関する著作の分析に入る前に、それらを時系列的に位置づけておくのが有益であろう。ローレンツは長年にわたり電子論の研究に取り組んでいたが、ローレンツ変換の決定的な形式や、完全な相対論的性質を備えた幾つかの結果を提示した論文をアムステルダム科学アカデミーの紀要で発表したのは、1904年のことであった（Lorentz, 1904）。それらの中でも、電場および磁場の変換式は特筆すべきものである。これらの変換は、マクスウェルの方程式の形を不変に保つ。さらに彼は、低速の場合における相対論的な運動方程式も導き出した。
+</span>
+</p><p>
+
+In the summer of 1905, the first of Einstein’s articles on the theory of relativity was published in the German
+journal Annalen der Physik (Einstein, 1905). Almost simultaneously, Henri Poincar´e finished a more extensive
+work entitled “On the Dynamics of the Electron”. The work appeared (with significant delay) in 1906 in the
+journal Rendiconti del Circolo Matematico di Palermo (Poincar´e, 1906), and Poincar´e himself presented a preview
+of its content in 1905 at the Academy of Sciences in Paris (Poincar´e, 1905).
+
+<br><span style="color:blue;">
+1905年の夏、アインシュタインによる相対性理論に関する最初の論文が、ドイツの学術誌『アナーレン・デア・フィジーク（物理学年報）』に掲載された（Einstein, 1905）。ほぼ同時期に、アンリ・ポアンカレも「電子の力学について（Sur la dynamique de l'électron）」と題する、より包括的な論文を完成させていた。この論文は（大幅な遅れを経て）1906年に『パレルモ数学会紀要（Rendiconti del Circolo Matematico di Palermo）』に掲載されたが（Poincaré, 1906）、ポアンカレ自身は1905年の時点で、すでにパリの科学アカデミーにおいてその内容の概要を発表していた（Poincaré, 1905）。
+</span>
+</p><p>
+
+Poincar´e and Einstein started from almost identical postulates: the principle of relativity and the constancy of
+the speed of light. The difference was that Einstein considered them independent postulates, while for Poincar´e,
+the constancy of the speed of light was a consequence of the principle of relativity. In Poincar´e’s words: “If we
+admit the postulate of relativity. . . we will find in the law of gravitation and in the electromagnetic laws a common
+number that will be the speed of light” (Poincar´e, 1906). The bottom line of the argument is that the speed of
+light is a parameter of Maxwell’s equations; if these are the same for all inertial observers, that parameter should
+not change. Although the methods, notation, and physical interpretation of the results differed between the two
+authors, both obtained many of the formulas that we now consider correct: the contraction of lengths, the theorem
+of addition of velocities, the transformations of charge and current densities, the transformations of fields, and so
+on. It must be noted that Einstein’s style is clearer and more direct than Poincar´e’s. He had a remarkable ability
+to articulate the main principles and ideas clearly.
+
+<br><span style="color:blue;">
+ポアンカレとアインシュタインは、相対性原理と光速度不変性という、ほぼ同一の要請から出発しました。両者の違いは、アインシュタインがこれらを独立した要請とみなしたのに対し、ポアンカレにとっては光速度不変性が相対性原理の帰結であったという点にあります。ポアンカレは次のように述べています。「もし相対性の要請を認めるならば……重力の法則や電磁気学の法則の中に、光速度に相当する共通の数値を見出すことになるだろう」（Poincaré, 1906）。この議論の要点は、光速度がマクスウェル方程式における一つのパラメータであるということです。もしこれらの方程式がすべての慣性系観測者に対して同一であるならば、そのパラメータも変化しないはずです。両者の間で手法や記法、そして結果の物理的解釈には違いがありましたが、いずれも現在正しいとされている多くの公式――長さの収縮、速度の合成則、電荷密度および電流密度の変換、場の変換など――を導き出しました。特筆すべきは、アインシュタインの記述スタイルがポアンカレのものよりも明快かつ直接的であったという点です。彼には、主要な原理や概念を明確に表現する卓越した能力がありました。
+</span>
+</p><p>
+
+Two aspects of Poincar´e’s work deserve special attention in relation to Minkowski’s later work. Poincar´e introduced in the last section the time coordinate as an imaginary coordinate and wrote (Poincar´e, 1906, p. 168):
+
+<br><span style="color:blue;">
+ミンコフスキーの後の研究との関連において、ポアンカレの研究の二つの側面は特に注目に値する。ポアンカレは、その最後の節で時間座標を虚数座標として導入し、次のように記している（Poincaré, 1906, p. 168）：
+</span>
+</p><p style="padding-left:4em;">
+
+”Let us consider x, y, z, and t as the coordinates of... (the points)... in a four-dimensional space. We see that
+the Lorentz transformation is merely a rotation in this space around the origin.”
+
+<br><span style="color:blue;">
+x, y, z, t を4次元空間における（点の）座標とみなしてみよう。すると、
+ローレンツ変換は、この空間における原点を中心とした回転にすぎないことがわかる。
+</span>
+</p><p>
+
+The second aspect is that this last section was dedicated to a first attempt to build a relativistic theory of
+gravitation (Katzir, 2005). Minkowski would discuss this analysis of Poincar´e in his work.
+
+<br><span style="color:blue;">
+第二の点は、この最後の節が、相対論的な重力理論を構築しようとする最初の試みに充てられていたということである（Katzir, 2005）。ミンコフスキーは、自身の著作の中でポアンカレによるこの解析について論じることになる。
+</span>
+</p><p>
+
+As we have already mentioned, in that same summer of 1905 Minkowski and Hilbert organized a seminar
+in G¨ottingen on the problems of the theory of the electron. This shows that, most likely, Minkowski was already
+working on these issues at that time. According to the testimony of his assistant Max Born, when in 1907 Minkowski
+first saw a copy of Einstein’s 1905 paper, he was shocked and told him that he had independently arrived at similar
+relations (Born, 1978).
+
+<br><span style="color:blue;">
+すでに述べたように、1905年の夏、ミンコフスキーとヒルベルトはゲッティンゲンで電子論の諸問題に関するセミナーを組織した。このことは、ミンコフスキーが当時すでにこれらの問題に取り組んでいた可能性が高いことを示唆している。助手のマックス・ボルンの証言によれば、1907年にミンコフスキーがアインシュタインの1905年の論文を初めて目にした際、彼は衝撃を受け、自分も独自に同様の関係式に到達していたとボルンに語ったという（Born, 1978）。
+</span>
+</p><p>
+
+In November 1907, Minkowski delivered the first of his lectures on the theory of relativity in G¨ottingen. It was
+entitled “The Principle of Relativity” and in it he introduced the concepts of space–time, 4-vector, and 4-tensor
+(which he called “tractor”) (Minkowski, 1915).
+
+<br><span style="color:blue;">
+1907年11月、ミンコフスキーはゲッティンゲンで相対性理論に関する一連の講義の最初のものを行った。その講義は「相対性原理」と題され、その中で彼は時空、4元ベクトル、および4元テンソル（彼はこれを「トラクター」と呼んだ）の概念を導入した（Minkowski, 1915）。
+</span>
+</p><p>
+
+In December 1907, also in G¨ottingen, he gave the second of the lectures on relativity: “The Fundamental
+Equations for the Electromagnetic Processes of Moving Bodies” (Minkowski, 1908). This is the most extensive of
+all his works on relativity. In it, he introduced the formalism of space–time: 4-vectors, 4-tensors, and invariants.
+In addition, he gave the covariant formulation of mechanics and Maxwell’s equations.
+
+<br><span style="color:blue;">
+1907年12月、同じくゲッティンゲンにおいて、彼は相対性理論に関する2回目の講義「運動する物体の電磁気的過程の基本方程式」（Minkowski, 1908）を行った。これは、彼の相対性理論に関する全著作の中で最も包括的なものである。その中で彼は、4元ベクトル、4元テンソル、不変量といった時空の定式化を導入した。さらに、力学およびマクスウェル方程式の共変的な定式化も示した。
+</span>
+</p><p>
+
+In September 1908, Minkowski gave his most famous lecture in Cologne, at the “Naturforscher Versammlung”
+(Congress of Natural Scientists), which had the greatest impact: “Raum und Zeit” (Space and Time). Its contents
+were published in 1909 (Minkowski, 1909). In it, he introduced several fundamental concepts of the theory of
+relativity: the Lorentz transformations as a group that leaves the interval invariant, the structure of space–time,
+the world line of a particle, proper time, etc. He also showed that the electrodynamic potentials of an acceleratingmoving particle are naturally deduced from those of a particle at rest using the four-dimensional formalism.
+
+<br><span style="color:blue;">
+1908年9月、ミンコフスキーはケルンで開催された「自然科学者会議（Naturforscher Versammlung）」において、最も大きな反響を呼ぶこととなる有名な講演「空間と時間（Raum und Zeit）」を行いました。その内容は1909年に出版されました（Minkowski, 1909）。この講演の中で、彼は相対性理論におけるいくつかの基本的な概念、すなわち、時空の「間隔（interval）」を不変に保つ群としてのローレンツ変換、時空の構造、粒子の世界線、固有時などを導入しました。また、彼は4次元の定式化を用いることで、加速運動する粒子の電磁力学的ポテンシャルが、静止している粒子のポテンシャルから自然に導き出されることも示しました。
+</span>
+</p><p>
+
+In January 1909, Minkowski died prematurely from appendicitis. Much of his work on relativity was unpublished,
+and his collaborator Max Born took it upon himself to compile his notes and publish them in a paper entitled
+“A Derivation of the Fundamental Equations of the Electromagnetic Processes of Moving Bodies from the Point
+of View of Electron Theory.” This article dealt with the generalization of the constitutive equations of material
+bodies to moving media (Minkowski, 2020).
+
+<br><span style="color:blue;">
+1909年1月、ミンコフスキーは虫垂炎により早世した。彼の相対性理論に関する研究の多くは未発表のままであったが、
+共同研究者であったマックス・ボルンがその遺稿をまとめ、「電子論の観点から見た、運動する物体の電磁気的過程の
+基本方程式の導出」と題する論文として発表した。この論文は、物質の構成方程式を運動する媒質へと一般化する
+ことを扱ったものであった（Minkowski, 2020）。
+</span>
+</p>
+
+<h2>4 Original contributions by Minkowski <span style="color:blue;">ミンコフスキーによる独自の貢献</span></h2>
+<p>
+In the articles published by Minkowski on the theory of relativity, there are several ideas that stand out and
+constitute his original contributions. They are as follows:
+
+<br><span style="color:blue;">
+ミンコフスキーが相対性理論に関して発表した論文には、際立ったいくつかの概念が含まれており、それらは彼の独創的な貢献をなすものです。それらは以下の通りです。
+</span>
+</p><p>
+
+– The concept of space–time. Although Poincar´e introduced time as an additional coordinate in his 1906 article
+and commented that Lorentz’s transformations could be understood as a rotation in that four-dimensional space,
+it is Minkowski who deepens this idea and derives all its consequences from it.
+
+<br><span style="color:blue;">
+時空という概念について。ポアンカレは1906年の論文で時間を付加的な座標として導入し、ローレンツ変換をその4次元空間における回転として理解できると述べましたが、この考えを深化させ、そこから導かれるあらゆる帰結を導き出したのはミンコフスキーでした。
+</span>
+</p><p>
+
+In his famous lecture in Cologne, he began his speech by saying:
+
+<br><span style="color:blue;">
+ケルンで行った有名な講演で、彼は次のような言葉から話を始めました。
+</span>
+</p><p style=padding-left:4em;">
+
+”Gentlemen! The views of space and time which I want to present to you arose from the domain of experimental
+physics and therein lies their strength. Their tendency is radical. From now onwards, space by itself and time
+by itself shall completely fade into mere shadows, and only a specific union of the two will stand independently
+on its own.” (Minkowski, 2020, p.57).
+
+<br><span style="color:blue;">
+「紳士諸君！私が諸君に提示しようとする空間と時間に関する見解は、実験物理学の領域から生まれたものであり、そこにこそその強みがある。その傾向は急進的なものである。これより先、空間そのものや時間そのものは、単なる影へと完全に消え去り、両者の特定の結合のみが、独立して自立することになるだろう。」（Minkowski, 2020, p.57）
+</span>
+</p><p>
+
+In November 1907 Minkowski wrote explicitly: ”. . . The world in space and time in a certain sense is a fourdimensional, non-Euclidean manifold.” (Minkowski, 2020, p.77). And in 1908:
+
+<br><span style="color:blue;">
+1907年11月、ミンコフスキーは明確にこう記した。「…ある意味で、空間と時間における世界は4次元の非ユークリッド多様体である。」(ミンコフスキー、2020年、77ページ)。そして1908年にはこうも記している。
+</span>
+</p><p style=padding-left:4em;">
+
+”We are compelled to admit that the relations considered here reveal their inner being in full simplicity only
+in four dimensions, whereas on a three-dimensional space, forced upon us from the beginning, they cast only
+a very tangled projection.” (Minkowski, 2020, p. 75).
+
+<br><span style="color:blue;">
+「ここで考察される関係は、四次元においてのみその本​​質を完全に単純な形で現すのに対し、我々に当初から与えられている三次元空間においては、極めて入り組んだ投影としてしか現れないということを、我々は認めざるを得ない。」（Minkowski, 2020, p. 75）
+</span>
+</p><p>
+
+– The contraction of lengths as a consequence of the geometry of space–time. In “Space and Time”, Minkowski
+deduced the relativistic length contraction using a geometric diagram, with time as one of the dimensions.
+
+<br><span style="color:blue;">
+時空の幾何学的性質に起因する長さの収縮。ミンコフスキーは『空間と時間』の中で、時間を一つの次元として取り入れた幾何学的な図を用いて、相対論的な長さの収縮を導き出しました。
+</span>
+</p><p>
+
+– Minkowski introduced the concept of event (associated with a point in space–time), world line of a particle,
+interval (relativistic invariant between two events) and proper time. The concept of proper time, the one measured
+by a clock at rest in the reference frame of a particle in motion, is a fundamental concept of the theory.
+
+<br><span style="color:blue;">
+ミンコフスキーは、事象（時空上の点に対応するもの）、粒子の世界線、間隔（二つの事象間の相対論的不変量）、および固有時の概念を導入しました。固有時、すなわち運動する粒子の基準系において静止している時計によって測定される時間は、この理論の根本的な概念です。
+</span>
+</p><p>
+
+– The structure of space–time. The interval between two events can be positive, negative, or null. This characteristic is independent of the observer and allows space–time to be divided into differentiated regions. If we take
+the origin as a reference event, the future and the past are made up of regions whose points are separated from
+the origin by a time-type interval. The cone of light is the conical region that can be reached from the origin by
+a ray of light. Finally, the region separated by a spatial interval does not have a defined temporal sequence with
+respect to the origin and cannot have a causal relationship with it.
+
+<br><span style="color:blue;">
+時空の構造について述べます。2つの事象間の間隔は、正、負、あるいはゼロ（ヌル）のいずれかになり得ます。この特性は観測者に依存せず、時空を異なる領域へと区分することを可能にします。原点を基準となる事象とすると、未来や過去は、その各点が原点から「時間的間隔」で隔てられた領域によって構成されます。光円錐とは、原点から光線によって到達可能な円錐状の領域のことです。最後に、「空間的間隔」で隔てられた領域は、原点との間に明確な時間的順序を持たず、原点との間に因果関係が成立することもありません。
+</span>
+</p><p>
+
+– The postulate of the absolute world. In “Space and Time”, Minkowski wrote:
+
+<br><span style="color:blue;">
+絶対的世界の公準。ミンコフスキーは『空間と時間』の中で次のように記した。
+</span>
+</p><p style=padding-left:4em;">
+
+”I think the word ‘relativity postulate’ used for the requirement of invariance under the group Gc is very
+feeble. Since the meaning of the postulate is that through phenomena only the four-dimensional world in
+space and time is given, but the projection into space and in time can still be made with some freedom, I want
+to give this affirmation rather the name ‘the postulate of the absolute world’ (or shortly the world postulate).”
+(Minkowski, 2020, p. 65).
+
+<br><span style="color:blue;">
+「群Gcの下での不変性という要請に対して『相対性の公理』という言葉が使われているが、私はそれが極めて不適切であると考える。この公理が意味するのは、諸現象を通じて与えられるのは時空における四次元世界のみであるということ、しかし空間と時間への射影は依然としてある程度の自由度をもって行いうるということである。それゆえ、私はこの命題にむしろ『絶対的世界の公理』（あるいは略して『世界の公理』）という名称を与えたいと思う。」
+(Minkowski, 2020, p. 65)
+</span>
+</p><p>
+
+We can understand this concept of Minkowski if we think of rotations in the ordinary Euclidean plane. Any
+point on the plane can be expressed by two Cartesian coordinates \((x, y)\) or by any other pair \((\overline{x}, \overline{y})\) referring to
+axes rotated with respect to the initial Cartesian axes. The point and, therefore, the plane are the same in both
+cases, we have only changed the reference axes. The same happens with the space–time of events. A particular
+event, a bell that rings in the tower of a church, is the same in all reference systems, except that each observer
+assigns it different space–time coordinates \((x, y, z, t)\).
+
+<br><span style="color:blue;">
+ミンコフスキーのこの概念は、通常のユークリッド平面における回転を考えると理解できます。平面上の任意の点は、2つのデカルト座標 \((x, y)\) で表すことも、あるいは元のデカルト軸に対して回転させた別の軸に基づく座標対 \((\overline{x}, \overline{y})\) で表すことも可能です。どちらの場合も点（ひいては平面）自体は同一であり、単に基準となる軸を変えたにすぎません。事象の時空についても同様のことが言えます。例えば、教会の塔で鐘が鳴るという特定の事象は、あらゆる基準系において同一のものです。ただ、各観測者がその事象に対して割り当てる時空座標 \((x, y, z, t)\) が異なるだけなのです。
+</span>
+</p><p>
+
+– The 4D formalism. Although the notation in which it has become to the present day is different from that
+used by Minkowski, the formalism of 4-vectors and 4-tensors was proposed by him. Minkowski developed it for
+both mechanics and electrodynamics. In particular, in his December 1907 paper (Minkowski, 1908), he presented
+Maxwell’s equations in covariant form, using the electromagnetic field tensor and the four-dimensional divergence
+operator, which he called “lor” in honor of Lorentz. In his notation, Minkowski wrote Maxwell’s equations as
+follows (Minkowski, 2020, p. 139).:
+
+<br><span style="color:blue;">
+4次元の定式化。今日用いられている表記法はミンコフスキーのものとは異なりますが、4元ベクトルや4元テンソルを用いたこの定式化自体は、彼によって提案されたものです。ミンコフスキーは、力学と電磁気学の双方に対してこの定式化を展開しました。特に、1907年12月の論文（Minkowski, 1908）において、彼は電磁場テンソルと、ローレンツにちなんで「lor」と名付けた4次元発散演算子を用い、マクスウェル方程式を共変形式で提示しました。ミンコフスキーは自身の表記法で、マクスウェル方程式を次のように記述しています（Minkowski, 2020, p. 139）。
+</span>
+\[
+\begin{align}
+lor\;f &= −s \\
+\\
+lor\;F^∗ &=0
+\end{align}
+\]
+
+where \(f\) is the tensor of the electromagnetic field, \(F^∗\) its dual, and s the 4-vector current density. Minkowskian
+formalism ensures that the equations are the same in any frame of reference.
+
+<br><span style="color:blue;">
+ここで、\(f\) は電磁場のテンソル、\(F^∗\) はその双対テンソル、\(s\) は4元電流密度である。ミンコフスキー的定式化により、これらの式は任意の座標系において同一であることが保証される。
+</span>
+</p><p>
+
+– The momentum-energy tensor of the electromagnetic field. In his longest paper, published in 1908 (Minkowski,
+1908), in Sect. 13, Minkowski defined the momentum-energy tensor, showing that Maxwell’s stress tensor, Poynting’s vector, and electromagnetic energy density form a single entity in four-dimensional spacetime. This tensor
+plays a fundamental role in the electrodynamic theory. It was also key to the development of gravitational field
+equations. For the physicist-mathematician and historian of science Edmund Whittaker, the momentum-energy
+tensor was Minkowski’s greatest discovery (Whittaker 1953, 66–67, Hehl, 2008).
+
+<br><span style="color:blue;">
+電磁場のエネルギー・運動量テンソル。ミンコフスキーは、1908年に発表した自身の最長の論文（Minkowski, 1908）の第13節において、エネルギー・運動量テンソルを定義し、マクスウェルの応力テンソル、ポインティング・ベクトル、および電磁場のエネルギー密度が、4次元時空において一つの実体をなすことを示した。このテンソルは、電磁気学の理論において根本的な役割を果たすものである。また、それは重力場方程式の構築においても鍵となるものであった。物理学者・数学者であり科学史家でもあったエドマンド・ウィテカーにとって、エネルギー・運動量テンソルはミンコフスキーの最大の発見であった（Whittaker 1953, 66–67; Hehl, 2008）。
+</span>
+</p><p>
+
+Table 1 Minkowski’s contributions in current physics textbooks
+
+<br><span style="color:blue;">
+表1 現代の物理学の教科書におけるミンコフスキーの貢献
+</span>
+
+\[
+\begin{array}{l l}
+\hline
+\text{「回転」としてのローレンツ変換} & \text{通常 yes} \\
+\text{次元幾何学の結果としての長さの収縮} &  \text{通常 not} \\
+\text{事象、間隔、固有時} &  \text{yes} \\
+\text{時空の構造} & \text{通常 yes} \\
+\text{絶対世界の公理} & \text{No} \\
+\text{4次元形式} & \text{通常 yes, ただし一般的な物理学の教科書では扱わなれない} \\
+\text{運動量-エネルギー テンソル} & \text{通常 yes, ただし専門的な書籍に限る}\\
+\hline
+\end{array}
+\]
+</p>
+
+<h2>5 What is left of Minkowski? <span style="color:blue;">ミンコフスキーの何が残っているのか？</span></h2>
+<p>
+What remains of all these original contributions by Minkowski in current physics textbooks? In Table 1, we can
+see a summary of the situation.
+
+<br><span style="color:blue;">
+現代の物理学の教科書において、ミンコフスキーによるこれらすべての独創的な貢献のうち、何が残されているのでしょうか？表1に、その状況の概要が示されています。
+</span>
+</p><p>
+
+Let us look at some examples that illustrate this table. Regarding Lorentz transformations as rotations, Griffiths,
+in his influential textbook of electrodynamics (Griffiths, 2024, p.531), says:
+
+<br><span style="color:blue;">
+この表を具体的に示す例をいくつか見てみましょう。ローレンツ変換を回転とみなすことについて、グリフィスは、
+その影響力のある電磁気学の教科書（Griffiths, 2024, p.531）の中で、次のように述べています。
+</span>
+</p><p style="padding-left:4em;">
+
+”If this reminds you of the rotations we studied in Section 1.1.5, it’s no accident. There we were concerned
+with the change in components when you switch to a rotated coordinate system; here we are interested in
+changing components when you go to a moving system.”
+
+<br><span style="color:blue;">
+「これがセクション1.1.5で扱った回転を想起させるとしても、それは偶然ではありません。あちらでは回転させた座標系へ移行した際の成分の変化を扱いましたが、ここでは、運動する座標系へ移行した際の成分の変化に注目します。」
+</span>
+</p><p>
+
+We also find in Griffiths the definitions of event, interval, and proper time, accompanied by an illustration of
+the world line of a particle that is almost identical to Minkowski’s corresponding drawing of 1908. The structure
+of space–time is explained by Griffiths accompanied by an illustration very similar to Minkowski’s.
+
+<br><span style="color:blue;">
+グリフィスは、事象、間隔、および固有時の定義に加え、ミンコフスキーが1908年に示した図とほぼ同一の、粒子の世界線を描いた図を提示しています。また、時空の構造についても、ミンコフスキーの図と非常によく似た図を用いて説明しています。
+</span>
+</p><p>
+
+The way in which modern textbooks address the postulates of relativity is almost unanimous. A form similar
+to that used by Einstein in 1905 is usually preferred. Taking Griffiths again as a reference (Griffiths, 2024, p.512):
+
+<br><span style="color:blue;">
+現代の教科書において、相対性理論の公理がどのように扱われているかについては、ほぼ一致した見解が見られます。通常、アインシュタインが1905年に用いたものと同様の形式が採用されています。ここでもグリフィス（Griffiths, 2024, p.512）を例に挙げると、以下のようになります。
+</span>
+</p><p style="padding-left:4em;">
+
+“. . . Einstein proposed his two famous postulates:
+<br><span style="color:blue;">
+「……アインシュタインは、あの有名な2つの公理を提唱した。」
+</span>
+</p><p>
+
+1. The principle of relativity. The laws of physics apply in all inertial reference frames.
+
+<br><span style="color:blue;">
+相対性の原理。物理法則は、すべての慣性系において成り立つ。
+</span>
+</p><p>
+
+2. The universal speed of light. The speed of light in vacuum is the same for all inertial observers, regardless of
+the motion of the source, the observer, or any assumed medium of propagation.”
+
+<br><span style="color:blue;">
+普遍的な光速。真空中の光の速さは、光源や観測者の運動、あるいは伝播を媒介すると仮定されるいかなる媒質の有無にかかわらず、すべての慣性系にある観測者にとって同一である。
+</span>
+</p><p>
+
+Another famous textbook, Jackson’s, devotes a section to the history of the origin of relativity with the title:
+
+<br><span style="color:blue;">
+もう一つの有名な教科書であるジャクソン（Jackson）の著書では、相対性理論の起源に関する歴史を扱う節に、次のような見出しが付けられています。
+</span>
+</p><p style="padding-left:4em">
+
+“11.1 The situation before 1900, Einstein’s postulates” (Jackson, 1998, p. 515).
+
+<br><span style="color:blue;">
+「11.1　1900年以前の状況、アインシュタインの公理」（Jackson, 1998, p. 515）
+</span>
+</p><p>
+
+For their part, Lorrain and Corson (Lorrain, 1991) deal with all the topics of the table except for the postulate
+of the absolute world. They do not give historical references; they only mention Minkowski for his diagrams. Even
+Einstein is only mentioned in passing in this systematic but ahistorical presentation.
+
+<br><span style="color:blue;">
+一方、ロレインとコルソン（Lorrain, 1991）は、「絶対的世界」という公準を除き、表に挙げられたすべての論題を扱っている。彼らは歴史的な言及を行っておらず、ミンコフスキーについてはその図に関して触れているにすぎない。アインシュタインでさえ、この体系的ではあるものの歴史的観点を欠いた叙述の中では、単に通りすがりに言及される程度である。
+</span>
+</p><p>
+
+Goldstein, Poole, and Safko in Classical mechanics (Goldstein, 2002), another of the world’s reference textbooks
+during the second half of the twentieth century, in this case of classical mechanics, dedicates a chapter to the
+special theory of relativity. The statement of the postulates is that of Einstein, but the treatment of the Lorentz
+transformations is closer to that of Minkowski. As in most modern textbooks, the concepts of interval or proper
+time are defined in the same terms as Minkowski did. It also introduces the whole formalism of 4-vectors and
+4-tensors, certainly with a modern notation and abandoning the imaginary character of the temporal component.
+In this textbook, the concepts are not attributed to any particular scientist. The usual terms are simply used:
+Lorentz transformations, Lorentz group, Poincar´e group (for inhomogeneous Lorentz transformations), Minkowski
+force, and so on.
+
+<br><span style="color:blue;">
+20世紀後半における古典力学の世界的名著の一つであるゴールドスタイン、プール、サフコ著『古典力学』（Goldstein, 2002）では、特殊相対性理論について1つの章が割かれています。そこでの基本原理の記述はアインシュタインによるものですが、ローレンツ変換の扱いはミンコフスキーによるものに近い形をとっています。近年の多くの教科書と同様に、「時空間隔（インターバル）」や「固有時」といった概念は、ミンコフスキーによる定義を踏襲しています。また、4元ベクトルや4元テンソルに関する一連の定式化も導入されていますが、そこでは現代的な記法が採用され、時間成分に虚数単位を用いる手法は放棄されています。同書において、これらの概念は特定の科学者に帰属するものとしては扱われていません。ローレンツ変換、ローレンツ群、ポアンカレ群（非斉次ローレンツ変換に対して）、ミンコフスキー力といった一般的な用語がそのまま用いられています。
+</span>
+</p><p>
+
+Another influential mechanics textbook, that of Thornton and Marion (Thornton, 2003), also introduces all
+of Minkowski’s concepts of spacetime. In this case, the imaginary unit is used for the temporal component, as
+Minkowski did. In a footnote, the authors make the following clarification: “Hermann Minkowski (1864–1909) made
+important contributions to the mathematical theory of relativity and introduced ict as the fourth component.” It
+must be said that Minkowski does not have priority in the latter. As we said above, Poincar´e had already used
+ict in his 1906 article. Also, in another footnote, Thornton and Marion give an account of the history of Lorentz’s
+transformations, naming Voigt and Larmor, in addition to Lorentz and Poincar´e.
+
+<br><span style="color:blue;">
+力学のもう一つの有力な教科書であるソーントンとマリオンの著書（Thornton, 2003）でも、ミンコフスキーの時空に関する概念がすべて導入されている。この場合、ミンコフスキーと同様に、時間成分に対して虚数単位が用いられている。著者らは脚注において、「ヘルマン・ミンコフスキー（1864–1909）は相対性理論の数学的理論に重要な貢献をなし、第4成分として \(ict\) を導入した」と明記している。しかし、後者（\(ict\) の導入）に関しては、ミンコフスキーが先駆者であるとは言えない。前述の通り、ポアンカレはすでに1906年の論文で \(ict\) を用いていたからである。また、別の脚注において、ソーントンとマリオンはローレンツ変換の歴史について解説し、ローレンツやポアンカレに加え、フォークトやラーモアの名も挙げている。
+</span>
+</p><p>
+
+Two well-known scientists, Weinberg and Rindler gave different values to Minkowski’s contributions. Whereas
+Weinberg does not give any credit to Minkowski (Weinberg, 1972), Rindler wrote: “It is the great achievement of
+Minkowski to have discovered in the wreckage of absolute space and time something which, if perhaps less simple,
+is nevertheless absolute once more and constitutes a suitable new background for our intuitive thought about the
+physical world: four dimensional space–time.” (Rindler, 1960).
+
+<br><span style="color:blue;">
+著名な科学者であるワインバーグとリンドラーは、ミンコフスキーの貢献に対して異なる評価を下している。ワインバーグがミンコフスキーの貢献を認めていない（Weinberg, 1972）のに対し、リンドラーは次のように記している。「絶対的な空間と時間の概念が崩壊したその残骸の中から、あるものを見出したことこそ、ミンコフスキーの偉大な業績である。それは、単純さという点では劣るかもしれないが、それでもなお再び『絶対的』なものであり、物理的世界に関する我々の直感的な思考にとって適切な新しい背景、すなわち4次元時空を構成するものである」（Rindler, 1960）。
+</span>
+</p><p>
+
+We have not found any current reference textbook that echoes Minkowski’s postulate of the absolute world.
+Everything seems to indicate that this postulate has fallen into oblivion.
+
+<br><span style="color:blue;">
+ミンコフスキーの「絶対的世界」という要請を反映した、現行の参考書や教科書は見当たりません。
+あらゆる状況から見て、この要請は忘れ去られてしまったようです。
+</span>
+</p><p>
+
+Finally, the concepts of 4-vectors and 4-tensors are used today by all advanced texts on classical electrodynamics,
+relativity, relativistic quantum physics, particle physics, etc. The notation has evolved and differs from Minkowski’s,
+but the concepts are the same, and the equations are equivalent—see, for example, (Zangwill, 2013).
+
+<br><span style="color:blue;">
+最後に、4元ベクトルや4元テンソルといった概念は、今日、古典電磁気学、相対性理論、相対論的量子物理学、素粒子物理学などのあらゆる高度な専門書で用いられています。表記法は時代とともに変化し、ミンコフスキーの当時のものとは異なりますが、概念は同一であり、方程式も等価です（例として、Zangwill, 2013 を参照）。
+</span>
+</p>
+
+<h2>6 Some unfair attributions <span style="color:blue;">不当な帰属付けの例</span></h2>
+<p>
+The history of science is full of erroneous attributions: theorems, laws, and theories that do not bear the name
+of the one who first enunciated them. (There is even a “law”, the Stiegler law, saying that no scientific discovery
+receives the names of the true discoverer. Examples include Halley’s comet, Fibonacci numbers or the theorem
+of Pythagoras—of course, Stiegler’s law was first found by sociologist R. Merton.) In the case of Minkowski, his
+contributions to the theory of relativity are not always recognized. What follows is just a sample of the many times
+Minkowski has been unfairly ignored.
+
+<br><span style="color:blue;">
+科学の歴史には、誤った命名の例が数多く見られます。つまり、ある定理や法則、理論を最初に提唱した人物の名が、それらに冠されていないというケースです。（実際、「科学的発見に真の発見者の名が冠されることはない」とする「スティグラーの法則」というものさえ存在します。ハレー彗星、フィボナッチ数列、ピタゴラスの定理などがその例ですが、皮肉なことに、この「スティグラーの法則」自体、最初に発見したのは社会学者のR.マートンでした。）ミンコフスキーの場合も、相対性理論に対する彼の貢献が正当に評価されているとは必ずしも言えません。以下に挙げるのは、ミンコフスキーが不当にも無視されてきた数多くの事例の、ほんの一例に過ぎません。
+</span>
+</p><p>
+
+Especially serious is the case of Richard Feynman and his Feynman lectures on physics. At the beginning of the
+lesson on the special theory of relativity, we read:
+
+<br><span style="color:blue;">
+特に深刻なのは、リチャード・ファインマンと彼の『ファインマン物理学』の例です。特殊相対性理論に関する講義の冒頭には、次のように記されています。
+</span>
+</p><p stype"=padding-left:4em;">
+
+”For over 200 years the equations of motion enunciated by Newton were believed to describe nature correctly,
+and the first time that an error in these laws was discovered, the way to correct it was also discovered. Both
+the error and its correction were discovered by Einstein in 1905.” (Feynman, 1964, vol. 1, p. 15-1)
+
+<br><span style="color:blue;">
+「ニュートンが提唱した運動方程式は、200年以上にわたって自然を正しく記述するものだと信じられていました。そして、それらの法則に誤りがあることが初めて発見された際、その誤りを正す方法もまた発見されたのです。その誤りと修正法の双方は、1905年にアインシュタインによって発見されました。」（Feynman, 1964, vol. 1, p. 15-1）
+</span>
+</p><p>
+
+The last sentence could not be more wrong. Feynman ignores here the previous work of Lorentz, Poincar´e,
+Cohn, and others who had already noticed the contradictions between the electromagnetic theory and Newtonian
+mechanics. And both Lorentz and Poincar´e had already laid the foundations to resolve these contradictions.
+
+<br><span style="color:blue;">
+最後の文は、これ以上ないほど間違っています。ファインマンはここで、電磁気学とニュートン力学の間の矛盾にすでに気づいていたローレンツ、ポアンカレ、コーンらによる先行研究を無視しています。しかも、ローレンツとポアンカレの双方は、それらの矛盾を解決するための基礎をすでに築いていたのです。
+</span>
+</p><p>
+
+In addition, Feynman devotes a lesson to the concept of space–time, and only mentions Minkowski at the end to
+quote his famous line that space and time will fade into mere shadows. At no time did he attribute to Minkowski
+any of the fundamental concepts he introduced.
+
+<br><span style="color:blue;">
+さらに、ファインマンは時空の概念について一つの講義を割いているが、ミンコフスキーの名に言及するのは、空間と時間が単なる影へと消え去るだろうという彼の有名な言葉を引用する際のみである。彼が導入した基本的な概念のいずれについても、それをミンコフスキーに帰するようなことは一切なかった。
+</span>
+</p><p>
+
+Another notable example of the misattribution of Minkowski’s work involves Stephen Hawking. In his popular
+book, A Brief History of Time (Hawking, 1988), Hawking details the structure of spacetime and its various
+features—all ingredients of Minkowski’s original framework—yet fails to mention him by name.
+
+<br><span style="color:blue;">
+ミンコフスキーの業績の帰属先が誤って扱われているもう一つの注目すべき例として、スティーヴン・ホーキングのケースが挙げられます。ホーキングは、ベストセラーとなった著書『ホーキング、宇宙を語る』（Hawking, 1988）の中で、時空の構造やその諸特性について詳述していますが――これらはすべてミンコフスキーが構築した当初の枠組みを構成する要素であるにもかかわらず――ミンコフスキーの名前に言及することはありませんでした。
+</span>
+</p><p>
+
+It is also strange that Hermann Weyl in his book Space–Time-Matter , first published in 1922, attributed the
+concept of space–time to Einstein. In chapter III of the book, we can read:
+
+<br><span style="color:blue;">
+また、ヘルマン・ワイルが1922年に初版が刊行された著書『空間・時間・物質』において、時空の概念をアインシュタインに帰していることも奇妙な点です。同書の第3章には、次のように記されています。
+</span>
+</p><p style="padding-left:4em;">
+
+”The solution of Einstein, which at one stroke overcomes all difficulties, is then this: the world is a fourdimensional affine space whose metrical structure is determined by a non-definite quadratic form. . . ” (Weyl,
+2013, p. 256)
+
+<br><span style="color:blue;">
+「あらゆる困難を一挙に解決するアインシュタインの解法とは、次のようなものである。すなわち、世界は4次元アフィン空間であり、その計量構造は不定符号の二次形式によって決定される……」（ワイル、2013年、p. 256）
+</span>
+</p><p>
+
+The fact is that this phrase is, almost literally, framed in Minkowski’s terms, and Einstein had a hard time
+accepting them. However, Weyl corrects himself immediately and on the next page he says:
+
+<br><span style="color:blue;">
+実のところ、この表現は文字通りと言っていいほどミンコフスキーの用語で構成されており、アインシュタインはそれらを受け入れるのに苦労したのです。しかし、ワイルはすぐに自説を修正し、次のページでは次のように述べています。
+</span>
+</p><p style="padding-left:4em;">
+
+”The adequate mathematical formulation of Einstein’s discovery was first given by Minkowski: to him we are
+indebted for the idea of four-dimensional world geometry, on which we based our argument from the outset.”
+(Weyl, 2013, p. 257).
+
+<br><span style="color:blue;">
+「アインシュタインの発見を適切に数学的に定式化したのは、ミンコフスキーが最初であった。我々が当初から議論の基礎としてきた四次元世界幾何学という着想は、彼に負うものである。」
+(Weyl, 2013, p. 257)
+</span>
+</p><p>
+
+In a recent text, science writer Arianrhod (2024) makes the following statement (Arianrhod, 2024, p. 207):
+
+<br><span style="color:blue;">
+科学ライターのアリアンロッド（Arianrhod, 2024）は、近年の著作において次のように述べている（Arianrhod, 2024, p. 207）。
+</span>
+</p><p style="padding-left:4em;">
+
+”It took Lorentz, Poincar´e, and Einstein to uncover the mathematical properties of such a four-dimensional
+construct— and it took Einstein to make it “real” by suggesting testable predictions to check his theory. (One
+of those predictions led him, completely unexpectedly, to deduce that E = mc2.) So, when people hear the
+words “fourth dimension” today, they tend to think of Einstein, not Wells— and Einstein did it with the
+language of math.”
+
+<br><span style="color:blue;">
+「そのような4次元の構成体の数学的性質を明らかにするには、ローレンツ、ポアンカレ、そしてアインシュタインの力が必要でした。さらに、自身の理論を検証可能な予測を提示することで、それを「現実のもの」としたのはアインシュタインでした（そうした予測の一つが、全く予期せぬ形で、彼に「E = mc²」を導き出させることになったのです）。ですから、今日「第4次元」という言葉を耳にすると、人々はウェルズではなくアインシュタインを思い浮かべる傾向にあります。そして、アインシュタインはそれを数学という言語を用いて成し遂げたのです。」
+</span>
+</p><p>
+
+The reference to Wells is due to the fact that in his novel The Time Machine Wells makes the traveler say that
+the world has four dimensions: the three of space and time. Arianrhod partially corrects herself a few lines below,
+clarifying:
+
+<br><span style="color:blue;">
+ウェルズに言及しているのは、彼の小説『タイム・マシン』の中で、タイム・トラベラーに「世界は4つの次元、すなわち3つの空間次元と時間次元から成る」と語らせているためである。アリアンロッドは数行後、自らの発言を部分的に訂正し、次のように説明している。
+</span>
+</p><p style="padding-left:4em;">
+
+”Tragically, he (Minkowski) never got the chance to develop his work fully, or to know that today his name
+lives on in the “Minkowski metric.” Not long after he gave space-time to the world, he died suddenly, after
+surgery for appendicitis.” (Arianrhod, 2024, p. 211)
+
+<br><span style="color:blue;">
+「悲劇的なことに、彼（ミンコフスキー）は自身の研究を十分に発展させる機会にも、今日その名が『ミンコフスキー計量』として生き続けていることを知る機会にも恵まれなかった。時空という概念を世界に提示して間もなく、彼は虫垂炎の手術後に急逝したのである。」（Arianrhod, 2024, p. 211）
+</span>
+</p><p>
+
+Finally, as a curiosity, we can note that in Wikipedia in the Spanish version, in the article “L´ınea de universo”
+(world line), we can read: “The concept of world lines in physics was introduced by Albert Einstein, and the term
+is currently common in the theory of relativity” (accessed on 08/27/2025).<sup>2</sup> Again, this attribution is erroneous.
+
+<br><span style="color:blue;">
+最後に、興味深い点として、スペイン語版Wikipediaの「Línea de universo」（世界線）という記事には、「物理学における世界線という概念はアルベルト・アインシュタインによって導入されたものであり、現在、この用語は相対性理論において一般的に用いられている」と記されていることを挙げておきます（2025年8月27日アクセス）。<sup>2</sup> しかし、この帰属（アインシュタインが導入したとする説）もまた誤りです。
+</span>
+</p><p style="padding-left:4em;">
+<sup>2</sup> https://es.wikipedia.org/wiki/Linea_de_universo..
+</p><p>
+
+As we often see, the figure of Einstein overshadows all others, especially Minkowski. As if his already undoubted
+merits were not enough, Einstein is credited with those of Minkowski. Historian of science Corry explains it this
+way:
+
+<br><span style="color:blue;">
+よく見られることだが、アインシュタインの存在感は他のすべての人々、とりわけミンコフスキーのそれを圧倒している。アインシュタインは、それ自体疑う余地のない自身の功績に加え、ミンコフスキーの功績までをも自分のものとして評価されているのである。科学史家のコリーは、この状況を次のように説明している。
+</span>
+</p><p style="padding-left:4em;">
+
+”. . . one of the problems of historically interpreting Minkowski’s and Hilbert’s work in this domain has been
+precisely the excessive stress on Einstein’s work as the adequate and inevitable main frame of reference.”
+(Corry, 1997, p. 306)
+
+<br><span style="color:blue;">
+「……この領域におけるミンコフスキーとヒルベルトの業績を歴史的に解釈する際の問題点の一つは、まさに、アインシュタインの業績を適切かつ必然的な主要な参照枠として過度に重視してきたことにある。」
+(Corry, 1997, p. 306)
+</span>
+</p>
+
+<h2>7 Physics vs. math controversy <span style="color:blue;">物理学対数学の論争</span></h2>
+<p>
+In his writings on the theory of relativity, Minkowski repeatedly claims a supposed superiority of mathematics
+over physics when it comes to constructing physical theories and grasping their full depth. Thus, in the Cologne
+conference “Space and Time”, after defining and explaining what the groups Gc and G∞ are, which correspond
+to the group of Lorentz transformations and the group of Galileo’s transformations, we can read:
+
+<br><span style="color:blue;">
+
+</span>
+</p><p style="padding-left:4em;">
+
+“In this situation, and since Gc is mathematically more understandable than G∞, there could have probably
+been a mathematician with a free imagination who could have come up with the idea that at the end natural
+phenomena do not actually possess an invariance with the group G∞, but rather with a group Gc with a
+certain finite c, which is extremely large only in ordinary units of measurement. Such an insight would have
+been an extraordinary triumph for pure mathematics. Now mathematics expressed only staircase wit here,
+but it has the satisfaction that, due to its happy antecedents with their senses sharpened by their free and
+penetrating imagination, it can grasp the profound consequences of such a remodelling of our view of nature.”
+(Minkowski, 2020, p. 61).
+
+<br><span style="color:blue;">
+ミンコフスキーは相対性理論に関する著作の中で、物理理論の構築やその深奥の理解において、数学が物理学よりも優位にあると繰り返し主張しています。実際、ケルンで開催された「空間と時間」と題する会議において、ローレンツ変換群およびガリレイ変換群にそれぞれ対応する群 Gc と G∞ を定義・解説した後、次のような記述が見られます。
+</span>
+</p><p>
+
+Since, as we have said, in 1905 Minkowski and Hilbert organized a seminar on the theory of the electron in
+G¨ottingen, it is very plausible that Minkowski was already working on the principle of relativity and its mathematical articulation at that time. Is Minkowski talking about himself when he speaks of a mathematician with “a
+free imagination”? That is very likely, and the testimony of Max Born, to which we have referred above, goes in
+that direction.
+
+<br><span style="color:blue;">
+前述の通り、1905年にミンコフスキーとヒルベルトがゲッティンゲンで電子論に関するゼミナールを組織したことを踏まえれば、ミンコフスキーが当時すでに相対性原理とその数学的定式化に取り組んでいた可能性は極めて高いと言えます。「自由な想像力」を持つ数学者について語る際、ミンコフスキーは自分自身について述べているのでしょうか？その可能性は十分にあり、前述したマックス・ボルンの証言もまた、その見解を裏付けるものです。
+</span>
+</p><p>
+
+Later on, in the same text of the Cologne conference we read:
+
+<br><span style="color:blue;">
+その後、同じケルン会議の文書には、次のように記されています。
+</span>
+</p><p style="padding-left:4em;">
+
+“Neither Einstein nor Lorentz disputed the concept of space... To go beyond the concept of space in such a
+way is an instance of what can only be imputed to the audacity of mathematical culture.” (Minkowski, 2020,
+p. 65).
+
+<br><span style="color:blue;">
+「アインシュタインもローレンツも、空間という概念に異議を唱えることはなかった……。そのようにして空間の概念を超越することは、数学的文化の大胆さにのみ帰せられるべき事柄の一例である」（ミンコフスキー、2020年、65ページ）。
+</span>
+</p><p>
+
+And also, to those who find it “unsympathetic or painful to abandon the prevailing views”, he proposed to
+become reconciled “through the thought of a pre-established harmony between mathematics and physics.”
+
+<br><span style="color:blue;">
+また、既存の見解を捨てることに「共感しがたい、あるいは苦痛」を感じる人々に対して、彼は、「数学と物理学の間にあらかじめ確立された調和（予定調和）」という考え方を通じて和解を図るよう提案した。
+</span>
+</p><p>
+
+In November 1907, in “The Principle of Relativity,” he wrote:
+
+<br><span style="color:blue;">
+1907年11月、彼は『相対性原理』の中で次のように記した。
+</span>
+</p><p style="padding-lfet:4em;">
+
+”Also, the mathematician is particularly well predisposed to absorb these new intuitions because this involves
+becoming acclimatized and to conceptualize things anew, that is, it involves a process that the mathematician
+has practiced for the longest time. Although the physicists must now partially and newly invent these concepts
+whereby they must clear for themselves and with great effort a jungle-like path through an unexplored territory,
+while quite nearby there already exists an excellent highway of the mathematicians’ which comfortably leads
+onwards.” (Minkowski, 2020, p. 77).
+
+<br><span style="color:blue;">
+「また、数学者はこうした新しい直観を吸収するのに特に適した素養を備えていると言える。なぜなら、そこには物事に慣れ親しみ、それを新たに概念化することが求められるからであり、それこそは数学者が長きにわたって実践してきたプロセスそのものだからである。これに対し物理学者は、未踏の地におけるジャングルのような道を自力で苦労して切り開きながら、こうした概念を部分的に、かつ新たに創り出さねばならない状況にある。それも、すぐ近くには、快適に先へと導いてくれる数学者たちの見事な高速道路がすでに存在しているというのに、である。」（Minkowski, 2020, p. 77）
+</span>
+</p><p>
+
+And in the article of December of that same year, he elaborated on the same line:
+
+<br><span style="color:blue;">
+そして、同年12月の記事において、彼は同じ論調でさらに詳しく論じました。
+</span>
+</p><p style="padding-left:4em;">
+
+”To the mathematician, accustomed on the one hand to the above considerations in multidimensional manifolds, and on the other hand to the concepts of so-called non-Euclidean geometry, there can be no difficulty in
+adopting this concept of time for the application of the Lorentz transformation. The paper of Einstein which
+has been cited in the Introduction, has succeeded to some extent in presenting the nature of the transformation
+from a physical standpoint.” (Minkowski, 2020, p. 113).
+
+<br><span style="color:blue;">
+「多次元多様体における上述の考察や、いわゆる非ユークリッド幾何学の概念に慣れ親しんでいる数学者にとって、ローレンツ変換を適用するにあたり、この時間の概念を採用することに何ら困難はないであろう。序論で言及されたアインシュタインの論文は、物理的観点からこの変換の性質を提示することに、ある程度成功している。」（Minkowski, 2020, p. 113）
+</span>
+</p><p>
+
+It is to be expected that these statements did not sit well with the physicists. Yet, to some extent their reactions
+confirmed Minkowski’s perception.
+
+<br><span style="color:blue;">
+こうした発言が物理学者たちの反感を買ったのは、当然のことと言える。しかし、彼らの反応はある程度、ミンコフスキーの認識を裏付けるものでもあった。
+</span>
+</p><p>
+
+As is well known, the formalism of 4-vectors and 4-tensors was not initially well received by Einstein, who called
+it “superfluous erudition”. But he also wrote down that position in an article published in collaboration with Laub
+on Minkowski’s electromagnetic theory. In the Introduction, Einstein and Laub wrote (Einstein and Laub, 1908a):
+
+<br><span style="color:blue;">
+周知の通り、4元ベクトルや4元テンソルを用いる定式化は、当初アインシュタインには好意的に受け入れられず、彼はそれを「余計な博学」と評していました。しかし、彼はミンコフスキーの電磁気理論に関するラウブ（Laub）との共同論文においても、その見解を記しています。その序論の中で、アインシュタインとラウブは次のように述べています（Einstein and Laub, 1908a）。
+</span>
+</p><p style="padding-left:4em;">
+
+”In a recently published study Mr. Minkowski has presented the fundamental equations for the electromagnetic
+processes in moving bodies. In view of the fact that this study makes rather great demands on the reader in
+its mathematical aspects, we do not consider it superfluous to derive here these important equations in an
+elementary way, which, is, by the way, essentially in agreement with that of Minkowski.”
+
+<br><span style="color:blue;">
+「ミンコフスキー氏は最近発表された論文において、運動物体内での電磁気的過程に関する基本方程式を提示しました。この論文は数学的な面で読者にかなりの理解を求めるものであるため、ここでそれらの重要な方程式を初等的な方法で導出することは無駄ではないと考えます。なお、この導出法は、本質的にはミンコフスキー氏の手法と一致するものです。」
+</span>
+</p><p>
+
+That is, for Eistein and Laub, Minkowski’s formalism was more of an added difficulty than a help (Einstein and
+Laub, 1908b). It did not contribute anything conceptually important to the theory. In contrast to Einstein’s initial
+position, Sommerfeld was of the opposite opinion. In his treatise “On the Theory of Relativity: Vector Analysis
+in 4 Dimensions”, written in 1910, he presented in detail all the mathematical formalism devised by Minkowski,
+adapting the notation and filling in the many technical gaps that Minkowski had not had time to address. In
+Sect. 5 of this treatise Sommerfeld put Maxwell’s equations in covariant form. And he concluded the section by
+saying:
+
+<br><span style="color:blue;">
+つまり、アインシュタインとラウブにとって、ミンコフスキーの定式化は助けになるどころか、むしろ厄介なもの（余分な困難）であった（Einstein and Laub, 1908b）。それは理論に対して、概念的に重要な寄与を何らもたらさなかったのである。アインシュタインの当初の立場とは対照的に、ゾンマーフェルトは正反対の意見を抱いていた。1910年に執筆された論文『相対性理論について：4次元におけるベクトル解析』の中で、彼はミンコフスキーが考案した数学的定式化のすべてを詳細に提示した。その際、彼は記法を調整し、ミンコフスキーが取り組む時間のなかった数多くの技術的な不備や未解決部分を補完したのである。同論文の第5節において、ゾンマーフェルトはマクスウェル方程式を共変形式で記述した。そして、次のように述べてその節を締めくくった。
+</span>
+</p><p style="padding-left:4em;">
+
+”The differential operations considered here are (by their geometric introduction, in which coordinate systems
+are not mentioned at all) independent of the choice of the reference system; their coordinate expressions are
+thus behaving invariant or covariant with respect to Lorentz transformations. This especially applies to the
+field equations. The complicated calculations, by which Lorentz (1895 and 1904) and Einstein (1905) proved
+their applicability independent from the coordinate system, and by which they had to show the meaning of
+the transformed field vectors, thus become irrelevant in the system of Minkowski’s ‘world’.” (Sommerfeld,
+1910b, p. 12)
+
+<br><span style="color:blue;">
+「ここで考察される微分演算は、（座標系に全く言及しないという幾何学的な導入の仕方により）基準系の選択とは無関係である。したがって、それらの座標表示は、ローレンツ変換に対して不変または共変な振る舞いをする。このことは特に場の方程式に当てはまる。ローレンツ（1895年、1904年）やアインシュタイン（1905年）が、座標系によらずその適用可能性を証明し、かつ変換された場ベクトルの意味を示すために行わねばならなかった複雑な計算は、こうしてミンコフスキーの『世界』の体系においては不要なものとなる。」（Sommerfeld, 1910b, p. 12）
+</span>
+</p><p>
+
+In the volume dedicated to Einstein’s 70th birthday, Sommerfeld recounted that Einstein once said: “Since
+mathematicians have invaded the theory of relativity, I myself no longer understand it.”
+
+<br><span style="color:blue;">
+アインシュタインの70歳の誕生日に捧げられた記念論文集の中で、ゾンマーフェルトはアインシュタインがかつてこう語ったと回想している。「数学者たちが相対性理論に乗り込んできて以来、私自身、もはやそれが理解できなくなってしまった。」
+</span>
+</p><p>
+
+More surprising is the position of Poincar´e, himself more a mathematician than a physicist. In Science et
+M´ethode, published in 1908, he admits that it would be possible to translate physics into the language of geometry
+of four dimensions, but attempting such a translation “would be giving oneself a great deal of trouble for little
+profit”, and he mentions Hertz’s mechanics, in which something of the kind may be seen. “Yet it seems that the
+translation would always be less simple than the text, and that it would never lose the appearance of a translation,
+for the language of three dimensions seems the best suited to the description of our world, even though that
+description may be made, in case of necessity, in another language.”
+
+<br><span style="color:blue;">
+さらに驚くべきは、物理学者というよりはむしろ数学者であったポアンカレの立場である。1908年に出版された『科学と方法（Science et Méthode）』の中で、彼は物理学を4次元幾何学の言語に翻訳することは可能だと認めつつも、そうした翻訳を試みることは「わずかな利益のために多大な労力を費やすこと」になると述べており、その種の試みが見られる例としてヘルツの力学を挙げている。「とはいえ、その翻訳は常に原文よりも複雑なものにならざるを得ないだろうし、翻訳という体裁を拭い去ることもできないだろう。なぜなら、我々の世界を記述するには3次元の言語こそが最も適しているように思われるからだ――たとえ必要に迫られれば別の言語で記述することも可能だとしても。」
+</span>
+</p><p>
+
+This statement is all the more surprising, since Poincar´e was the first to introduce time as a fourth dimension.
+But probably when he wrote those lines he was unaware of the deeper significance that the “translation” would
+turn out to have.
+
+<br><span style="color:blue;">
+ポアンカレこそが時間を第4の次元として最初に導入した人物であることを考えると、この発言はなおさら驚くべきものです。
+しかし、彼がその一文を記した際、おそらくその「変換」が後に持つことになるより深い意味については、まだ気づいていなかったのでしょう。
+</span>
+</p><p>
+
+In other words, what Minkowski and Sommerfeld saw as advantages, Einstein and Poincar´e understood as
+difficulties. Of course, the context in which such evaluations are made can be relevant: perhaps Sommerfeld, who
+had been trained in K¨onigsberg (where a rich tradition of combining math and physics existed) and was working
+in G¨ottingen, was less conditioned by the traditional mathematical toolbox of the physicist, more open to pure
+mathematics, entertaining greater expectations about the mathematical sophistication that future physicists might
+attain.
+
+<br><span style="color:blue;">
+言い換えれば、ミンコフスキーやゾンマーフェルトが利点とみなしたものを、アインシュタインやポアンカレは困難な点として捉えていたのである。もちろん、こうした評価がなされる文脈も無関係ではないだろう。例えばゾンマーフェルトは、数学と物理学を融合させる豊かな伝統を持つケーニヒスベルクで教育を受け、ゲッティンゲンで研究に従事していた人物である。そのため、彼は物理学者が伝統的に用いる数学的道具立てにそれほど強く縛られておらず、純粋数学に対してより柔軟な姿勢をとっていたほか、将来の物理学者が到達しうる数学的洗練さについても、より大きな期待を抱いていたのかもしれない。
+</span>
+</p><p>
+
+Another man from G¨ottingen, Hermann Weyl, Hilbert’s most brilliant disciple, who succeeded him in his chair
+in 1930, also weighed in on the discussion, vindicating the role of the physicist:
+
+<br><span style="color:blue;">
+ゲッティンゲン出身のもう一人の人物、すなわちヒルベルトの最も優秀な弟子であり、1930年にヒルベルトの後任としてその職に就いたヘルマン・ワイルもまた、物理学者の役割を擁護する形でこの議論に加わりました。
+</span>
+</p><p style="padding-left:4em;">
+
+”The maze of experimental facts which the physicist has to take into account is too manifold, their expansion
+too fast, and their aspect and relative weight too changeable for the axiomatic method to find a firm enough
+foothold, except in the thoroughly consolidated parts of our physical knowledge. Men like Einstein and Niels
+Bohr grope their way in the dark toward their conceptions of general relativity or atomic structure by another
+type of experience and imagination than those of the mathematician, although no doubt mathematics is an
+essential ingredient.” (Herman Weyl, cited by (Corry, 1997, p. 310))
+
+<br><span style="color:blue;">
+「物理学者が考慮に入れなければならない実験的事実の迷宮はあまりに多岐にわたり、その拡大はあまりに急速であり、またその様相や相対的な重要性はあまりに流動的であるため、公理的方法が確固たる足場を見出せるのは、我々の物理学的知識のうち完全に確立された領域に限られる。アインシュタインやニールス・ボーアといった人々は、一般相対性理論や原子構造という概念に至るまで、数学者とは異なる種類の経験と想像力を駆使して暗闇の中を手探りで進んでいったのである――もちろん、数学が不可欠な要素であることに疑いはないが。」（ヘルマン・ワイル、(Corry, 1997, p. 310)による引用）
+</span>
+</p><p>
+
+Minkowski’s ideas were well received among mathematicians, especially the G¨ottingen circle. For example,
+Felix Klein was pleased that Minkowski had used the concept of a group of transformations in geometry in
+his analysis of Lorentz transformations. Klein had published in 1872 what was called the Erlangen program,
+according to which each possible geometry was characterized by a group of transformations. In a 1909 lecture at
+the G¨ottingen Mathematical Society, Klein claimed that his work had somewhat anticipated Minkowski’s (Corry,
+1997). In his words: “What the modern physicists call ‘relativity theory’ is the theory of invariants of a four
+dimensional space–time region x, y, z, t (the Minkowski ‘world’) with respect to a particular group of collineations,
+namely the ‘Lorentz group’” (quoted by Norton, 1982, p. 136). For Minkowski, only those elements of the fourdimensional variety that were invariant under Lorentz transformations could have physical reality. Stated in this
+way, Minkowski’s work was a further embodiment of Klein’s Erlangen program.
+
+<br><span style="color:blue;">
+ミンコフスキーの考えは数学者たち、とりわけゲッティンゲン学派の間で好意的に受け入れられた。例えば、
+フェリックス・クラインは、ミンコフスキーがローレンツ変換の解析において、幾何学における「変換群」の概念を用いたことを喜んだ。クラインは1872年にいわゆる「エアランゲン・プログラム」を発表しており、その中で、あらゆる可能な幾何学は変換群によって特徴づけられると説いていた。1909年にゲッティンゲン数学会で行った講演において、クラインは自身の業績がミンコフスキーの業績をある程度先取りしていたと主張した（Corry, 1997）。彼の言葉を借りれば、「現代の物理学者が『相対性理論』と呼んでいるものは、特定の射影変換群、すなわち『ローレンツ群』に関して、4次元時空領域 x, y, z, t（ミンコフスキーの言う『世界』）の不変量を扱う理論である」（Norton, 1982, p. 136による引用）。ミンコフスキーにとって、ローレンツ変換の下で不変である4次元多様体の要素だけが、物理的実在性を持ち得たのである。このように述べれば、ミンコフスキーの業績は、クラインのエアランゲン・プログラムをさらに具体化したものであったと言える。
+</span>
+</p><p>
+
+The reception was mixed among the physicists. Those closest to the G¨ottingen circle, such as Sommerfeld, Born,
+or Abraham, appreciated the value of Minkowski’s approach. The work of Sommerfeld and von Laue was decisive for
+the definitive acceptance of the 4D formalism. But in their interpretation Sommerfeld and Laue deprived the theory
+of Minkowski’s more philosophical concepts, such as the postulate of the absolute world and the idea that reality ‘is’
+four-dimensional. No doubt, this restriction of the Minkowskian universe to a mathematical formalism helped its
+acceptance. Furthermore, reception evolved in the years following the emergence of General Relativity, particularly
+as empirical evidence—such as the solar eclipse observations—supported the theory’s credibility. Walter (2007,
+p. 244) outlines five key factors that contributed to the adoption of four-dimensional formalism:
+
+<br><span style="color:blue;">
+物理学者の間での反応は様々であった。ゾンマーフェルト、ボルン、アブラハムといったゲッティンゲン学派に近い人々は、ミンコフスキーのアプローチの価値を認めていた。4次元の定式化が決定的に受け入れられる上で、ゾンマーフェルトとフォン・ラウエの業績は決定的な役割を果たした。しかし、彼らの解釈において、ミンコフスキーが抱いていた「絶対的世界」という要請や、実在は4次元的なものであるという考えといった、より哲学的な概念は理論から排除されてしまった。ミンコフスキーの宇宙論を数学的な定式化へと限定したことが、その受容を後押ししたことは疑いない。さらに、一般相対性理論の登場後、特に日食観測などの実証的証拠が同理論の信頼性を裏付けるにつれて、その受容のあり方も変化していった。ワルター（Walter 2007, p. 244）は、4次元の定式化が採用されるに至った主な要因として、以下の5点を挙げている。
+</span>
+</p><p style="padding-left:4em;">
+
+”The elaboration of new concepts and definitions, the introduction of a graphic model of spacetime, the experimental confirmation of relativity theory, the vector-symbolic movement, and problem-solving performance.”
+
+<br><span style="color:blue;">
+「新たな概念や定義の構築、時空の図式的モデルの導入、相対性理論の実験的実証、ベクトル記号論的動向、そして問題解決の遂行。」
+</span>
+</p><p>
+
+Hence, due to the work of Sommerfeld and Laue, the adoption of four-dimensional (4D) formalism transcended
+its utility as a mere calculation method, representing instead a fundamental shift in how we conceptualize the
+universe. Within General Relativity, spacetime is not viewed as a passive container; rather, it is characterized as
+a dynamic, four-dimensional pseudo-Riemannian manifold capable of curvature, through which objects traverse
+along specific paths known as geodesics. Today, this 4D framework serves as a cornerstone of modern physics.
+
+<br><span style="color:blue;">
+したがって、ゾンマーフェルトやラウエの業績により、4次元形式の採用は単なる計算手法としての有用性を超え、宇宙を捉える概念の根本的な転換をもたらしました。一般相対性理論において、時空は受動的な「入れ物」とは見なされません。むしろそれは、曲率を持ち得る動的な4次元擬リーマン多様体として特徴づけられ、物体はその中を「測地線」と呼ばれる特定の経路に沿って移動します。今日、この4次元の枠組みは現代物理学の礎となっています。
+</span>
+</p>
+
+<h2>8 Supporters and detractors <span style="color:blue;">支持者と反対者</span></h2>
+<p>
+It may seem normal that Minkowski’s works aroused sympathy and rejection in his time. His words about the
+superiority of mathematical thinking were undoubtedly provocative and may not have been well received in certain
+quarters. Furthermore, that was a time of revolutionary change in the mathematical tools of physics: the wellestablished tools of mathematical analysis started to be replaced by more abstract ideas (e.g., groups), and the
+change was just then starting to be felt. It’s easy for us today to forget what such situations may be—Pauli went
+so far as to speak in the 1920s of a “group pest”.
+
+<br><span style="color:blue;">
+ミンコフスキーの業績が当時、共感と反発の双方を呼び起こしたことは、ごく自然なことのように思えるかもしれない。数学的思考の優位性を説く彼の言葉は、間違いなく挑発的なものであり、一部からは好意的に受け止められなかった可能性もある。さらに当時は、物理学における数学的道具立てが革命的な変化を遂げつつある時期でもあった。すなわち、確立された手法であった数学解析に代わり、より抽象的な概念（群など）が導入され始め、その変化の影響がまさに感じ取られ始めた頃だったのである。現代の私たちにとって、当時の状況がどのようなものであったかを想像するのは容易ではないかもしれない――実際、パウリなどは1920年代に「群の疫病（group pest）」という言葉を口にするほどであったのだから。
+</span>
+</p><p>
+
+We find it more surprising that the controversy has spread to present writers dealing with the history of physics.
+Let us remind the reader, once more, that we are interested in the public perception, more than the work of
+professional historians. We find among physicists and science writers both supporters and detractors of Minkowski,
+and some detractors even go so far as to use disqualifying language. Let us look at some examples.
+
+<br><span style="color:blue;">
+この論争が、物理学の歴史を扱う現代の書き手にまで及んでいることには、いっそうの驚きを禁じ得ません。
+改めて申し上げますが、我々の関心は、専門の歴史家による研究そのものよりも、むしろ一般の人々に抱かれている認識にあります。物理学者や科学ライターの間には、ミンコフスキーを支持する者もいれば批判する者もおり、批判者の中には、彼を否定するような厳しい言葉を投げかける者さえいます。いくつかの例を見てみましょう。
+</span>
+</p><p>
+
+Theoretical physicist T. Damour (Damour, 2008) is one of those who are very critical of Minkowski. In his article
+on the Cologne conference, we can read:
+
+<br><span style="color:blue;">
+理論物理学者のT. ダムール（Damour, 2008）は、ミンコフスキーに対して非常に批判的な人物の一人である。ケルンでの会議に関する彼の論文には、次のように記されている。
+</span>
+</p><p style="padding-left:4em;">
+
+”Actually, Minkowski’s first technical paper used an abstract mathematical notation which was not of much
+help for physicists.
+”Without fully understanding what Einstein had done, nor (at least initially) what Poincar´e had already
+achieved, he was lucky to unearth elegant and deep mathematical structures that were implicitly contained
+in their (and others’) work and had the boldness to embrace with enthusiasm their revolutionary character.”
+(Damour, 2008, p. 16).”
+
+<br><span style="color:blue;">
+「実際、ミンコフスキーの最初の技術論文は、物理学者にとってあまり役に立たない抽象的な数学記号を用いていた。
+アインシュタインの業績も、ポアンカレの業績も（少なくとも当初は）十分に理解していなかったにもかかわらず、彼は幸運にも、彼ら（そして他の人々）の研究に暗黙のうちに含まれていた、優雅で深遠な数学的構造を発掘し、その革命的な性格を熱意をもって受け入れる大胆さを持っていた。」（ダモール、2008年、16ページ）
+</span>
+</p><p>
+
+We find surprising the use of the expression “he was lucky to”, as if Minkowski’s contribution was not the result
+of his talent and effort.
+
+<br><span style="color:blue;">
+「彼は幸運にも～した」という表現が使われていることには驚かされます。まるでミンコフスキーの貢献が、彼の才能や努力の賜物ではなかったかのような言い方だからです。
+</span>
+</p><p>
+
+One of Damour’s reproaches to Minkowski is that he does not mention Poincar´e in his lecture in Cologne (he
+had mentioned him in the previous work) and he speculates about his motives:
+
+<br><span style="color:blue;">
+ダムールがミンコフスキーに対して抱く不満の一つは、彼がケルンでの講演においてポアンカレに言及しなかったことである（それ以前の著作では言及していたにもかかわらず）。ダムールはその動機について次のように推測している。
+</span>
+</p><p style="padding-left:4em;">
+
+”It seems that, somehow, Minkowski’s full realization of the elegant 4-dimenesional geometrical formulation
+of Special Relativity pioneered by Poincar´e in a more technical way, and using less transparent notations, put
+him in the psychological mood of downplaying, and ultimately completely neglecting (in the Cologne lecture)
+Poincar´e’s contributions. This psychological reaction probably had several different roots.” (Damour, 2008,
+p. 9).
+
+<br><span style="color:blue;">
+「ポアンカレが（より専門的かつ、あまり明快とは言えない記法を用いて）先駆的に切り開いた特殊相対性理論の、あの優美な4次元幾何学的定式化。ミンコフスキーがそれを全面的に実現したという事実は、どうやら彼を、ポアンカレの貢献を軽視し、ついには（ケルンでの講演において）完全に無視してしまうような心理状態へと導いたようだ。こうした心理的反応には、おそらくいくつかの異なる要因が絡んでいたのだろう」（Damour, 2008, p. 9）。
+</span>
+</p><p>
+
+Damour finds it reprehensible that Minkowski did not mention Poincar´e in his Cologne lecture, but if we have
+a look at Einstein’s 1905 paper, there are no references to any scientist, not even to Lorentz or Poincar´e, and he
+only mentions his friend M. Besso in the acknowledgments.
+
+<br><span style="color:blue;">
+ダムールは、ミンコフスキーがケルンでの講演においてポアンカレに言及しなかったことを非難すべきことだと考えている。しかし、アインシュタインの1905年の論文に目を向けてみると、ローレンツやポアンカレを含め、いかなる科学者への言及もなく、謝辞において友人であるM.ベッソの名が挙げられているにすぎない。
+</span>
+</p><p>
+
+In a section devoted to the concept of time, Damour makes the following statements: 
+
+<br><span style="color:blue;">
+時間の概念を扱った節の中で、ダムールは次のように述べている
+</span>
+</p><p style="padding-left:4em;">
+“First, I would like . . . to
+stress that Minkowski probably did not really comprehend the conceptual novelty of Einstein’s June 1905 paper
+on Special Relativity, and especially the results therein concerning time.” (Damour, 2008, p. 12).
+
+<br><span style="color:blue;">
+「まず強調しておきたいのは、ミンコフスキーはおそらく、アインシュタインによる1905年6月の特殊相対性理論に関する論文、とりわけその中で示された時間に関する結論が持つ概念的な新しさを、真には理解していなかったということである」（Damour, 2008, p. 12）。
+</span>
+</p><p>
+
+In our opinion, it is very common for a scientist who contributes to the construction of a whole new theoretical framework to not fully understand the scope of his discoveries. The phrase “did not really comprehend the
+conceptual novelty” can be applied to Minkowski as well as to Einstein himself, or to Poincar´e. It is certain that
+Einstein was not aware in 1905 of all the implications that accompanied his papers. And if that is true for the
+articles on relativity, what about those on quantum physics! It took decades to understand the scope of the ideas
+introduced by Planck in 1900 and Einstein in 1905.
+
+<br><span style="color:blue;">
+全く新しい理論的枠組みの構築に貢献した科学者が、自身の発見の及ぶ範囲を完全には理解していないということは、極めてよくあることだと私たちは考えます。「概念的な新しさを真には理解していなかった」という言葉は、アインシュタイン自身やポアンカレだけでなく、ミンコフスキーにも当てはまるでしょう。1905年の時点で、アインシュタインが自身の論文に伴うあらゆる含意を認識していなかったことは確かです。そして、相対性理論に関する論文についてそれが言えるのであれば、量子物理学に関する論文についてはなおさらです。プランクが1900年に、そしてアインシュタインが1905年に提示した概念の真の広がりを理解するには、何十年もの歳月を要したのです。
+</span>
+</p><p>
+
+For comparison, historian of science Scott Walter, a scholar of Minkowski’s work and its repercussions, also
+discusses why Minkowski does not mention Poincar´e in his Cologne lecture.
+
+<br><span style="color:blue;">
+比較として、ミンコフスキーの業績とその波及効果を研究する科学史家のスコット・ウォルターもまた、ミンコフスキーがケルンでの講演においてポアンカレに言及しなかった理由について論じている。
+</span>
+</p><p style="padding-left:4em;">
+
+”In the absence of any clear indication why Minkowski left Poincar´e out of his lecture, a speculation or
+two on his motivation may be entertained. If Minkowski had chosen to include some mention of Poincar´e’s
+work, his own contribution may have appeared derivative. Also, Poincar´e’s modification of Lorentz’s theory
+of electrons constituted yet another example of the cooperative role played by the mathematician in the
+elaboration of physical theory. Poincar´e’s ‘more mathematical’ study of Lorentz’s electron theory demonstrated
+the mathematician’s dependence upon the insights of the theoretical physicist, and as such, it did little to
+establish the independence of the physical and mathematical paths to the Lorentz group. The metatheoretical
+goal of establishing the essentially mathematical nature of the principle of relativity was no doubt more easily
+attained by neglecting Poincar´e’s elaboration of this principle.” (Walter, 1999, p. 58).
+
+<br><span style="color:blue;">
+「ミンコフスキーがなぜ自身の講義でポアンカレを取り上げなかったのか、その理由は明確ではないが、彼の動機についていくつか推測することは可能である。もしミンコフスキーがポアンカレの業績に言及していたら、彼自身の貢献は（ポアンカレの）派生的なものに見えたかもしれない。また、ローレンツの電子論に対するポアンカレの修正は、物理理論の精緻化において数学者が果たした協力的役割を示す好例でもあった。ローレンツの電子論に関するポアンカレの『より数学的な』研究は、数学者が理論物理学者の洞察に依拠していることを示したものであり、それゆえ、ローレンツ群に至る物理学的アプローチと数学的アプローチの独立性を確立する役にはほとんど立たなかったのである。相対性原理の本質的に数学的な性格を確立するというメタ理論的な目標は、ポアンカレによるこの原理の精緻化を無視することによって、間違いなくより容易に達成されたと言えるだろう」（Walter, 1999, p. 58）。
+</span>
+</p><p>
+
+And further on:
+
+<br><span style="color:blue;">
+さらに先へ進むと、
+</span>
+</p><p style="padding-left:4em;">
+
+”The confrontation of Einstein’s articles of 1905 and 1907, both cited by Minkowski, with the interpretation
+charged to Einstein (and Lorentz) by Minkowski, offers matter for reflection. Indeed, the justification offered
+by Minkowski for his claim would seem to support the view, held by more than one historian, that Minkowski,
+to put it bluntly, did not understand Einstein’s theory of relativity.” (Walter, 1999, p. 64).
+
+<br><span style="color:blue;">
+「ミンコフスキーが言及したアインシュタインの1905年および1907年の論文と、ミンコフスキーがアインシュタイン（およびローレンツ）に帰した解釈とを対照してみると、興味深い考察の余地が生まれる。実際、ミンコフスキーが自身の主張の根拠として示した内容は、複数の科学史家が抱いている見解――端的に言えば、ミンコフスキーはアインシュタインの相対性理論を理解していなかったという見解――を裏付けているように思われる」（Walter, 1999, p. 64）。
+</span>
+</p><p>
+
+But, despite these reservations, Walter concludes that Minkowski did understand Einstein, only that he seemed
+to believe that the success of his own theory depended on poorly describing Einstein’s (Walter, 1999).
+
+<br><span style="color:blue;">
+しかし、こうした留保はあるものの、ウォルターは、ミンコフスキーがアインシュタインを理解していたと結論づけている。ただ、ミンコフスキーは、自身の理論の成功がアインシュタインの理論を不十分に記述することにかかっていると考えていたようである（Walter, 1999）。
+</span>
+</p><p>
+
+In the camp of Minkowski’s supporters, V. Petkov, director of the Minkowski Institute and editor of an English
+version of Minkowski’s articles (Minkowski, 2020), stands out. Here are some of his statements:
+
+<br><span style="color:blue;">
+ミンコフスキーの支持者の中でも、ミンコフスキー研究所の所長であり、ミンコフスキーの論文集（英語版）の編集者でもあるV. ペトコフ（Petkov, 2020）の存在は際立っています。彼の主張をいくつか挙げると、次のようになります。
+</span>
+</p><p style="padding-left:4em;">
+ “Einstein did not
+have the correct understanding of the physical meaning of length contraction either since at that time [referring
+to 1907–1908] he had not yet fully understood and adopted Minkowski’s four-dimensional physics” (Petkov, in
+(Minkowski, 2020, p.14)).
+
+<br><span style="color:blue;">
+「アインシュタインでさえ、当時［1907～1908年頃を指す］はミンコフスキーの4次元物理学を完全には理解し取り入れていなかったため、長さの収縮という現象が持つ物理的意味を正しく理解していなかった」（Petkov, in Minkowski, 2020, p.14）。
+</span>
+</p><p>
+
+Regarding Minkowski’s failure to mention Poincar´e in his Cologne lecture, Petkov defends it by saying,
+
+<br><span style="color:blue;">
+ミンコフスキーがケルンでの講演でポアンカレに言及しなかったことについて、ペトコフは次のように擁護している。
+</span>
+</p><p style="padding-left:4em;">
+
+”Probably we will never learn why Minkowski did not quote Poincar´e in his lecture ‘Space and Time’ in 1908.
+However, a similar question applies to Poincar´e himself: in the lecture Poincar´e delivered in G¨ottingen on the
+new mechanics in April 1909, he did not see fit to mention the names of Minkowski and Einstein.” (Minkowski,
+2020, p.31).
+
+<br><span style="color:blue;">
+「ミンコフスキーが1908年の講演『空間と時間』においてポアンカレを引用しなかった理由は、おそらく永遠に解明されないだろう。しかし、同様の疑問はポアンカレ自身にも当てはまる。すなわち、1909年4月にゲッティンゲンで行った新しい力学に関する講演において、彼はミンコフスキーやアインシュタインの名を挙げることをしなかったのである」（Minkowski, 2020, p.31）。
+</span>
+</p><p>
+
+As far as the reproaches to Minkowski for not quoting Poincar´e are concerned, we believe that Petkov is right
+here. There are many examples in which Poincar´e does not cite Einstein or Minkowski. Also, as mentioned above,
+Einstein was not careful about quoting other authors. On the other hand, we are judging these events with the
+benefit of hindsight, knowing the relevance they had in the history of science. Minkowski couldn’t have known
+that his lecture would become so famous, nor that it would be one of his last works. He certainly didn’t write it
+as a testament to posterity, taking care to address future criticisms.
+
+<br><span style="color:blue;">
+ポアンカレを引用しなかったことについてミンコフスキーが非難されている点に関しては、ペトコフの主張が正しいと我々は考える。ポアンカレ自身、アインシュタインやミンコフスキーを引用していない例は数多くある。また、前述の通り、アインシュタインも他者の引用については必ずしも慎重ではなかった。一方で、我々は科学史におけるそれらの出来事の重要性を知った上で、後知恵としてこれらを判断しているに過ぎない。ミンコフスキーは、自身の講演がこれほど有名になるとも、それが自身の最晩年の業績の一つ​​になるとも知る由はなかった。彼が将来の批判を想定し、後世への遺言としてその講演を執筆したわけではないことは確かである。
+</span>
+</p><p>
+
+Other authors also argue that Minkowski did not understand Einstein’s ideas in depth. A. Miller says that
+Minkowski’s deduction of the length contraction shows an incomplete understanding of the differences between
+Lorentz’s and Einstein’s theories (Miller, 1981). Goldberg reduces Minkowski’s contribution to mere mathematical
+formalism, disdaining the possible epistemological interpretation of the concept of space–time (Goldberg, 1984).
+Pyenson believes that Minkowski did not understand Einstein’s theory well and attributed to Minkowski the idea
+that what Einstein had done was an extension of electrodynamics when it was something more general (Pyenson,
+1985).
+
+<br><span style="color:blue;">
+他の著者らも、ミンコフスキーはアインシュタインの考えを深く理解していなかったと論じている。A.ミラーは、
+ミンコフスキーによる長さの収縮の導出は、ローレンツの理論とアインシュタインの理論の差異についての
+理解が不完全であることを示していると述べている（Miller, 1981）。ゴールドバーグは、時空という概念が
+持ちうる認識論的な解釈を軽視し、ミンコフスキーの貢献を単なる数学的形式主義に矮小化している（Goldberg, 1984）。
+パイエンソンは、ミンコフスキーはアインシュタインの理論を十分に理解していなかったと考えており、
+アインシュタインの業績は実際にはより一般的なものであったにもかかわらず、ミンコフスキーはそれを
+単なる電気力学の拡張であるとみなしていたと指摘している（Pyenson, 1985）。
+</span>
+</p><p>
+
+Sommerfeld, who was very close to Minkowski, was not of that opinion. We have commented in the previous
+section on how Sommerfeld had derived the transformations of fields without resorting to Maxwell’s equations.
+Sommerfeld argued that 
+
+<br><span style="color:blue;">
+ミンコフスキーと極めて親密な関係にあったゾンマーフェルトは、そのような見解をとっていなかった。ゾンマーフェルトがマクスウェル方程式に頼ることなく場の変換を導出したことについては、前節で述べた通りである。ゾンマーフェルトは、
+</span>
+</p><p style="padding-left:4em;">
+
+“. . . according to Einstein and Minkowski, the relativity principle is to be seen as a
+superior principle above electrodynamics.” (Sommerfeld, 1910a, p. 19).
+
+<br><span style="color:blue;">
+「……アインシュタインやミンコフスキーによれば、相対性原理は電気力学の上位に位置する原理とみなされるべきものである」と論じた（Sommerfeld, 1910a, p. 19）。
+</span>
+</p><p>
+
+In the face of all these conflicting opinions, we think that philosopher-historian of physics DiSalle, in his book
+“Understanding Space–Time”, offers a more balanced perspective of Minkowski’s contribution to the theory of
+relativity from a conceptual point of view. We can summarize DiSalle’s position (DiSalle, 2006) in three points.
+First, the four-dimensional formalism is not without physical significance. Second, a world in which the theory of
+relativity is true is a world in which space–time has a certain structure. Third, it is difficult to imagine how general
+relativity would have been constructed without Minkowski’s formalism.
+
+<br><span style="color:blue;">
+こうした相反する見解を前にして、我々は、物理学の哲学者であり歴史家でもあるディサール（DiSalle）が、その著書『Understanding Space–Time』の中で、概念的な観点からミンコフスキーの相対性理論への貢献について、よりバランスの取れた視点を提示していると考えている。ディサールの見解（DiSalle, 2006）は、以下の3点に要約できる。第一に、4次元の定式化には物理的な意義があるということ。第二に、相対性理論が成立する世界とは、時空がある特定の構造を持つ世界であるということ。第三に、ミンコフスキーの定式化なしに一般相対性理論がいかにして構築され得たか、想像しがたいということである。
+</span>
+</p><p>
+
+R. Penrose holds a similar position: “In my opinion, the theory of special relativity was not yet complete,
+despite the wonderful physical insights of Einstein and the profound contributions of Lorentz and Poincar´e, until
+Minkowski provided his fundamental and revolutionary viewpoint: spacetime.” (Penrose, 2004). Also, Taylor and
+Wheeler acknowledge: “Minkowski’s insight is central to the understanding of the physical world.” (Taylor, 1992).
+
+<br><span style="color:blue;">
+R. ペンローズも同様の見解を示している。「アインシュタインによる素晴らしい物理学的洞察や、ローレンツとポアンカレによる深遠な貢献があったにもかかわらず、ミンコフスキーが『時空』という基本的かつ革命的な視点を提示するまでは、特殊相対性理論はまだ完全なものではなかったと私は考える」（Penrose, 2004）。また、テイラーとウィーラーも次のように認めている。「ミンコフスキーの洞察は、物理的世界を理解する上で中心的な役割を果たすものである」（Taylor, 1992）。
+</span>
+</p>
+
+<h2>9 Conclusions <span style="color:blue;">結論</span></h2>
+<p>
+Herman Minkowski’s work was decisive for the development of the theory of relativity. Although his geometric
+and mathematical approach met with some initial resistance among physicists, the concept of space–time and the
+4D mathematical formalism prevailed, and today they are part of the central core of the theory as it appears in
+modern physics textbooks. Also, they played a decisive part in the development of the general theory of relativity.
+
+<br><span style="color:blue;">
+ヘルマン・ミンコフスキーの業績は、相対性理論の発展において決定的な役割を果たしました。彼の幾何学的かつ数学的なアプローチは、当初、物理学者の間である程度の抵抗に遭いましたが、時空という概念や4次元の数学的定式化はやがて広く受け入れられるようになり、今日では現代物理学の教科書に記される理論の中核を成す要素となっています。また、それらは一般相対性理論の発展においても決定的な役割を果たしました。
+</span>
+</p><p>
+
+What was filtered by Sommerfeld, von Laue, and other continuators of Minkowski’s work were his more philosophical approaches, such as the postulate of the absolute world or his axiomatic approach to physics, which were
+probably influenced by Hilbert and the mathematical tradition in G¨ottingen.
+
+<br><span style="color:blue;">
+ゾンマーフェルトやフォン・ラウエといったミンコフスキーの研究の継承者たちが「ふるい落とした」のは、絶対的世界の要請や物理学への公理的アプローチといった、彼のより哲学的な側面であった。これらはおそらく、ヒルベルトやゲッティンゲンにおける数学の伝統の影響を受けていたものと思われる。
+</span>
+</p><p>
+
+But Minkowski is often not properly recognized for his merits. Some commentators tend to undermine their
+importance and, above all, his ability to understand all the nuances of the theory of relativity. This criticism seems
+to us at least inadequate, if not unfair. Science does not develop in a linear way, straight ahead. Meandering and
+obscurities are common.
+
+<br><span style="color:blue;">
+しかし、ミンコフスキーの功績は、しばしば正当に評価されていません。一部の論者は、彼の功績の重要性や、何よりも相対性理論のあらゆるニュアンスを理解する彼の能力を過小評価する傾向があります。こうした批判は、不当とまでは言わないにしても、少なくとも不適切であると私たちは考えます。科学の発展は、一直線に進むものではありません。紆余曲折や不明瞭な点はつきものです。
+</span>
+</p><p>
+
+It is normal for a scientist to make mistakes in his or her publications. Minkowski misdefined the velocity 4-
+vector in his first paper on relativity and corrected the mistake in the next. And as he published his results, he
+refined some concepts and discarded others. This is normal in scientific development, especially when you are
+exploring unknown territory. In this sense, Einstein’s first paper in 1905 on the electrodynamics of moving bodies
+is exceptional. Almost all the formulas it contains are still valid today, and Einstein’s interpretation of them is the
+one we normally accept.
+
+<br><span style="color:blue;">
+科学者が自身の論文で誤りを犯すことは、ごく当たり前のことです。ミンコフスキーは、相対性理論に関する最初の論文で4元速度の定義を誤りましたが、続く論文でその誤りを訂正しました。また、研究成果を発表する過程で、彼はいくつかの概念を洗練させ、別の概念は放棄していきました。こうしたことは科学の発展において、とりわけ未知の領域を探求する際には、ごく普通に見られることです。そうした意味で、1905年に発表されたアインシュタインの「動いている物体の電気力学」に関する最初の論文は、極めて異例なものです。その論文に含まれる数式のほとんどは今日でも有効であり、それらに対するアインシュタインの解釈もまた、私たちが現在一般的に受け入れているものだからです。
+</span>
+</p><p>
+
+But the case of that article by Einstein is the exception. The notation has been changed since then, and the
+mathematical proofs have been simplified or refined. For Einstein himself, the story was going to be different with
+quantum physics. There, without a doubt, it can be said that Einstein in 1905 did not understand his own theory.
+But it is an absurd criticism: no one understood all the details until several years later, and even today there are
+things not fully understood. Einstein’s own path to the general theory of relativity was also zigzagging. Along the
+way, he published several articles that have been forgotten and are only of interest to historians of science.
+
+<br><span style="color:blue;">
+しかし、アインシュタインのあの論文のケースは例外です。その後、表記法は変更され、数学的な証明も簡略化あるいは洗練されたものになりました。アインシュタイン自身にとって、量子物理学をめぐる状況はまた異なるものでした。量子物理学に関しては、1905年当時のアインシュタインが自身の理論を理解していなかったと言っても過言ではありません。とはいえ、それは不条理な批判というものです。なぜなら、細部に至るまで完全に理解できた者は数年後まで誰もおらず、今日でさえ完全には解明されていない点があるからです。一般相対性理論に至るアインシュタイン自身の道のりもまた、紆余曲折に満ちたものでした。その過程で彼はいくつかの論文を発表しましたが、それらは今や忘れ去られ、科学史家の関心を引くにとどまっています。
+</span>
+</p><p>
+
+Mention should also be made of the physics-mathematics controversy, which certainly deserves deeper treatment.
+It also seems to us an unnecessary controversy, too often fueled by partisanship. By the 1900s, what had previously
+been a symbiotic coexistence (we have mentioned the Mathematics and Physics Seminar in K¨onigsberg, which may
+be a fitting example) was turning into a duality of self-conscious disciplines. Both Minkowski’s claim to a supposed
+superiority of mathematics and Einstein’s initial reaction to his formalism seem to us misguided. Physics and
+mathematics have advanced together throughout history, and great physicists have been great mathematicians
+(also vice versa) and even great philosophers. Without going any further in search of examples, Poincar´e was one
+of them.
+
+<br><span style="color:blue;">
+物理学と数学をめぐる論争についても触れておくべきでしょう。この問題は、間違いなくより深く論じるに値するものです。
+また、私たちには、この論争は不必要なものであり、往々にして党派的な対立意識によって煽られてきたように思われます。1900年代に入る頃には、それまで共生関係にあった両分野（ケーニヒスベルクの数学・物理学セミナーはその好例と言えるでしょう）は、互いを意識し合う別個の学問領域としての対立構造へと変化しつつありました。数学の優位性を主張したミンコフスキーの考えも、彼の定式化に対するアインシュタインの当初の反応も、私たちには見当違いなものに思えます。物理学と数学は歴史を通じて共に発展してきました。偉大な物理学者は偉大な数学者でもあり（その逆もまた然り）、さらには偉大な哲学者でもあったのです。例を挙げるのに遠くまで探す必要はありませんが、ポアンカレはその一人でした。
+</span>
+</p><p>
+
+And finally, let us remark again that perhaps the early death of Minkowski, at age 44, also had an impact on
+the recognition he obtained. Those who live longer have, quite obviously, more chances to be acknowledged, to
+assert their claims and obtain visibility. Likewise, colleagues and institutions can be better at defending the work
+of those who are still alive.
+
+<br><span style="color:blue;">
+最後に、ミンコフスキーが44歳という若さで亡くなったことも、彼がどのような評価を得るかに影響を及ぼしたかもしれないという点に、改めて触れておきたいと思います。当然のことながら、長生きをすれば、それだけ認められたり、自らの主張を世に問うたり、広く知られたりする機会も増えるものです。同様に、同僚や所属機関にとっても、存命中の人物の業績を擁護する方が容易であると言えるでしょう。
+</span>
+</p>
+
+<p>
+<strong>Acknowledgements</strong>　This work was funded by the Spanish Ministerio de Ciencia e Innovaci´on under grant number
+PID2021-123297NB-I00.
+
+<br><span style="color:blue;">
+<strong>謝辞</strong> 本研究は、スペイン科学イノベーション省の助成金（番号：PID2021-123297NB-I00）の支援を受けて実施されました。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Arianrhod, R. (2024). Vector, a surprising story of space, time, and mathematical transformation. The University of Chicago
+Press.
+
+</li><br><li> 
+
+Born, M. (1978). My life: Recollections of a Nobel Laurate. Scribner.
+
+</li><br><li> 
+
+Corry, L. (1997). Hermann Minkowski and the Postulate of Relativity. Archive for History of Exact Sciences. 51, 273–314.
+http://www.jstor.org/stable/41134033
+
+</li><br><li> 
+
+Corry, L. (2004). David Hilbert and the Axiomatization of Physics (1898–1918). Springer.
+
+</li><br><li> 
+
+Damour, T. (2008). What is missing from Minkowski’s “Raum und Zeit” lecture. Annalen der Physik, 17 (9 – 10), 619 –
+630. https://doi.org/10.1002/andp.200852009-1004
+
+</li><br><li> 
+
+DiSalle, R. (2006). Understanding Space-Time. Cambridge University Press.
+
+</li><br><li> 
+
+Einstein, A. (1905). On the electrodynamics of moving bodies. Annalen der Physik, 17, 891-921.
+
+</li><br><li> 
+
+Einstein, A., & Laub, J. (1908a) On the fundamental electromagnetic equations for moving bodies. Annalen der Physik,
+26, 532-540.
+
+</li><br><li> 
+
+Einstein, A., & Laub, J. (1908b) On the ponderomotive forces exerted on bodies at rest in the electromagnetic field. Annalen
+der Physik, 26, 541-550.
+
+</li><br><li> 
+
+Feynman, R., Leighton R., & Sands, M. (1964) The Feynman lectures on physics. Addison-Wesley.
+
+</li><br><li> 
+
+Goldberg, S. (1984). Understanding relativity. Birkh¨auser.
+
+</li><br><li> 
+
+Goldstein, H., Poole, C., & Safko, J. (2002). Classical Mechanics, 3rd edition. Addison-Wesley.
+
+</li><br><li> 
+
+Griffiths, D. J. (2024). Introduction to Electrodynamics, 5th edition. Cambridge University Press.
+
+</li><br><li> 
+
+Gray, J. (2000) The Hilbert challenge. Oxford University Press.
+
+</li><br><li> 
+
+Hawking, S. (1988) A Brief History of Time. From the Big Bang to Black Holes. Bantam Books.
+
+</li><br><li> 
+
+H¨anel, J. M., Oswald, N., Steuding, J., Volkert, K. (2025) Drei mathematische Freunde: Der Briefwechsel von David Hilbert,
+Adolf Hurwitz und Hermann Minkowski. Springer Verlag.
+
+</li><br><li> 
+
+Hehl, F. W. (2008). Maxwell’s equations in Minkowski’s world: their premetric generalization and the electromagnetic
+energy-momentum tensor. Annalen der Physik, 17 (9 – 10), 691 – 704. https://doi.org/10.1002/andp.200852009-1006
+
+</li><br><li> 
+
+Jackson, J. D. (1998). Classical Electrodynamics. Wiley.
+
+</li><br><li> 
+
+Katzir, S. (2005). Poincare’s Relativistic Theory of Gravitation. In The universe of general relativity, Springer.
+
+</li><br><li> 
+
+Lorentz, H. A. (1904). Electromagnetic Phenomena in a System Moving with any Velocity less than that of Light. Proceedings
+of the Academy of Sciences of Amsterdam, 6, 809-831.
+
+</li><br><li> 
+
+Lorrain, P., & Corson, D. (1991) Electromagnetic Fields and Waves. W. H. Freeman & Company.
+
+</li><br><li> 
+
+Miller, A. (1981). Albert Einstein’s special theory of relativity. Addison-Wesley Publishing Company.
+
+</li><br><li> 
+
+Minkowski, H (1908) Die Grundgleichungen f¨ur die elektromagnetischen Vorg¨ange in bewegten K¨orpern. Nachrichten der
+K. Gesellschaft der Wissenschaften zu G¨ottingen. Mathematisch-physikalische Klasse S. 53–111. (English translation
+available in (Minkowski, 2020).
+
+</li><br><li> 
+
+Minkowski, H. (1909). Raum und Zeit, Physikalische Zeitschrift, 10, S. 104–111. (English translation available in (Minkowski,
+2020).
+
+</li><br><li> 
+
+Minkowski, H. (1915). Das Relativit¨atsprinzip, Annalen der Physik, 47, 927–938. (English translation available in
+(Minkowski, 2020).
+
+</li><br><li> 
+
+Minkowski, H. (2020). Spacetime: Minkowski’s Papers on Spacetime Physics. Minkowski Institute Press.
+
+</li><br><li> 
+
+Norton, J. D. (1982). Geometries in collision: Einstein, Klein and Riemann. In Norton, J. D. (ed.).
+
+</li><br><li> 
+
+Penrose, R. (2004). The Road to Reality. Jonathan Cape. London.
+
+</li><br><li> 
+
+Poincar´e, H. (1905). Sur la dynamique de l’´electron. Comptes rendus hebdomadaires des s´eances de l’Acad´emie des sciences,
+140, 1504-1508.
+
+</li><br><li> 
+
+Poincar´e, H. (1906). Sur la dynamique de l’´electron. Rendiconti del Circolo Matematico di Palermo. Tomo XXI, pp. 129–175.
+
+</li><br><li> 
+
+Pyenson, L. (1985). The Young Einstein. Ed. Adam Hilger.
+
+</li><br><li> 
+
+Pyenson, L. (1979) Physics in the Shadow of Mathematics: the G¨ottingen Electron-theory Seminar of 1905. Archive for
+History of Exact Sciences, 21, 55–89.
+
+</li><br><li> 
+
+Rindler, W. (1960) Special Relativity. Oliver and Boyd
+
+</li><br><li> 
+
+Rowe, D. E. (2018). A Richer Picture of Mathematics. The G¨ottingen Tradition and Beyond. Springer.
+
+</li><br><li> 
+
+Sommerfeld, A. (1910a) On the Theory of Relativity I: Four dimensional Vector Algebra. Exported from Wikisource on
+December 12, 2023.
+
+</li><br><li> 
+
+Sommerfeld, A. (1910b) On the Theory of Relativity II: Four dimensional Vector Analysis. Exported from Wikisource on
+December 12, 2023.
+
+</li><br><li> 
+
+Taylor, E. F. & Wheeler, J. A. (1992) Spacetime Physics: Introduction to Special Relativity. W. H. Freeman & Co Ltd
+
+</li><br><li> 
+
+Thornton, S. T., & Marion, J. B. (2003). Classical dynamics of particles and systems, 5th edition. Cengage learning.
+
+</li><br><li> 
+
+Walter, S. (1999). Minkowski, Mathematicians, and the Mathematical Theory of Relativity. In Goenner, H., Renn, J., Ritter,
+J., Sauer, J. (Eds.), The Expanding Worlds of General Relativity (Einstein Studies, volume 7), pp. 45–86. Boston/Basel:
+Birkh¨auser.
+
+</li><br><li> 
+
+Walter, S. (2007). Breaking in the 4-vectors: the four-dimensional movement in gravitation, 1905–1910. In J¨urgen Renn
+(Ed.), The Genesis of General Relativity, 4 vols., Volume 3, pp. 193–252. Berlin: Springer.
+
+</li><br><li> 
+
+Weinberg, S. (1972) Gravitation and cosmology. John Wiley and Sons.
+
+</li><br><li> 
+
+Weyl, H. (2013). Space-Time-Matter. The Project Gutemberg.
+
+</li><br><li> 
+
+Zangwill, A. (2013). Modern Electrodynamics. Cambridge University Press
+</p>
+    </body>
+</html>
