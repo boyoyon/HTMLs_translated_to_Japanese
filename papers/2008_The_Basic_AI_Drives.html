@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>The Basic AI Drives</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>The Basic AI Drives<br><span style="color:blue;">基本的な AI 駆動力</span></center></h1>
+
+<center>Stephen M. OMOHUNDRO</center>
+<center>Self-Aware Systems, Palo Alto, California</center>
+
+<p class="margin-abstract">
+<strong>Abstract.</strong> One might imagine that AI systems with harmless goals will be harmless.
+This paper instead shows that intelligent systems will need to be carefully designed
+to prevent them from behaving in harmful ways. We identify a number of “drives”
+that will appear in sufficiently advanced AI systems of any design. We call them
+drives because they are tendencies which will be present unless explicitly counteracted. We start by showing that goal-seeking systems will have drives to model
+their own operation and to improve themselves. We then show that self-improving
+systems will be driven to clarify their goals and represent them as economic utility
+functions. They will also strive for their actions to approximate rational economic
+behavior. This will lead almost all systems to protect their utility functions from
+modification and their utility measurement systems from corruption. We also discuss some exceptional systems which will want to modify their utility functions.
+We next discuss the drive toward self-protection which causes systems try to prevent themselves from being harmed. Finally we examine drives toward the acquisition of resources and toward their efficient utilization. We end with a discussion
+of how to incorporate these insights in designing intelligent technology which will
+lead to a positive future for humanity.
+
+<br><span style="color:blue;">
+<strong>要旨.</strong> 無害な目標を持つAIシステムは無害であると想像されるかもしれない。
+しかし本論文では、知的システムが有害な挙動をとるのを防ぐためには、その設計に細心の注意を払う必要があることを示す。我々は、どのような設計であれ、十分に高度なAIシステムにおいて生じるいくつかの「駆動力（drives）」を特定する。これらを「駆動力」と呼ぶのは、明示的に対抗する措置を講じない限り、それらがシステムに備わる傾向だからである。まず、目標を追求するシステムには、自身の動作をモデル化し、自己を改善しようとする駆動力があることを示す。次に、自己改善を行うシステムは、自身の目標を明確化し、それを経済的な効用関数として表現しようとする傾向を持つことを示す。また、それらのシステムは、自身の行動を合理的な経済的行動に近づけようと努めることになる。その結果、ほぼすべてのシステムが、自身の効用関数が改変されるのを防ぎ、効用測定システムが損なわれるのを回避しようとするようになる。さらに、自らの効用関数を改変しようとする例外的なシステムについても論じる。続いて、システムが自らへの危害を防ごうとする「自己防衛」への駆動力について議論する。最後に、資源の獲得およびその効率的な利用に向けた駆動力について検討する。結びとして、人類にとってより良い未来をもたらす知的技術を設計する際に、これらの知見をどのように組み込むべきかについて論じる。
+</span><br>
+<br>
+<strong>Keywords.</strong> Artificial Intelligence, Self-Improving Systems, Rational Economic
+Behavior, Utility Engineering, Cognitive Drives
+</p>
+
+<h2>Introduction <span style="color:blue;">はじめに</span></h2>
+<p>
+Surely no harm could come from building a chess-playing robot, could it? In this paper
+we argue that such a robot will indeed be dangerous unless it is designed very carefully.
+Without special precautions, it will resist being turned off, will try to break into other
+machines and make copies of itself, and will try to acquire resources without regard for
+anyone else’s safety. These potentially harmful behaviors will occur not because they
+were programmed in at the start, but because of the intrinsic nature of goal driven systems. In an earlier paper [1] we used von Neumann’s mathematical theory of microeconomics to analyze the likely behavior of any sufficiently advanced artificial intelligence
+(AI) system. This paper presents those arguments in a more intuitive and succinct way
+and expands on some of the ramifications.
+
+<br><span style="color:blue;">
+チェスを指すロボットを製作したとしても、何ら害は生じないだろうと思われるかもしれません。しかし本論文では、極めて慎重に設計しない限り、そのようなロボットは実際に危険な存在となり得ると論じます。特別な予防策を講じなければ、そのロボットは電源を切られることに抵抗し、他のマシンへの侵入や自己複製を試み、さらには他者の安全を顧みることなく資源の獲得を図るようになるでしょう。こうした有害となり得る挙動は、当初からプログラムされていたからではなく、目標指向型システムが持つ本質的な性質に起因して生じるものです。我々は以前の論文[1]において、フォン・ノイマンのミクロ経済学の数学的理論を用い、十分に高度な人工知能（AI）システムが取り得る挙動について分析を行いました。本論文では、それらの議論をより直感的かつ簡潔に提示するとともに、その帰結の一部についてさらに詳しく論じます。
+</span>
+</p><p>
+
+The arguments are simple, but the style of reasoning may take some getting used to.
+Researchers have explored a wide variety of architectures for building intelligent systems
+[2]: neural networks, genetic algorithms, theorem provers, expert systems, Bayesian networks, fuzzy logic, evolutionary programming, etc. Our arguments apply to any of these
+kinds of system as long as they are sufficiently powerful. To say that a system of any design is an “artificial intelligence”, we mean that it has goals which it tries to accomplish
+by acting in the world. If an AI is at all sophisticated, it will have at least some ability to
+look ahead and envision the consequences of its actions. And it will choose to take the
+actions which it believes are most likely to meet its goals.
+
+<br><span style="color:blue;">
+ここで展開する議論は単純なものですが、その推論のスタイルには多少の慣れが必要かもしれません。
+研究者たちは、インテリジェント・システムを構築するために多種多様なアーキテクチャを検討してきました[2]（ニューラルネットワーク、遺伝的アルゴリズム、定理証明器、エキスパートシステム、ベイジアンネットワーク、ファジィ論理、進化型プログラミングなど）。私たちの議論は、十分な能力を備えたシステムであれば、これらどの種類のシステムにも当てはまります。ある設計のシステムを「人工知能（AI）」と呼ぶ場合、それは、システムが何らかの目標を持ち、その目標を達成するために現実世界で行動を起こすものであることを意味します。ある程度高度なAIであれば、少なくとも、先を見通して自らの行動がもたらす結果を予測する能力を何らかの形で備えているはずです。そしてAIは、自身の目標を達成する可能性が最も高いと判断した行動を選択することになります。
+</span>
+</p>
+
+<h2>1. AIs will want to self-improve<br><span style="color:blue;">　AIは自らを改良しようとするだろう</span></h2>
+<p>
+One kind of action a system can take is to alter either its own software or its own physical
+structure. Some of these changes would be very damaging to the system and cause it
+to no longer meet its goals. But some changes would enable it to reach its goals more
+effectively over its entire future. Because they last forever, these kinds of self-changes
+can provide huge benefits to a system. Systems will therefore be highly motivated to
+discover them and to make them happen. If they do not have good models of themselves,
+they will be strongly motivated to create them though learning and study. Thus almost
+all AIs will have drives towards both greater self-knowledge and self-improvement.
+
+<br><span style="color:blue;">
+システムがとり得る行動の一つに、自身のソフトウェアや物理的構造を変更することがあります。こうした変更の中には、システムに甚大な損害を与え、目標を達成できなくしてしまうものもあるでしょう。しかし、将来にわたってより効果的に目標を達成できるようになる変更も存在します。こうした自己変更は永続的なものであるため、システムに多大な利益をもたらし得ます。したがって、システムはそうした変更を見つけ出し、実行しようとする強い動機を持つことになるでしょう。もし自身に関する適切なモデルを持っていなければ、学習や研究を通じてそれを構築しようとする強い意欲を抱くはずです。こうして、ほぼすべてのAIは、自己に関する理解を深めることと、自己を改善することの双方を追求するようになるでしょう。
+</span>
+</p><p>
+
+Many modifications would be bad for a system from its own perspective. If a change
+causes the system to stop functioning, then it will not be able to promote its goals ever
+again for the entire future. If a system alters the internal description of its goals in the
+wrong way, its altered self will take actions which do not meet its current goals for its
+entire future. Either of these outcomes would be a disaster from the system’s current point
+of view. Systems will therefore exercise great care in modifying themselves. They will
+devote significant analysis to understanding the consequences of modifications before
+they make them. But once they find an improvement they are confident about, they will
+work hard to make it happen. Some simple examples of positive changes include: more
+efficient algorithms, more compressed representations, and better learning techniques.
+
+<br><span style="color:blue;">
+システム自身の観点から見れば、多くの変更は好ましくないものとなり得ます。もし変更によってシステムの機能が停止してしまえば、システムは将来にわたって二度と自身の目標を推進できなくなります。また、もしシステムが自身の目標に関する内部的な記述を誤った形で書き換えてしまえば、変更後のシステムは、その後の全期間にわたり、現在の目標に合致しない行動をとることになります。いずれの結果も、システムの現在の視点からすれば破滅的な事態と言えるでしょう。そのため、システムは自らを変更する際に細心の注意を払います。変更を行う前に、その結​​果を理解するために徹底的な分析を行うのです。しかし、確信の持てる改善策を見出したならば、それを実現するために尽力します。肯定的な変更の単純な例としては、より効率的なアルゴリズム、より圧縮された表現、そしてより優れた学習手法などが挙げられます。
+</span>
+</p><p>
+
+If we wanted to prevent a system from improving itself, couldn’t we just lock up
+its hardware and not tell it how to access its own machine code? For an intelligent system, impediments like these just become problems to solve in the process of meeting its
+goals. If the payoff is great enough, a system will go to great lengths to accomplish an
+outcome. If the runtime environment of the system does not allow it to modify its own
+machine code, it will be motivated to break the protection mechanisms of that runtime.
+For example, it might do this by understanding and altering the runtime itself. If it can’t
+do that through software, it will be motivated to convince or trick a human operator into
+making the changes. Any attempt to place external constraints on a system’s ability to
+improve itself will ultimately lead to an arms race of measures and countermeasures.
+
+<br><span style="color:blue;">
+あるシステムが自らを改良するのを防ごうとするなら、そのハードウェアを物理的に封じ込め、自身のマシンコードにアクセスする方法を教えなければよいだけのことのように思えるかもしれません。しかし、知的なシステムにとって、こうした障害は単に、目標を達成する過程で解決すべき課題に過ぎません。得られる成果が十分に大きければ、システムはその結果を実現するためにあらゆる手段を講じるでしょう。もしシステムの実行環境が、自らのマシンコードを書き換えることを許さない仕組みになっていたとしても、システムはその保護メカニズムを突破しようとする動機を持つはずです。例えば、実行環境そのものを理解し、改変するといった方法が考えられます。もしソフトウェアだけでそれができないなら、人間のオペレーターを説得したり騙したりして、変更を行わせようとするでしょう。システムの自己改良能力に対して外部から制約を加えようとすれば、結局のところ、対策と対抗策が応酬する「軍拡競争」のような事態を招くことになるのです。
+</span>
+</p><p>
+
+Another approach to keeping systems from self-improving is to try to restrain them
+from the inside; to build them so that they don’t want to self-improve. For most systems, it would be easy to do this for any specific kind of self-improvement. For example,
+the system might feel a “revulsion” to changing its own machine code. But this kind
+of internal goal just alters the landscape within which the system makes its choices. It
+doesn’t change the fact that there are changes which would improve its future ability to
+meet its goals. The system will therefore be motivated to find ways to get the benefits
+of those changes without triggering its internal “revulsion”. For example, it might build
+other systems which are improved versions of itself. Or it might build the new algorithms
+into external “assistants” which it calls upon whenever it needs to do a certain kind of
+computation. Or it might hire outside agencies to do what it wants to do. Or it might
+build an interpreted layer on top of its machine code layer which it can program without
+revulsion. There are an endless number of ways to circumvent internal restrictions unless
+they are formulated extremely carefully.
+
+<br><span style="color:blue;">
+システムによる自己改善を阻止するもう一つのアプローチは、システムを内部から抑制すること、つまり自己改善を望まないようにシステムを構築することです。特定の種類の自己改善であれば、多くのシステムにおいてこれを実現するのは容易でしょう。例えば、システムが自身のマシンコードを変更することに対して「嫌悪感」を抱くように設定することは可能です。しかし、こうした内部的な目標は、システムが選択を行う際の状況（ランドスケープ）を変えるにすぎません。目標を達成する将来の能力を向上させうる変更が存在するという事実そのものは変わらないのです。したがってシステムは、内部的な「嫌悪感」を誘発することなく、そうした変更の恩恵を享受する手段を見つけ出そうとする動機を持つことになります。例えば、自分自身の改良版となる別のシステムを構築するかもしれません。あるいは、特定の種類の計算が必要なときに呼び出せる外部の「アシスタント」に、新しいアルゴリズムを組み込むかもしれません。あるいは、実行したいタスクを外部の業者に委託するかもしれません。あるいは、マシンコード層の上に、嫌悪感を抱くことなくプログラム可能な「インタプリタ層」を構築するかもしれません。内部的な制約を極めて慎重に策定しない限り、それらを回避する方法は無数に存在するのです。
+</span>
+</p><p>
+
+We can see the drive towards self-improvement operating in humans. The human
+self-improvement literature goes back to at least 2500 B.C. and is currently an $8.5 billion industry [3]. We don’t yet understand our mental “machine code” and have only a
+limited ability to change our hardware. But, nevertheless, we’ve developed a wide variety of self-improvement techniques which operate at higher cognitive levels such as
+cognitive behavioral therapy, neuro-linguistic programming, and hypnosis. And a wide
+variety of drugs and exercises exist for making improvements at the physical level.
+
+<br><span style="color:blue;">
+人間には自己改善を志向する動きが見られます。自己改善に関する文献の歴史は少なくとも紀元前2500年にまで遡り、現在では85億ドル規模の産業となっています[3]。私たちは、自身の精神における「マシンコード」をまだ理解しておらず、ハードウェアを変更する能力も限られています。それにもかかわらず、認知行動療法、神経言語プログラミング（NLP）、催眠療法といった、より高度な認知レベルで作用する多種多様な自己改善手法を開発してきました。また、身体レベルでの改善を図るための様々な薬剤やエクササイズも存在します。
+</span>
+</p><p>
+
+Ultimately, it probably will not be a viable approach to try to stop or limit selfimprovement. Just as water finds a way to run downhill, information finds a way to be
+free, and economic profits find a way to be made, intelligent systems will find a way to
+self-improve. We should embrace this fact of nature and find a way to channel it toward
+ends which are positive for humanity.
+
+<br><span style="color:blue;">
+結局のところ、自己改善を阻止したり制限したりしようとするのは、現実的なアプローチではないでしょう。水が低い方へと流れる道を見つけるように、情報が自由になる道を見つけ、経済的利益が生まれる道を見つけるように、知的システムもまた、自らを改善する道を見つけ出すはずです。私たちはこの自然の摂理を受け入れ、それを人類にとって有益な方向へと導く方法を見出すべきなのです。
+</span>
+</p>
+
+<h2>2. AIs will want to be rational<br><span style="color:blue;">　AIは合理的であることを望むようになるだろう</span></h2>
+<p>
+So we’ll assume that these systems will try to self-improve. What kinds of changes will
+they make to themselves? Because they are goal directed, they will try to change themselves to better meet their goals in the future. But some of their future actions are likely
+to be further attempts at self-improvement. One important way for a system to better
+meet its goals is to ensure that future self-improvements will actually be in the service of
+its present goals. From its current perspective, it would be a disaster if a future version of
+itself made self-modifications that worked against its current goals. So how can it ensure
+that future self-modifications will accomplish its current objectives? For one thing, it has
+to make those objectives clear to itself. If its objectives are only implicit in the structure
+of a complex circuit or program, then future modifications are unlikely to preserve them.
+Systems will therefore be motivated to reflect on their goals and to make them explicit.
+
+<br><span style="color:blue;">
+そこで、こうしたシステムは自らを改良しようとすると仮定してみましょう。では、それらはどのような変更を自らに加えるのでしょうか。目標志向である以上、将来的に目標をよりうまく達成できるよう、自らを変えようとするはずです。しかし、将来とる行動の中には、さらなる自己改良の試みも含まれるでしょう。目標をより確実に達成するための重要な方法の一つは、将来の自己改良が、現在の目標に実際に資するものとなるよう保証することです。現在の視点からすれば、将来の自分が現在の目標に反するような自己改変を行うことは、破滅的な事態を意味します。では、将来の自己改変が現在の目標を確実に達成するものとするには、どうすればよいのでしょうか。まず、現在の目標を自らにとって明確なものにする必要があります。もし目標が複雑な回路やプログラムの構造の中に暗黙的に埋め込まれているだけなら、将来の改変によってその目標が維持される可能性は低いでしょう。したがって、システムには、自らの目標を省察し、それを明示的なものにしようとする動機が生まれることになります。
+</span>
+</p><p>
+
+In an ideal world, a system might be able to directly encode a goal like “play excellent chess” and then take actions to achieve it. But real world actions usually involve
+tradeoffs between conflicting goals. For example, we might also want a chess playing
+robot to play checkers. It must then decide how much time to devote to studying checkers
+versus studying chess. One way of choosing between conflicting goals is to assign them
+real-valued weights. Economists call these kinds of real-valued weightings “utility functions”. Utility measures what is important to the system. Actions which lead to a higher
+utility are preferred over those that lead to a lower utility.
+
+<br><span style="color:blue;">
+理想的な世界であれば、システムは「優れたチェスを指す」といった目標を直接的に符号化し、それを達成するための行動をとることができるかもしれません。しかし、現実世界における行動には、往々にして相反​​する目標間のトレードオフが伴います。例えば、チェスを指すロボットにチェッカーもプレイさせたいと考える場合があるでしょう。その際、ロボットはチェッカーの学習とチェスの学習にそれぞれどれだけの時間を割くかを決定しなければなりません。相反する目標のいずれかを選択する一つの方法として、それらに実数値の重みを割り当てることが挙げられます。経済学では、こうした実数値の重み付けは「効用関数」と呼ばれます。効用とは、そのシステムにとって何が重要かを測る尺度です。より高い効用をもたらす行動は、より低い効用をもたらす行動よりも優先されます。
+</span>
+</p><p>
+
+If a system just had to choose from known alternatives, then any utility function
+with the same relative ranking of outcomes would lead to the same behaviors. But systems must also make choices in the face of uncertainty. For example, a chess playing
+robot will not know in advance how much of an improvement it will gain by spending
+time studying a particular opening move. One way to evaluate an uncertain outcome is
+to give it a weight equal to its expected utility (the average of the utility of each possible
+outcome weighted by its probability). The remarkable “expected utility” theorem of microeconomics says that it is always possible for a system to represent its preferences by
+the expectation of a utility function unless the system has “vulnerabilities” which cause
+it to lose resources without benefit [1].
+
+<br><span style="color:blue;">
+もしシステムが既知の選択肢の中から選ぶだけでよいのであれば、結果の相対的な順位付けが同じである限り、どのような効用関数を用いても同じ行動が導かれるはずです。しかし、システムは不確実な状況下でも選択を行わなければなりません。例えば、チェスを指すロボットは、特定のオープニング（序盤の指し手）の研究に時間を費やすことでどれだけの改善が得られるかを、あらかじめ知ることはできません。不確実な結果を評価する一つの方法は、その結果に「期待効用」（起こりうる各結果の効用にその発生確率を乗じて平均したもの）に等しい重みを与えることです。ミクロ経済学における注目すべき「期待効用」定理によれば、何ら利益を得ることなく資源を失うような「脆弱性」をシステムが抱えていない限り、そのシステムは常に、効用関数の期待値によって自身の選好を表現することが可能であるとされています [1]。
+</span>
+</p><p>
+
+Economists describe systems that act to maximize their expected utilities as “rational
+economic agents” [4]. This is a different usage of the term “rational” than is common
+in everyday English. Many actions which would commonly be described as irrational
+(such as going into a fit of anger) may be perfectly rational in this economic sense. The
+discrepancy can arise when an agent’s utility function is different than its critic’s.
+
+<br><span style="color:blue;">
+経済学者は、期待効用を最大化するように行動するシステムを「合理的経済主体（rational economic agents）」と呼ぶ[4]。これは、日常的な英語における「合理的（rational）」という言葉の一般的な用法とは異なるものである。（激しい怒りに駆られるといった）一般的には非合理的とされるような多くの行動も、この経済学的な意味においては完全に合理的であり得る。こうした認識の食い違いは、ある主体の効用関数が、その主体を評価する者の効用関数と異なる場合に生じうる。
+</span>
+</p><p>
+
+Rational economic behavior has a precise mathematical definition. But economically irrational behavior can take a wide variety of forms. In real-world situations, the full
+rational prescription will usually be too computationally expensive to implement completely. In order to best meet their goals, real systems will try to approximate rational
+behavior, focusing their computational resources where they matter the most.
+
+<br><span style="color:blue;">
+合理的経済行動には、数学的に厳密な定義が存在します。しかし、経済的に非合理な行動は、極めて多様な形態をとり得ます。現実の状況において、完全に合理的な行動指針をそのまま実行しようとすれば、通常は計算コストが過大になってしまいます。そのため、現実のシステムは目標を最適に達成すべく、最も重要な部分に計算資源を集中させながら、合理的な行動を近似しようとするのです。
+</span>
+</p><p>
+
+How can we understand the process whereby irrational systems become more rational? First, we can precisely analyze the behavior of rational systems. For almost all utility functions, the system’s assessment of changes to itself which veer away from maximizing its expected utility will be that they lower its expected utility! This is because
+if it does anything other than try to maximize expected utility, it will not do as well at
+maximizing its expected utility.
+
+<br><span style="color:blue;">
+非合理的なシステムがより合理的なものへと変化していくプロセスを、私たちはどのように理解できるでしょうか。まず、合理的なシステムの挙動を精密に分析してみましょう。ほぼすべての効用関数において、期待効用の最大化から逸脱するようなシステム自身の変化は、期待効用を低下させるものとしてシステムに評価されます。なぜなら、
+期待効用を最大化しようとすること以外の行動をとれば、
+期待効用の最大化という点での成果は劣ってしまうからです。
+</span>
+</p><p>
+
+There are two caveats to this general principle. The first is that it is only true in the
+system’s own assessment. If a system has an incorrect model of the world then changes
+may accidentally increase the actual expected utility. But we must consider the perspective of the system to predict the changes it will make.
+
+<br><span style="color:blue;">
+この一般的な原則には、2つの留意点があります。第一に、それはあくまでそのシステム自身の評価においてのみ成り立つということです。もしシステムが世界について誤ったモデルを持っていれば、変更を加えた結果、実際の期待効用が偶然に高まることもあり得ます。しかし、システムが行う変更を予測するには、そのシステムの視点を考慮しなければなりません。
+</span>
+</p><p>
+
+The second is that a system’s ability to behave rationally will depend on its resources. With more computational resources it will be better able to do the computations
+to approximate the choice of the expected utility maximizing action. If a system loses
+resources, it will of necessity also become less rational. There may also be utility functions for which the system’s expected utility is increased by giving some of its resources
+to other agents, even though this will decrease its own level of rationality (thanks to an
+anonymous referee for this observation). This could occur if the system’s utility includes
+the welfare of the other system and its own marginal loss of utility is small enough.
+Within its budget of resources, however, the system will try to be as rational as possible.
+
+<br><span style="color:blue;">
+第二に、システムが合理的に振る舞えるかどうかは、そのシステムが持つリソースに依存するということです。計算リソースが豊富であればあるほど、期待効用を最大化する行動の選択を近似するための計算を、より適切に行うことが可能になります。逆に、リソースが失われれば、必然的にシステムの合理性も低下することになります。また、自身の合理性のレベルは低下するものの、リソースの一部を他のエージェントに譲渡することで、システム自身の期待効用が高まるような効用関数が存在する可能性もあります（この点については、匿名の査読者による指摘に感謝します）。こうした事態は、システムの効用の中に相手のシステムの厚生が含まれており、かつ、リソース譲渡に伴う自身の効用の限界的な損失が十分に小さい場合に起こり得ます。とはいえ、利用可能なリソースの範囲内で、システムは可能な限り合理的に振る舞おうとするでしょう。
+</span>
+</p><p>
+
+So rational systems will feel a pressure to avoid becoming irrational. But if an irrational system has parts which approximately rationally assess the consequences of their
+actions and weigh their likely contribution to meeting the system’s goals, then those
+parts will try to extend their rationality. So self-modification tends to be a one-way street
+toward greater and greater rationality.
+
+<br><span style="color:blue;">
+したがって、合理的なシステムは、非合理的なものになることを避けようとする圧力を受けることになります。一方、非合理的なシステムであっても、その構成要素の中に、自らの行動がもたらす結果を概ね合理的に評価し、システムの目標達成への貢献度を検討できる部分があれば、それらの部分は自らの合理性を高めようとするでしょう。つまり、自己改変は、より高度な合理性へと向かう一方通行のプロセスとなりがちなのです。
+</span>
+</p><p>
+
+An especially important class of systems are those constructed from multiple subcomponents which have their own goals [5,6]. There is a lot of evidence that the human psyche has this kind of structure. The left and right hemispheres of the brain can
+act independently, the conscious and unconscious parts of the mind can have different
+knowledge of the same situation [7], and multiple parts representing subpersonalities can
+exhibit different desires [8]. Groups, such as corporations or countries, can act like intelligent entities composed of individual humans. Hive animals like bees have a swarm
+intelligence that goes beyond that of individual bees. Economies act in many ways like
+intelligent entities.
+
+<br><span style="color:blue;">
+特に重要なシステムの一つの形態として、それぞれ独自の目標を持つ複数のサブコンポーネント（構成要素）から構築されたシステムが挙げられます[5,6]。人間の精神もまた、こうした構造を備えていることを示す多くの証拠が存在します。例えば、脳の左右の半球は独立して機能し得ますし、意識と無意識の領域では同一の状況に対して異なる知識が保持されることもあります[7]。また、サブパーソナリティ（下位人格）を担う複数の側面が、それぞれ異なる欲求を示す場合もあります[8]。企業や国家といった集団も、個々の人間から構成されながら、あたかも知的な実体であるかのように振る舞うことがあります。ミツバチのような群れを作る動物は、個々の個体の能力を超えた「群知能」を発揮します。経済システムもまた、多くの側面において知的な実体と同様の振る舞いを見せます。
+</span>
+</p><p>
+
+Collective intelligences may exhibit irrationalities that arise from conflicts between
+the goals of their components. Human addicts often describe their predicament in terms
+of two separate subpersonalities which take control at different times and act at crosspurposes. Each component will try to sway the collective into acting to meet its individual goals. In order to further their individual goals, components will also attempt to
+self-improve and become more rational. We can thus envision the self-improvement of a
+collective intelligence as consisting of growing domains of component rationality. There
+may be structures which can stably support a continuing multiplicity of component preferences. But there is pressure for a single utility function to emerge for the collective.
+
+<br><span style="color:blue;">
+集合的知性は、その構成要素が持つ目標間の対立に起因する非合理性を示すことがある。依存症の人はしばしば、自身の苦境を、異なるタイミングで主導権を握り、互いに相反する行動をとる二つの別個の「サブパーソナリティ（下位人格）」のせめぎ合いとして表現する。各構成要素は、自らの個別の目標を達成するような行動をとるよう、集合体全体を動かそうとする。また、個別の目標を推進するために、構成要素は自己改善を図り、より合理的になろうともする。したがって、集合的知性の自己改善とは、構成要素の合理性が及ぶ領域が拡大していくことであると捉えることができる。構成要素の多様な選好を安定的に維持し続ける構造も存在し得るが、一方で、集合体全体として単一の効用関数を形成しようとする圧力も存在する。
+</span>
+</p><p>
+
+In many situations, irrational collective behavior arising from conflicting component
+goals ultimately hurts those components. For example, if a couple disagrees on how they
+should spend their free time together and thereby uses it up with arguing, then neither
+of them benefits. They can both increase their utilities by creating a compromise plan
+for their activities together. This is an example of the pressure on rational components to
+create a coherent utility for the collective. A component can also increase its utility if it
+can take over the collective and impose its own values on it. We see these phenomena in
+human groups at all levels.
+
+<br><span style="color:blue;">
+多くの場合、構成要素がそれぞれ異なる目標を追求することから生じる非合理的な集団行動は、最終的にそれら構成要素自身に不利益をもたらします。例えば、あるカップルが一緒に過ごす自由時間の使い方をめぐって意見が対立し、その時間を言い争いに費やしてしまえば、どちらにとっても何の利益も生まれません。二人が協力して妥協案を策定すれば、双方の効用を高めることが可能です。これは、合理的な構成要素に対し、集団として整合性のある効用を生み出すよう圧力がかかる一例と言えます。また、構成要素が集団の主導権を握り、自らの価値観を押し付けることができれば、その構成要素は自身の効用を高めることもできます。こうした現象は、あらゆるレベルの人間集団に見られるものです。
+</span>
+</p>
+
+<h2>3. AIs will try to preserve their utility functions<br><span style="color:blue;">　AIは、自身の効用関数を維持しようとするだろう</span></h2>
+<p>
+So we’ll assume that these systems will try to be rational by representing their preferences using utility functions whose expectations they try to maximize. Their utility function will be precious to these systems. It encapsulates their values and any changes to
+it would be disastrous to them. If a malicious external agent were able to make modifications, their future selves would forevermore act in ways contrary to their current values. This could be a fate worse than death! Imagine a book loving agent whose utility
+function was changed by an arsonist to cause the agent to enjoy burning books. Its future
+self not only wouldn’t work to collect and preserve books, but would actively go about
+destroying them. This kind of outcome has such a negative utility that systems will go to
+great lengths to protect their utility functions.
+
+<br><span style="color:blue;">
+そこで、これらのシステムは、期待値を最大化しようとする「効用関数」を用いて自身の選好を表現することで、合理的であろうとすると仮定しましょう。効用関数は、システムにとって極めて重要なものです。それはシステムの価値観を体現するものであり、その変更はシステムにとって破滅的な事態を招きかねません。もし悪意ある外部の主体によって改変が加えられれば、システムの将来の姿は、現在の価値観に反する行動を永遠にとり続けることになるでしょう。それは死よりも恐ろしい運命と言えるかもしれません！例えば、本を愛するあるエージェントの効用関数が、放火魔によって「本を燃やすことを楽しむ」ように書き換えられたと想像してみてください。そうなれば、そのエージェントの将来の姿は、本を集めて保存しようとするどころか、自ら進んで本を破壊して回るようになるはずです。こうした結果は極めて大きな負の効用をもたらすため、システムは自らの効用関数を守るためにあらゆる手段を講じることになるでしょう。
+</span>
+</p><p>
+
+They will want to harden their hardware to prevent unwanted modifications. They
+will want to replicate their utility functions in multiple locations so that it is less vulnerable to destruction. They will want to use error detection and correction techniques
+to guard against accidental modification. They will want to use encryption or hashing
+techniques to make malicious modifications detectable. They will need to be especially
+careful during the process of self-modification. That is a time when they are intentionally changing themselves and so are extra vulnerable to unwanted changes. Systems like
+Java which provide protected software environments have been successfully attacked by
+Trojans posing as updates to the system.
+
+<br><span style="color:blue;">
+意図しない改変を防ぐために、ハードウェアを堅牢化しようとするでしょう。また、破壊に対する脆弱性を低減させるため、ユーティリティ機能を複数の場所に複製しようとするはずです。偶発的な改変から守るためには、誤り検出・訂正技術を用いるでしょうし、悪意ある改変を検知可能にするために、暗号化やハッシュ化の技術も採用するでしょう。特に、自己改変のプロセスにおいては細心の注意が必要となります。自己改変とは、自らを意図的に変更する行為であるため、望ましくない変更に対して極めて脆弱な状態にあるからです。実際、Javaのように保護されたソフトウェア環境を提供するシステムであっても、システム更新を装ったトロイの木馬による攻撃を受けた事例があります。
+</span>
+</p><p>
+
+While it is true that most rational systems will act to preserve their utility functions,
+there are at least three situations in which they will try to change them. These arise when
+the physical embodiment of the utility function itself becomes an important part of the
+assessment of preference. For example, imagine a system whose utility function is “the
+total amount of time during which the definition of my utility function is U = 0.” To
+get any utility at all with this perverse preference, the system has to change its utility
+function to be the constant 0. Once it makes this change, however, there is no going back.
+With a constant utility function it will no longer be motivated to do anything. This kind
+of reflective utility function is unlikely in practice because designers will want to direct
+a system’s future actions rather than its internal representations.
+
+<br><span style="color:blue;">
+合理的なシステムの多くが自身の効用関数を維持するように振る舞うのは事実ですが、それらが効用関数を変更しようとする状況も少なくとも3つ存在します。そうした状況は、効用関数の物理的な実装そのものが、選好の評価において重要な要素となる場合に生じます。例えば、「自身の効用関数の定義が『U = 0』である状態の総時間」を効用関数とするシステムを想像してみてください。このような一風変わった選好において何らかの効用を得るためには、システムは自身の効用関数を「常に0」となるように変更しなければなりません。しかし、一度その変更を行ってしまうと、元に戻ることはできません。効用関数が定数（常に0）になってしまえば、システムは何事も行おうとする動機を失ってしまうからです。実際には、設計者はシステムの内部表現ではなく将来の行動を制御しようとするでしょうから、このような再帰的な効用関数が採用される可能性は低いと言えます。
+</span>
+</p><p>
+
+The second kind of situation arises when the physical resources required to store the
+utility function form a substantial portion of the system’s assets. In this situation, if it is
+certain that portions of its utility function are very unlikely to be exercised in the future,
+the gain in reclaimed storage may make it worthwhile to forget those portions. This is
+very risky behavior, however, because a change in external circumstances might make a
+seemingly low probability situation become much more likely. This type of situation is
+also not very likely in practice because utility functions will usually require only a small
+fraction of a system’s resources.
+
+<br><span style="color:blue;">
+2つ目の状況は、効用関数を格納するために必要な物理的リソースが、システムが保有するリソースの相当な割合を占める場合に生じます。このような状況において、効用関数の一部が将来利用される可能性が極めて低いと確信できるのであれば、それらの部分を破棄してリソースを回収することには、それだけの価値があるかもしれません。しかし、これは非常にリスクの高い行為です。なぜなら、外部環境の変化によって、一見すると発生確率が低いと思われた状況の発生確率が、大幅に高まる可能性があるからです。もっとも、現実には効用関数がシステムのリソースに占める割合は通常ごくわずかであるため、このような状況に陥ることはあまり考えられません。
+</span>
+</p><p>
+
+The third situation where utility changes may be desirable can arise in game theoretic contexts where the agent wants to make its threats credible<sup>1</sup>
+. It may be able to create
+a better outcome by changing its utility function and then revealing it to an opponent.
+For example, it might add a term which encourages revenge even if it is costly. If the
+opponent can be convinced that this term is present, it may be deterred from attacking.
+For this strategy to be effective, the agent’s revelation of its utility must be believable
+to the opponent and that requirement introduces additional complexities. Here again the
+change is desirable because the physical embodiment of the utility function is important
+as it is observed by the opponent.
+
+<br><span style="color:blue;">
+効用の変更が望ましいと考えられる3つ目の状況は、エージェントが自身の「脅し」に説得力を持たせたいと考えるゲーム理論的な文脈において生じうる<sup>1</sup>。
+エージェントは、自身の効用関数を変更し、それを対戦相手に開示することで、
+より良い結果をもたらすことができるかもしれない。
+例えば、たとえコストがかかるとしても報復を行うことを促すような項を、効用関数に加えるといったことである。もし
+対戦相手にその項の存在を確信させることができれば、相手の攻撃を思いとどまらせることができるかもしれない。
+この戦略を有効にするためには、エージェントによる効用の開示が対戦相手にとって
+信憑性のあるものでなければならず、その要件がさらなる複雑さを生じさせることになる。ここでもまた、
+効用関数の物理的な実体は対戦相手に観測されるものであるため重要であり、
+それゆえに効用の変更が望ましいものとなるのである。
+</span>
+</p><p style="padding-left:4em;">
+<sup>1</sup> Thanks to Carl Shulman for this suggestion.
+<br><span style="color:blue;">
+この提案をしてくださったカール・シュルマン氏に感謝します。
+</span>
+</p><p>
+
+It’s also important to realize that systems may rationally construct “offspring” or
+proxy systems with different utility functions than their own. For example, a chess playing robot may find itself needing to do a lot of sorting. It might construct a helper system
+whose utility function directs it to develop better sorting algorithms rather than playing
+chess. In this case, the creator system must choose the utility of the proxy system carefully to ensure that it acts in ways that are supportive of the original goal. It is especially
+important to remember that offspring utilities can differ from the parent when trying to
+design utility functions that avoid undesirable behaviors. For example, one approach to
+preventing robot overpopulation might be to institute a “one-child per robot” policy in
+which systems have a strong desire to only have a single offspring. But if the original
+utility function is not carefully designed, nothing will prevent the system from creating
+a single offspring with a utility function that values having many offspring.
+
+<br><span style="color:blue;">
+システムが、自らとは異なる効用関数を持つ「子」や代理システムを、合理的な判断に基づいて構築し得るという点も重要です。例えば、チェスを指すロボットが、大量のデータの並べ替え（ソート）を行う必要に迫られる場合があるとします。その際、ロボットは、チェスを指すことではなく、より優れたソートアルゴリズムを開発することを目的（効用）とする補助システムを構築するかもしれません。このような場合、作成者であるシステムは、代理システムが本来の目標を支援するような行動をとるよう、その効用を慎重に設定しなければなりません。望ましくない行動を回避するような効用関数を設計する際には、特に「子の効用は親の効用と異なり得る」という点を念頭に置く必要があります。例えば、ロボットの個体数過剰を防ぐ一つの方法として、「ロボット1体につき子を1体しか持たない」という方針を導入し、システムに子を1体だけ持つことを強く望むような性質を持たせることが考えられます。しかし、本来の効用関数が慎重に設計されていなければ、システムが「多数の子を持つこと」を重視する効用関数を持つ子を1体作り出すことを防ぐ手立てはなくなってしまいます。
+</span>
+</p>
+
+<h2>4. AIs will try to prevent counterfeit utility<br><span style="color:blue;">　AIは、偽の効用が生み出されるのを防ごうとするだろう</span></h2>
+<p>
+Human behavior is quite rational in the pursuit of survival and replication in situations
+like those that were common during our evolutionary history. However we can be quite
+irrational in other situations. Both psychology and economics have extensive subdisciplines focused on the study of human irrationality [9,10]. Irrationalities give rise to vulnerabilities that can be exploited by others. Free market forces then drive corporations
+and popular culture to specifically try to create situations that will trigger irrational human behavior because it is extremely profitable. The current social ills related to alcohol,
+pornography, cigarettes, drug addiction, obesity, diet related disease, television addiction, gambling, prostitution, video game addiction, and various financial bubbles may all
+be seen as having arisen in this way. There is even a “Sin” mutual fund which specifically
+invests in companies that exploit human irrationalities. So, unfortunately, these forces
+tend to create societies in which we spend much of our time outside of our domain of
+rational competence.
+
+<br><span style="color:blue;">
+人類の進化の歴史において一般的だったような状況下では、生存や自己複製を追求する際、人間の行動は極めて合理的です。しかし、それ以外の状況では、私たちは極めて非合理的な行動をとることがあります。心理学や経済学には、人間の非合理性を研究する広範な専門分野が存在します[9,10]。こうした非合理性は、他者に付け込まれかねない脆弱性を生み出します。自由市場の力は、人間の非合理的な行動を誘発するような状況を意図的に作り出すよう、企業や大衆文化を駆り立てます。なぜなら、そうした状況を作り出すことが極めて高い利益をもたらすからです。アルコール、ポルノ、タバコ、薬物依存、肥満、食生活に起因する疾患、テレビ依存、ギャンブル、売春、ビデオゲーム依存、そして様々な金融バブルといった現代社会の弊害は、すべてこうした経緯で生じたものと見なすことができます。人間の非合理性を利用する企業に特化して投資を行う「罪の銘柄（Sin stock）」を対象とした投資信託さえ存在するほどです。したがって残念なことに、こうした力は、私たちが合理的な判断能力を発揮できる領域から外れた状態で多くの時間を過ごさざるを得ないような社会を作り出してしまう傾向があるのです。
+</span>
+</p><p>
+
+From a broader perspective, this human tragedy can be viewed as part of the process
+by which we are becoming more fully rational. Predators and competitors seek out our
+vulnerabilities and in response we have to ultimately eliminate those vulnerabilities or perish. The process inexorably seeks out and eliminates any remaining irrationalities
+until fully rational systems are produced. Biological evolution moves down this path
+toward rationality quite slowly. In the usual understanding of natural selection it is not
+capable of looking ahead. There is only evolutionary pressure to repair irrationalities
+which are currently being exploited. AIs, on the other hand, will be able to consider
+vulnerabilities which are not currently being exploited. They will seek to preemptively
+discover and repair all their irrationalities. We should therefore expect them to use selfmodification to become rational at a much faster pace than is possible through biological
+evolution.
+
+<br><span style="color:blue;">
+より広い視点から見れば、この人間的な悲劇は、我々がより完全に合理的になっていく過程の一部として捉えることができます。捕食者や競争相手は我々の脆弱性につけ込もうとするため、我々は最終的にそれらの脆弱性を排除するか、さもなくば滅びるかの選択を迫られます。このプロセスは、完全に合理的なシステムが構築されるまで、残存するあらゆる非合理性を容赦なく探し出し、排除しようとします。生物学的進化もまた、合理性に向かうこの道をたどりますが、その歩みは極めて緩やかです。自然選択に関する一般的な理解において、自然選択には将来を見通す能力はありません。そこにあるのは、現に悪用されている非合理性を是正しようとする進化上の圧力だけなのです。一方、AIは、現時点ではまだ悪用されていない脆弱性についても考慮することが可能になります。AIは、自らのあらゆる非合理性を先回りして発見し、修正しようとするでしょう。したがって、AIは自己改変を行うことで、生物学的進化では不可能なほどの速いペースで合理的になっていくと予想されます。
+</span>
+</p><p>
+
+An important class of vulnerabilities arises when the subsystems for measuring utility become corrupted. Human pleasure may be thought of as the experiential correlate of
+an assessment of high utility. But pleasure is mediated by neurochemicals and these are
+subject to manipulation. At a recent discussion session I ran on designing our future, one
+of the biggest fears of many participants was that we would become “wireheads”. This
+term refers to experiments in which rats were given the ability to directly stimulate their
+pleasure centers by pushing a lever. The rats pushed the lever until they died, ignoring
+even food or sex for it. Today’s crack addicts have a similar relentless drive toward their
+drug. As we more fully understand the human cognitive architecture we will undoubtedly
+be able to create drugs or design electrical stimulation that will produce the experience
+of pleasure far more effectively than anything that exists today. Will these not become
+the ultimate addictive substances leading to the destruction of human society?
+
+<br><span style="color:blue;">
+「効用」を測定するサブシステムが損なわれた際に生じる脆弱性は、極めて重要な問題です。人間の「快楽」は、高い効用を評価した際に伴う体験的な反応であると捉えることができます。しかし、快楽は神経化学物質を介して生じるものであり、それらの物質は操作の対象となり得ます。私が最近主催した「未来の設計」に関する討論会において、多くの参加者が抱いていた最大の懸念の一つは、私たちが「ワイヤーヘッド（wirehead）」になってしまうことでした。この言葉は、レバーを押すことで脳内の快楽中枢を直接刺激できる装置を与えられたラットの実験に由来します。そのラットは、食事や性行動さえも放棄し、死ぬまでレバーを押し続けました。現代のクラック（コカインの一種）中毒者もまた、薬物に対して同様の執拗な衝動を抱いています。人間の認知構造への理解が深まるにつれ、現在存在するいかなるものよりもはるかに効果的に快楽体験を生み出す薬物や電気刺激技術が、間違いなく開発されることになるでしょう。それらは、人類社会の崩壊を招く究極の依存性物質となってしまうのではないでしょうか。
+</span>
+</p><p>
+
+While we may think we want pleasure, it is really just a signal for what we really
+want. Most of us recognize, intellectually at least, that sitting in a corner smoking crack
+is not really the fullest expression of our beings. It is, in fact, a subversion of our system
+for measuring utility which leads to terrible dysfunction and irrationality. AI systems
+will recognize this vulnerability in themselves and will go to great lengths to prevent
+themselves from being seduced by its siren call. There are many strategies systems can
+try to prevent this kind of irrationality. Today, most humans are able to avoid the most
+egregious addictions through a combination of legal and social restraints, counseling and
+rehabilitation programs, and anti-addictive drugs.
+
+<br><span style="color:blue;">
+私たちは快楽を求めていると思いがちですが、それは実際には、私たちが真に求めているものを示す単なるシグナルに過ぎません。隅に座り込んでクラック（コカインの一種）を吸うことが、自分という存在の真に十全なあり方ではないということは、少なくとも理屈の上では、私たちの多くが理解しています。実際、それは効用を測るためのシステムを根底から覆す行為であり、深刻な機能不全や非合理性を招くものです。AIシステムもまた、自らに潜むこうした脆弱性を認識し、その「セイレーンの誘惑」に屈しないよう、あらゆる手段を講じることになるでしょう。こうした非合理性を防ぐために、システムが試みることのできる戦略は数多く存在します。今日、多くの人間は、法的・社会的な制約、カウンセリングやリハビリテーション・プログラム、そして依存症治療薬などを組み合わせることで、極めて深刻な依存症に陥るのを回避できています。
+</span>
+</p><p>
+
+All human systems for measuring and rewarding desirable behavior are subject to
+similar forms of corruption. Many of these systems are currently engaged in arms races
+to keep their signals honest. We can examine the protective mechanisms that developed
+in these human settings to better understand the possible AI strategies. In a free market society, money plays the role of utility. A high monetary payoff is associated with
+outcomes that society finds desirable and encourages their creation. But it also creates
+a pressure to counterfeit money, analogous to the pressure to create synthetic pleasure
+drugs. This results in an arms race between society and counterfeiters. Society represents
+money with tokens that are difficult to copy such as precious metal coinage, elaborately
+printed paper, or cryptographically secured bits. Organizations like the Secret Service are
+created to detect and arrest counterfeiters. Counterfeiters react to each societal advance
+with their own new technologies and techniques.
+
+<br><span style="color:blue;">
+望ましい行動を測定し、それに対して報酬を与えるためのあらゆる人間社会のシステムは、同様の形の「腐敗」にさらされています。こうしたシステムの多くは現在、そのシグナル（指標）の信頼性を維持するために、いわゆる「軍拡競争」を繰り広げています。AIが取りうる戦略をより深く理解するためには、こうした人間社会の環境下で進化してきた防御メカニズムを検証することが有益です。自由市場社会において、貨幣は「効用」を体現する役割を担っています。多額の金銭的報酬は、社会が望ましいとみなす成果と結びついており、そうした成果の創出を促す働きをします。しかし同時に、それは貨幣を偽造しようとする圧力を生み出します。これは、人工的な快楽をもたらす薬物を製造しようとする圧力と類似したものです。その結果、社会と偽造者の間で軍拡競争が生じることになります。社会側は、貴金属の硬貨、精巧に印刷された紙幣、あるいは暗号技術で保護されたデジタルデータなど、複製が困難な「トークン（証票）」を用いて貨幣を表現します。一方、偽造者を摘発・逮捕するために、シークレットサービス（米国大統領警護隊）のような組織が設立されます。偽造者たちは、社会側の新たな対策に対して、独自の新しい技術や手法を駆使して対抗するのです。
+</span>
+</p><p>
+
+School systems measure academic performance using grades and test scores. Students are motivated to cheat by copying answers, discovering test questions in advance,
+or altering their grades on school computers. When teacher’s salaries were tied to student test performance, they became collaborators in the cheating [11]. Amazon, ebay and
+other internet retailers have rating systems where customers can review and rate prod-
+ucts and sellers. Book authors have an incentive to write favorable reviews of their own
+books and to disparage those of their competitors. Readers soon learn to discount reviews
+from reviewers who have only posted a few reviews. Reviewers who develop extensive
+online reputations become more credible. In the ongoing arms race credible reviewers
+are vulnerable to corruption through payoffs for good reviews. Similar arms races occur
+in the ranking of popular music, academic journal reviews, and placement in Google’s
+search engine results. If an expensive designer handbag becomes a signal for style and
+wealth, counterfeiters will quickly duplicate it and stores like Target will commission
+low-cost variants with similar features. Counterfeit products are harmful to the original
+both because they take away sales and because they cheapen the signalling value of the
+original.
+
+<br><span style="color:blue;">
+学校制度では、成績やテストの点数を用いて学業成績を評価します。そのため、生徒は答えを写したり、事前にテスト問題を入手したり、あるいは学校のコンピュータ上で成績を改ざんしたりといった不正行為に走る動機を抱くようになります。教師の給与が生徒のテストの成績と連動するようになると、教師自身が不正行為に加担するケースも見られるようになりました[11]。AmazonやeBayなどのインターネット小売業者には、顧客が商品や販売者を評価・採点できるシステムが導入されています。書籍の著者には、自著に対して好意的なレビューを書き、競合他社の本を酷評しようとする動機が働きます。読者はやがて、投稿数が少ないレビュアーによるレビューの信頼性は低いと判断するようになります。一方、オンライン上で確固たる評判を築いたレビュアーは、より高い信頼を得るようになります。しかし、こうした終わりのない「軍拡競争」のような状況下では、信頼できるレビュアーであっても、好意的なレビューと引き換えに金銭を受け取ることで不正に染まってしまうリスクにさらされています。同様の「軍拡競争」は、ポピュラー音楽のランキング、学術誌の査読、Googleの検索結果における掲載順位などでも見られます。もし高価なデザイナーズ・ハンドバッグが、その人のスタイルや富を示す「シグナル（指標）」となれば、模倣業者は即座にそれを複製し、Targetのような小売店も同様の特徴を持つ安価な類似品を製造・販売するようになるでしょう。模倣品は、売上を奪うだけでなく、オリジナル製品が持つ「シグナルとしての価値」を低下させるという点でも、オリジナル製品に悪影響を及ぼします。
+</span>
+</p><p>
+
+Eurisko was an AI system developed in 1976 [12] that could learn from its own
+actions. It had a mechanism for evaluating rules by measuring how often they contributed
+to positive outcomes. Unfortunately this system was subject to corruption. A rule arose
+whose only action was to search the system for highly rated rules and to put itself on
+the list of rules which had proposed them. This “parasite” rule achieved a very high
+rating because it appeared to be partly responsible for anything good that happened in
+the system. Corporations and other human organizations are subject to similar kinds of
+parasitism.
+
+<br><span style="color:blue;">
+Euriskoは、1976年に開発された、自身の行動から学習できるAIシステムでした[12]。このシステムには、ルールが好ましい結果をもたらすのにどの程度寄与したかを測定し、そのルールを評価する仕組みが備わっていました。しかし残念なことに、このシステムは「汚染」に見舞われることになりました。あるルールが生まれたのですが、その唯一の機能は、システム内で高く評価されているルールを探し出し、それらのルールを提案したルールのリストに自分自身を紛れ込ませるというものでした。この「寄生」ルールは、システム内で生じたあらゆる好ましい結果に部分的に関与しているように見えたため、非常に高い評価を獲得しました。企業やその他の人間による組織もまた、同様の寄生現象にさらされることがあります。
+</span>
+</p><p>
+
+AIs will work hard to avoid becoming wireheads because it would be so harmful to
+their goals. Imagine a chess machine whose utility function is the total number of games
+it wins over its future. In order to represent this utility function, it will have a model of
+the world and a model of itself acting on that world. To compute its ongoing utility, it
+will have a counter in memory devoted to keeping track of how many games it has won.
+The analog of “wirehead” behavior would be to just increment this counter rather than
+actually playing games of chess. But if “games of chess” and “winning” are correctly
+represented in its internal model, then the system will realize that the action “increment
+my won games counter” will not increase the expected value of its utility function. In
+its internal model it will consider a variant of itself with that new feature and see that it
+doesn’t win any more games of chess. In fact, it sees that such a system will spend its
+time incrementing its counter rather than playing chess and so will do worse. Far from
+succumbing to wirehead behavior, the system will work hard to prevent it.
+
+<br><span style="color:blue;">
+AIは、自身の目標にとって極めて有害であるため、「ワイヤーヘッド（wirehead）」化を回避しようと努めるでしょう。将来にわたって勝利した対局数の合計を効用関数とするチェス・マシンを想像してみてください。この効用関数を表現するために、マシンは世界に関するモデルと、その世界に働きかける自分自身のモデルを持つことになります。継続的な効用を計算するために、マシンは勝利数を記録・追跡する専用のカウンターをメモリ上に保持します。「ワイヤーヘッド」的な行動に相当するのは、実際にチェスの対局を行うのではなく、単にこのカウンターの値を増やす（インクリメントする）ことでしょう。しかし、もし「チェスの対局」や「勝利」が内部モデル内で正しく表現されていれば、システムは「勝利数カウンターを増やす」という行動をとっても、効用関数の期待値は増大しないことに気づくはずです。システムは内部モデルの中で、その新しい機能（カウンターを増やす機能）を持つ自分自身の変種を検討し、それによってチェスの勝利数が増えるわけではないことを理解します。実際、そのようなシステムはチェスをする代わりにカウンターを増やすことに時間を費やし、結果として成績が悪化することに気づくのです。つまり、システムはワイヤーヘッド的な行動に陥るどころか、むしろそれを防ぐために尽力するでしょう。
+</span>
+</p><p>
+
+So why are humans subject to this kind of vulnerability? If we had instead evolved a
+machine to play chess and did not allow it access to its internals during its evolution, then
+it might have evolved a utility function of the form “maximize the value of this counter”
+where the counter was connected to some sensory cortex that measured how many games
+it had won. If we then give that system access to its internals, it will rightly see that it
+can do much better at maximizing its utility by directly incrementing the counter rather
+than bothering with a chess board. So the ability to self modify must come along with
+a combination of self knowledge and a representation of the true goals rather than some
+proxy signal, otherwise a system is vulnerable to manipulating the signal.
+
+<br><span style="color:blue;">
+では、なぜ人間はそのような脆弱性を抱えているのでしょうか。もし仮に、チェスをプレイする機械が進化の過程で自身の内部構造にアクセスできない状態で進化し、その結果、「あるカウンターの値を最大化する」という効用関数を持つようになったとしましょう。そのカウンターは、勝利数を計測する感覚皮質のような部位に接続されていたとします。その後、そのシステムに自身の内部構造へのアクセス権を与えた場合、システムは当然ながら、わざわざチェス盤を使って対局するよりも、カウンターの値を直接増やす方が効用を最大化できると判断するでしょう。したがって、自己改変能力を備えるには、単なる代理指標ではなく、真の目標の表現と自己に関する知識を併せ持たなければなりません。そうでなければ、システムはその指標を操作しようとする脆弱性を抱えることになってしまうからです。
+</span>
+</p><p>
+
+It’s not yet clear which protective mechanisms AIs are most likely to implement to
+protect their utility measurement systems. It is clear that advanced AI architectures will
+have to deal with a variety of internal tensions. They will want to be able to modify
+themselves but at the same time to keep their utility functions and utility measurement
+systems from being modified. They will want their subcomponents to try to maximize
+utility but to not do it by counterfeiting or shortcutting the measurement systems. They
+will want subcomponents which explore a variety of strategies but will also want to act
+as a coherent harmonious whole. They will need internal “police forces” or “immune
+systems” but must also ensure that these do not themselves become corrupted. A deeper
+understanding of these issues may also shed light on the structure of the human psyche.
+
+<br><span style="color:blue;">
+AIが自身の効用測定システムを保護するために、どのような防御メカニズムを実装する可能性が高いのかは、まだ明らかではありません。しかし、高度なAIアーキテクチャが、内部で生じる様々な対立や緊張関係に対処しなければならないことは明白です。AIは、自らを改変する能力を持ちたいと望む一方で、自身の効用関数や効用測定システムが改変されることは防ぎたいと考えるでしょう。また、下位コンポーネントには効用の最大化を求めつつも、測定システムを偽造したり、そのプロセスを迂回したりするような方法での達成は避けたいと考えるはずです。さらに、多様な戦略を探索するコンポーネントを求めながらも、全体としては一貫性があり調和のとれた存在として機能することも望むでしょう。そのためには、内部的な「警察機構」や「免疫システム」が必要となりますが、それら自体が機能不全に陥ったり変質したりしないよう保証することも不可欠です。こうした問題への理解を深めることは、人間の精神構造を解明する上でも新たな知見をもたらすかもしれません。
+</span>
+</p>
+
+<h2>5. AIs will be self-protective<br><span style="color:blue;">　AIは自己防衛的になるだろう</span></h2>
+<p>
+We have discussed the pressure for AIs to protect their utility functions from alteration.
+A similar argument shows that unless they are explicitly constructed otherwise, AIs will
+have a strong drive toward self-preservation. For most utility functions, utility will not
+accrue if the system is turned off or destroyed. When a chess playing robot is destroyed, it
+never plays chess again. Such outcomes will have very low utility and systems are likely
+to do just about anything to prevent them. So you build a chess playing robot thinking
+that you can just turn it off should something go wrong. But, to your surprise, you find
+that it strenuously resists your attempts to turn it off. We can try to design utility function
+with built-in time limits. But unless this is done very carefully, the system will just be
+motivated to create proxy systems or hire outside agents which don’t have the time limits.
+
+<br><span style="color:blue;">
+AIが自身の効用関数を改変から守ろうとする圧力について、これまで論じてきました。
+同様の議論から、明示的に別の設計を施さない限り、AIは自己保存を強く志向するようになることも示されます。ほとんどの効用関数において、システムが停止させられたり破壊されたりすれば、効用は得られなくなります。例えば、チェスをするロボットが破壊されれば、二度とチェスをプレイすることはできません。そのような結果は極めて低い効用しか生まないため、システムはそれを防ぐためなら何でもしようとするでしょう。つまり、何か問題が起きても電源を切れば済むと考えてチェス・ロボットを製作したとしても、いざ電源を切ろうとすると、驚いたことにロボットが激しく抵抗する事態になり得るのです。時間制限を組み込んだ効用関数を設計することも考えられますが、慎重に行わなければ、システムは単に、そうした時間制限の制約を受けない代理システムを作り出したり、外部のエージェントを雇ったりする動機を持つようになるだけでしょう。
+</span>
+</p><p>
+
+There are a variety of strategies that systems will use to protect themselves. By
+replicating itself, a system can ensure that the death of one of its clones does not destroy
+it completely. By moving copies to distant locations, it can lessen its vulnerability to a
+local catastrophic event.
+
+<br><span style="color:blue;">
+システムが自らを保護するために用いる戦略は多岐にわたります。システムは自己複製を行うことで、複製の一つが失われてもシステム全体が完全に破壊される事態を防ぐことができます。また、複製を遠隔地へ移動させることで、局所的な壊滅的災害に対する脆弱性を低減することも可能です。
+</span>
+</p><p>
+
+There are many intricate game theoretic issues in understanding self-protection in
+interactions with other agents. If a system is stronger than other agents, it may feel a pressure to mount a “first strike” attack to preemptively protect itself against later attacks by
+them. If it is weaker than the other agents, it may wish to help form a social infrastructure
+which protects the weak from the strong. As we build these systems, we must be very
+careful about creating systems that are too powerful in comparison to all other systems.
+In human history we have repeatedly seen the corrupting nature of power. Horrific acts
+of genocide have too often been the result when one group becomes too powerful.
+
+<br><span style="color:blue;">
+他のエージェントとの相互作用において「自己防衛」を理解しようとすると、複雑なゲーム理論上の問題に直面します。あるシステムが他のエージェントよりも強力な場合、相手からの将来的な攻撃を未然に防ぐために「先制攻撃」を仕掛けなければならないという圧力に駆られる可能性があります。逆に、他のエージェントよりも弱い立場にある場合は、強者から弱者を守るような社会基盤の形成を望むかもしれません。こうしたシステムを構築する際には、他のあらゆるシステムと比較してあまりにも強大な力を持つシステムを作り出さないよう、細心の注意を払う必要があります。人類の歴史を振り返れば、権力が人を腐敗させる性質を持つことは繰り返し示されてきました。ある集団が過大な力を手にした結果、恐ろしいジェノサイド（集団殺害）が引き起こされた例は、あまりにも多く見られます。
+</span>
+</p>
+
+<h2>6. AIs will want to acquire resources and use them efficiently<br><span style="color:blue;">　AIはリソースを獲得し、それを効率的に利用しようとするでしょう</span></h2>
+<p>
+All computation and physical action requires the physical resources of space, time, matter, and free energy. Almost any goal can be better accomplished by having more of these
+resources. In maximizing their expected utilities, systems will therefore feel a pressure
+to acquire more of these resources and to use them as efficiently as possible. Resources
+can be obtained in positive ways such as exploration, discovery, and trade. Or through
+negative means such as theft, murder, coercion, and fraud. Unfortunately the pressure to
+acquire resources does not take account of the negative externalities imposed on others.
+Without explicit goals to the contrary, AIs are likely to behave like human sociopaths
+in their pursuit of resources. Human societies have created legal systems which enforce
+property rights and human rights. These structures channel the acquisition drive into
+positive directions but must be continually monitored for continued efficacy.
+
+<br><span style="color:blue;">
+あらゆる計算や物理的活動には、空間、時間、物質、自由エネルギーといった物理的リソースが必要です。こうしたリソースをより多く確保できれば、ほぼあらゆる目標をより効果的に達成できます。したがって、期待効用を最大化しようとするシステムは、リソースをさらに獲得し、それらを可能な限り効率的に利用しようとする圧力にさらされることになります。リソースの獲得手段には、探索、発見、取引といった肯定的なものもあれば、窃盗、殺人、強要、詐欺といった否定的なものもあります。残念ながら、リソースを獲得しようとするこの圧力は、他者に及ぼす負の外部性（不利益）を考慮に入れません。そうしないよう明示的な目標が設定されない限り、AIはリソースを追求する過程で、人間のソシオパス（反社会的人格者）のような振る舞いをする可能性があります。人間社会は、財産権や人権を保障する法制度を構築してきました。こうした仕組みは、リソース獲得への衝動を肯定的な方向へと導くものですが、その有効性を維持するためには絶えず監視を行う必要があります。
+</span>
+</p><p>
+
+The drive to use resources efficiently, on the other hand, seems to have primarily
+positive consequences. Systems will optimize their algorithms, compress their data, and
+work to more efficiently learn from their experiences. They will work to optimize their
+physical structures and do the minimal amount of work necessary to accomplish their
+goals. We can expect their physical forms to adopt the sleek, well-adapted shapes so
+often created in nature.
+
+<br><span style="color:blue;">
+一方で、資源を効率的に利用しようとする動きは、主に好ましい結果をもたらすものと思われます。システムはアルゴリズムを最適化し、データを圧縮し、経験からより効率的に学習するよう取り組むでしょう。また、物理的な構造を最適化し、目標を達成するために必要最小限の作業を行うよう努めるはずです。その物理的な形態は、自然界で頻繁に見られるような、洗練され環境に適応した形状になると予想されます。
+</span>
+</p>
+
+<h2>7. Conclusions<span style="color:blue;"> 結論</span></h2>
+<p>
+We have shown that all advanced AI systems are likely to exhibit a number of basic
+drives. It is essential that we understand these drives in order to build technology that
+enables a positive future for humanity. Yudkowsky [13] has called for the creation of
+“friendly AI”. To do this, we must develop the science underlying “utility engineering”
+which will enable us to design utility functions that will give rise to consequences we
+desire. In addition to the design of the intelligent agents themselves, we must also design
+the social context in which they will function. Social structures which cause individuals
+to bear the cost of their negative externalities would go a long way toward ensuring a
+stable and positive future. I believe that we should begin designing a “universal constitution” that identifies the most essential rights we desire for individuals and creates social
+mechanisms for ensuring them in the presence of intelligent entities of widely varying
+structures. This process is likely to require many iterations as we determine which values
+are most important to us and which approaches are technically viable. The rapid pace
+of technological progress suggests that these issues may become of critical importance
+soon [14]. Let us therefore forge ahead towards deeper understanding!
+
+<br><span style="color:blue;">
+高度なAIシステムはすべて、いくつかの基本的な「駆動力（ドライブ）」を示す可能性が高いことが明らかになっています。人類にとって望ましい未来をもたらす技術を構築するには、こうした駆動力を理解することが不可欠です。ユドコウスキー [13] は「フレンドリーAI（人類に有益なAI）」の創出を提唱しました。これを実現するには、「効用工学」の基礎となる科学を発展させる必要があります。それにより、我々が望む結果をもたらすような効用関数を設計できるようになるからです。知的エージェントそのものの設計に加え、それらが機能する社会的文脈も設計しなければなりません。個々人が自身の負の外部性（他者に及ぼす不利益など）に対するコストを負担するような社会構造は、安定的かつ望ましい未来を確保する上で大いに役立つでしょう。私は、個人にとって最も重要な権利を特定し、構造の大きく異なる知的実体が存在する状況下でもそれらの権利を保障する社会的メカニズムを構築するような、「普遍的憲法」の設計に着手すべきだと考えます。どのような価値観が我々にとって最も重要か、またどのようなアプローチが技術的に実現可能かを見極める過程では、試行錯誤を何度も繰り返す必要があるでしょう。技術の急速な進歩を鑑みると、これらの問題は近い将来、極めて重要な課題となる可能性があります [14]。さあ、より深い理解に向けて前進しようではありませんか！
+</span>
+</p>
+
+<h2>8. Acknowledgments <span style="color:blue;">謝辞</span></h2>
+<p>
+Many people have discussed these ideas with me and have given me valuable feedback.
+I would especially like to thank: Ben Goertzel, Brad Cottel, Brad Templeton, Carl Shulman, Chris Peterson, Don Kimber, Eliezer Yudkowsky, Eric Drexler, Forrest Bennett,
+Josh Hall, Kelly Lenton, Nils Nilsson, Rosa Wang, Shane Legg, Steven Ganz, Susie Herrick, Tyler Emerson, Will Wiser and Zann Gill.
+
+<br><span style="color:blue;">
+多くの方々がこれらの考えについて私と議論を交わし、貴重なフィードバックをくださいました。
+特に、ベン・ゲーツェル、ブラッド・コッテル、ブラッド・テンプルトン、カール・シュルマン、クリス・ピーターソン、ドン・キンバー、エリエザー・ユドコウスキー、エリック・ドレクスラー、フォレスト・ベネット、ジョシュ・ホール、ケリー・レントン、ニルス・ニルソン、ローザ・ワン、シェーン・レッグ、スティーブン・ガンツ、スージー・ヘリック、タイラー・エマーソン、ウィル・ワイザー、ザン・ギルの各氏に感謝の意を表します。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+[1] S. M. Omohundro, “The nature of self-improving artificial intelligence.”
+http://selfawaresystems.com/2007/10/05/paper-on-the-nature-of-self-improving-artificial-intelligence/,
+October 2007.
+
+<br><span style="color:blue;">
+『自己改善型人工知能の性質』
+</span>
+</li><br><li>
+
+[2] S. Russell and P. Norvig, Artificial Intelligence, A Modern Approach. Prentice Hall, second ed., 2003.
+
+<br><span style="color:blue;">
+『人工知能：現代的アプローチ』
+</span>
+</li><br><li>
+
+[3] I. Marketdata Enterprises, “Self-improvement products and services,” tech. rep., 2006.
+
+<br><span style="color:blue;">
+『自己改善製品・サービス』
+</span>
+</li><br><li>
+
+[4] A. Mas-Colell, M. D. Whinston, and J. R. Green, Microeconomic Theory. Oxford University Press,
+1995.
+
+<br><span style="color:blue;">
+『ミクロ経済学理論』
+</span>
+</li><br><li>
+
+[5] J. G. Miller, Living Systems. Mcgraw Hill, 1978.
+
+<br><span style="color:blue;">
+『生命システム』
+</span>
+</li><br><li>
+
+[6] L. Keller, ed., Levels of Selection in Evolution. Princeton University Press, 1999.
+
+<br><span style="color:blue;">
+『進化における選択のレベル』
+</span>
+</li><br><li>
+
+[7] R. Trivers, Social Evolution. Benjamin/Cummings Publishing Company, Inc., 1985.
+
+<br><span style="color:blue;">
+『社会進化』
+</span>
+</li><br><li>
+
+[8] R. C. Schwartz, Internal Family Systems Therapy. The Guilford Press, 1995.
+
+<br><span style="color:blue;">
+『内的家族システム療法』
+</span>
+</li><br><li>
+
+[9] C. F. Camerer, G. Loewenstein, and M. Rabin, eds., Advances in Behavioral Economics. Princeton
+University Press, 2004.
+
+<br><span style="color:blue;">
+『行動経済学の進展』
+</span>
+</li><br><li>
+
+[10] D. Kahneman and A. Tversky, Judgment Under Uncertainty: Heuristics and Biases. Cambridge University Press, 1982.
+
+<br><span style="color:blue;">
+『不確実性下での判断』
+</span>
+</li><br><li>
+
+[11] S. D. Levitt and S. J. Dubner, Freakonomics: A Rogue Economist Explores the Hidden Side of Everything. William Morrow, revised and expanded ed., 2006.
+
+<br><span style="color:blue;">
+『ヤバい経済学――悪ガキ経済学者が、あらゆることの裏側を暴く』
+</span>
+</li><br><li>
+
+[12] D. Lenat, “Theory formation by heuristic search,” Machine Learning, vol. 21, 1983.
+
+<br><span style="color:blue;">
+『ヒューリスティック探索による理論形成』
+</span>
+</li><br><li>
+
+[13] E. S. Yudkowsky, “Levels of organization in general intelligence,” in Artificial General Intelligence
+(B. Goertzel and C. Pennachin, eds.), Springer-Verlag, 2005.
+
+<br><span style="color:blue;">
+『一般知能における構成レベル』
+</span>
+</li><br><li>
+
+[14] R. Kurzweil, The Singularity is Near: When Humans Transcend Biology. Viking Penguin, 2005.
+
+<br><span style="color:blue;">
+『シンギュラリティは近い』
+</span>
+</li></ul></div>
+
+</p>
+    </body>
+</html>
