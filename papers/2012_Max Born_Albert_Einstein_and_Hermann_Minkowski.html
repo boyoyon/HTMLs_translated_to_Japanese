@@ -1,0 +1,1133 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Max Born, Albert Einstein and Hermann Minkowski's Space-Time Formalism of Special Relativity</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1>Max Born, Albert Einstein and Hermann Minkowski's Space-Time Formalism of Special Relativity<br><span style="color:blue;">マックス・ボルン、アルベルト・アインシュタイン、ヘルマン・ミンコフスキーによる特殊相対性理論の時空定式化</span></h1>
+
+Galina Weinstein
+
+<p>
+This note is by no means a comprehensive study of Minkowski's space-time formalism of
+special relativity. The mathematician, Hermann Minkowski was Einstein's former
+mathematics professor at the Zürich Polytechnic. During his studies at the Polytechnic
+Einstein skipped Minkowski's classes. In 1904 Max Born arrived in the first time to
+Göttingen. Many years later Born wrote his recollections. In the summer of 1905, Minkowski
+and Hilbert led an advanced seminar on mathematical physics, on electrodynamical theory.
+Minkowski told Born later that it came to him as a great shock when Einstein published his
+paper in which the equivalence of the different local times of observers moving relative to
+each other was pronounced; for he had reached the same conclusions independently but did
+not publish them because he wished first to work out the mathematical structure in all its
+splendor. He never made a priority claim and always gave Einstein his full share in the great
+discovery. Indeed in his famous talk, "Space and Time" Minkowski wrote that the credit of
+first recognizing sharply that the time of the one electron is just as good as that of the other,
+i.e., that t and t' are to be treated the same, is of A. Einstein.
+
+<br><span style="color:blue;">
+本稿は、特殊相対性理論におけるミンコフスキーの時空定式化について、網羅的な研究を行うものでは決してない。数学者ヘルマン・ミンコフスキーは、チューリッヒ工科大学におけるアインシュタインのかつての数学の教授であった。同大学在学中、アインシュタインはミンコフスキーの講義を欠席しがちであった。1904年、マックス・ボルンが初めてゲッティンゲンを訪れた。後年、ボルンはその当時の回想を記している。1905年の夏、ミンコフスキーとヒルベルトは、数理物理学、とりわけ電気力学理論に関する上級セミナーを主導した。ミンコフスキーは後にボルンに対し、アインシュタインが「互いに相対運動する観測者の異なる局所時刻が等価である」と説く論文を発表した際、大きな衝撃を受けたと語っている。なぜなら、ミンコフスキー自身も独自に同じ結論に達していたものの、その数学的構造を完全かつ見事な形で構築し終えてから発表したいと考え、公表を控えていたからである。彼は決して優先権を主張することはなく、この偉大な発見におけるアインシュタインの功績を常に全面的に認めていた。実際、有名な講演「空間と時間」の中でミンコフスキーは、「ある電子の時刻は他の電子の時刻と全く同等であること、すなわち t と t' は同一のものとして扱われるべきであること」を最初に明確に認識した功績は、A. アインシュタインにあると記している。
+</span>
+</p><p>
+
+
+The mathematician, Hermann Minkowski was Einstein's former mathematics
+professor at the Zürich Polytechnic, and since 1902 a professor at Göttingen.
+
+<br><span style="color:blue;">
+数学者のヘルマン・ミンコフスキーは、チューリッヒ工科大学におけるアインシュタインの元数学教授であり、1902年からはゲッティンゲン大学の教授を務めていました。
+</span>
+</p><p>
+
+During his studies at the Polytechnic Einstein skipped Minkowski's classes.
+According to Einstein's biographer Carl Seelig, Minkowski's "lectures, at times badly
+prepared but full of creative power".<sup>1</sup>
+Einstein attended the following lectures of
+Minkowski: Geometry of Numbers, Function Theory, Potential Theory, Elliptic
+Functions, Analytical Mechanics, Variational Calculus, Algebra, Partial differential
+Equations, and Applications of Analytical Mechanics.<sup>2</sup>
+
+<br><span style="color:blue;">
+アインシュタインは工科大学在学中、ミンコフスキーの講義を欠席していた。
+アインシュタインの伝記作家カール・ゼーリヒによれば、ミンコフスキーの講義は「時に準備不足ではあったものの、創造力に満ちていた」という。<sup>1</sup>
+アインシュタインは、ミンコフスキーによる以下の講義に出席した：数の幾何学、関数論、ポテンシャル論、楕円関数論、解析力学、変分法、代数学、偏微分方程式、および解析力学の応用。<sup>2</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>1</sup> Seelig Carl, Albert Einstein: A documentary biography, Translated to English by Mervyn Savill 1956,
+London: Staples Press, p. 27; Seelig Carl, Albert Einstein; eine dokumentarische Biographie,
+ : Europa Verlag, p. 32.
+<br><span style="color:blue;">
+カール・シーリグ、*アルバート・アインシュタイン: ドキュメンタリー伝記*、マーヴィン・サヴィルにより英語に翻訳 (1956)、
+ロンドン: Staples Press、p. 27;カール・ゼーリグ、*アルバート・アインシュタイン: アインのドキュメンタリー伝記*、
+エウロパ・フェルラーグ、p. 32.
+</span>
+</p><p style="padding-left:4em;">
+<sup>2</sup> The Collected Papers of Albert Einstein Vol. 1: The Early Years,1879–1902, Stachel, John, Cassidy,
+David C., and Schulmann, Robert (eds.), Princeton: Princeton University Press, 1987, Doc. 28.
+<br><span style="color:blue;">
+『アルベルト・アインシュタイン全集』第1巻：初期の時代（1879–1902年）、ジョン・スタッヘル、デヴィッド・C・キャシディ、ロバート・シュルマン（編）、プリンストン：プリンストン大学出版局、1987年、文書28。
+</span>
+</p><p>
+
+
+Einstein could have gotten good mathematical training from his teachers at the Zürich
+Polytechnic. "At that time", says Anton Reiser, Einstein was less interested in
+mathematical speculation than in the visible process of physics".<sup>3</sup>
+Einstein felt that
+"the most fascinating subject at the time that I was a student was Maxwell's theory".<sup>4</sup>
+He found it difficult to accept for a long time the importance of abstract mathematics, and found high mathematics necessary only when developing his gravitation theory –
+he discovered the qualities of high mathematics around 1912.<sup>5</sup>
+
+<br><span style="color:blue;">
+アインシュタインは、チューリッヒ工科大学の教師たちから十分な数学の教育を受けることができた。アントン・ライザーによれば、「当時、アインシュタインは数学的な思索よりも、目に見える物理学のプロセスの方に関心を寄せていた」という。<sup>3</sup>
+アインシュタインは、「学生時代、最も心を惹かれたのはマクスウェルの理論だった」と感じていた。<sup>4</sup>
+彼は長い間、抽象的な数学の重要性を受け入れることができずにいたが、重力理論を構築する段階になって初めて、高度な数学が必要であることを認識するようになった。彼が高度な数学の真価を見出したのは、1912年頃のことである。<sup>5</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>3</sup> Reiser, Anton Albert Einstein: A Biographical Portrait, 1930, New York: Dover, pp. 48-49.
+<br><span style="color:blue;">
+ライザー、アントン『アルベルト・アインシュタイン：伝記的肖像』、1930年、ニューヨーク：ドーバー、48–49ページ。
+</span>
+</p><p style="padding-left:4em;">
+<sup>4</sup> Einstein, Albert, "Autobiographical notes" in Schilpp, Paul Arthur (ed.), Albert Einstein:
+Philosopher-Scientist, 1949, La Salle, IL: Open Court, pp. 1–95; p. 31.
+<br><span style="color:blue;">
+アインシュタイン、アルベルト、「自伝的覚書」（ポール・アーサー・シルプ編『アルベルト・アインシュタイン：哲学者にして科学者』、1949年、イリノイ州ラ・サール：オープン・コート社、1–95ページ所収；31ページ）
+</span>
+</p><p style="padding-left:4em;">
+<sup>5</sup> A girl named Barbara from Washington D.C. wrote Einstein on January 3, 1943, "I'm a little below
+average in mathematics", and she told Einstein that she had to work at it harder than most of her
+friends. Replying in English from Princeton on January 7, 1943, with his usual sense of humor,
+Einstein wrote in part as follows: "Do not worry about your difficulties in mathematics; I can assure
+you that mine are still greater". Calaprice, Alice (ed), Dear Professor Einstein, Albert Einstein's Letters
+to And From Children, 2002, New York: Prometheus Books, pp. 139-140.
+<br><span style="color:blue;">
+ワシントンD.C.に住むバーバラという少女は、1943年1月3日、アインシュタイン宛ての手紙に「私は数学が少し苦手です」と書き、友人たちの多くよりも一生懸命勉強しなければならないと打ち明けました。これに対し、アインシュタインは1943年1月7日、プリンストンから英語で、彼らしいユーモアを交えて次のように返事を送りました。「数学で苦労していることを心配しないでください。私の方がもっとひどいのですから、それは保証しますよ」（Alice Calaprice (ed.), *Dear Professor Einstein: Albert Einstein's Letters to And From Children*, Prometheus Books, 2002, pp. 139-140）。
+</span>
+</p><p>
+
+Jacob Johann Laub (an Austrian-born, who graduated under Professor Wilhelm Wien,
+professor of physics at the University of Würzburg) came to Bern to visit Einstein.
+Between 1908 and 1909 Einstein and Laub collaborated in three jointly works. In the
+opening paragraph of their first paper they wrote:
+<sup>6</sup>
+
+<br><span style="color:blue;">
+オーストリア出身で、ヴュルツブルク大学の物理学教授ヴィルヘルム・ヴィーンの下で学んだヤーコプ・ヨハン・ラウプは、アインシュタインを訪ねるためにベルンを訪れた。1908年から1909年にかけて、アインシュタインとラウプは3本の共同論文を執筆した。彼らの最初の論文の冒頭で、二人は次のように記している。
+<sup>6</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>6</sup>
+"In einer Kürzlich Vëroffentlichen Abhandlung hat Hr. Minkowski die Grundgleichungen für die
+elektromagnetischen Vorgänge in bewegten Körpern angegeben In Anbetracht des Umstandes, daß
+diese Arbeit in mathematischer Beziehung an der Leser Ziemlich große Anforderungen Stellt, halten
+wir es nicht für überflüssig, jene wichtigenGleichungen im folgenden auf elementaren Wege, der
+übrigens mit dem Minkowskischen im wesentlichen übereinstimmt, abzuleiten".
+Einstein, Albert and Laub, Jacob, Johann, "Über die elektromagnetischen Grundgleichungen für
+bewegte Körper", Annalen der Physik 26, 1908, pp. 532-540; p. 532.
+Arnold Sommerfeld's recollections of what Einstein said can further indicate his attitude towards
+mathematics before 1912: "Strangely enough no personal contacts resulted between his teacher of
+mathematics, Hermann Minkowski, and Einstein. When, later on, Minkowski built up the special
+theory of relativity into his 'world-geometry', Einstein said on one occasion: 'Since the mathematicians
+have invaded the theory of relativity, I do not understand it myself any more'. But soon thereafter, at
+the time of the conception of the general theory of relativity, he readily acknowledged the
+indispensability of the four-dimensional scheme of Minkowski". Sommerfeld, Arnold, "To Albert
+Einstein's Seventieth Birthday", in Einstein, 1949, in Schilpp, 1949, pp. 99-105; p. 102.
+Abraham Pais also reported that before 1912 Einstein told V. Bergmann that he regarded the
+transcription of his theory into tensor form as "überflüssige Gelehrsamkeit" (superfluous learnedness).
+Pais, Abraham, Subtle is the Lord. The Science and Life of Albert Einstein, 1982, Oxford: Oxford
+University Press, p. 152.
+<br><span style="color:blue;">
+「ミンコフスキー氏は最近発表された論文において、運動物体内の電磁気現象に関する基本方程式を提示した。
+この研究は読者に対してかなりの数学的理解を求めるものであるため、
+我々は、以下において初等的な手法を用いてそれらの重要な方程式を導出することは無駄ではないと考える。
+ちなみに、その手法は本質的にミンコフスキー自身のものと一致するものである。」
+アインシュタイン、アルベルトおよびラウブ、ヤーコプ・ヨハン、『運動物体に関する電磁気学的基本方程式について』
+（*Über die elektromagnetischen Grundgleichungen für bewegte Körper*）、『アナーレン・デア・フィジーク』第26巻、1908年、532–540ページ；532ページ。
+アインシュタインの発言に関するアルノルト・ゾンマーフェルトの回想は、1912年以前の彼が数学に対して
+どのような態度をとっていたかについて、さらなる洞察を与えてくれる。「奇妙なことに、彼の数学の
+教師であったヘルマン・ミンコフスキーとアインシュタインとの間には、個人的な交流は生まれなかった。
+後にミンコフスキーが特殊相対性理論を『世界幾何学』へと拡張した際、アインシュタインはかつてこう述べた。
+『数学者たちが相対性理論に侵入してきて以来、私自身、もはやそれが理解できなくなった』と。
+しかしその直後、一般相対性理論が構想されつつあった時期には、彼はミンコフスキーの
+4次元的枠組みが不可欠であることを即座に認めたのである。」ゾンマーフェルト、アルノルト、
+「アルベルト・アインシュタインの70歳の誕生日に向けて」（*To Albert Einstein's Seventieth Birthday*）、
+『アインシュタイン』（Einstein, 1949 [Schilpp, 1949]）所収、99–105ページ；102ページ。
+アブラハム・パイスもまた、1912年以前にアインシュタインがV. ベルクマンに対し、
+自身の理論をテンソル形式で記述することを「überflüssige Gelehrsamkeit」（余計な博学、
+あるいは無用な学識）とみなしていると語ったことを報告している。
+パイス、アブラハム、『神は老獪にして… アルベルト・アインシュタインの科学と生涯』
+（*Subtle is the Lord: The Science and Life of Albert Einstein*）、1982年、オックスフォード：
+オックスフォード大学出版局、152ページ。
+</span>
+</p><p style="padding-left:4em;">
+
+"In a recent published study Mr. Minkowski has presented the fundamental equations
+for the electromagnetic processes in moving bodies. In view of the fact that this study
+makes rather great demands on the reader in its mathematical aspects, we do not
+consider it superfluous to derive here these important equations in an elementary way,
+which, is, by the way, essentially in agreement with that of Minkowski".
+
+<br><span style="color:blue;">
+「ミンコフスキー氏は最近発表された論文において、運動物体内での電磁気的過程に関する基本方程式を提示しました。この論文は数学的な面で読者にかなりの理解を求めるものであるため、ここでそれらの重要な方程式を初等的な方法で導出することは無駄ではないと考えます。なお、この導出方法は、本質的にはミンコフスキー氏の手法と一致するものです。」
+</span>
+</p><p>
+
+Einstein explained in his Autobiographical Notes,
+<sup>7</sup>
+
+<br><span style="color:blue;">
+アインシュタインは『自伝的覚書』の中で次のように説明した。
+<sup>7</sup>
+</span>
+</p><p style="padding-left:4em;">
+7 Einstein, 1949, in Schilpp, 1949, pp. 14-15.
+</p><p style="padding-left:4em;">
+
+"I had excellent teachers (for example, [Adolf] Hurwitz, Minkowski), so that I should
+have been able to obtain a mathematical training in depth. I worked most of the time
+in physical laboratory, however, fascinated by the direct contact with experience. The
+balance of the time I used, in the main, in order to study at home the works of
+Kirchhoff, Helmholtz, Hertz, etc."
+
+<br><span style="color:blue;">
+私には（例えば[アドルフ・]フルヴィッツやミンコフスキーといった）優れた教師がいたため、数学の深い訓練を受けることも可能だったはずです。しかし、私は実験を通じて直接的に事象に触れることに魅了され、大半の時間を物理の実験室で過ごしました。残りの時間は主に、キルヒホッフ、ヘルムホルツ、ヘルツらの著作を自宅で研究することに費やしました。
+</span>
+</p><p>
+
+Einstein saw that it was split into numerous specialties – so he did not know what to
+do,<sup>8</sup>
+
+<br><span style="color:blue;">
+アインシュタインは、それが数多くの専門分野に分かれていることを見て取った――そのため、彼はどうすべきかわからなかったのである。<sup>8</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>8</sup> Einstein, 1949, in Schilpp, 1949, pp. 14-15.
+
+</p><p style="padding-left:4em;">
+
+"Consequently, I saw myself in the position of Buridan's ass, which was unable to
+decide upon any particular bundle of hay. Presumably this was because my intuition
+was not strong enough in the field of mathematics to differentiate clearly the
+fundamentally important, that which is really basic, from the rest of the more or less
+dispensable erudition. Also, my interest in the study of nature was no doubt stronger;
+and it was not clear to me as a young student that access to a more profound
+knowledge of the basic principles of physics depends on the most intricate
+mathematical methods. This dawned upon me only gradually after years of
+independent scientific work".
+
+<br><span style="color:blue;">
+その結果、私は「ブリダンのロバ」のような立場に置かれることになった。どちらの干し草の束を選ぶべきか決められずに立ち尽くす、あのロバである。おそらくそれは、数学という分野において、本質的に重要なこと――真に基礎的なこと――と、多かれ少なかれ省略可能なその他の知識とを明確に区別できるだけの直感が、当時の私には備わっていなかったからだろう。また、私には自然研究への関心の方が間違いなく強く、物理学の基本原理に関するより深い知識に到達するには、極めて複雑な数学的手法が必要であるということも、若い学生だった頃の私には明らかではなかった。そのことに気づいたのは、長年にわたる独自の研究活動を経て、ようやく徐々にのことだった。
+</span>
+</p><p>
+
+After 1912 Einstein regretted and wrote about his switch of attitude towards
+mathematics in the oft-quoted letter to Sommerfeld on October 29, 1912,<sup>9</sup>
+
+<br><span style="color:blue;">
+1912年以降、アインシュタインは数学に対する自身の態度の変化について、1912年10月29日付のゾンマーフェルト宛ての書簡（しばしば引用されるものである）の中で、後悔の念を交えつつ記している<sup>9</sup>。
+</span>
+</p><p style="padding-left:4em;">
+<sup>9</sup> Einstein to Sommerfeld, October 29, 1912, The Collected Papers of Albert Einstein (CPAE, Vol. 5):
+The Swiss Years: Correspondence, 1902–1914, Klein, Martin J., Kox, A.J., and Schulmann, Robert
+(eds.), Princeton: Princeton University Press, 1993, Doc. 421.
+<br><span style="color:blue;">
+アインシュタインからゾンマーフェルトへ、1912年10月29日、『アルベルト・アインシュタイン全集』（CPAE、第5巻）：
+スイス時代：書簡、1902–1914年、マーティン・J・クライン、A・J・コックス、ロバート・シュルマン（編）、プリンストン：プリンストン大学出版局、1993年、文書421。
+</span>
+</p><p style="padding-left:4em;">
+
+"I am now occupied exclusively with the gravitational problem, and believe that I can
+overcome all difficulties with the help of a local mathematician friend [Marcel
+Grossmann]. But one thing is certain, never before in my life have I troubled myself
+over anything so much, and that I have gained great respect for mathematics, whose
+more subtle parts I considered until now, in my ignorance, as pure luxury! Compared
+with this problem, the original theory of relativity is childish".
+
+<br><span style="color:blue;">
+「現在、私はもっぱら重力の問題に取り組んでおり、地元の数学者である友人［マルセル・グロスマン］の助けを借りて、あらゆる困難を克服できると確信しています。しかし、一つ確かなことは、これまでの人生でこれほど思い悩んだことはなかったということです。また、数学に対して深い敬意を抱くようになりました。それまでは無知ゆえに、数学のより深遠な側面を単なる『贅沢品』とみなしていたのですから！ この問題に比べれば、当初の相対性理論など子供だましにすぎません。」
+</span>
+</p><p>
+
+Minkowski, who was the first to recognize the formal mathematical importance of
+Einstein's relativity theory, once admitted to his student, the physicist Max Born, "For
+me it came as a tremendous surprise, for in his student days Einstein had been a real
+lazybones. He never bothered about mathematics at all".<sup>10</sup>
+
+<br><span style="color:blue;">
+アインシュタインの相対性理論が持つ数学的・形式的な重要性をいち早く認識したミンコフスキーは、かつて教え子である物理学者マックス・ボルンにこう打ち明けた。「私にとってそれは大変な驚きでした。というのも、学生時代のアインシュタインは実に怠け者で、数学のことなど全く気にかけようともしなかったからです」<sup>10</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>10</sup> "Denn früher war Einstein ein richtiger Faulpelz. Um die Mathematik hat er sich überhaupt nicht
+gekümmert". Seelig, 1956, p. 28; Seelig, 1954, p. 33.
+
+<br><span style="color:blue;">
+「アインシュタインはかつて、かなりの怠け者だった。彼は数学には全く関心を払わなかったのである。」（Seelig, 1956, p. 28; Seelig, 1954, p. 33）
+</span>
+</p><p>
+
+Constance Reid, a popular American biographer wrote that Minkowski later often told
+his students in Göttingen, "Einstein's presentation of his deep theory [of relativity] is
+mathematically awkward – I can say that because he got his mathematical education
+in Zürich from me".<sup>11</sup> Reid did not give reference to this quotation and did not say
+from whom she heard this. It was probably just another of the "Einstein anecdotes"
+widespread in Göttingen. Reid wrote her book in English, and she visited in
+Göttingen; suppose that she heard this anecdote in Göttingen, then she had somehow
+to translate the quotation from German to English.
+
+<br><span style="color:blue;">
+アメリカの人気伝記作家コンスタンス・リードは、ミンコフスキーが後にゲッティンゲンで学生たちによくこう語っていたと記している。「アインシュタインの（相対性）理論という深遠な理論の提示の仕方は、数学的には不格好だ。そう言えるのは、彼がチューリッヒで私から数学の教育を受けたからなのだ」<sup>11</sup>。リードはこの引用について出典を明記しておらず、誰からその話を聞いたのかも述べていない。おそらくそれは、ゲッティンゲンで広く流布していた数ある「アインシュタイン逸話」の一つに過ぎなかったのだろう。リードは著書を英語で執筆しており、ゲッティンゲンを訪れてもいた。もし彼女がこの逸話をゲッティンゲンで耳にしたのだとすれば、その引用をドイツ語から英語へと翻訳する必要があったはずである。
+</span>
+</p><p style="padding-left:4em;">
+<sup>11</sup> Reid, Constance, Hilbert, 1970/1996, New-York: Springer-Verlag, p. 112.
+<br><span style="color:blue;">
+コンスタンス・リード『ヒルベルト』（1970年／1996年、ニューヨーク：シュプリンガー・フェルラーク）、112ページ。
+</span>
+</p><p>
+
+In 1907-1908 Minkowski developed the mathematical formalism for Einstein's
+relativity theory. He was occupied with the problem of electrodynamics theory at least
+from 1905.
+
+<br><span style="color:blue;">
+ミンコフスキーは1907年から1908年にかけて、アインシュタインの相対性理論のための数学的定式化を構築しました。彼は少なくとも1905年頃から、電気力学理論の課題に取り組んでいました。
+</span>
+</p><p>
+
+In 1904 Max Born arrived in the first time to Göttingen. Many years later Born wrote
+his recollections. Born said that his stepmother gave him a letter of introduction to
+Minkowski, whom she had met years before at dancing lessons and balls at Königsberg.<sup>12</sup> After delivering the letter, Born received an invitation to dinner
+(German style, at 1:30 p. m.) from Frau Minkowski for Sunday. He was received most
+cordially and enjoyed an excellent meal. After the dinner Minkowski asked Born
+whether he would like to join in a little excursion to a ruined castle in the
+neighborhood, the 'Plesse'. They walked through the fields and woods to the 'Plesse'.<sup>13</sup>
+By August 1904 Born was David Hilbert's 'private assistant' – Hilbert offered Born
+this unpaid position at the end of his first year in Göttingen.<sup>14</sup>
+
+<br><span style="color:blue;">
+1904年、マックス・ボルンは初めてゲッティンゲンを訪れた。後年、ボルンはその時のことを回想して次のように記している。継母がミンコフスキー宛ての紹介状を彼に持たせてくれたのだが、継母は以前、ケーニヒスベルクでのダンスのレッスンや舞踏会でミンコフスキーと知り合っていたのであった。<sup>12</sup> 紹介状を届けた後、ボルンはミンコフスキー夫人から日曜日の昼食（ドイツ流の、午後1時半からの食事）に招待された。彼は非常に温かく迎えられ、素晴らしい食事を楽しんだ。食後、ミンコフスキーはボルンに、近郊にある「プレッセ（Plesse）」という城跡へのちょっとした遠出に加わらないかと誘った。彼らは野原や森を抜けて「プレッセ」まで歩いた。<sup>13</sup> 1904年8月までには、ボルンはダフィット・ヒルベルトの「私的助手」となっていた。ヒルベルトは、ボルンがゲッティンゲンに来て1年が経った頃、この無給の職を彼に持ちかけたのである。<sup>14</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>12</sup> Born, Max (1975/1978), Mein Leben: Die Erinnerungen des Nobelpreisträgers, 1975, München:
+Nymphenburger Verlagshandlung GmbH; My Life Recollections of a Nobel Laureate, 1978, New
+York, Charles Scribner's Sons, p. 80.
+<br><span style="color:blue;">
+マックス (1975/1978)、Mein Leben: Die Erinnerungen des Nobelpreisträgers、1975 年、ミュンヘン生まれ:
+Nymphenburger Verlagshandlung GmbH;私の人生: ノーベル賞受賞者の回想、1978 年、新品
+ヨーク、チャールズ スクリブナーの息子たち、p. 80.
+</span>
+</p><p style="padding-left:4em;">
+<sup>13</sup> Born, 1975/1978, pp. 82-83.
+
+</p><p style="padding-left:4em;">
+14 Born, 1975/1978, p. 89.
+
+</p><p>
+
+Born recounted that Minkowski and David Hilbert were intimate friends from their
+school-days at Königsberg, and inseparable at the University. The dominant figure in
+mathematics in Germany and Göttingen at that time was Feix Klein. He had an
+immense influence on all things concerned with mathematics. He persuaded his
+faculty in 1895 to nominate Hilbert to a second professorship, to which the Prussian
+Ministry agreed. From that time on Hilbert was the star of mathematical Göttingen.
+But he missed his friend Minkowski and worked incessantly to get him called to
+Göttingen. In 1902 he succeeded; and a third professorship was offered to
+Minkowski.<sup>15</sup>
+
+<br><span style="color:blue;">
+ボルンは、ミンコフスキーとダフィット・ヒルベルトがケーニヒスベルクでの学生時代からの親友であり、大学でも常に一緒に行動する仲だったと語っている。当時、ドイツおよびゲッティンゲンにおける数学界の第一人者はフェリックス・クラインであった。彼は数学に関わるあらゆる事柄に多大な影響を及ぼしていた。クラインは1895年、ヒルベルトを2つ目の教授職に就けるよう学部を説得し、プロイセン省もこれを承認した。それ以来、ヒルベルトはゲッティンゲン数学界のスターとなった。しかし、彼は友人のミンコフスキーを恋しく思い、彼をゲッティンゲンに招聘しようと絶えず尽力した。1902年、その努力は実を結び、ミンコフスキーに3つ目の教授職が提示された。<sup>15</sup>
+</span>
+</p><p style="padding-left:4em;">
+15 Born,1975/1978, p. 80.
+
+</p><p>
+
+In the summer of 1905, Minkowski and Hilbert led an advanced seminar on
+mathematical physics, on electrodynamical theory. Participants of the seminar, Max
+Laue, Max Born, Max Abraham, Arnold Sommerfeld and others, studied the papers of
+Hendrik Antoon Lorentz, Henri Poincaré and others on the difficulties which the
+theories of the electrodynamics had run into as a result of Michelson's celebrated
+experiment. Born says that at that time the ether was considered well established, and
+some people said that its properties were better known than those of matter. Ether was
+the word most used by the theoretical physicist from Göttingen Professor Woldemar
+Voigt in his lectures on optics. And in summer 1905 all crucial experiments to detect
+the ether were giving negative results.<sup>16</sup> This seminar was the starting-point for
+Minkowski's celebrated work on electrodynamics of moving bodies.<sup>17</sup>
+
+<br><span style="color:blue;">
+1905年の夏、ミンコフスキーとヒルベルトは、電気力学理論を主題とする数理物理学の高度なゼミナールを主導した。マックス・ラウエ、マックス・ボルン、マックス・アブラハム、アルノルト・ゾンマーフェルトらゼミの参加者は、マイケルソンの有名な実験の結果として電気力学理論が直面していた困難について、ヘンドリック・アントーン・ローレンツやアンリ・ポアンカレらの論文を研究した。ボルンによれば、当時エーテルは確固たるものと見なされており、その性質は物質の性質よりもよく知られているとさえ言う人々もいたという。ゲッティンゲンの理論物理学者ヴォルデマール・フォークト教授は、光学の講義において「エーテル」という言葉を頻繁に用いていた。そして1905年の夏、エーテルを検出するためのあらゆる重要な実験は、否定的な結果を示していた。<sup>16</sup> このゼミナールは、運動する物体の電気力学に関するミンコフスキーの有名な研究の出発点となった。<sup>17</sup>
+</span>
+</p><p style="padding-left:4em;">
+16 Born,1975/1978, p. 98.
+
+
+</p><p style="padding-left:4em;">
+17 Born,1975/1978, p. 98.
+
+</p><p>
+
+Born also recounted in 1955 in his talk "Physik und Relativität" ("Physics and
+Relativity") his vague impressions of the seminar,
+
+<br><span style="color:blue;">
+ボルンはまた、1955年の講演「物理学と相対性理論」の中で、セミナーの漠然とした印象を語った。
+</span>
+</p><p style="padding-left:4em;">
+
+"My first encounter with the difficulties, struggles which occurred in this orthodoxy in
+1905, was in a seminar on the electron theory, led not by a physicist but by a
+mathematician, Hermann Minkowski. My memory of these old days is of course a
+little blurred. But I am quite sure that in this seminar we all discussed what was
+known at this time about the electrodynamics and optics of moving systems. We studied the works by Hertz, FitzGerald, Larmor, Lorentz, Poincaré, and others. As to
+it also, however, we also got an insight of Minkowski's own ideas, which were first
+published two years later".<sup>18</sup>
+
+<br><span style="color:blue;">
+「1905年当時、この正統派の理論が直面していた困難や葛藤に私が初めて触れたのは、物理学者ではなく数学者であるヘルマン・ミンコフスキーが主宰する電子論のゼミにおいてでした。もちろん、当時の記憶は多少曖昧になっています。しかし、そのゼミで、運動する系の電気力学や光学について当時知られていた事柄を皆で議論したことは確かです。私たちはヘルツ、フィッツジェラルド、ラーモア、ローレンツ、ポアンカレらの研究を学びました。それと同時に、ミンコフスキー自身の考え方についても理解を深めることができました。彼のその考え方は、後に2年を経て初めて発表されることになります」。<sup>18</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>18</sup> Born Max, Physics in My Generation: A selection of Papers, 1969, London: Pergamon Press, p. 101;
+Born, Max, Physik Im Wandel Meiner Zeit, 1957, Germany: F. Vieweg, p. 186.
+
+<br><span style="color:blue;">
+マックス・ボルン著、『Physics in My Generation: A selection of Papers』（1969年、ロンドン：Pergamon Press）、101ページ；
+マックス・ボルン著、『Physik Im Wandel Meiner Zeit』（1957年、ドイツ：F. Vieweg）、186ページ。
+</span>
+</p><p>
+
+Minkowski gave a lecture about Space and Time, under the title: "The Relativity
+Principle" on November 5, 1907 in the Göttingen Mathematical society. One month
+before this talk, on October 9, 1907, Minkowski had written to Einstein asking for a
+reprint of his 1905 paper, in order to discuss it in his seminar with Hilbert on the
+electrodynamics of moving bodies,
+<sup>19</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは1907年11月5日、ゲッティンゲン数学会において「相対性原理」と題する時空に関する講演を行った。この講演の1ヶ月前、1907年10月9日、ミンコフスキーはアインシュタインに対し、ヒルベルトと共に行っていた「運動物体の電気力学」に関するゼミナールで議論するために、1905年の論文の別刷りを送ってくれるよう依頼する手紙を送っていた。
+<sup>19</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>19</sup> Minkowski to Einstein, October 9, 1907, CPAE, Vol. 5, Doc. 62.
+
+<br><span style="color:blue;">
+ミンコフスキーからアインシュタインへ、1907年10月9日、CPAE, Vol. 5, Doc. 62。
+</span>
+</p><p style="padding-left:4em;">
+
+"Dear Doctor Einstein,
+<br><span style="color:blue;">
+アインシュタイン博士へ
+</span>
+<br><br>
+At our seminar in the W.S. we also wish to discuss your interesting papers on
+electrodynamics. If you still have available reprints of your article in the Ann. d. Phys.
+u. Ch., Vol. 17, I would be grateful if you would send us a copy. I was in Zürich
+recently and was pleased to hear from different quarters about the great interest being
+shown in your scientific successes.
+<br><span style="color:blue;">
+私たちのゼミナールにおいて、電気力学に関する博士の興味深い論文についても議論したいと考えております。『Annalen der Physik und Chemie』第17巻に掲載された博士の論文の別刷りがまだお手元にございましたら、一部お送りいただければ幸いです。先日チューリッヒを訪れた際、博士の科学的業績が多方面から大きな関心を集めていることを耳にし、大変嬉しく思いました。
+</span>
+<br><br>
+With best regards, yours sincerely,
+<br><span style="color:blue;">
+敬具
+</span>
+<br><br>
+H. Minlowski".
+<br><span style="color:blue;">
+H. ミンコフスキー
+</span>
+</p><p>
+
+In 1915, six years after Minkowski's death, Minkowski's 1907 talk was published in
+the Annalen der Physik, and coordinated to the Annalen by Arnold Sommerfeld.<sup>20</sup>
+Sommerfeld edited Minkowski's text, and introduced a few changes to the original
+manuscript. Sommerfeld expressed opposition to Minkowski's use of the ether;
+
+<br><span style="color:blue;">
+ミンコフスキーの死から6年後の1915年、彼の1907年の講演録が『アナーレン・デア・フィジーク』誌に掲載された。この掲載はアルノルト・ゾンマーフェルトが取りまとめたものである。<sup>20</sup> ゾンマーフェルトはミンコフスキーの原稿を編集し、いくつかの変更を加えた。彼は、ミンコフスキーがエーテルを用いたことに対して異議を唱えていた。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>20</sup> Minkowski, Hermann (1907/1915), "Das Relativitätsprinzip" (Presented in Göttingen on 5.11.1907,
+Published Post-mortem by Arnold Sommerfeld), Annalen der Physik 47, 1915, pp. 927-938, p. 927.
+
+<br><span style="color:blue;">
+ヘルマン・ミンコフスキー (1907/1915)、「相対性理論」 (1907 年 11 月 5 日にゲッティンゲンで発表)
+アーノルド・ゾンマーフェルトによって死後に出版された）、『Annalen der Physik』47、1915年、927–938ページ、p. 927。
+</span>
+</p><p style="padding-left:4em;">
+
+"Sommerfeld was unable to resist rewriting Minkowski’s judgment of Einstein’s
+formulation of the principle of relativity. He introduced a clause inappropriately
+praising Einstein for having used the Michelson experiment to demonstrate that the
+concept of absolute space did not express a property of phenomena. Sommerfeld also
+suppressed Minkowski’s conclusion, where Einstein was portrayed as the clarifier,
+but by no means as the principal expositor, of the principle of relativity. With the
+exception of these changes, it seems that Sommerfeld printed Minkowski's
+manuscript substantially as he found it".
+<sup>21</sup>
+
+<br><span style="color:blue;">
+ゾンマーフェルトは、アインシュタインによる相対性原理の定式化に対するミンコフスキーの評価を書き直さずにはいられなかった。彼は、絶対空間という概念が現象の性質を表すものではないことを示すためにマイケルソンの実験を用いたとして、アインシュタインを不適切に称賛する一節を付け加えたのである。またゾンマーフェルトは、アインシュタインを相対性原理の「解明者」としては描いても、決してその「主要な提唱者」としては描いていなかったミンコフスキーの結論部分を削除した。こうした変更を除けば、ゾンマーフェルトはミンコフスキーの原稿を、概ねそのままの形で印刷したようである。
+<sup>21</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>21</sup> Pyenson, Lewis, The Young Einstein: The Advent of Relativity, 1985, Boston: Adam Hilger, p. 82.
+
+<br><span style="color:blue;">
+ルイス・パイエンソン『若きアインシュタイン――相対性理論の登場』（1985年、ボストン：アダム・ヒルガー社、82ページ）
+</span>
+</p><p>
+
+On December 21, 1907, Minkowski talked to the Göttingen scientific society. On 5
+April, 1908, his talk was published in Göttinger Nachrichten as a technical paper,
+"Die Grundgleichungen für die elektromagnetischen Vorgänge in bewegten
+Körpern"("The Basic Equations for Electromagnetic Processes in Moving Bodies").<sup>22</sup>
+
+<br><span style="color:blue;">
+1907年12月21日、ミンコフスキーはゲッティンゲン科学協会で講演を行った。1908年4月5日、その講演は『ゲッティンゲン報知（Göttinger Nachrichten）』に、専門論文「運動物体における電磁過程の基本方程式」<sup>22</sup>として掲載された。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>22</sup> Minkowski, Hermann (1908a), "Die Grundgleichungen für die elektromagnetischen Vorgänge in
+bewegten Körpern, Nachrichten von der Königlichen Gesellschaft der Wissenschaften zu Göttingen,
+1908, pp. 53-111.
+
+<br><span style="color:blue;">
+ヘルマン・ミンコフスキー (1908a)、「電磁プロセスの基本方程式」
+Moving Bodies、*Nachrichten von der Königlichen Gesellschaft der Wissenschaften zu Göttingen*、
+1908 年、53 ～ 111 ページ。
+</span>
+</p><p>
+
+This was Minkowski’s only publication on the topic of electrodynamics and relativity
+to appear before his death on January 12, 1909. Pais writes that in this paper
+Minkowski for the first time presented the Maxwell-Lorentz equations in their
+modern tensor form, and the inadequacy of the Newtonian gravitational theory from
+the relativistic point of view is discussed.”<sup>23</sup>
+
+<br><span style="color:blue;">
+これは、1909年1月12日にミンコフスキーが死去するまでに発表された、電気力学および相対性理論に関する彼の唯一の論文であった。パイスによれば、この論文においてミンコフスキーは初めてマクスウェル・ローレンツ方程式を現代的なテンソル形式で提示し、相対論的観点から見たニュートンの重力理論の不備について論じている。<sup>23</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>23</sup> Pais, 1982, pp. 151-152.
+
+On September 21, 1908, in the 80th annual general meeting of the German Society of
+Scientists and Physicians (Gesellschaft Deutscher Naturforscher und Ärzte) at
+Cologne (Köln) in 1908, Minkowski presented his famous talk, "Raum und Zeit"; a
+culmination of Minkowski's burst of creativity of 1907-1908.
+
+<br><span style="color:blue;">
+1908年9月21日、ケルンで開催されたドイツ自然科学者・医師会（Gesellschaft Deutscher Naturforscher und Ärzte）の第80回年次総会において、ミンコフスキーは有名な講演「空間と時間」を行いました。これは、1907年から1908年にかけての彼の爆発的な創造活動の集大成とも言えるものでした。
+</span>
+</p><p>
+
+Minkowski's assistant, Max Born recounted, <sup>24</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーの助手であったマックス・ボルンは、次のように回想している。<sup>24</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>24</sup> Born, 1975/1978, pp. 130-131.
+
+</p><p style="padding-left:4em;">
+
+"One day [Fritz] Reiche asked me whether I knew a paper by a man named Einstein
+on the principle of relativity. He said Planck considered it most important. I had not
+heard of it, but when I learned that it had something to do with the fundamental
+principles of electrodynamics and optics which years ago had fascinated me in Hilbert
+and Minkowski's seminar, I agreed at once to join Reiche in studying it. From that
+moment relativity became our principal interest, and both [Stanislaw] Loria and
+[Rudolf] Ladenburg were infected by our enthusiasm. I began to think and work on
+some relativistic problems, and when I got stuck over some difficulties I wrote a letter
+to Minkowski asking his advice.
+
+<br><span style="color:blue;">
+ある日、[フリッツ・]ライヒェが私に、アインシュタインという人物が相対性原理について書いた論文を知っているかと尋ねてきた。彼は、プランクがその論文を極めて重要視していると言った。私はそれまでその論文のことを知らなかったが、それが、かつてヒルベルトとミンコフスキーのゼミで私を夢中にさせた電気力学や光学の基本原理に関わるものだと知ると、すぐにライヒェと共にその研究に取り組むことに同意した。その瞬間から相対性理論は私たちの主要な関心事となり、[スタニスワフ・]ロリアや[ルドルフ・]ラーデンブルクもまた、私たちの熱意に感化された。私はいくつかの相対論的な問題について考え、研究を始めたが、困難に直面して行き詰まると、ミンコフスキーに手紙を書いて助言を求めた。
+</span>
+</p><p>
+
+His reply was a great surprise. He did not answer my questions but said that he was
+himself working on the same subject and would like to have a young collaborator who
+knew something of physics, and of optics in particular. Would I like to come to
+Göttingen once again? And he added that this might lead to my future entrance into an
+academic career. Then he proposed that I should attend the annual meeting of the
+German Society of Scientists and Physicians, which was to be held in Cologne in
+September. There he could answer my questions and substantiate his proposition.
+
+<br><span style="color:blue;">
+彼の返事は驚くべきものでした。彼は私の質問に答える代わりに、自分自身も同じテーマに取り組んでおり、物理学、とりわけ光学の知識を持つ若い共同研究者を求めていると述べたのです。そして、もう一度ゲッティンゲンに来ないかと誘い、それが将来的に学術の道へ進むきっかけになるかもしれないと付け加えました。さらに彼は、9月にケルンで開催されるドイツ科学者・医師会議の年次総会に出席するよう提案しました。そこでなら、私の質問に答え、自身の提案について詳しく説明できるだろうというのです。
+</span>
+</p><p style="padding-left:4em;">
+
+[…] I went to Cologne met M nkowsk and ea d s eleb ated le tu e 'Spa e and
+T me' del ve ed on 2 Septembe 08. […] He told me late t at t ame to m as a
+great shock when Einstein published his paper in which the equivalence of the
+different local times of observers moving relative to each other was pronounced; for
+he had reached the same conclusions independently but did not publish them because
+he wished first to work out the mathematical structure in all its splendor. He never
+made a priority claim and always gave Einstein his full share in the great discovery.
+
+<br><span style="color:blue;">
+[…] 私はケルンへ赴き、ミンコフスキーに会って、1908年9月2日に行われた彼の講演「空間と時間」を聴いた。[…] 後に彼が語ったところによれば、アインシュタインが、互いに相対運動する観測者の「異なる局所時刻」が等価であると説く論文を発表した際、彼は大きな衝撃を受けたという。なぜなら、彼自身も独自に同じ結論に達していたものの、その数学的構造を完全かつ見事な形で構築し終えてから発表したいと考え、公表を控えていたからであった。彼は決して先取権を主張することはなく、この偉大な発見におけるアインシュタインの功績を常に全面的に認めていた。
+</span>
+</p><p>
+
+
+After having heard Minkowski speak about his ideas, my mind was made up at once, I
+would go to Göttingen to help him in his work".
+
+<br><span style="color:blue;">
+ミンコフスキーが自身の考えについて語るのを聞いて、私は即座に決心した。彼の研究を支援するために、ゲッティンゲンへ行こうと。
+</span>
+</p><p>
+
+Scott Walter writes, "This story of Minkowski’s recollection of his encounter with
+Einstein’s paper on relativity is curious, in that the idea of the observable equivalence of clocks in uniform motion had been broached by Poincaré in one of the papers
+studied during the first session of the electron-theory seminar. It is possible, of course,
+that Poincaré’s operational definition of local time escaped Minkowski’s attention, or
+that Minkowski was thinking of an exact equivalence of timekeepers".<sup>25</sup>
+
+<br><span style="color:blue;">
+スコット・ウォルターは次のように記している。「アインシュタインの相対性理論に関する論文との出会いについてのミンコフスキーの回想には、興味深い点がある。というのも、等速運動する時計の観測上の等価性という考え方は、電子論セミナーの最初の回で検討された論文の一つにおいて、すでにポアンカレによって提示されていたからである。もちろん、ポアンカレによる『局所時間』の操作的定義がミンコフスキーの目に留まらなかった可能性や、あるいはミンコフスキーが時計の完全な等価性を念頭に置いていた可能性も考えられる」<sup>25</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>25</sup> Walter, Scott, "Hermann Minkowski’s approach to physics", Mathematische Semesterberichte 55(2),
+2008, pp. 213-235 (Emended version), p. 10.
+
+<br><span style="color:blue;">
+Walter、Scott、「ヘルマン・ミンコフスキーの物理学へのアプローチ」、Mathematische Semesterberichte 55(2)、
+2008、213–235 ページ (修正版)、2008 年、213 ～ 235 ページ。 10.
+</span>
+</p><p>
+
+Before 1905 Poincaré stressed the importance of the method of clocks and their
+synchronization by light signals. He gave a physical interpretation of Lorentz's local
+time in terms of clock synchronization by light signals, and formulated a principle of
+relativity. John Stachel explains: "Poincaré had interpreted the local time as that given
+by clocks at rest in a frame moving through the ether when synchronized as if –
+contrary to the basic assumptions of Newtonian kinematics – the speed of light were
+the same in all inertial frames. Einstein dropped the ether and the 'as if': one simply
+synchronized clocks by the Poincaré convention in each inertial frame and accepted
+that the speed of light really is the same in all inertial frames when measured with
+clocks so synchronized".<sup>26</sup>
+
+<br><span style="color:blue;">
+1905年以前、ポアンカレは時計を用いる方法と、光信号によるそれらの同期の重要性を強調していた。彼は、ローレンツの「局所時間」を光信号による時計の同期という観点から物理的に解釈し、相対性原理を定式化した。ジョン・スタッヘルは次のように説明している。「ポアンカレは局所時間を、エーテル中を運動する座標系において静止している時計を同期させることで得られるものと解釈していた。その同期は、ニュートン力学の基本仮定に反して、光速があらゆる慣性系で同一であるかのように仮定して行われるものであった。アインシュタインはエーテルと『～であるかのように』という仮定を排除した。彼は単に、各慣性系においてポアンカレの規約に従って時計を同期させ、そのように同期された時計で測定すれば光速は実際にすべての慣性系で同一であると認めたのである」。<sup>26</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>26</sup> Stachel, John, "1905 and all that, How Einstein Claimed his Place in the Changing Landscape of
+Physics During his Annus Mirablis", 2005, Nature 433, pp. 215-217; p. 217.
+
+<br><span style="color:blue;">
+tachel, John, "1905 and all that, How Einstein Claimed his Place in the Changing Landscape of Physics During his Annus Mirablis"（1905年とそれらすべて――「奇跡の年」に物理学の変貌する情勢の中でアインシュタインはいかにして自らの地位を確立したか）、2005年、Nature 433, pp. 215-217; p. 217.
+</span>
+</p><p>
+
+In the Cologne talk Minkowski said immediately after presenting Lorentz's local time,
+"However, the credit of first recognizing sharply that the time of the one electron is
+just as good as that of the other, i.e., that t and t' are to be treated the same, is of A.
+Einstein". And Minkowski referred to Einstein's 1905 relativity paper and to his 1907
+review article.<sup>27</sup>
+
+<br><span style="color:blue;">
+ケルンでの講演において、ミンコフスキーはローレンツの「局所時間」を提示した直後、次のように述べた。
+「しかしながら、一方の電子の時間が他方の電子の時間と全く同等であること、すなわち t と t' を同等に扱うべきであることを最初に明確に認識した功績は、A. アインシュタインにある」。そしてミンコフスキーは、アインシュタインの1905年の相対性理論に関する論文と、1907年の総説論文に言及した。<sup>27</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>27</sup> Minkowski, Hermann (1908b), "Raum und Zeit" (lecture delivered on the 80th assembly of German
+Natural Scientists and Physicians, at Cologne on 21 September 1908), Physikalische Zeitschrift 20,
+1909, pp.104-111; p. 107.
+
+<br><span style="color:blue;">
+ミンコフスキー、ヘルマン (1908b)、「空間と時間」（1908年9月21日にケルンで開催されたドイツ自然科学者・医師会議第80回大会での講演）、『Physikalische Zeitschrift』20、1909年、pp. 104-111；p. 107。
+</span>
+</p><p>
+
+Until 1912 Einstein's intuition was not strong enough in the field of mathematics, he
+considered mathematical formalism superfluous learnedness. Louis De Broglie
+distinguished between mathematical physics and theoretical physics. <sup>28</sup> The first,
+according to De Broglie, is the profound and critical examination of the physical
+theories put forward by the researcher who assesses mathematical speculations in
+order to improve these theories and in order to render their inherent proofs more
+rigorous. In contrast, theoretical physics is the construction of theories suitable to
+serve as an explanation of the experimental facts and to guide the work of the
+laboratory staff. Extensive mathematical knowledge is a pre-requisite, although it is
+not, ordinarily, the work of real mathematicians; it requires wide knowledge of the
+experimental facts, and mainly some kind of intuition in physics, which not all
+mathematicians have, as did Poincaré. Poincaré, according to De Broglie, was
+especially destined to engage fruitfully in mathematical physics. De Broglie asserted
+that Einstein was a scientist of the second type, and therefore he had succeeded in arriving at the theory of relativity. In respect to Poincaré, "mathematical physics" was
+even apparent in the manner in which he presented his scientific endeavors.
+
+<br><span style="color:blue;">
+1912年までのアインシュタインは、数学の分野における直感が十分ではなく、数学的定式化を余計な博学にすぎないと考えていた。ルイ・ド・ブロイは、数理物理学と理論物理学を区別した。<sup>28</sup> ド・ブロイによれば、数理物理学とは、物理理論を改良し、その理論に内在する証明をより厳密なものにするために、数学的考察を評価する研究者によって行われる、物理理論への深くかつ批判的な検討のことである。対照的に理論物理学とは、実験事実を説明し、実験室のスタッフの作業を導くのに適した理論を構築することである。そこでは広範な数学的知識が前提条件となるものの、それは通常、純粋な数学者の仕事ではない。理論物理学には、実験事実に関する幅広い知識と、何よりもある種の「物理学的直感」が求められるが、ポアンカレのようにそうした直感を備えた数学者は決して多くはない。ド・ブロイによれば、ポアンカレこそは数理物理学の分野で実りある成果を上げるべく運命づけられた人物であった。ド・ブロイは、アインシュタインは後者のタイプの科学者であり、それゆえに相対性理論の構築に成功したのだと主張した。ポアンカレの場合、「数理物理学」という性格は、彼が自身の科学的探究の成果を提示するその様式にさえ見て取ることができた。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>28</sup> Broglie de, Louis, "Henri Poincaré et les théories de la physique", Savants et Découvertes, 1951,
+Paris: Albin Michel, p. 46.
+
+<br><span style="color:blue;">
+ルイ・ド・ブロイ、「アンリ・ポアンカレと物理学の諸理論」、『科学者と発見』、1951年、
+パリ：アルバン・ミシェル、46ページ。
+</span>
+</p><p>
+
+The Cologne talk was Minkowski's last talk before he died. The talk had aroused
+great interest at the Cologne Congress and has become the basis of the modern
+mathematical apparatus of the relativity theory. Minkowski sent his manuscript a few
+days before Christmas – on December, 23, 1908 – to the editor of the Physikalisch
+Zeitschrift. Four days before his death the editor of the Physikalisch Zeitschrift spoke
+with Minkowski about the contents of his talk. He did not say what Minkowski told
+him, but mentioned that no one imagined that he would die suddenly. The
+Physikalisch Zeitschrift published the manuscript of the talk on 1909. <sup>29</sup>
+
+<br><span style="color:blue;">
+ケルンでの講演は、ミンコフスキーにとって生涯最後のものとなった。この講演はケルン会議で大きな関心を集め、現代の相対性理論における数学的枠組みの基礎となった。ミンコフスキーは、クリスマスの数日前である1908年12月23日に、『物理学雑誌（Physikalische Zeitschrift）』の編集者へ原稿を送付した。亡くなる4日前、同誌の編集者はミンコフスキーと講演内容について話し合っている。編集者はミンコフスキーが何を語ったかについては明かさなかったが、彼が突然亡くなるとは誰も予想していなかったと述べている。『物理学雑誌』は1909年にこの講演の原稿を掲載した。<sup>29</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>29</sup> Minkowski, 1908b, p. 104.
+
+</p><p>
+
+In 1915 Minkowski's talk was reproduced in the book Das Relativitätsprinzip, a
+collection of the path breaking papers of special and one general relativity paper (with
+comments by Arnold Sommerfeld). The book began with an abridged version of
+Lorentz's 1904 paper on the theory of electron; then afterwards, were brought
+Einstein's 1905 two relativity papers. Minkowski's 1908 talk was reproduced in this
+book with minor changes.<sup>30</sup> Sommerfeld (as said above) also brought Minkowski's
+1907 talk for publication in 1915.
+
+<br><span style="color:blue;">
+1915年、ミンコフスキーの講演は、特殊相対性理論に関する画期的な論文と一般相対性理論に関する1本の論文を収録した書籍『相対性原理（Das Relativitätsprinzip）』（アルノルト・ゾンマーフェルトによる解説付き）に再録された。同書は、ローレンツによる1904年の電子論に関する論文の要約版で始まり、続いてアインシュタインによる1905年の相対性理論に関する2本の論文が掲載されていた。ミンコフスキーの1908年の講演も、軽微な変更を加えた上で同書に再録された。<sup>30</sup> また、前述の通り、ゾンマーフェルトはミンコフスキーの1907年の講演についても、1915年の出版に向けて収録を行っている。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>30</sup> Lorentz, Hendryk, Antoon., Einstein, Albert, and Minkowski, Hermann, Das Relativitätsprinzip,
+1915, Leipzig und Berlin: Druck und Verlag von B. G. Teubner, pp. 56-73.
+
+<br><span style="color:blue;">
+ローレンツ、ヘンドリック・アントゥーン、アインシュタイン、アルバート、ミンコフスキー、ヘルマン、*Das Relativitätsprinzip*、
+1915 年、ライプツィヒとベルリン: B. G. Teubner によって印刷および出版、56 ～ 73 ページ。
+</span>
+</p><p>
+
+The differences between the Cologne 1908 talk as published in 1909 and the same
+talk as it appeared in the 1915 book are quite critical in some places. For instance, at
+the end of the 1915 version we find the following sentence,
+<sup>31</sup>
+
+<br><span style="color:blue;">
+1909年に公表された1908年のケルンでの講演と、1915年の著書に収録された同講演との間には、いくつかの箇所で極めて重要な相違が見られる。例えば、1915年版の末尾には次のような一文がある。
+<sup>31</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>31</sup> Lorentz, Einstein, and Minkowski, 1915, p. 68.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p style="padding-left:4em;">
+
+"The validity without exception of the World postulate, so I would like to believe, is
+the true core of an electromagnetic worldview, which started by Lorentz, and further
+revealed by Einstein, in full day light" ["Die ausnahmslose Gültigkeit des
+Weltpostulates ist, so möchte ich glauben, der wahre Kern eines elektromagnetischen
+Weltbildes, der von Lorentz getroffen, von Einstein weiter herausgeschält,
+nachgerade vollends am Tage liegt"].
+
+<br><span style="color:blue;">
+「世界仮説の絶対的な妥当性こそが、
+ローレンツによって提唱され、
+アインシュタインによってさらに明らかにされ、今や完全に白日の下に晒された電磁的世界観の真の核心であると私は信じたい」[「世界仮説の絶対的な妥当性こそが、
+ローレンツによって提唱され、アインシュタインによってさらに明らかにされ、今や完全に白日の下に晒された電磁的世界観の真の核心であると私は信じたい」]
+</span>
+</p><p>
+
+
+On the other hand, at the end of the manuscript of the 1908 talk as it was published in
+the Physikalisch Zeitschrift in 1909 we find,
+<sup>32</sup>
+
+<br><span style="color:blue;">
+他方、1909年に『Physikalische Zeitschrift』誌に掲載された1908年の講演の原稿の末尾には、次のような記述が見られる。
+<sup>32</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>32</sup> Minkowski, 1908b, p. 111.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p style="padding-left:4em;">
+
+
+"The validity without exception of the Relativity postulate, so I would like to believe,
+is the true core of an electromagnetic worldview, which started by Lorentz, and
+further revealed by Einstein, in full day light" ["Die ausnahmslose Gültigkeit des
+Relativitätspostulates ist, so möchte ich glauben, der wahre Kern eines
+elektromagnetischen Weltbildes, der von Lorentz getroffen, von Einstein weiter
+herausgeschält, nachgerade vollends am Tage liegt"].
+
+<br><span style="color:blue;">
+「相対性理論の絶対的な妥当性は、
+ローレンツによって提唱され、
+アインシュタインによってさらに明らかにされた電磁気的世界観の真髄であり、
+事実上完全に明白なものであると私は信じたい」[「相対性理論の絶対的な妥当性は、
+ローレンツによって提唱され、アインシュタインによってさらに明らかにされ、事実上完全に明白な電磁気的世界観の真髄であり、
+事実上完全に明白なものである」]
+</span>
+</p><p>
+
+The 1915 book was updated in 1922 <sup>33</sup> and translated to English in 1923 as The
+Principle of Relativity.
+<sup>34</sup> Minkowski's 1915 version above was translated from
+German to English and the above 1915 paragraph appeared in the 1923 English
+translation.
+
+<br><span style="color:blue;">
+1915年の著書は1922年に改訂され<sup>33</sup>、1923年には『相対性原理（The Principle of Relativity）』として英訳された。
+<sup>34</sup> 上記のミンコフスキーによる1915年版はドイツ語から英語に翻訳されたものであり、前述の1915年の段落は、その1923年の英訳版に掲載されている。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>33</sup> Lorentz, Hendryk, Antoon., Einstein, Albert, and Minkowski, Hermann, Das Relativitätsprinzip,
+1922, Leipzig und Berlin: Druck und Verlag von B. G. Teubner. (Einstein's personal library, the
+Einstein Archives). This version already includes Einstein 1916 review paper on the General Theory of
+Relativity.
+
+<br><span style="color:blue;">
+ローレンツ、アインシュタイン、ミンコフスキー著『相対性原理』（1922年、ライプツィヒおよびベルリン：B. G. トイブナー社刊。アインシュタイン個人蔵書、アインシュタイン・アーカイブ）。本書には、アインシュタインによる1916年の一般相対性理論に関する総説論文がすでに収録されている。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>34</sup> Lorentz, Hendryk, Antoon, Einstein, Albert, and Minkowski, Hermann, The Principle of Relativity,
+1923/1952, New York: Dover.
+
+<br><span style="color:blue;">
+ローレンツ、ヘンドリック・アントーン、アインシュタイン、アルベルト、ミンコフスキー、ヘルマン、『相対性原理』、
+1923年／1952年、ニューヨーク：ドーバー社
+</span>
+</p><p>
+
+Minkowski never spoke about "The validity without exception of the World
+postulate", and this was an editing of his 1908 manuscript.
+
+<br><span style="color:blue;">
+ミンコフスキーは「世界公理の例外なき妥当性」について語ったことはなく、その表現は1908年の原稿に加えられた編集によるものであった。
+</span>
+</p><p>
+
+Minkowski started his 1908 talk with the famous paragraph,<sup>35</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは1908年の講演を、あの有名な一節で始めた。<sup>35</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>35</sup> Minkowski, 1908b, p. 104.
+
+</p><p style="padding-left:4em;">
+
+
+"M. H.! [ladies and gentleman!] The views of space and time, which I would like
+develop, have sprung from the experimental-physical soil. Therein lies their strength.
+They tend to be radical. Henceforth space by itself and time by itself, fade away
+completely into shadow, and only a kind of union of the two will preserve
+independent permanency".
+
+<br><span style="color:blue;">
+「紳士淑女の皆様！私がここで展開しようとする空間と時間に関する見解は、実験物理学という土壌から生まれたものです。そこにこそ、その見解の強みがあります。それらは急進的なものです。これより先、空間そのものや時間そのものは完全に影の中へと消え去り、両者のある種の結合のみが、独立した実在性を保つことになるでしょう。」
+</span>
+</p><p>
+
+And Minkowski presented new notions, "Weltpunkt x, y, z, t", "Kerwe in der Welt",
+"Weltlinie", and "Weltlinien".<sup>36</sup>
+
+<br><span style="color:blue;">
+そしてミンコフスキーは、「世界点 x, y, z, t」、「世界糸」、「世界線」、「世界線群」という新たな概念を導入した。<sup>36</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>36</sup> Minkowski, 1908b, p. 104.
+
+</p><p>
+
+Minkowski considered a world, space-time; he examined the transformations that
+leave the expression:
+
+<br><span style="color:blue;">
+ミンコフスキーはある世界、すなわち時空を考察し、ある式を不変に保つ変換を検討した。その式とは
+</span>
+
+\[
+c^2t^2 – x^2 – y^2 – z^2 = 1
+\]
+
+Invariant. This expression had already appeared in his two previous papers.
+Minkowski said that the structure of this equation with positive c consists of two
+hyperboloid sheets separated by \(t = 0\). When transforming \(x, y, z, t\) into \(x^\prime, y^\prime, z^\prime, t^\prime\),
+while \(y\) and \(z\) remain unchanged, we draw the upper branch of the hyperbola, the
+upper "light cone":
+
+<br><span style="color:blue;">
+不変量。この表現は、彼の過去2本の論文ですでに登場していた。
+ミンコフスキーは、cが正である場合、この方程式の構造は \(t = 0\) によって隔てられた2つの双曲面から成ると述べた。\(x, y, z, t\) を \(x^\prime, y^\prime, z^\prime, t^\prime\) に変換する際、\(y\) と \(z\) は不変のままであるとすると、双曲線の上側の枝、すなわち上側の「光円錐」が描かれることになる。
+</span>
+
+\[
+c^2t^2 – x^2 = 1.
+\]
+
+Minkowski explained that when \(c = \infty\) (\(c\) is the velocity of light in empty space), the
+group of Newtonian mechanics \(G_\infty\) is graphically out of the hyperbola (the upper light
+cone). Hence the group \(G_c\) is mathematically more intelligible than the Newtonian
+group \(G_\infty\)<sup>37</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは、\(c = \infty\)（\(c\)は真空中の光速）の場合、ニュートン力学の群 \(G_\infty\) は図形的に双曲線（上側光円錐）の外側に位置すると説明した。したがって、群 \(G_c\) は、ニュートン力学の群 \(G_\infty\) よりも数学的に理解しやすいものである<sup>37</sup>。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>37</sup> Minkowski, 1908b, p. 105.
+
+</p><p>
+
+In 1921 Max Born explained Minkowski's "Absolute World",
+<sup>38</sup>
+
+<br><span style="color:blue;">
+1921年、マックス・ボルンはミンコフスキーの「絶対世界」について解説した。
+<sup>38</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>38</sup> Born, Max, Die Relativitätstheorie Einsteins, 1922, Berlin: Verlag von Julius Springer, pp. 218-219;
+Born Max, Einstein's Theory of Relativity, 1924/1962, New-York: Dover, p. 305.<br>
+<br>
+"Wir haben uns seiner Darstellung durchweg bedient, wobei wir nur zur Vereinfachung die \(y\) und \(z\) Achsen fortließen und in der \(xt\)-Ebene operierten. Werfen wir nun noch einen Blick vom
+mathematischen Standpunkte auf die Geometrie in der xt-Ebene, so erkennen wir, daß es sich nicht um
+die gewöhnliche Euklidische Geometrie handelt. Denn bei dieser sind alle vom Null punkt
+ausgehenden Geraden gleichberechtigt, die Längeneinheit auf ihnen ist dieselbe, die Eichkurve also ein
+Kreis. In der \(xt\)-Ehene aber sind die raumartigen und zeitartigen Geraden nicht gleichwertig, auf jeder
+gilt eine andere Längeneinheit, die Eichkurve besteht aus den Hyperbeln \(G = x^2 – c^2t^2 = ± 1\)."
+
+<br><span style="color:blue;">
+マックス、相対性理論アインシュタイン生まれ、1922 年、ベルリン: Verlag von Julius Springer、218 ～ 219 ページ。
+ボーン、マックス、アインシュタインの相対性理論、1924/1962、ニューヨーク: ドーバー、p. 305.<br>
+<br>
+「我々は一貫して彼の提示した手法を用い、簡略化のために\(y\)軸と\(z\)軸を省いて\(xt\)平面上で考察を行ってきた。ここで\(xt\)平面の幾何学的性質を数学的観点から検討すると、それが通常のユークリッド幾何学ではないことがわかる。なぜなら、ユークリッド幾何学においては、原点から発するすべての直線は同等であり、それらに沿った長さの単位は同一であって、したがって目盛り曲線（較正曲線）は円となるからである。しかし\(xt\)平面においては、空間的直線と時間的直線は同等ではなく、それぞれに異なる長さの単位が適用され、目盛り曲線は双曲線 \(G = x^2 – c^2t^2 = ± 1\) によって構成されることになる。」
+</span>
+</p><p style="padding-left:4em;">
+
+"We have made use of his method of description throughout, by omitting the \(y-\) and \(z-\) axis only for the sake of simplicity and working in the \(xt\) plane. If we take a look at
+the geometry in the \(xt\)-plane from the mathematical point of view, we see that we are
+not dealing with ordinary Euclidean geometry. Since therefore, all straight lines that
+originate from the zero-point are equivalent, the unit of length on them is the same as
+the calibration curve, that is, a circle. But in the xt-plane the spacelike and timelike
+straight lines are not equivalent, there is a different unit of length on each, and the
+calibration curve consists of the hyperbole
+
+<br><span style="color:blue;">
+我々は終始、彼の記述法を用いている。ただし、簡略化のために \(y\) 軸と \(z\) 軸を省き、\(xt\) 平面上で考察を行っている。\(xt\) 平面における幾何学的構造を数学的な観点から見ると、そこでは通常のユークリッド幾何学が扱われているわけではないことがわかる。したがって、原点から発するすべての直線は等価であり、それらの直線上の長さの単位は、校正曲線（すなわち円）によって定まるものと同一である。しかし、\(xt\) 平面においては、空間的直線と時間的直線は等価ではなく、それぞれ異なる長さの単位が存在し、校正曲線は双曲線によって構成される。
+</span>
+
+\[
+G = x^2 – c^2t^2 = ±1.
+\]
+
+An important property of Minkowski's world is the following: consider the \(x-t\) axes.
+Suppose we have a world-line, straight and parallel to the axis of \(t\). This line
+corresponds to a point at rest. If the world-line is straight at an angle to the axis of \(t\),
+this corresponds to a point in uniform motion. If the point is in non-uniform motion,
+the world line is a curved. We can draw new axes \(t^\prime-x^\prime\) in such a way that a substance
+that is in uniform motion in \(x-t\) is at rest in \(x^\prime-t^\prime\). From \(c^2t^2 – x^2 – y^2 – z^2 = 1\)
+
+<br><span style="color:blue;">
+ミンコフスキーの世界には、次のような重要な性質があります。まず、\(x-t\) 軸を考えてみましょう。
+\(t\) 軸に平行な直線状の世界線を想定すると、この線は静止している点に対応します。もし世界線が \(t\) 軸に対して傾いた直線であれば、それは等速運動をしている点に対応します。点が非等速運動をしている場合、世界線は曲線となります。\(x-t\) 系で等速運動している物体が \(x^\prime-t^\prime\) 系では静止しているように見えるような、新しい軸 \(t^\prime-x^\prime\) を引くことができます。\(c^2t^2 – x^2 – y^2 – z^2 = 1\) より、
+</span>
+</p><p>
+
+Minkowski arrived at: \(c^2dt^2 – dx^2 – dy^2 – dz^2\), which is positive, and thus the velocity v
+is always less than \(c\).<sup>39</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは \(c^2dt^2 – dx^2 – dy^2 – dz^2\) という式を導き出したが、これは正の値をとるため、速度 v は常に \(c\) 未満となる。<sup>39</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>39</sup> Minkowski, 1908b, p. 106.
+
+</p><p>
+
+Minkowski explained that according to Lorentz, any moving body, experiences a
+contraction in the direction of motion with a velocity \(v\) in the ratio:
+
+\(1: \sqrt{(1 – \frac{v^2}{c^2}\) <sup>40</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは、ローレンツによれば、速度 \(v\) で運動するあらゆる物体は、その運動方向に以下の比率で収縮すると説明した。
+</span>
+</p><p style="padding-left:4em;">
+</p><p>
+
+<sup>40</sup> Minkowski, 1908b, p. 106.
+
+</p><p>
+
+According to Einstein, the Lorentz contraction cannot be detected by physical means
+for an observer moving with the object. However, it can be detected by physical
+means by a non-co-moving observer. This is embodied in Minkowski's graphical
+space-time "world".
+
+<br><span style="color:blue;">
+アインシュタインによれば、物体と共に運動する観測者にとって、ローレンツ収縮は物理的な手段では検出できません。しかし、物体と共に運動しない観測者であれば、物理的な手段でそれを検出することが可能です。こうした事実は、ミンコフスキーによる時空の「世界」の図式表現に具現化されています。
+</span>
+</p><p>
+
+Minkowski presented his talk on September 12th, 1908, and this talk had aroused great
+interest at the Cologne [Köln] Congress and has become the basis of the modern
+mathematical apparatus of the relativity theory. Einstein was supposed to meet Planck
+at the Cologne Congress, but Einstein did not come to this meeting. Planck wrote
+Einstein on September 9, 1908, "would it not be more practical if we were to meet in
+Cologne at the Naturforscherversammlung? I am certain to be there. There we would
+have more time and be in a more appropriate mood for scientific discussions".<sup>41</sup> Born arrived at the second time in Göttingen just a few weeks before Minkowski
+died,<sup>42</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーは1908年9月12日に講演を行ったが、この講演はケルンでの会議において大きな関心を呼び、相対性理論の現代的な数学的枠組みの基礎となった。アインシュタインはケルンの会議でプランクと会うことになっていたが、実際にはその会議には姿を見せなかった。プランクは1908年9月9日、アインシュタインに次のような手紙を送っている。「ケルンで開催される『自然科学者会議（Naturforscherversammlung）』で会うほうが実際的ではないでしょうか。私は確実に出席します。そこなら、科学的な議論をするための時間も十分に取れますし、雰囲気もより適しているでしょうから」。<sup>41</sup> ボルンが二度目にゲッティンゲンに到着したのは、ミンコフスキーが亡くなるほんの数週間前のことであった。<sup>42</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>41</sup> Planck to Einstein, September 9, 1908, CPAE, Vol. 5, Doc. 118.
+
+<br><span style="color:blue;">
+プランクからアインシュタインへ、1908年9月9日、CPAE, Vol. 5, Doc. 118.
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>42</sup> Born, 1975/1978, pp. 132-133.
+
+</p><p style="padding-left:4em;">
+
+"I arrived in Göttingen rather late, on December 1908, long after the semester had
+sta ted; […] T e follow ng day I alled on M nkowsk and was e e ved ve y k ndly.
+He explained to me his ideas on electrodynamics and relativity, and he listened
+patiently to my own suggestions. Once again I was fortunate in meeting a leading man
+in my branch of science and in being allowed to watch him working on a subject
+which fascinated me. But alas, it lasted only a few weeks. When I returned from a
+short Christmas holiday at home, I learned that Minkowski had been taken to hospital
+dangerously ill, and that an appendicitis operation had been performed. I did not see
+him again. He died on 2 January 1900 . […]
+
+<br><span style="color:blue;">
+私がゲッティンゲンに到着したのは1908年12月のことで、学期が始まってからずいぶん経ってからのことでした。[…] 翌日、ミンコフスキーを訪ねると、彼は私をとても親切に迎えてくれました。彼は自身の電気力学や相対性理論に関する考えを説明してくれ、私の提案にも根気よく耳を傾けてくれました。自分の専門分野における第一人者と出会い、しかも私が強く惹かれていたテーマに取り組む彼の姿を間近で見ることができたのは、幸運なことでした。しかし、残念ながらそれはほんの数週間のことでした。短いクリスマス休暇を実家で過ごして戻ってみると、ミンコフスキーが重体で入院し、虫垂炎の手術を受けたことを知らされました。それ以来、彼に会うことは二度とありませんでした。彼は1909年1月2日に亡くなりました。[…]
+</span>
+</p><p>
+
+Minkowski's numerous papers and unfinished manuscripts were given to [Andreas]
+Speiser, a young Swiss mathematician, and myself for sifting and possibly finishing.<sup>43</sup>
+We first of all separated the pure mathematics from mathematical physics; the latter
+was entrusted to me. It was formidable bundle, but most of it turned out to be either
+manuscripts of papers already published, or indecipherable sketches. Only one
+investigation which I knew in outline from my last interview with Minkowski was far
+enough advanced for me to try to finish it for publication. This I succeeded in doing.
+The article appeared in May 1910, together with a reprint of Minkowski's celebrated
+paper "Die Grundgleichungen für die Elektromagnetischen Vorgänge in Bewegten
+Körpern" (The basic equations for electromagnetic processes in moving bodies) as No
+1 of a series of monographs edited by Blumenthal".<sup>44</sup>
+
+<br><span style="color:blue;">
+ミンコフスキーの数多くの論文や未完の草稿は、スイスの若き数学者[アンドレアス・]シュパイザーと私の二人に託され、その整理や、場合によっては完成に向けた作業を行うことになった。<sup>43</sup> 私たちはまず、純粋数学に関するものと数理物理学に関するものを仕分けし、後者は私が担当することになった。それは膨大な量の資料であったが、その大半は、すでに発表された論文の草稿か、あるいは解読不能な断片的なメモのいずれかであることが判明した。ミンコフスキーとの最後の面談でその概要を知っていた研究のうち、出版に向けて完成を試みるのに十分な段階まで進んでいたものは、ただ一つだけであった。私はその完成に成功した。
+その論文は1910年5月、ブルーメンタールが編集した一連のモノグラフ・シリーズの第1巻として、ミンコフスキーの著名な論文『運動物体における電磁気現象の基本方程式』（Die Grundgleichungen für die Elektromagnetischen Vorgänge in Bewegten Körpern）の再録と共に発表された。<sup>44</sup>
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>43</sup> Minkowski, Hermann, Gesammelte Abhandlungen von Minkowski, Hermann unter mitwirkung von
+Andreas Speiser und Hermann Weyl herausgegeben David Hibert, Zweiter band, mit einem bildnis
+Hermann Minkowskis 34 Figuren im text und einer doppeltafel, 1911, Leipzig: G. B. Teubner.
+
+<br><span style="color:blue;">
+ミンコフスキー、ヘルマン、『ヘルマン・ミンコフスキー論文集』、ダヴィト・ヒルベルト編（アンドレアス・シュパイザーおよびヘルマン・ワイルの協力による）、第2巻、ヘルマン・ミンコフスキーの肖像画、本文図34点、見開き図版1点を含む、1911年、ライプツィヒ：G. B. トイブナー社。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>44</sup> Minkowski, Hermann, Zwei Abhandlungen über die Grundgleichungen der Elektrodynamik, Mit
+einem einführungswort von Otto Blumenthal, 1910, Leipzig und Berlin: B. G. Teubner.
+
+<br><span style="color:blue;">
+ミンコフスキー、ヘルマン、『電気力学の基本方程式に関する二つの論文』（オットー・ブルーメンタールによる序文付き）、1910年、ライプツィヒおよびベルリン：B. G. トイブナー社。
+</span>
+</p><p>
+
+I wish to thank Prof. John Stachel from the Center for Einstein Studies in Boston University for sitting
+with me for many hours discussing special relativity and its history.
+
+<br><span style="color:blue;">
+ボストン大学アインシュタイン研究センターのジョン・スタッヘル教授に、長時間にわたり私と相対性理論とその歴史について議論してくださったことに感謝の意を表します。
+</span>
+</p>
+    </body>
+</html>
