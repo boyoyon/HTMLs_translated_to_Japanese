@@ -10,9 +10,11 @@
         </p>
         <h2>更新項目</h2>
         <p>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_Minkowskis_Geometric_Explanation/2026_Minkowskis_Geometric_Explanation.html">2026 ローレンツ収縮に関するミンコフスキーの幾何学的説明</a><br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2012_Max Born_Albert_Einstein_and_Hermann_Minkowski.html">2012 特殊相対性理論の時空定式化</a><br>
+            ---<br>
              <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_hermann_minkowski_and_the_special_theory_of_relativity.html">2026 ヘルマン・ミンコフスキーと特殊相対性理論</a><br>
              <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2008_The_Basic_AI_Drives.html">2008 基本的な AI 駆動力</a><br>
-            ---<br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1922_relativity/1922_how_I_created_the_theory_of_relativity.html">1922 (1982) 私が相対性理論を構築した経緯</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_math_in_ai_age/2026_MATHEMATICS_IN_THE_AGE_OF_AI.html">2026 AI時代の数学</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_ON_THE_DEPTH_OF_WILES_PROOF_OF_FERMATS_LAST_THEOREM.html">2026 フェルマーの最終定理に関するワイルズの証明の深さについて</a><br>
