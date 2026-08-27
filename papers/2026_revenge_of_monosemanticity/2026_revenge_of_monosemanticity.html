@@ -1,0 +1,5059 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>Revenge of Monosemanticity</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>Revenge of Monosemanticity: Specialized
+Neurons Improve Data Efficiency in MLPs<br><span style="color:blue;">単義性の逆襲：MLPにおけるデータ効率を向上させる特化型ニューロン</span></center></h1>
+
+<center>
+<div class="container">
+<div class="column">Amirhesam Abedsoltan<sup></sup><br>Fivos Kalogiannis<sup>1</sup></div>
+<div class="column">Enric Boix-Adsera<sup>2</sup><br>Mikhail Belkin<sup>3,1</sup></div>
+</div>
+</center>
+<br>
+<center><sup>1</sup> Department of Computer Science and Engineering, UC San Diego</center>
+<center><sup>2</sup> Department of Statistics and Data Science, The Wharton School, University of
+Pennsylvania</center>
+<center><sup>3</sup> Halıcıo˘glu Data Science Institute, UC San Diego</center>
+
+
+<h2><center>Abstract <span style="color:blue;">要旨</span></center></h2>
+<p class="margin-abstracr">
+Understanding how neural networks learn and organize features is central to understanding their behavior. Much existing theory of feature
+learning has focused on the emergence of a global low-dimensional predictive geometry. We show that this picture is incomplete. In regression
+problems with clustered data, we demonstrate that multilayer perceptrons (MLPs) naturally develop monosemantic specialized neurons: individual neurons become strongly aligned with a specific predictive feature
+relevant to a particular region of the input space. Rather than learning a single global low-dimensional representation, MLPs learn a collection of local low-dimensional representations that can collectively span a
+high-dimensional space. This specialization provably gives MLPs a dataefficiency advantage over feature-learning methods based on a global lowdimensional representation.
+
+<br><span style="color:blue;">
+ニューラルネットワークがどのように学習し、特徴を構成するかを理解することは、その挙動を把握する上で極めて重要です。特徴学習に関する既存の理論の多くは、大域的かつ低次元の予測幾何構造の創発に焦点を当ててきました。しかし、我々は、この見方が不完全であることを示します。クラスタ構造を持つデータを用いた回帰問題において、多層パーセプトロン（MLP）は、単一の意味（モノセマンティック）に対応する特化したニューロンを自然に形成することを示します。すなわち、個々のニューロンが、入力空間の特定の領域に関連する特定の予測特徴と強く整合するようになるのです。MLPは、単一の大域的な低次元表現を学習するのではなく、全体として高次元空間を張ることができるような、局所的な低次元表現の集合を学習します。このような特化により、MLPは大域的な低次元表現に基づく特徴学習手法と比較して、データ効率の面で有利であることが理論的に示されます。
+</span>
+</p>
+
+<h2>1 Revisiting Feature Learning <span style="color:blue;">特徴学習の再考</span></h2>
+<p>
+The empirical success of neural networks has motivated substantial work aimed
+at understanding what enables neural networks to outperform classical learning
+methods [Allen-Zhu and Li, 2019, Ghorbani et al., 2019, 2020a]. One prominent
+explanation is their ability to perform feature learning: rather than optimizing
+a predictor over a representation fixed before training, neural networks can
+use supervision to adapt their internal representations to the structure of the
+prediction task [Bengio et al., 2013].
+
+<br><span style="color:blue;">
+ニューラルネットワークが経験的に成功を収めていることを背景に、なぜニューラルネットワークが従来の学習手法を凌駕できるのかを解明しようとする研究が活発に行われています [Allen-Zhu and Li, 2019, Ghorbani et al., 2019, 2020a]。その有力な説明の一つとして、特徴学習を行う能力が挙げられます。すなわち、ニューラルネットワークは、学習前に固定された表現に基づいて予測器を最適化するのではなく、教師信号を利用して、予測タスクの構造に合わせて内部表現を適応させることができるのです [Bengio et al., 2013]。
+</span>
+</p><p>
+
+The distinction between fixed representations and feature learning can be formalized through the neural tangent kernel (NTK). Under a particular initialization scaling and in the infinite-width limit, neural-network training converges
+to kernel gradient descent with an NTK that remains fixed throughout training [Jacot et al., 2018, Lee et al., 2019]. In this regime, the neural network is
+effectively equivalent to a classical kernel method operating over a fixed representation. Away from this regime, however, the NTK can evolve substantially
+during training, and the resulting dynamics can no longer be described by a
+kernel fixed at initialization [Chizat et al., 2019, Woodworth et al., 2020, Geiger
+et al., 2020, Yang and Hu, 2021].
+
+<br><span style="color:blue;">
+固定された表現と特徴学習との間の区別は、ニューラル・タンジェント・カーネル（NTK）を用いて定式化できます。特定の初期化スケーリングの下、かつネットワークの幅を無限大とする極限において、ニューラルネットワークの学習は、学習を通じて不変のNTKを用いたカーネル勾配降下法へと収束します [Jacot et al., 2018, Lee et al., 2019]。この領域（レジーム）では、ニューラルネットワークは実質的に、固定された表現に基づく従来のカーネル法と等価です。しかし、この領域から外れると、NTKは学習中に大きく変化し得るため、その結果生じるダイナミクスは、もは​​や初期化時に固定されたカーネルによっては記述できなくなります [Chizat et al., 2019, Woodworth et al., 2020, Geiger et al., 2020, Yang and Hu, 2021]。
+</span>
+</p><p>
+
+This raises a fundamental question:
+
+<br><span style="color:blue;">
+ここで、根本的な疑問が浮かび上がります。
+</span>
+</p><p>
+
+When does such kernel evolution provide an advantage over methods based on
+fixed kernels?
+
+<br><span style="color:blue;">
+そのようなカーネルの進化は、固定カーネルに基づく手法に対して、いつ利点をもたらすのでしょうか。
+</span>
+</p><p>
+
+A major advance in understanding neural networks was the recognition that
+neural networks can exploit low-dimensional structure in the target, where prediction depends on only a small number of directions in the input space. In
+such settings, neural networks can adapt their representations to identify these
+predictive directions, whereas fixed-feature like kernel methods cannot [Bach,
+2017, Soltanolkotabi, 2017, Yehudai and Shamir, 2019, Wei et al., 2019, Ghorbani et al., 2019, 2020b, Malach et al., 2021, Abbe et al., 2022, 2023, Ba et al.,
+2022, Damian et al., 2022, Dandi et al., 2024, Bruna and Hsu, 2025]. In this
+setting, the target takes the form
+
+<br><span style="color:blue;">
+ニューラルネットワークの理解における大きな進展の一つは、
+ニューラルネットワークが対象（ターゲット）の低次元構造、すなわち入力空間内の少数の方向のみに予測が依存するような構造を活かせるという認識でした。
+そのような状況下では、ニューラルネットワークは表現を適応させて予測に寄与する方向を特定できますが、カーネル法のような固定特徴量を用いる手法ではそれができません [Bach, 2017, Soltanolkotabi, 2017, Yehudai and Shamir, 2019, Wei et al., 2019, Ghorbani et al., 2019, 2020b, Malach et al., 2021, Abbe et al., 2022, 2023, Ba et al., 2022, Damian et al., 2022, Dandi et al., 2024, Bruna and Hsu, 2025]。この設定において、対象は次のような形式をとります。
+</span>
+
+\[
+f(x) = g\big(U^\top x\big),\quad U ∈ \mathbb{R}^{d×r},\quad r \ll d.
+\]
+
+Although \(x ∈ \mathbb{R}^d\), the response depends only on the \(r\)-dimensional predictive
+subspace spanned by the columns of \(U\).
+
+<br><span style="color:blue;">
+\(x \in \mathbb{R}^d\) ではあるが、応答は \(U\) の列によって張られる \(r\) 次元の予測部分空間にのみ依存する。
+</span>
+</p><p>
+
+A feature-learning method can use the responses of the model to learn the representations corresponding to the predictive subspace, effectively reducing the
+problem from the ambient dimension d to the intrinsic dimension r. By contrast,
+a representation fixed independently of the labels would still be dependent on
+\(d\) dimensions.
+
+<br><span style="color:blue;">
+特徴学習手法では、モデルの応答を利用して予測部分空間に対応する表現を学習することで、問題を元の次元数 \(d\) から真の次元数 \(r\) へと効果的に縮約できます。対照的に、ラベルとは無関係に固定された表現では、依然として \(d\) 次元の影響を受けることになります。
+</span>
+</p><p>
+
+Taken together, this line of work views feature learning primarily as a mechanism
+for discovering low-dimensional predictive structure: supervision reshapes the
+representation so that learning is governed by the intrinsic dimension of the task
+rather than the ambient dimension of the input.
+
+<br><span style="color:blue;">
+これらを総合すると、一連の研究において、特徴学習は主として低次元の予測構造を発見するためのメカニズムであると捉えられています。すなわち、教師あり学習は、入力の本来の次元数（アンビエント次元）ではなく、タスクの本質的な次元数によって学習が支配されるように、表現を再構成するのです。
+</span>
+</p><p>
+
+In our work, we identify a qualitatively different mechanism of feature learning
+in multilayer perceptrons (MLPs) that is not fundamentally tied to recovering
+a single global low-dimensional predictive subspace.
+
+<br><span style="color:blue;">
+本研究において我々は、単一の広域的な低次元予測部分空間の復元とは根本的に結びついていない、多層パーセプトロン（MLP）における質的に異なる特徴学習メカニズムを特定する。
+</span>
+</p><p>
+
+In this setting, the data are drawn from multiple clusters, and each cluster can
+have its own predictive directions and its own link function.
+
+<br><span style="color:blue;">
+この設定では、データは複数のクラスタから抽出され、各クラスタは独自の予測方向とリンク関数を持ち得ます。
+</span>
+</p><p>
+
+Thus, while the prediction problem
+could be low-dimensional locally within
+each cluster, there may be no lowdimensional structure globally.
+
+<br><span style="color:blue;">
+したがって、各クラスタ内では局所的に低次元の予測問題となり得るものの、全体としては低次元の構造が存在しない可能性があります。
+</span>
+</p><p>
+
+We show that MLPs can simultaneously discover the cluster structure and
+learn the predictive functions relevant
+to each cluster. This uncovers a new
+form of feature learning that goes beyond the standard paradigm of recovering a single global low-dimensional predictive subspace.
+
+<br><span style="color:blue;">
+我々は、MLP（多層パーセプトロン）がクラスタ構造の発見と、各クラスタに関連する予測関数の学習を同時に行えることを示す。これは、単一の広域的な低次元予測部分空間を復元するという標準的なパラダイムを超えた、新たな形態の「特徴学習」を明らかにするものである。
+</span>
+</p>
+
+<center><img src="images/01.svg"></center>
+
+<h4>Our main contributions are as follows.<br><span style="color:blue;">我々の主な貢献は以下の通り</span></h4>
+
+<p>
+We show that in trained MLPs, a substantial fraction of individual neurons
+become monosemantic, specializing by aligning predominantly with a single
+cluster-specific predictive direction. This specialization allows the MLP to
+learn both the relevant local low-dimensional features and an implicit clustering
+that determines where each feature is useful. The resulting behavior resembles
+mixture-of-experts routing, but emerges within a standard MLP without an
+explicit routing module or expert decomposition.
+
+<br><span style="color:blue;">
+学習済みMLPにおいて、個々のニューロンのかなりの割合が「単一の意味（モノセマンティック）」を持つようになり、特定のクラスタに対応する単一の予測方向と主に整合することで特化していくことを示します。この特化により、MLPは、関連する局所的な低次元特徴と、各特徴がどこで有用かを決定する暗黙的なクラスタリングの両方を学習することが可能になります。その結果生じる挙動は「Mixture-of-Experts（MoE）」におけるルーティングに似ていますが、明示的なルーティングモジュールやエキスパートへの分解を用いることなく、標準的なMLPの内部で自然に創発するものです。
+</span>
+</p><p>
+
+While this specialization happens for standard ReLU and GeLU [Hendrycks and
+Gimpel, 2016], modern architectures with multiplicative gating, such as ReGLU
+and SwiGLU [Shazeer, 2020], can substantially improve sample efficiency in this
+setting.
+
+<br><span style="color:blue;">
+標準的なReLUやGeLU [Hendrycks and Gimpel, 2016] においてもこうした特化は生じますが、ReGLUやSwiGLU [Shazeer, 2020] といった乗法的なゲーティング（multiplicative gating）を備えた現代的なアーキテクチャは、この設定においてサンプル効率を大幅に向上させることができます。
+</span>
+</p><p>
+
+Furthermore, we show that this specialization leads to increasingly favorable
+sample-complexity scaling as the number of clusters grows, allowing MLPs to
+maintain strong performance even when the cluster-specific predictive directions collectively span the ambient space and no useful global low-dimensional
+structure exists.
+
+<br><span style="color:blue;">
+さらに、クラスタ数が増加するにつれて、この特化がますます有利なサンプル複雑度のスケーリングをもたらすことを示します。これにより、クラスタ固有の予測方向が全体として埋め込み空間（アンビエント空間）を張り、かつ有用な大域的な低次元構造が存在しない場合であっても、MLPは高い性能を維持することが可能になります。
+</span>
+</p>
+
+<h3>1.1 Discussion <span style="color:blue;">考察</span></h3>
+<p>
+The form of feature learning identified in this work differs from the classical feature learning, where the main goal is to recover a single global lowdimensional predictive subspace. In such settings, methods designed for learning
+low-dimensional features can perform as well or better than MLPs. A prominent example is the Recursive Feature Machine (RFM), a supervised kernelbased method that uses input-response pairs to learn a global low-dimensional
+predictive subspace [Radhakrishnan et al., 2024, 2025]. RFM is therefore a particularly informative comparison: like an MLP, it learns features from the data
+rather than operating with a fixed representation.
+
+<br><span style="color:blue;">
+本研究で特定された特徴学習の形態は、単一の広域的な低次元予測部分空間を復元することを主目的とする従来の特徴学習とは異なります。そのような設定においては、低次元特徴を学習するように設計された手法が、MLP（多層パーセプトロン）と同等、あるいはそれ以上の性能を発揮することがあります。その代表的な例がRecursive Feature Machine（RFM）です。これは、入力と応答のペアを用いて広域的な低次元予測部分空間を学習する、教師ありのカーネルベース手法です[Radhakrishnan et al., 2024, 2025]。したがって、RFMは特に有益な比較対象となります。なぜなら、RFMはMLPと同様に、固定された表現を用いるのではなく、データから特徴を学習するからです。
+</span>
+</p>
+
+
+<center><img src="images/02.svg"></center>
+
+<p>
+
+However, as the number of clusters increases, the span of cluster-specific predictive directions grows until it equals the ambient space, so they no longer lie in a
+single low-dimensional global subspace. This demonstrates a key advantage of
+MLPs – they can use neuron specialization to preserve the association between
+each predictive direction and the cluster in which it is relevant, allowing MLPs
+to remain effective as the number of clusters grows, while RFM feature learning
+ability diminishes with the number of clusters.
+
+<br><span style="color:blue;">
+しかし、クラスター数が増加するにつれて、クラスター固有の予測方向が張る空間は拡大し、やがて埋め込み空間全体を覆うようになるため、それらはもはや単一の低次元な大域的部分空間には収まらなくなります。これはMLPの重要な利点を示しています。すなわち、MLPはニューロンの専門化を利用することで、各予測方向とそれに関連するクラスターとの対応関係を維持できるため、クラスター数が増加しても有効性を保てるのです。一方、RFMの素性学習能力は、クラスター数が増えるにつれて低下してしまいます。
+</span>
+</p><p>
+
+To study this phenomenon systematically, we consider a mixture of single-index
+models. Suppose the data are drawn from K clusters. For an input \(x ∈ \mathbb{R}^d\) belonging to cluster \(c ∈ [K]\), the target is
+
+<br><span style="color:blue;">
+この現象を体系的に研究するために、シングルインデックスモデルの混合モデルを考えます。データは \(K\) 個のクラスタから生成されると仮定します。クラスタ \(c ∈ [K]\) に属する入力 \(x ∈ \mathbb{R}^d\) に対して、ターゲットは
+</span>
+
+\[
+f(x) = g_c\big(v_c^\top x\big),\quad v_c ∈ \mathbb{R}^d
+\]
+
+Thus, prediction is one-dimensional within each cluster, but both the relevant
+direction \(v_c\) and the link function \(g_c\) may vary across clusters.
+
+<br><span style="color:blue;">
+したがって、各クラスタ内での予測は一次元的であるが、関連する方向 \(v_c\) とリンク関数 \(g_c\) の双方は、クラスタ間で異なり得る。
+</span>
+</p><p>
+
+The classical single-index model corresponds to \(K = 1\). When \(K \gt 1\), however,
+the predictive directions of different clusters may collectively span the entire
+ambient space:
+
+<br><span style="color:blue;">
+古典的な単一指標モデルは \(K = 1\) に対応します。しかし、\(K > 1\) の場合、
+異なるクラスタの予測方向が、全体として埋め込み空間（アンビエント空間）全体を
+張る可能性があります。
+</span>
+
+\[
+rank \big([v_1 ··· v_K]\big) = d.
+\]
+
+Hence, prediction can be low-dimensional within every cluster even though there
+is no useful global low-dimensional predictive subspace to recover.
+
+<br><span style="color:blue;">
+したがって、抽出可能な有用な大域的低次元予測部分空間が存在しない場合であっても、各クラスタ内では予測を低次元で行うことが可能である。
+</span>
+</p>
+
+<h3>1.2 Prior Work <span style="color:blue;">先行研究</span></h3>
+<p>
+<strong>Feature learning of global low-dimensional structure.</strong> A large body of
+work studies feature learning for multi-index targets. These works have shown
+that neural-network models can adapt to an unknown low-dimensional subspace of the inputs, succeeding where fixed-kernel methods are sample-inefficient
+[Bach, 2017, Soltanolkotabi, 2017, Yehudai and Shamir, 2019, Ghorbani et al.,
+2020b]. Recently, the literature has characterized how gradient-based training
+succeeds in recovering this subspace for isotropic data [Abbe et al., 2022, 2023,
+Damian et al., 2022, Ba et al., 2022, Dandi et al., 2024, Damian et al., 2025,
+Bruna and Hsu, 2025], and in the related setting of classifying Gaussian-mixture
+data with a constant number of clusters [Refinetti et al., 2021, Ben Arous et al.,
+2024].
+
+<br><span style="color:blue;">
+<strong>大域的な低次元構造の学習。</strong> マルチインデックス・ターゲット（multi-index targets）に対する特徴学習については、数多くの研究が行われてきました。これらの研究により、ニューラルネットワーク・モデルは入力の未知の低次元部分空間に適応できることが示されています。これは、固定カーネル法ではサンプル効率が低い状況においても成功を収めるものです [Bach, 2017, Soltanolkotabi, 2017, Yehudai and Shamir, 2019, Ghorbani et al., 2020b]。近年では、等方性データに対して勾配法を用いた学習がいかにしてこの部分空間を復元できるかについて、理論的な解明が進んでいます [Abbe et al., 2022, 2023, Damian et al., 2022, Ba et al., 2022, Dandi et al., 2024, Damian et al., 2025, Bruna and Hsu, 2025]。また、固定数のクラスタを持つガウス混合データを分類するという関連設定においても、同様の解析が行われています [Refinetti et al., 2021, Ben Arous et al., 2024]。
+</span>
+</p><p>
+
+However, in our work, we prove that neuron specialization is a different form
+of feature learning, allowing MLPs to efficiently tackle settings where a single
+global low-dimensional representation is insufficient.
+
+<br><span style="color:blue;">
+しかし、我々の研究では、ニューロンの特化が一種の「特徴学習」であることを証明します。これにより、単一の低次元な大域的表現では不十分な状況においても、MLP（多層パーセプトロン）が効率的に対処できるようになります。
+</span>
+</p><p>
+
+<strong>Neuron specialization.</strong> Emergence of specialized neurons has been observed
+in several settings. For instance, training neural networks to do modular arithmetic leads to specialized neurons each representing different Fourier components [Nanda et al., 2023, Gromov, 2023, Morwani et al., 2024, He et al., 2026].
+When learning XOR-type targets, it has also been shown that neurons specialize to four clusters rather than being distributed evenly across a predictive
+low-dimensional subspace [Frei et al., 2023, Glasgow, 2024]. And in teacherstudent settings the student’s neurons have been shown to often align to the
+teacher’s neurons [Tian, 2020, Oostwal et al., 2021, Zhu et al., 2025], although
+this depends on initialization [Jarvis et al., 2025].
+
+<br><span style="color:blue;">
+<strong>ニューロンの特化。</strong> 特化したニューロンの出現は、いくつかの状況で観察されています。例えば、モジュロ演算を行うようにニューラルネットワークを学習させると、それぞれが異なるフーリエ成分を表すような特化したニューロンが生じます [Nanda et al., 2023, Gromov, 2023, Morwani et al., 2024, He et al., 2026]。
+XOR型のターゲットを学習する場合にも、ニューロンは予測に寄与する低次元部分空間全体に均一に分布するのではなく、4つのクラスタに特化することが示されています [Frei et al., 2023, Glasgow, 2024]。また、教師・生徒（teacher-student）設定においては、生徒側のニューロンが教師側のニューロンと整合するようになることがしばしば示されています [Tian, 2020, Oostwal et al., 2021, Zhu et al., 2025]（ただし、これは初期化に依存します [Jarvis et al., 2025]）。
+</span>
+</p><p>
+
+These works mainly study specialization to globally relevant features or to cluster directions that themselves determine the target. In our work, neurons specialize to locally predictive features. Thus, an MLP must not only learn the predictive directions, but also preserve their association with the clusters in which
+they are relevant. Moreover, these works do not isolate a sample-complexity
+advantage of specialization over an adaptive feature-learning method based on
+a single global representation, such as the Recursive Feature Machine [Radhakrishnan et al., 2024]. We establish such an advantage: when cluster-specific
+predictive directions collectively span a high-dimensional space, neuron specialization allows an MLP to preserve these local feature-cluster associations and
+achieve better sample complexity.
+
+<br><span style="color:blue;">
+これらの研究は主に、大域的に重要な特徴や、それ自体がターゲットを決定するようなクラスタの方向性への特化を扱っています。一方、本研究では、ニューロンが局所的に予測に寄与する特徴へと特化する点に着目します。そのため、MLP（多層パーセプトロン）は予測に役立つ方向性を学習するだけでなく、それらが関連するクラスタとの結びつきを維持する必要があります。さらに、既存研究では、単一の大域的表現に基づく適応的特徴学習手法（Recursive Feature Machine [Radhakrishnan et al., 2024] など）と比較した際の、特化による「サンプル複雑性（sample complexity）」上の利点は明確に示されていませんでした。本研究では、そのような利点を明らかにします。すなわち、クラスタ固有の予測方向性が全体として高次元空間を張る場合、ニューロンの特化によって、MLPは局所的な特徴とクラスタの関連性を維持し、より優れたサンプル複雑性を実現できるのです。
+</span>
+</p><p>
+
+<strong>Monosemanticity.</strong> Interpretability works on language models have found
+that some individual neurons are monosemantic, responding primarily to a single interpretable concept or pattern, while others are polysemantic, responding
+to multiple distinct concepts or patterns [Bills et al., 2023, Elhage et al., 2022].
+More recent work has argued that monosemantic features need not align with
+individual neurons, and has used sparse dictionary learning to recover more
+monosemantic feature directions from neural representations [Bricken et al.,
+2023, Templeton et al., 2024]. Our work shows that, at least in simple MLPs,
+monosemantic features can emerge directly at the level of individual neurons
+and that this neuron-level specialization can improve sample efficiency compared with methods that are limited to global feature discovery.
+
+<br><span style="color:blue;">
+<strong>単義性（Monosemanticity）。</strong> 言語モデルの解釈可能性に関する研究により、個々のニューロンの中には、主に単一の解釈可能な概念やパターンに反応する「単一意味的（monosemantic）」なものがある一方で、複数の異なる概念やパターンに反応する「多義的（polysemantic）」なものも存在することが明らかになっています [Bills et al., 2023, Elhage et al., 2022]。より最近の研究では、単一意味的な特徴が必ずしも個々のニューロンと一致する必要はないと論じられており、スパース辞書学習を用いて、ニューラル表現からより単一意味的な特徴の方向を抽出する手法が用いられています [Bricken et al., 2023, Templeton et al., 2024]。本研究では、少なくとも単純なMLP（多層パーセプトロン）においては、単一意味的な特徴が個々のニューロンのレベルで直接的に創発し得ること、そしてこのニューロン・レベルでの特化が、全体的な特徴の発見にとどまる手法と比較して、サンプル効率を向上させ得ることを示します。
+</span>
+</p><p>
+
+<strong>Mixture of Experts models.</strong> A complementary line of work studies specialization and latent-cluster recovery in mixture-of-experts (MoE) architectures.
+Chen et al. [2022] analyze a clustered classification problem and show that an
+MoE router can learn cluster-center features that partition the problem into
+simpler subproblems handled by different experts. Dikkala et al. [2023] likewise
+show, theoretically and empirically, that a learned router can route inputs according to latent clusters. Particularly close to our statistical setting, Kawata
+et al. [2025] study nonlinear regression with an underlying cluster structure of
+single-index models and show that an MoE trained by SGD can detect the latent
+organization and divide the task into cluster-specific subproblems; under their
+assumptions, a vanilla neural network does not detect this organization within
+their polynomial complexity regime.
+
+<br><span style="color:blue;">
+<strong>Mixture of Experts（MoE）モデル。</strong>MoEアーキテクチャにおける専門化（specialization）や潜在的なクラスタ構造の復元に関する研究も、本研究を補完する一連の取り組みとして存在します。
+Chenら [2022] は、クラスタ構造を持つ分類問題を分析し、MoEのルーターが、問題をより単純なサブ問題へと分割し各エキスパートに割り当てるような「クラスタ中心の特徴」を学習できることを示しました。同様に、Dikkalaら [2023] は、学習されたルーターが潜在的なクラスタに基づいて入力を振り分けられることを、理論的および実証的に明らかにしています。本研究の統計的設定と特に近いものとして、Kawataら [2025] による研究が挙げられます。彼らは、シングルインデックスモデル（single-index models）に基づく潜在的なクラスタ構造を伴う非線形回帰を研究し、SGD（確率的勾配降下法）で学習されたMoEがその潜在的な構造を検出し、タスクをクラスタごとのサブ問題に分割できることを示しました。彼らの仮定の下では、通常のニューラルネットワークは、多項式時間計算量の範囲内ではこの構造を検出できません。
+</span>
+</p><p>
+
+These works build specialization into the architecture through an explicit router
+and separate experts. In contrast, we study a standard MLP with no explicit
+routing or expert decomposition, and show that both the implicit clustering and
+the corresponding local predictive-feature specialization can emerge through the
+specialization of individual neurons.
+
+<br><span style="color:blue;">
+これらの手法は、明示的なルーターと個別のエキスパートを用いることで、アーキテクチャに専門化の仕組みを組み込んでいます。対照的に、本研究では明示的なルーティングやエキスパートへの分割を行わない標準的なMLPを対象とし、個々のニューロンの専門化を通じて、暗黙的なクラスタリングとそれに対応する局所的な予測特徴の専門化の双方が創発し得ることを示します。
+</span>
+</p>
+
+<h3>1.3 Paper Structure <span style="color:blue;">論文の構成</span></h3>
+<p>
+The remainder of the paper develops the view that MLPs learn cluster-dependent
+predictive structure through neuron specialization, both empirically and theoretically. In Section 2, we introduce the setting used throughout the paper. In
+Section 3, we present our empirical results, showing that MLPs learn this cluster structure and achieve better sample-complexity over RFM as the number
+of clusters grows. We also show that gated activations such as ReGLU and
+SwiGLU can further improve sample complexity compared with standard activations such as ReLU and GeLU. Finally, in Section 4, we theoretically analyze
+the emergence of neuron specialization in simplified settings.
+
+<br><span style="color:blue;">
+本論文の残りの部分では、MLP（多層パーセプトロン）がニューロンの特化を通じてクラスタ依存の予測構造を学習するという見解を、実証的および理論的に展開します。第2節では、本論文全体で使用する設定を導入します。第3節では実証結果を提示し、MLPがこのクラスタ構造を学習すること、およびクラスタ数が増加するにつれてRFM（Random Feature Models）よりも優れたサンプル複雑性を達成することを示します。また、ReGLUやSwiGLUといったゲート付き活性化関数を用いることで、ReLUやGeLUのような標準的な活性化関数と比較して、サンプル複雑性をさらに改善できることも示します。最後に第4節では、簡略化された設定の下でニューロンの特化が生じるメカニズムを理論的に分析します。
+</span>
+</p>
+
+<h2>2 Preliminary <span style="color:blue;">予備</span></h2>
+<p>
+Throughout our synthetic experiments and theoretical analysis, we consider
+data drawn from a Gaussian mixture model with K clusters. The cluster index
+c is drawn uniformly from \(\{1,..., K\}\). For each cluster \(c\), let \(µ_c ∈ \mathbb{R}^d\) denote
+its mean and \(Σ_c ∈ \mathbb{R}^{d×d}\) its covariance matrix. Conditioned on cluster \(c\), the
+covariates \(x ∈ \mathbb{R}^d\) are distributed as
+
+<br><span style="color:blue;">
+本稿では、合成実験および理論解析を通して、K個のクラスターを持つガウス混合モデルから抽出されたデータを考慮する。クラスターインデックスcは、\(\{1,..., K\}\)から一様に抽出される。各クラスター\(c\)について、\(µ_c ∈ \mathbb{R}^d\)をその平均、\(Σ_c ∈ \mathbb{R}^{d×d}\)をその共分散行列とする。クラスター\(c\)を条件とした場合、
+共変量\(x ∈ \mathbb{R}^d\)は次のように分布する。
+</span>
+
+\[
+x|c \sim \mathcal{N}(µ_c, Σ_c).
+\]
+
+In all settings considered in this paper, we choose the cluster means so that distinct clusters are well separated. The response follows a cluster-specific singleindex model with additive Gaussian noise,
+
+<br><span style="color:blue;">
+本論文で検討するすべての設定において、異なるクラスターが十分に分離されるようにクラスター平均を選択します。応答は、加法ガウスノイズを伴うクラスター固有の単一インデックスモデルに従います。
+</span>
+
+\[
+y = g_c(\langle x, v_c\rangle ) + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, σ^2),
+\]
+
+where \(\varepsilon\) is independent of \(x\) and \(c\), \(v_c ∈ \mathbb{R}^d\), with \(||v_c||^2 = 1\), is the clusterspecific predictive direction, and \(g_c : \mathbb{R} → \mathbb{R}\) is a nonlinear “link function” that
+may vary across clusters. Throughout, we use mean squared error (MSE) as the
+regression loss,
+
+<br><span style="color:blue;">
+ここで、\(\varepsilon\)は\(x\)と\(c\)とは独立であり、\(v_c ∈ \mathbb{R}^d\)（\(||v_c||^2 = 1\)）はクラスター固有の予測方向であり、\(g_c : \mathbb{R} → \mathbb{R}\)はクラスターごとに変化する可能性のある非線形「リンク関数」です。以下では、回帰損失として平均二乗誤差（MSE）を使用します。
+</span>
+
+\[
+\mathcal{L}(f) = \mathbb{E}\big[(f(x) − y)^2\big],
+\]
+
+where \(f : \mathbb{R}^d → \mathbb{R}\) denotes the learned predictor.
+
+<br><span style="color:blue;">
+ここで、\(f : \mathbb{R}^d → \mathbb{R}\) は学習された予測器を表す。
+</span>
+</p>
+
+<h2>3 Experiments <span style="color:blue;">実験</span></h2>
+<p>
+In this section, we empirically show that MLPs can learn both the cluster structure and the predictive function within each cluster. This gives rise to a form
+of feature learning that goes beyond recovering a single low-dimensional predictive subspace. We demonstrate these phenomena through three complementary
+experiments, each presented in a separate subsection.
+
+<br><span style="color:blue;">
+本節では、MLPがクラスタ構造と各クラスタ内の予測関数の双方を学習できることを実証的に示します。これにより、単一の低次元予測部分空間を復元するにとどまらない、ある種の「特徴学習」が実現されます。これらの現象については、それぞれ別の小節で詳述する3つの相補的な実験を通じて実証します。
+</span>
+</p>
+
+<h3>3.1 MLPs Develop Specialized First-layer Neurons<br><span style="color:blue;">　MLPは特化した第1層ニューロンを形成する</span></h3>
+<p>
+<strong>Main finding.</strong> Figure 1 shows that a significant number of first-layer neurons in trained MLPs become monosemantic, specializing to individual clusterspecific predictive directions. We measure specialization among the active neurons that contribute most strongly to the output, as defined in Appendix A.1.
+The bottom panel illustrates this directly for selected GELU neurons, whose
+weights concentrate on a single predictive coordinate.
+
+<br><span style="color:blue;">
+<strong>主な知見。</strong>図1は、学習済みMLPの第1層ニューロンの相当数が「単一の意味（monosemantic）」を持つようになり、個々のクラスタ特有の予測方向に対して特化することを示しています。ここでは、付録A.1で定義される通り、出力に最も強く寄与する活性ニューロンを対象として、その特化の度合いを測定しています。
+下段のパネルは、特定のGELUニューロンについてこの様子を直接的に示しており、それらのニューロンでは
+重みが単一の予測座標に集中しています。
+</span>
+</p>
+
+<center><img src="images/1.png"></center>
+
+<p>
+
+Figure 1: First-layer neurons become monosemantic along clusterspecific predictive directions. Top: percentage of specialized neurons among
+active neurons. Across standard and gated activations, many neurons become
+monosemantic, aligning strongly with a single cluster-specific predictive direction. For gated architectures, gate and value weights are evaluated separately.
+Higher values indicate stronger specialization. Bottom: absolute first-layer
+weights of selected GELU neurons. Each neuron concentrates strongly on one
+predictive coordinate, with comparatively little weight on cluster-position and
+nuisance coordinates. See Appendix A.1 for definitions and further details.
+
+<br><span style="color:blue;">
+図1：第1層のニューロンは、クラスタ固有の予測方向に沿って単一の意味（モノセマンティック）を持つようになる。上段：活性化したニューロン全体に占める、特定の役割に特化したニューロンの割合。標準的な活性化とゲート付き活性化のいずれにおいても、多くのニューロンが単一のクラスタ固有の予測方向と強く整合し、単一の意味を持つようになる。ゲート付きアーキテクチャの場合、ゲートの重みと値の重みは個別に評価される。値が高いほど、特化の度合いが強いことを示す。下段：選択されたGELUニューロンにおける第1層の重みの絶対値。各ニューロンは特定の予測座標に強く集中しており、クラスタ位置や不要な（nuisance）座標への重みは比較的小さい。定義や詳細については付録A.1を参照のこと。
+</span>
+</p><p>
+
+<strong>Data setting.</strong> Following the notation introduced in Section 2, in Figure 1 we
+use \(K = 10\) clusters in \(d = 40\). We choose the cluster centers and predictive directions to lie along separate coordinate axes:
+
+<br><span style="color:blue;">
+<strong>データの設定。</strong> 第2節で導入した記法に従い、図1では \(d = 40\) の空間において \(K = 10\) 個のクラスタを用います。クラスタ中心と予測方向は、それぞれ異なる座標軸上に配置されるように設定します。
+</span>
+
+\[
+[µ_c]_j =
+\begin{cases}
+20, & j = c, \\
+0, & otherwise,
+\end{cases}
+\quad
+
+[v_c]_j =
+\begin{cases}
+1, & j = K + c, \\
+0, & otherwise,
+\end{cases}
+\quad
+j ∈ \{1,...,d\}.
+\]
+
+We further set
+
+<br><span style="color:blue;">
+さらに、私たちは以下を設定します。
+</span>
+
+\[
+Σ_c = Id/d,\quad \varepsilon \sim \mathcal{N} (0, 0.005^2).
+\]
+
+Thus, the cluster centers occupy the first K coordinates, while the predictive
+directions occupy the next K coordinates.
+
+<br><span style="color:blue;">
+したがって、クラスタ中心は最初のK個の座標を占め、予測方向はそれに続くK個の座標を占める。
+</span>
+</p><p>
+
+The cluster centers and predictive directions lie along separate coordinate axes.
+Since each \(v_c\) is a standard basis vector, specialization is directly visible as a
+large weight on the corresponding coordinate in Fig. 1. We use a second-Hermite
+nonlinearity \(g_c\) with small Gaussian response noise.
+
+<br><span style="color:blue;">
+クラスタ中心と予測方向は、それぞれ異なる座標軸上に位置しています。
+各 \(v_c\) は標準基底ベクトルであるため、その「特化（specialization）」は、図1において対応する座標上の大きな重みとして直接見て取ることができます。ここでは、小さなガウス型応答ノイズを伴う、エルミート多項式（2次）に基づく非線形関数 \(g_c\) を用います。
+</span>
+</p><p>
+
+<strong>Specialization measures.</strong> For a neuron’s first-layer weight \(w_j\) , we measure
+specialization using the maximum absolute cosine similarity with the clusterspecific predictive directions:
+<br><span style="color:blue;">
+<strong>特化の尺度。</strong> ニューロンの第1層の重み \(w_j\) について、以下の方法で特化を測定します。すなわち、クラスタ固有の予測方向とのコサイン類似度の絶対値の最大値を用います。
+</span>
+
+\[
+\max\limits_{1\leq c\leq K}\frac{|[\langle w_j,v_c\rangle |}{||w_j||_2||v_c||_2}
+\]
+
+Figure 1 reports the fraction of active neurons for which this cosine similarity
+is at least \(\frac{1}{\sqrt{2}\) or \(0.90\). We use \(1/\sqrt{2}\approx 0.71\) as a moderate-alignment threshold,
+corresponding to at least half of the squared weight norm lying along a single
+predictive direction, and \(0.90\) as a stricter measure of strong alignment. The
+table also reports two additional measures of specialization, since cosine similarity can underestimate specialization when one predictive coordinate is dominant
+but many small coefficients contribute to the overall weight norm.
+
+<br><span style="color:blue;">
+図1は、このコサイン類似度が \(1/\sqrt{2}\) または \(0.90\) 以上である活性ニューロンの割合を示しています。ここでは、ある単一の予測方向に重みノルムの二乗の少なくとも半分が集中していることに相当する \(1/\sqrt{2} \approx 0.71\) を「中程度の整合性」の閾値とし、より厳格な「強い整合性」の指標として \(0.90\) を用いています。コサイン類似度は、特定の予測座標が支配的であっても、多数の小さな係数が重みノルム全体に寄与している場合には専門化の度合いを過小評価する可能性があるため、この表では専門化に関する2つの追加指標も併せて示しています。
+</span>
+</p><p>
+
+Full experimental details, including the definitions and motivation for the additional specialization measures, are given in Appendix A.1.
+
+<br><span style="color:blue;">
+追加の専門化指標の定義やその導入の根拠を含む、実験の詳細は付録A.1に記載されています。
+</span>
+</p>
+
+<h3>3.2 MLPs Jointly Learn Cluster Structure and Clusterspecific Predictive Functions<br><span style="color:blue;">　MLPによるクラスタ構造とクラスタ固有の予測関数の同時学習</span></h3>
+<p>
+Following the clustered single-index model introduced in Section 2, we consider
+regression problems in \(d = 20\) in which both the predictive direction vc and
+nonlinear response function gc may differ across clusters. We vary the number of
+clusters over \(K ∈ \{1, 2, 10, 50\}\). The MLPs and global kernel baselines, Laplace
+and RFM, are trained only on input–response pairs and are never given the
+cluster identities. As a reference, we also consider oracle baselines that are given
+the true cluster identities and fit a separate Laplace or RFM predictor within
+each cluster. These oracles therefore measure the performance achievable when
+the cluster structure is known in advance.
+
+<br><span style="color:blue;">
+第2節で導入したクラスタ化単一指標モデル（clustered single-index model）に基づき、予測方向 \(v_c\) と非線形応答関数 \(g_c\) の双方がクラスタ間で異なり得る、\(d=20\) の回帰問題を検討します。クラスタ数 $K$ は $\{1, 2, 10, 50\}$ の範囲で変化させます。MLPおよびグローバルなカーネル法ベースライン（LaplaceおよびRFM）は、入力と応答のペアのみを用いて学習され、クラスタの識別情報は一切与えられません。比較対象として、真のクラスタ識別情報が与えられ、各クラスタ内で個別にLaplaceまたはRFMの予測器を適合させる「オラクル」ベースラインも検討します。したがって、これらのオラクルは、クラスタ構造が事前に既知である場合に達成可能な性能を測定するものです。
+</span>
+</p><p>
+
+<strong>Main findings.</strong> Figure 2 highlights two main conclusions,
+
+<br><span style="color:blue;">
+<strong>主な調査結果</strong> 図2は2つの主な結論を示しています。
+</span>
+<br>
+<div class="styleBullet">
+<ul><li>
+1. <strong>Sample complexity as the number of clusters grows.</strong> MLPs outperform other methods as the number of clusters increases. Remarkably,
+MLPs achieve performance close to that of “oracle” baselines that are
+given the true cluster identities and fit a separate RFM or Laplace predictor within each cluster. Thus, MLPs recover much of the benefit of
+knowing the cluster structure without ever observing the cluster identities.
+
+<br><span style="color:blue;">
+<strong>クラスタ数が増加する際のサンプル複雑性。</strong> クラスタ数が増えるにつれ、MLPは他の手法を凌駕する性能を示します。特筆すべきは、
+MLPが「オラクル」ベースラインに近い性能を達成している点です。このベースラインは、
+真のクラスタ識別情報が与えられた上で、各クラスタ内に個別のRFMまたはラプラス予測器を適合させるものです。
+つまり、MLPはクラスタ識別情報を一切観測することなく、
+クラスタ構造を知ることによる利点の多くを享受できるのです。
+</span>
+</li><br><li>
+
+2. <strong>Gated activations enhance cluster-dependent feature learning.</strong>
+ReLU already learns useful cluster-dependent structure and substantially
+outperforms global RFM when many clusters are present. ReGLU improves further in this regime. Its separate gate and value branches allow the network to select cluster-specific predictive features more directly than
+an ordinary ReLU hidden layer.
+
+<br><span style="color:blue;">
+<strong>ゲート付き活性化は、クラスタ依存の素性学習を強化する。</strong>
+ReLUはすでに有用なクラスタ依存の構造を学習しており、多数のクラスタが存在する状況では、グローバルなRFMを大幅に凌駕する性能を示す。ReGLUは、こうした状況においてさらに性能を向上させる。ゲートと値（バリュー）を扱う分岐を個別に設けることで、通常のReLU隠れ層よりも直接的に、クラスタ固有の予測用素性をネットワークが選択できるようになるためである。
+</span>
+</li></ul></div>
+</p>
+
+<center><img src="images/2.png"></center>
+
+<p>
+
+Figure 2: MLPs jointly learn clustering and local predictive functions.
+Each cluster has its own predictive direction and nonlinear prediction rule, while
+cluster identities are hidden from the models. Three trends emerge: (i) as
+the number of clusters increases and the predictive directions span more of
+the ambient space, the advantage of global RFM over the isotropic Laplace
+kernel diminishes; (ii) ReLU and ReGLU remain effective and approach clusteraware oracle methods, showing that MLPs can jointly infer cluster structure
+and learn the corresponding local predictive functions; and (iii) ReGLU further
+improves over ReLU, demonstrating the benefit of explicit multiplicative gating
+for cluster-dependent feature learning.
+
+<br><span style="color:blue;">
+図2：MLPは、クラスタリングと局所的な予測関数を同時に学習する。
+各クラスタは独自の予測方向と非線形予測ルールを持つが、
+クラスタの識別情報はモデルには明示的に与えられない。ここで3つの傾向が見られる。(i) クラスタ数が増加し、予測方向が空間全体をより広くカバーするようになるにつれ、等方性ラプラスカーネルに対するグローバルRFMの優位性は低下する。(ii) ReLUとReGLUは依然として有効であり、クラスタ情報を利用可能なオラクル法に近い性能を示す。これは、MLPがクラスタ構造の推定とそれに対応する局所的予測関数の学習を同時に行えることを示唆している。(iii) ReGLUはReLUよりもさらに優れた性能を示しており、クラスタ依存の素性学習において、明示的な乗法的ゲーティング（multiplicative gating）が有効であることを実証している。
+</span>
+</p><p>
+
+<strong>Data setting.</strong> Following Section 2, we consider \(K ∈ \{1, 2, 10, 50\}\) clusters in
+\(d = 20\). We divide the input into ten cluster-identifying coordinates and ten
+predictive coordinates. The cluster centers are chosen as well-separated unit
+vectors \(s_c ∈ \mathbb{S}^9:= \{s ∈ \mathbb{R}^{10} : ||s||_2 = 1\}\), selected sequentially from a large
+random candidate set so as to maximize separation from the previously selected
+centers. They are embedded as
+
+<br><span style="color:blue;">
+<strong>データ設定</strong> セクション2に続き、d = 20 における \(K ∈ \{1, 2, 10, 50\}\) 個のクラスターを検討します。入力は、10 個のクラスター識別座標と 10 個の予測座標に分割されます。クラスター中心は、十分に分離された単位ベクトル \(s_c ∈ \mathbb{S}^9:= \{s ∈ \mathbb{R}^{10} : ||s||_2 = 1\}\) として選択されます。これらのベクトルは、以前に選択された中心からの分離を最大化するように、大規模なランダム候補セットから順次選択されます。これらは次のように埋め込まれます。
+</span>
+
+\[
+µ_c =
+\begin{bmatrix}
+s_c \\
+0
+\end{bmatrix}
+\]
+
+The cluster-specific predictive directions are sampled independently and uniformly from the unit sphere in the predictive subspace, with
+
+<br><span style="color:blue;">
+クラスター固有の予測方向は、予測部分空間内の単位球から独立かつ均一にサンプリングされ、
+</span>
+
+\[
+\tilde{v}_c \sim \text{Unif}(\mathbb{S}^9),\quad v_c =
+\begin{bmatrix}
+0 \\
+\tilde{v}_c
+\end{bmatrix},
+\quad
+Σ_c =
+\begin{pmatrix}
+σ_K^2I_{10} & 0 \\
+0 & I_{10}
+\end{pmatrix},
+\quad \varepsilon \sim \mathcal{N}(0, 0.02^2).
+\]
+
+Here, \(σ_K\) is adjusted with \(K\) so that the clusters remain well separated. Full
+details of the center construction and the choice of \(σ_K\) are provided in Appendix A.2.
+
+<br><span style="color:blue;">
+ここで、\(σ_K\) は、各クラスタが十分に分離された状態に保たれるように \(K\) に応じて調整されます。中心の構成および \(σ_K\) の選択に関する詳細は、付録 A.2 に記載されています。
+</span>
+</p><p>
+
+Each cluster is also assigned a nonlinear response function \(g_c\), sampled from
+the normalized second-order Hermite polynomial, sin, and tanh. Thus, both
+the predictive direction vc and nonlinear prediction rule gc may vary across
+clusters. The models observe only (x, y), and the cluster identities are not used
+as predictive inputs or to fit cluster-specific predictors, except for the oracle
+baselines.
+
+<br><span style="color:blue;">
+各クラスタには、正規化された2次エルミート多項式、sin関数、およびtanh関数からサンプリングされた非線形応答関数 \(g_c\) も割り当てられます。したがって、予測方向 \(v_c\) と非線形予測規則 \(g_c\) の双方が、クラスタごとに異なる可能性があります。モデルが観測するのは \((x, y)\) のみであり、オラクル・ベースラインの場合を除き、クラスタの識別情報は予測入力として使用されたり、クラスタ固有の予測器の適合（フィッティング）に用いられたりすることはありません。
+</span>
+</p><p>
+
+<strong>Additional activations.</strong> To test whether the observed behavior extends beyond ReLU and ReGLU, we evaluate GELU and SwiGLU on the same mixedlink data model and the same \(K ∈ \{1, 2, 10, 50\}\) settings. Across five seeds,
+GELU behaves similarly to ReLU, and SwiGLU exhibits the same advantage
+as ReGLU as the number of clusters grows. Complete results are provided in
+Appendix A.2 and Fig. 6.
+
+<br><span style="color:blue;">
+<strong>その他の活性化関数。</strong> 観測された挙動がReLUやReGLU以外にも当てはまるかどうかを検証するため、同一のmixedlinkデータモデルおよび同一の \(K ∈ \{1, 2, 10, 50\}\) という設定の下で、GELUとSwiGLUの評価を行いました。5つの乱数シードを用いた結果、
+GELUはReLUと同様の挙動を示し、SwiGLUはクラスター数が増加するにつれて
+ReGLUと同様の利点を示すことが確認されました。詳細な結果は
+付録A.2および図6に示されています。
+</span>
+</p>
+
+<h3>3.3 Trained MLPs Encode Cluster Structure<br><span style="color:blue;">　学習済みMLPはクラスタ構造を符号化する</span></h3>
+<p>
+
+We use the mixed-link functions clustered model from Section 3.2 and vary the
+number of clusters over \(K ∈ \{2, 5, 10, 50\}\). Figure 3 summarizes the complete
+procedure. We train a ReLU MLP on the clustered data and extract its firstlayer representations. We then apply K-means to these representations to obtain
+learned clusters. For each learned cluster, we use the corresponding first-layer
+weights to construct features for an independent local Laplace or RFM predictor.
+At test time, each input is assigned to its nearest learned centroid and evaluated
+using the corresponding local predictor.
+
+<br><span style="color:blue;">
+本研究では、セクション3.2で述べた混合リンク関数を用いたクラスタリング・モデルを使用し、クラスタ数 \(K\) を \(\{2, 5, 10, 50\}\) の範囲で変化させます。図3に、一連の手順の概要を示します。まず、クラスタリングされたデータを用いてReLU MLPを学習させ、その第1層の表現を抽出します。次に、これらの表現に対してK-means法を適用し、学習されたクラスタを求めます。各クラスタについて、対応する第1層の重みを用いて特徴量を構成し、独立した局所的なラプラス予測器（Laplace predictor）またはRFM予測器を構築します。テスト時には、各入力データを最も近い学習済みクラスタ中心に割り当て、対応する局所予測器を用いて評価を行います。
+</span>
+</p>
+
+<center><img src="images/03.svg"></center>
+
+<p>
+
+Figure 3: Overview of the MLP-gated local-prediction procedure. A
+ReLU MLP is trained on the clustered data, K-means is applied to its firstlayer representations, and an independent local predictor is fit for each learned
+cluster. At test time, each input is routed to the local predictor associated with
+its nearest learned centroid.
+
+<br><span style="color:blue;">
+図3：MLPゲートによる局所予測手順の概要。ReLU MLPをクラスタリングされたデータで学習させ、その第1層の表現に対してK-means法を適用し、学習された各クラスタに対して独立した局所予測器を適合させる。推論時には、各入力は、学習された重心のうち最も近いものに対応する局所予測器へと振り分けられる。
+</span>
+</p><p>
+
+Across all numbers of clusters, using the clusters extracted from the MLP firstlayer representation substantially improves both Laplace and RFM over their
+global counterparts (Figure 4). In particular, the resulting local RFM consistently outperforms global RFM and approaches the cluster-aware oracle. These
+results show that the first-layer representation contains information that both
+separates the clusters and identifies cluster-specific predictive features, which
+can be extracted and reused by a separate predictor.
+
+<br><span style="color:blue;">
+クラスター数のいかんにかかわらず、MLPの第1層の表現から抽出されたクラスターを用いることで、Laplace法およびRFMの性能は、それらのグローバルな手法（全体を対象とする手法）と比較して大幅に向上します（図4）。特に、得られたローカルRFMは一貫してグローバルRFMを上回り、クラスター情報を利用するオラクル（理想的なモデル）に近い性能を示します。これらの結果は、第1層の表現に、クラスターを分離する情報とクラスター固有の予測用特徴量を特定する情報の双方が含まれており、それらが別の予測器によって抽出・再利用可能であることを示しています。
+</span>
+</p>
+
+<center><img src="images/4.png"></center>
+
+<p>
+Figure 4: Trained MLP first-layer representations encode cluster structure. Clustering the first-layer representations of a trained ReLU MLP and
+using the resulting clusters to fit local predictors substantially improves both
+Laplace and RFM across different numbers of clusters. MLP-gated RFM approaches the cluster-aware oracle and consistently outperforms global RFM,
+showing that the cluster structure learned by the MLP can be extracted from
+its first-layer representation and transferred to a separate predictor. Curves
+show means over five independent runs, each with a newly sampled dataset
+from the same distribution and an independent model initialization.
+
+<br><span style="color:blue;">
+図4：学習済みMLPの第1層表現は、クラスタ構造を符号化している。学習済みReLU MLPの第1層表現をクラスタリングし、得られたクラスタを用いて局所予測器を適合させることで、クラスタ数にかかわらず、Laplace法とRFMの双方が大幅に改善される。MLPでゲート制御を行うRFM（MLP-gated RFM）は、クラスタ情報を利用するオラクル（理想的な手法）に迫る性能を示し、一貫して通常のRFM（global RFM）を上回る。これは、MLPが学習したクラスタ構造が、その第1層表現から抽出され、別の予測器へと転移可能であることを示している。各曲線は、同一の分布から新たにサンプリングされたデータセットと独立したモデル初期化を用いて行われた、5回の独立した試行の平均値を示している。
+</span>
+</p>
+
+<h2>4 Theory <span style="color:blue;">理論</span></h2>
+<p>
+In this section, we prove two main results describing how MLPs learn data with
+cluster structure. In Theorem 1, we prove that neurons in the MLP specialize
+during training. In Theorem 2, we prove that, as the number of clusters tends
+to infinity, MLPs outperform standard kernel methods and Recursive Feature
+Machines (RFM) in terms of sample complexity. This comes as a consequence
+of the fact that the latter two methods cannot compute specialized features for
+each cluster.
+
+<br><span style="color:blue;">
+本節では、クラスター構造を持つデータをMLP（多層パーセプトロン）がどのように学習するかを記述する2つの主要な結果を証明します。定理1では、学習の過程でMLP内のニューロンが特化していくことを証明します。定理2では、クラスター数が無限大に近づくにつれて、サンプル複雑性の観点からMLPが標準的なカーネル法やRecursive Feature Machines（RFM）を凌駕することを証明します。これは、後者の2つの手法が各クラスターに特化した特徴量を計算できないという事実に起因しています。
+</span>
+</p>
+
+<h3>4.1 MLP Neurons Specialize When Learning on Gaussian
+Mixture Model Data<br><span style="color:blue;">　ガウス混合モデルのデータで学習する際、MLPのニューロンは特化する</span></h3>
+<p>
+In this subsection, we show that, under small initialization, neurons trained
+on well-separated Gaussian mixture data specialize to cluster-specific predictive
+directions.
+
+<br><span style="color:blue;">
+本小節では、初期値が小さい条件下において、十分に分離されたガウス混合データで学習されたニューロンが、各クラスタに特有の予測方向へと特化することを示します。
+</span>
+</p><p>
+
+We consider \(K\)-cluster Gaussian mixture data in \(d = 2K\) dimensions. Let
+\(e_1, ..., e_K\) denote the standard basis of \(\mathbb{R}^K\). We use the first \(K\) coordinates to
+separate the cluster means and the last \(K\) coordinates for the cluster-specific
+predictive directions.<sup>1</sup>
+
+<br><span style="color:blue;">
+\(d = 2K\) 次元の \(K\) クラスタ・ガウス混合データを考えます。
+\(e_1, \dots, e_K\) を \(\mathbb{R}^K\) の標準基底とします。
+最初の \(K\) 個の座標をクラスタ平均の分離に用い、最後の \(K\) 個の座標をクラスタ固有の予測方向として用います。<sup>1</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>1</sup> Note that independent orthogonal changes of basis in the two blocks preserve the isotropic
+Gaussian noise and all conclusions below.
+<br><span style="color:blue;">
+2つのブロックにおいて独立かつ直交する基底変換を行っても、等方性ガウスノイズおよび以下のすべての結論は維持されることに注意されたい。
+</span>
+
+</p><p style="background-color:rgb(0 0 115);margin:0;margin-left: 30px;padding:10px;color:white;">
+Data Setting 1 — Symmetric Gaussian mixture
+</p>
+
+<p style="border: 2px solid rgb(0 0 115); background-color:rgb(247 247 255);padding:10px; margin:0;margin-left: 30px;">
+Let \(R \gt 0\) be a cluster separation parameter and, for \(c ∈ [K]\), let
+<br><span style="color:blue;">
+\(R \gt 0\) をクラスター分離パラメータとし、\(c ∈ [K]\) に対して、
+</span>
+
+\[
+µ_c =
+\begin{bmatrix}
+Re_c \\
+0
+\end{bmatrix}
+,\quad v_c =
+\begin{bmatrix}
+0 \\
+e_c
+\end{bmatrix}
+\]
+
+Set each cluster to be isotropic with \(Σ_c = I_d\) and use the common
+link function \(g_c = h_3\), where \(h_3(t) = (t^3 − 3t)/\sqrt{6}\) is the third Hermite polynomial.
+
+<br><span style="color:blue;">
+各クラスタを \(Σ_c = I_d\) として等方的に設定し、共通のリンク関数 \(g_c = h_3\) を使用する。ここで、\(h_3(t) = (t^3 − 3t)/\sqrt{6}\) は第3エルミート多項式である。
+</span>
+<br><br>
+In the notation of Section 2, the data distribution is
+
+<br><span style="color:blue;">
+第2節の表記法では、データ分布は
+</span>
+
+\[
+c \sim \text{Unif}([K]),\quad x|c \sim \mathcal{N}(µ_c, Σ_c),\quad y = g_c(\langle x, v_c\rangle ) = h_3(\langle x, v_c\rangle ).
+\]
+</p>
+
+<p>
+Thus the routing coordinates encode cluster identity through the means \(Re_c\),
+where \(R\) should be thought of as a large cluster-separation parameter, so that the
+clusters are well separated, while within cluster \(c\) the response depends only on
+the cluster-specific predictive direction \(v_c\). The cubic Hermite target is chosen
+because there is an explicit expression for the expected product \(\mathbb{E}[y\phi(ω^\top x)]\) between the target response and the ReLU neuron’s activation, allowing us
+to characterize the directions to which neurons converge. Next, we consider
+training a neural network to learn this data distribution.
+
+<br><span style="color:blue;">
+このように、ルーティング座標は \(Re_c\) という形式でクラスタの識別情報を符号化しています。ここで \(R\) は大きなクラスタ分離パラメータとみなされ、クラスタ同士は十分に離間しています。一方、クラスタ \(c\) の内部では、応答はクラスタ固有の予測方向 \(v_c\) にのみ依存します。三次エルミート関数をターゲットとして採用したのは、ターゲットとなる応答とReLUニューロンの活性化との積の期待値 \(\mathbb{E}[y\phi(ω^\top x)]\) について明示的な式が得られるためであり、これによりニューロンが収束する方向を特徴付けることが可能になります。次に、このデータ分布を学習するようにニューラルネットワークを訓練することを考えます。
+</span>
+
+</p><p style="background-color:rgb(0 102 0);margin:0;margin-left: 30px;padding:10px;color:white;">
+Training Setup 1 — Two-layer ReLU population gradient flow
+</p>
+
+<p style="border: 2px solid rgb(0 102 0); background-color:rgb(247 255 247);padding:10px; margin:0;margin-left: 30px;">
+We train the two-layer ReLU network
+
+<br><span style="color:blue;">
+2層ReLUネットワークを学習させます。
+</span>
+\[
+f_θ(x) = \sum_{j=1}^m a_j\phi(w_j^\top x),\quad \phi(t) = t_+,
+\]
+
+by population gradient flow on the squared loss
+
+<br><span style="color:blue;">
+二乗損失に関する個体群勾配流によって
+</span>
+\[
+\mathcal{L}(θ) = \frac{1}{2}\mathbb{E}\Big[\big(f_θ(x) − y\big)^2\Big]
+\]
+</p>
+
+</p><p style="background-color:rgb(140 70 0);margin:0;margin-left: 30px;padding:10px;color:white;">
+Initialization 1 — Small random hidden weights and zero output
+layer
+</p>
+<p style="border: 2px solid rgb(140 70 0); background-color:rgb(255 250 245);padding:10px; margin:0;margin-left: 30px;">
+The hidden directions are initialized independently and uniformly at random, scaled by a parameter ε > 0, while the output layer is initialized at
+zero:
+<br><span style="color:blue;">
+隠れ層の方向ベクトルは、パラメータ ε > 0 でスケーリングされた上で、独立かつ一様にランダムに初期化される一方、出力層はゼロに初期化される。
+</span>
+
+\[
+ω_j^0 \overset{iid}{\sim}\text{Unif}(\mathbb{S}^{d−1}),\quad w_j(0) = \varepsilon ω_j^0, \quad a_j(0) = 0.
+\]
+</p>
+<p>
+Under this initialization and data distribution, we are able to prove that the
+neurons in the MLP specialize to the clusters of the Gaussian mixture. This
+result is consistent with, and provides theoretical support for, our empirical
+observations of neuron specialization in Section 3.1.
+
+<br><span style="color:blue;">
+このような初期化およびデータ分布の下で、MLP内のニューロンがガウス混合モデルの各クラスタに特化することを証明できます。この結果は、セクション3.1で述べたニューロンの特化に関する経験的な観察結果と整合しており、それらを理論的に裏付けるものです。
+</span>
+</p><p>
+
+<strong>Theorem 1</strong> (Randomly initialized neurons specialize). Under Data Setting 1,
+Training Setup 1 and Initialization 1 there are universal constants \(R_0\), \(C \lt ∞\)
+such that the following holds for every \(R \geq R_0\). For almost every draw of \(ω_1^0,...,ω_m^0\), there are cluster labels \(J_1,...,J_m ∈ [K]\) and orientations \(τ_1,...,τ_m ∈\{±1\}\) such that, for every \(δ \gt 0\), there exist a finite time \(T_δ\) and \(\varepsilon_0 \gt 0\) for which
+
+<br><span style="color:blue;">
+<strong>定理1</strong>（ランダムに初期化されたニューロンの特化）。データ設定1、学習設定1、および初期化1の下で、ある普遍定数 \(R_0\) および \(C < \infty\) が存在し、任意の \(R \geq R_0\) に対して以下が成り立つ。\(ω_1^0, \dots, ω_m^0\) のほとんどすべての抽出において、クラスターラベル \(J_1, \dots, J_m \in [K]\) および向き \(τ_1, \dots, τ_m \in \{±1\}\) が存在し、それらについて、任意の \(δ > 0\) に対し、ある有限時間 \(T_δ\) および \(\varepsilon_0 > 0\) が存在して、
+</span>
+
+\[
+0 \lt \varepsilon \leq \varepsilon_0 \Longrightarrow \Bigg|\Bigg|\frac{w_j(T_δ)}{||w_j(T_δ)||_2}− τ_jvJ_j\Bigg|\Bigg|_2 \leq δ +\frac{C}{R} \quad \text{for every }j ∈ [m].
+\]
+
+Thus every neuron specializes, up to orientation and a vanishing \(O(R^{−1})\) routing
+component, to the predictive direction of one cluster.
+
+<br><span style="color:blue;">
+したがって、各ニューロンは、向きおよび消失する \(O(R^{-1})\) のルーティング成分を除き、ある一つのクラスタの予測方向に対して特化することになる。
+</span>
+</p><p>
+
+The selected labels \(J_1,...,J_m\) are independent and uniformly distributed on \([K]\).Consequently,
+
+<br><span style="color:blue;">
+選択されたラベル \(J_1,...,J_m\) は独立しており、\([K]\) 上に均一に分布しています。したがって、
+</span>
+\[
+\mathbb{P}(\text{every cluster is covered by a specialized neuron}) \geq 1 − Ke^{−m/K}.
+\]
+
+In particular, if
+
+<br><span style="color:blue;">
+特に、以下の場合
+</span>
+
+\[
+m \geq  K \log \Bigg(\frac{K}{η}\Bigg),
+\]
+
+then all \(K\) clusters are covered with probability at least \(1 − η\).
+
+<br><span style="color:blue;">
+そのとき、すべての \(K\) 個のクラスタは、少なくとも \(1 − η\) の確率で被覆される。
+</span>
+</p><p>
+
+<strong>Proof sketch.</strong> We employ a proof strategy of studying feature learning through
+effectively independent neuron dynamics, which has been used in prior work on
+early-time and small-initialization regimes [Abbe et al., 2022, Min et al., 2024,
+Glasgow, 2024]. At initialization, the network output is zero and the hidden
+weights are stationary. The initial derivative of each output weight is proportional to the population correlation
+
+<br><span style="color:blue;">
+<strong>証明の概要。</strong>本稿では、特徴学習を「実質的に独立したニューロンのダイナミクス」を通じて解析するという証明戦略を採用する。この手法は、初期段階や小さな初期値を用いる設定に関する先行研究 [Abbe et al., 2022, Min et al., 2024, Glasgow, 2024] において用いられてきたものである。初期状態において、ネットワークの出力はゼロであり、隠れ層の重みは静止している。各出力重みの初期微分値は、集団相関に比例する。
+</span>
+
+\[
+Φ(ω) = \mathbb{E}\big[y \phi(ω^\top x)\big]
+\]
+
+of its own randomly initialized hidden direction. Except on a measure-zero
+set, this correlation is nonzero, so the output weight immediately acquires the
+appropriate sign. ReLU homogeneity then turns the neuron’s subsequent directional dynamics into a positive time reparameterization of gradient ascent on
+the corresponding signed correlation objective.
+
+<br><span style="color:blue;">
+ランダムに初期化された自身の隠れ方向との相関について考えます。測度ゼロの集合を除き、この相関は非ゼロであるため、出力重みは直ちに適切な符号を獲得します。その結果、ReLUの斉次性により、当該ニューロンのその後の方向に関するダイナミクスは、対応する符号付き相関目的関数に対する勾配上昇法の「正の時間方向への再パラメータ化」へと変化します。
+</span>
+</p><p>
+
+For the cubic target, the Hermite calculation makes this objective a sum of
+clusterwise cubic terms. Its positive local maxima are one-cluster solutions: a
+neuron aligns with \(±v_c\) and uses only an \(O(R^{−1})\) component in the associated
+routing direction to place its ReLU threshold within cluster \(c\). Indeed, we
+prove that any positive mixed-cluster critical point has an unstable direction.
+Analytic-gradient-flow convergence and strict-saddle avoidance therefore imply
+that a random neuron specializes almost surely.
+
+<br><span style="color:blue;">
+3次形式の目的関数に対し、エルミート計算を適用すると、この関数はクラスタごとの3次項の和として表されます。その正の値をとる局所最大点は「1クラスタ解」に対応します。すなわち、ニューロンが \(±v_c\) の方向に整列し、対応するルーティング方向において \(O(R^{-1})\) の成分のみを用いて、自身のReLU閾値をクラスタ \(c\) の内部に配置するような解です。実際、正の値をとる混合クラスタ型の臨界点はすべて不安定な方向を持つことが証明されています。したがって、解析的勾配流の収束性と厳密な鞍点（strict saddle）の回避という性質から、ランダムに初期化されたニューロンは、ほぼ確実に特定のクラスタに特化することになります。
+</span>
+</p><p>
+
+Permutation symmetry makes the selected cluster uniform on \([K]\), and independence of the initial hidden directions makes the selected labels independent. The
+coverage estimate is then the usual coupon-collector union bound. Finally, on
+every fixed early-time interval the full network output is \(O(m\varepsilon^2)\), so the coupled
+network dynamics are a vanishing perturbation of the isolated-neuron dynamics.
+A Gr¨onwall argument transfers the specialization result to population gradient
+flow. The complete proof is given in Appendix B.1.
+
+<br><span style="color:blue;">
+置換対称性により、選択されたクラスターは \([K]\) 上で一様となり、初期の隠れ方向の独立性により、選択されたラベルは互いに独立したものとなります。その結果、被覆率の推定値は、いわゆる「クーポン収集問題」における和集合限界（union bound）の形をとります。最後に、任意の固定された初期時間区間において、ネットワーク全体の出力は \(O(m\varepsilon^2)\) となるため、結合されたネットワークのダイナミクスは、孤立ニューロンのダイナミクスに対する消失する摂動（vanishing perturbation）とみなせます。グロンウォールの不等式を用いた議論により、この専門化（specialization）に関する結果を、集団勾配流（population gradient flow）の場合へと拡張することができます。完全な証明は付録 B.1 に記載されています。
+</span>
+</p>
+
+<h3>4.2 A Sample-complexity Gap Between MLPs, Kernel Methods, and RFM <br><span style="color:blue;">　MLP、カーネル法、およびRFMの間のサンプル複雑度のギャップ</span></h3>
+<p>
+In this subsection, we establish a sample-complexity separation between twolayer MLPs and both standard kernel methods and Recursive Feature Machines
+(RFM). We use a data distribution similar to that in the previous subsection,
+but with full separation between clusters for ease of analysis.
+
+<br><span style="color:blue;">
+本小節では、2層MLPと、標準的なカーネル法およびRecursive Feature Machines（RFM）との間に、サンプル複雑度の観点での分離可能性（separation）があることを示します。ここでは、前小節と同様のデータ分布を用いますが、解析を容易にするために、各クラスタ間が完全に分離された設定とします。
+</span>
+
+</p><p style="background-color:rgb(0 0 115);margin:0;margin-left: 30px;padding:10px;color:white;">
+Data Setting 2 — Gaussian mixture with noiseless routing
+</p>
+<p style="border: 2px solid rgb(0 0 115); background-color:rgb(247 247 255);padding:10px; margin:0;margin-left: 30px;">
+We set the means \(µ_c = [e_c; 0]\) and predictive directions \(v_c = [0; e_c]\) in
+\(d = 2K\) dimensions, but make the first \(K\) coordinates noiseless by setting
+
+<br><span style="color:blue;">
+\(d = 2K\) 次元の空間において、平均を \(µ_c = [e_c; 0]\)、予測方向を \(v_c = [0; e_c]\) と設定しますが、最初の \(K\) 個の座標については、次のように設定することでノイズなしとします。
+</span>
+
+\[
+Σ_c =
+\begin{bmatrix}
+0_{K×K} & 0 \\
+0 & I_K
+\end{bmatrix}
+\]
+
+We use the common clipped-ramp link \(g_c = g\), where
+
+<br><span style="color:blue;">
+我々は一般的なクリップドランプリンク \(g_c = g\) を使用する。
+</span>
+
+\[
+g(t) = t_+ − (t − 1)_+.
+\]
+
+Thus, in the notation of Section 2,
+
+<br><span style="color:blue;">
+したがって、第2節の表記では、
+</span>
+
+\[
+c \sim \text{Unif}([K]),\quad x|c \sim \mathcal{N}(µ_c, Σ_c),\quad y = g_c(⟨x, v_c⟩) = g(⟨x, v_c⟩).
+\]
+</p>
+
+<p>
+The routing block now reveals the cluster exactly, while the response within
+cluster c depends only on its cluster-specific predictive direction.
+
+<br><span style="color:blue;">
+ルーティングブロックは今やクラスタを正確に明らかにする一方、クラスタc内での応答は、そのクラスタ固有の予測方向にのみ依存する。
+</span>
+</p><p>
+
+Instead of studying a network trained through gradient-based updates, we study
+a two-layer MLP fit by empirical risk minimization subject to a Frobenius-norm
+constraint on its weights.
+
+<br><span style="color:blue;">
+勾配に基づく更新によって学習されたネットワークを調べる代わりに、本研究では、重みに対するフロベニウスノルム制約の下で経験リスク最小化により適合させた2層MLPを検討する。
+</span>
+</p>
+
+</p><p style="background-color:rgb(0 102 0);margin:0;margin-left: 30px;padding:10px;color:white;">
+Training Setup 2 — Frobenius-constrained MLP ERM
+</p>
+<p style="border: 2px solid rgb(0 102 0); background-color:rgb(247 255 247);padding:10px; margin:0;margin-left: 30px;">
+We fit the two-layer ReLU network
+
+<br><span style="color:blue;">
+2層ReLUネットワークを当てはめます。
+</span>
+
+\[
+f_θ(x) = \sum_{j=1}^m a_j\phi(w_j^\top x),\quad \phi(t) = t_+,
+\]
+
+using empirical risk minimization (ERM). For a budget \(B \gt 0\), consider
+the set of functions representable by Frobenius-constrained networks,
+
+<br><span style="color:blue;">
+経験的リスク最小化（ERM）を用いる。予算 \(B \gt 0\) に対して、
+フロベニウス制約付きネットワークで表現可能な関数の集合を考える。
+</span>
+
+\[
+\mathcal{F}_B :=\Bigg\{f_θ:||θ||_F^2 =\frac{1}{2}\sum_{j=1}^m\big(a_j^2 +||w_j||_2^2\big)\leq B\Bigg\}
+\]
+
+Given n samples, we consider the clipped-ERM estimator
+
+<br><span style="color:blue;">
+n個のサンプルが与えられたとき、クリップドERM推定量（clipped-ERM estimator）を考える。
+</span>
+
+\[
+\hat{f}_{MLP} ∈ \text{arg}\min\limits_{f∈clip\circ \mathcal{F}_B}\frac{1}{n}\sum_{i=1}^n\Big(f(x_i) − y_i\Big)^2,\quad \text{clip}(t) = \min\{1, \max\{0, t\}\}.
+\]
+</p>
+<p>
+We compare this MLP ERM with standard rotationally invariant kernel ridge
+regression and with RFM, a supervised kernel method [Radhakrishnan et al.,
+2024, 2025]. We give RFM the ground-truth population average gradient outer
+product (AGOP), thereby removing metric-estimation error and isolating the
+limitation of using one global feature metric.<sup>2</sup>
+
+<br><span style="color:blue;">
+本稿では、このMLP ERMを、標準的な回転不変カーネルリッジ回帰、および教師ありカーネル法であるRFM [Radhakrishnan et al., 2024, 2025] と比較します。RFMに対しては、真の母集団平均勾配外積（AGOP）を与えることで、計量推定誤差を排除し、単一のグローバルな特徴量計量を用いることの限界を切り分けて検証します。<sup>2</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>2</sup> Note that an analysis of a limitation for RFM using an empirically estimated AGOP
+would require bounding empirical fluctuations, so it is not implied by this theorem.
+<br><span style="color:blue;">
+経験的に推定されたAGOPを用いたRFMの制約に関する分析には、経験的な変動を抑える（バウンドする）ことが必要となるため、本定理からはそのことは導かれない点に留意されたい。
+</span>
+</p>
+
+</p><p style="background-color:rgb(0 102 0);margin:0;margin-left: 30px;padding:10px;color:white;">
+Training Setup 3 — Kernel methods and RFM with ground-truth
+AGOP
+</p>
+<p style="border: 2px solid rgb(0 102 0); background-color:rgb(247 255 247);padding:10px; margin:0;margin-left: 30px;">
+
+Let \(\mathcal{K}\) be a rotationally invariant kernel. Given \(n\) samples, \(\hat{f}_{Kernel}\) is kernel ridge regression with kernel \(\mathcal{K}(x, x^\prime)\). We give RFM the ground-truth
+population AGOP<sup>3</sup>
+
+<br><span style="color:blue;">
+\(\mathcal{K}\)を回転不変なカーネルとします。\(n\)個のサンプルが与えられたとき、\(\hat{f}_{Kernel}\)はカーネル\(\mathcal{K}(x, x^\prime)\)を用いたカーネルリッジ回帰となります。RFMに対しては、真の母集団AGOP<sup>3</sup>を与えます。
+</span>
+
+\[
+
+M := \mathbb{E}\big[∇_xf^⋆(x)∇_xf^⋆(x)^\top\big]
+\]
+
+For \(ρ \geq 0\), define the regularized AGOP and corresponding kernel
+
+<br><span style="color:blue;">
+\(ρ \geq 0\) に対し、正則化 AGOP および対応するカーネルを定義する。
+</span>
+
+\[
+M_ρ := M + ρI_d,\quad \mathcal{K}_{M_ρ}(x, x^\prime) := \mathcal{K}\big(\sqrt{M_ρ}x, \sqrt{M_ρ}x^\prime\big).
+\]
+
+\(\hat{f}_{RFM}\) is kernel ridge regression with kernel \(\mathcal{K}_{M_ρ}\)
+. Both estimators may use
+any kernel ridge parameter \(λ_n \geq 0\).
+
+<br><span style="color:blue;">
+\(\hat{f}_{RFM}\)は、カーネル\(\mathcal{K}_{M_ρ}\)を用いたカーネルリッジ回帰である。いずれの推定量も、任意のカーネルリッジ・パラメータ\(\lambda_n \geq 0\)を用いることができる。
+</span>
+</p><p style="padding-left:4em;">
+<sup>3</sup> Technically, because Px is supported on a union of affine subspaces, the regression function
+\(f^⋆\) is only intrinsically defined on that support, and its derivatives normal to the support are
+not determined. Throughout, \(∇_xf^⋆(x)\) denotes the tangential gradient of \(f^⋆\) along the affine
+support component containing \(x\), embedded in \(\mathbb{R}^d\) with zero normal component. In particular,
+for an input \(x\) from cluster \(c\), \(∇_xf^⋆(x) = g^\prime
+(⟨x, v_c⟩)v_c\) almost everywhere.
+<br><span style="color:blue;">
+厳密に言えば、Pxはアフィン部分空間の和集合上でサポートされているため、回帰関数\(f^⋆\)は本質的にそのサポート上でのみ定義されており、そのサポートに法線方向の微分は定まりません。本稿を通じて、\(∇_xf^⋆(x)\)は、\(x\)を含むアフィン・サポート成分に沿った\(f^⋆\)の接線方向の勾配を表すものとします（法線成分はゼロとして\(\mathbb{R}^d\)に埋め込まれたものとします）。特に、クラスタ\(c\)に属する入力\(x\)に対しては、ほとんど至る所で\(∇_xf^⋆(x) = g^\prime(⟨x, v_c⟩)v_c\)が成り立ちます。
+</span>
+</p><p>
+
+In the theorem below, we show that a two-layer MLP learns the cluster-structured
+data with polynomial sample complexity. In contrast, standard kernel methods
+and RFM provably fail under every polynomial sample-size scaling because they
+cannot compute a distinct specialized direction for each cluster. In particular,
+RFM is constrained to learn a single global feature geometry, which cannot
+capture the cluster-dependent specialization required by the target.
+
+<br><span style="color:blue;">
+以下の定理において、我々は2層MLPが多項式オーダーのサンプル複雑度でクラスタ構造を持つデータを学習できることを示します。対照的に、標準的なカーネル法やRFMは、各クラスタに特化した個別の方向を計算できないため、サンプルサイズを多項式オーダーで増大させるいかなる設定においても、学習に失敗することが証明されています。特にRFMは単一の「大域的な」特徴量幾何構造を学習することに制約されており、ターゲットが要求するクラスタごとの特化（クラスタ依存の特化）を捉えることができません。
+</span>
+</p><p>
+
+<strong>Theorem 2</strong> (The MLP succeeds while kernel methods and RFM fail). Under
+Data Setting 2 and Training Setup 2, the MLP estimator with \(B = 3K\) satisfies
+
+<br><span style="color:blue;">
+<strong>定理2</strong>（MLPは成功するが、カーネル法とRFMは失敗する）。データ設定2および学習設定2の下で、\(B = 3K\) としたMLP推定量は、次を満たす。
+</span>
+
+\[
+\mathbb{E}\Big[||\hat{f}_{MLP} − f^⋆||_{L^2(P_x)}^2\Big]\leq C\frac{K^{3/2}}{\sqrt{n}}
+\]
+
+for a universal constant \(C\).
+
+<br><span style="color:blue;">
+ある普遍定数 \(C\) に対して
+</span>
+</p><p>
+
+Under Data Setting 2 and Training Setup 3, for every fixed \(A \lt ∞\), every
+sequence \(n_K = O(K^A)\), and every sequence \(ρ_K \geq 0\),
+
+<br><span style="color:blue;">
+データ設定2およびトレーニング設定3において、任意の固定値\(A \lt ∞\)、任意のシーケンス\(n_K = O(K^A)\)、および任意のシーケンス\(ρ_K \geq 0\)に対して、
+</span>
+
+\[
+\lim\limits_{K→∞} inf\mathbb{E}\Big[||\hat{f}_{Kernel} − f^⋆||_{L^2(P_x)}^2\Big]\gt 0,
+\quad \lim\limits_{K→∞} inf\mathbb{E}\Big[||\hat{f}_{RFM} − f^⋆||_{L^2(P_x)^2}\Big]\gt 0.
+\]
+</p>
+
+<p>
+<strong>Proof sketch.</strong> We construct an MLP solution that assigns two ReLU neurons
+to each cluster. On every other cluster, the pair’s outputs cancel exactly, while on the selected cluster their difference equals the clipped ramp. This construction has zero approximation error and satisfies the Frobenius budget B = 3K.
+Since the MLP class has bounded Frobenius budget, it is contained in a corresponding path-norm ball. Norm-based capacity and Rademacher-complexity
+bounds for neural networks [Neyshabur et al., 2015, Bach, 2017, Golowich et al.,
+2018], together with standard Rademacher-complexity risk bounds [Bartlett and
+Mendelson, 2002], then yield the MLP risk estimate.
+
+<br><span style="color:blue;">
+<strong>証明の概要。</strong> 各クラスタに2つのReLUニューロンを割り当てるMLP（多層パーセプトロン）の解を構成する。それ以外のすべてのクラスタでは、そのペアの出力は互いに完全に打ち消し合う一方、対象となるクラスタでは、その差がクリップされたランプ関数（clipped ramp）と等しくなるようにする。この構成は近似誤差がゼロであり、フロベニウス・バジェット $B = 3K$ を満たす。
+MLPクラスはフロベニウス・バジェットが有界であるため、対応するパスノルム・ボール（path-norm ball）に含まれる。ニューラルネットワークに関するノルムに基づく容量およびラデマッハー複雑度の境界 [Neyshabur et al., 2015; Bach, 2017; Golowich et al., 2018] と、標準的なラデマッハー複雑度に基づくリスクの境界 [Bartlett and Mendelson, 2002] を組み合わせることで、MLPのリスク推定値が導かれる。
+</span>
+</p><p>
+
+The kernel lower bound exploits the same rotational-invariance obstruction identified in prior work on the limitations of kernel methods in high dimensions
+[Ghorbani et al., 2020a]. In our setting, the ground-truth AGOP is a scaled
+projector onto the predictive subspace. Hence both the standard kernel metric
+and the regularized RFM metric \(M_ρ\) act by scalars on the routing and predictive
+subspaces, so their kernels remain rotationally invariant within the predictive
+coordinates. The representer theorem restricts the predictor to the span of \(n\)
+kernel sections. At Hermite order \(r\), the clusterwise target contains a component in an irreducible harmonic subspace of dimension \(Θ_r(K^r)\). The span of
+the projected kernel sections is an invariant random subspace of dimension at
+most \(n\), so for \(n = O(K^A)\) every order \(r \gt A\) leaves asymptotically all of its
+target energy unrecovered. This argument is uniform over ρ and therefore covers standard kernels and ridge-regularized RFM simultaneously. The complete
+proof is given in Appendix B.2.
+
+<br><span style="color:blue;">
+このカーネルに関する下界は、高次元におけるカーネル法の限界を扱った先行研究 [Ghorbani et al., 2020a] で特定されたものと同様の、回転不変性による制約を利用しています。本設定において、真のAGOP（Average Gradient Outer Product）は、予測部分空間への射影行列をスケーリングしたものとなります。したがって、標準的なカーネル計量と正則化RFM計量 \(M_ρ\) は、いずれもルーティング部分空間および予測部分空間に対してスカラー的に作用するため、それらのカーネルは予測座標系内において回転不変性を保ちます。表現定理（representer theorem）により、予測器は \(n\) 個のカーネル・セクションの張る空間に制限されます。エルミート次数 \(r\) において、クラスターごとのターゲットは、次元が \(Θ_r(K^r)\) である既約調和部分空間の成分を含んでいます。射影されたカーネル・セクションの張る空間は、次元が高々 \(n\) の不変ランダム部分空間であるため、\(n = O(K^A)\) の場合、\(r > A\) となるすべての次数において、ターゲット・エネルギーのほぼすべて（漸近的に）が未回収のまま残ることになります。この議論は \(ρ\) に依存せず一様に成立するため、標準的なカーネルとリッジ正則化RFMの双方を同時に包含します。完全な証明は付録B.2に示されています。
+</span>
+</p>
+
+<h2>Acknowledgements</h2>
+<p>
+We gratefully acknowledge support from the National Science Foundation (NSF)
+under grants CCF-2112665 and MFAI 2502258, the Office of Naval Research
+(ONR N000142412631), and the Defense Advanced Research Projects Agency
+(DARPA) under Contract No. HR001125CE020. This work used the Delta
+system at the National Center for Supercomputing Applications through allocation TG-CIS220009 from the Advanced Cyberinfrastructure Coordination
+Ecosystem: Services & Support (ACCESS) program, which is supported by National Science Foundation grants #2138259, #2138286, #2138307, #2137603,
+and #2138296.
+
+<br><span style="color:blue;">
+本研究は、米国国立科学財団（NSF：助成金番号 CCF-2112665 および MFAI 2502258）、米国海軍研究局（ONR：助成金番号 N000142412631）、および米国国防高等研究計画局（DARPA：契約番号 HR001125CE020）からの支援を受けて実施されました。また、本研究では、NSF助成金番号 #2138259、#2138286、#2138307、#2137603、および #2138296 の支援による「Advanced Cyber​​infrastructure Coordination Ecosystem: Services & Support (ACCESS)」プログラムの割り当て（TG-CIS220009）を通じて、国立スーパーコンピューティング・アプリケーション・センター（NCSA）の「Delta」システムを利用しました。
+</span>
+</p><p>
+
+AI tools were used to assist with aspects of the experiments and theoretical
+analysis.
+
+<br><span style="color:blue;">
+実験や理論的解析の各工程を支援するために、AIツールが使用されました。
+</span>
+</p>
+
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Emmanuel Abbe, Enric Boix Adsera, and Theodor Misiakiewicz. The mergedstaircase property: a necessary and nearly sufficient condition for SGD learning of sparse functions on two-layer neural networks. In Proceedings of the
+35th Conference on Learning Theory, volume 178 of Proceedings of Machine
+Learning Research, pages 4782–4887. PMLR, 2022.
+
+</li><br><li>
+
+Emmanuel Abbe, Enric Boix-Adser`a, and Theodor Misiakiewicz. SGD learning on neural networks: Leap complexity and saddle-to-saddle dynamics. In
+Proceedings of the 36th Conference on Learning Theory, volume 195 of Proceedings of Machine Learning Research, pages 2552–2623. PMLR, 2023.
+
+</li><br><li>
+
+Amirhesam Abedsoltan, Mikhail Belkin, and Parthe Pandit. Toward large kernel
+models. In Proceedings of the 40th International Conference on Machine
+Learning, volume 202 of Proceedings of Machine Learning Research, pages
+61–78. PMLR, 2023.
+
+</li><br><li>
+
+Amirhesam Abedsoltan, Siyuan Ma, Parthe Pandit, and Misha Belkin. Fast
+training of large kernel models with delayed projections. In Advances in
+Neural Information Processing Systems, volume 38, 2025.
+
+</li><br><li>
+
+Zeyuan Allen-Zhu and Yuanzhi Li. What can ResNet learn efficiently, going
+beyond kernels? In Advances in Neural Information Processing Systems,
+volume 32, 2019.
+
+</li><br><li>
+
+Jimmy Ba, Murat A. Erdogdu, Taiji Suzuki, Zhichao Wang, Denny Wu, and
+Greg Yang. High-dimensional asymptotics of feature learning: How one gradient step improves the representation. In Advances in Neural Information
+Processing Systems, volume 35, pages 37932–37946, 2022.
+
+</li><br><li>
+
+Francis Bach. Breaking the curse of dimensionality with convex neural networks.
+Journal of Machine Learning Research, 18(19):1–53, 2017.
+
+</li><br><li>
+
+Peter L. Bartlett and Shahar Mendelson. Rademacher and gaussian complexities: Risk bounds and structural results. Journal of Machine Learning Research, 3:463–482, 2002.
+
+</li><br><li>
+
+G´erard Ben Arous, Reza Gheissari, Jiaoyang Huang, and Aukosh
+Jagannath. High-dimensional SGD aligns with emerging outlier
+eigenspaces. In International Conference on Learning Representations,
+2024. URL https://proceedings.iclr.cc/paper_files/paper/2024/
+hash/d10d6b28d74c4f0fcab588feeb6fe7d6-Abstract-Conference.html.
+
+</li><br><li>
+
+Yoshua Bengio, Aaron Courville, and Pascal Vincent. Representation learning:
+A review and new perspectives. IEEE Transactions on Pattern Analysis and
+Machine Intelligence, 35(8):1798–1828, 2013. doi: 10.1109/TPAMI.2013.50.
+
+</li><br><li>
+
+Steven Bills, Nick Cammarata, Dan Mossing, Henk Tillman, Leo Gao, Gabriel
+Goh, Ilya Sutskever, Jan Leike, Jeff Wu, and William Saunders. Language
+models can explain neurons in language models. https://openaipublic.
+blob.core.windows.net/neuron-explainer/paper/index.html, 2023.
+
+</li><br><li>
+
+Trenton Bricken, Adly Templeton, Joshua Batson, Brian Chen, Adam Jermyn,
+Tom Conerly, Nicholas L. Turner, Cem Anil, Carson Denison, Amanda Askell,
+Robert Lasenby, Yifan Wu, Shauna Kravec, Nicholas Schiefer, Tim Maxwell,
+Nicholas Joseph, Zac Hatfield-Dodds, Alex Tamkin, Karina Nguyen, Brayden
+McLean, Josiah E. Burke, Tristan Hume, Shan Carter, Tom Henighan, and
+Christopher Olah. Towards monosemanticity: Decomposing language models
+with dictionary learning. Transformer Circuits Thread, 2023. URL https://
+transformer-circuits.pub/2023/monosemantic-features/index.html.
+
+</li><br><li>
+
+Joan Bruna and Daniel Hsu. Survey on algorithms for multi-index models.
+Statistical Science, 40(3):378–391, 2025.
+
+</li><br><li>
+
+Zixiang Chen, Yihe Deng, Yue Wu, Quanquan Gu, and Yuanzhi Li. Towards
+understanding the mixture-of-experts layer in deep learning. In Advances in
+Neural Information Processing Systems, volume 35, pages 23049–23062, 2022.
+URL https://proceedings.neurips.cc/paper_files/paper/2022/hash/
+91edff07232fb1b55a505a9e9f6c0ff3-Abstract-Conference.html.
+
+</li><br><li>
+
+L´ena¨ıc Chizat, Edouard Oyallon, and Francis Bach. On lazy training in differentiable programming. In Advances in Neural Information Processing Systems, volume 32, pages 2937–2947. Curran Associates,
+Inc., 2019. URL https://proceedings.neurips.cc/paper/2019/hash/
+ae614c557843b1df326cb29c57225459-Abstract.html.
+
+</li><br><li>
+
+Alex Damian, Jason D Lee, and Joan Bruna. The generative leap: Sharp sample
+complexity for efficiently learning gaussian multi-index models. arXiv preprint
+arXiv:2506.05500, 2025.
+
+</li><br><li>
+
+Alexandru Damian, Jason Lee, and Mahdi Soltanolkotabi. Neural networks can
+learn representations with gradient descent. In Conference on learning theory,
+pages 5413–5452. PMLR, 2022.
+
+</li><br><li>
+
+Yatin Dandi, Florent Krzakala, Bruno Loureiro, Luca Pesce, and Ludovic
+Stephan. How two-layer neural networks learn, one (giant) step at a time.
+Journal of Machine Learning Research, 25(349):1–65, 2024.
+
+</li><br><li>
+
+Nishanth Dikkala, Nikhil Ghosh, Raghu Meka, Rina Panigrahy, Nikhil Vyas,
+and Xin Wang. On the benefits of learning to route in mixture-of-experts
+models. In Houda Bouamor, Juan Pino, and Kalika Bali, editors, Proceedings of the 2023 Conference on Empirical Methods in Natural Language
+Processing, pages 9376–9396, Singapore, December 2023. Association for
+Computational Linguistics. doi: 10.18653/v1/2023.emnlp-main.583. URL
+https://aclanthology.org/2023.emnlp-main.583/.
+
+</li><br><li>
+
+Nelson Elhage, Tristan Hume, Catherine Olsson, Neel Nanda, Tom Henighan,
+Scott Johnston, Sheer ElShowk, Nicholas Joseph, Nova DasSarma, Ben
+Mann, Danny Hernandez, Amanda Askell, Kamal Ndousse, Andy Jones,
+Dawn Drain, Anna Chen, Yuntao Bai, Deep Ganguli, Liane Lovitt, Zac
+Hatfield-Dodds, Jackson Kernion, Tom Conerly, Shauna Kravec, Stanislav
+Fort, Saurav Kadavath, Josh Jacobson, Eli Tran-Johnson, Jared Kaplan,
+Jack Clark, Tom Brown, Sam McCandlish, Dario Amodei, and Christopher Olah. Softmax linear units. Transformer Circuits Thread, 2022.
+https://transformer-circuits.pub/2022/solu/index.html.
+
+</li><br><li>
+
+Spencer Frei, Niladri S. Chatterji, and Peter L. Bartlett. Random feature amplification: Feature learning and generalization in neural networks. Journal
+of Machine Learning Research, 24(303):1–49, 2023.
+
+</li><br><li>
+
+Mario Geiger, Stefano Spigler, Arthur Jacot, and Matthieu Wyart. Disentangling feature and lazy training in deep neural networks. Journal of Statistical Mechanics: Theory and Experiment, 2020(11):113301, 2020. doi:
+10.1088/1742-5468/abc4de.
+
+</li><br><li>
+
+Behrooz Ghorbani, Song Mei, Theodor Misiakiewicz, and Andrea Montanari.
+Limitations of lazy training of two-layers neural network. In Advances in
+Neural Information Processing Systems, volume 32, 2019.
+
+</li><br><li>
+
+Behrooz Ghorbani, Song Mei, Theodor Misiakiewicz, and Andrea Montanari.
+When do neural networks outperform kernel methods? In Advances in Neural Information Processing Systems, volume 33, pages 14820–14830. Curran
+Associates, Inc., 2020a. URL https://proceedings.neurips.cc/paper/
+2020/hash/a9df2255ad642b923d95503b9a7958d8-Abstract.html.
+
+</li><br><li>
+
+Behrooz Ghorbani, Song Mei, Theodor Misiakiewicz, and Andrea Montanari.
+When do neural networks outperform kernel methods? In Advances in Neural
+Information Processing Systems, volume 33, pages 14820–14830, 2020b.
+
+</li><br><li>
+
+Margalit Glasgow. SGD finds then tunes features in two-layer neural networks
+with near-optimal sample complexity: A case study in the XOR problem.
+In The Twelfth International Conference on Learning Representations, 2024.
+URL https://openreview.net/forum?id=HgOJlxzB16.
+
+</li><br><li>
+
+Noah Golowich, Alexander Rakhlin, and Ohad Shamir. Size-independent sample
+complexity of neural networks. In Proceedings of the 31st Conference on
+Learning Theory, volume 75 of Proceedings of Machine Learning Research,
+pages 297–299. PMLR, 2018.
+
+</li><br><li>
+
+Andrey Gromov. Grokking modular arithmetic. arXiv preprint
+arXiv:2301.02679, 2023.
+
+</li><br><li>
+
+Jianliang He, Leda Wang, Siyu Chen, and Zhuoran Yang. On the mechanism and
+dynamics of modular addition: Fourier features, lottery ticket, and grokking.
+arXiv preprint arXiv:2602.16849, 2026.
+
+</li><br><li>
+
+Dan Hendrycks and Kevin Gimpel. Gaussian error linear units (gelus). arXiv
+preprint arXiv:1606.08415, 2016.
+
+</li><br><li>
+
+Arthur Jacot, Franck Gabriel, and Cl´ement Hongler. Neural tangent kernel:
+Convergence and generalization in neural networks. In Advances in Neural
+Information Processing Systems, volume 31, 2018.
+
+</li><br><li>
+
+Devon Jarvis, Sebastian Lee, Cl´ementine Carla Juliette Domin´e, Andrew M.
+Saxe, and Stefano Sarao Mannelli. A theory of initialisation’s impact on
+specialisation. In The Thirteenth International Conference on Learning Representations, 2025.
+
+</li><br><li>
+
+Ziwei Ji and Matus Telgarsky. The implicit bias of gradient descent on nonseparable data. In Conference on learning theory, pages 1772–1798. PMLR,
+2019.
+
+</li><br><li>
+
+Ziwei Ji and Matus Telgarsky. Directional convergence and alignment in deep
+learning. Advances in Neural Information Processing Systems, 33:17176–
+17186, 2020.
+
+</li><br><li>
+
+Ryotaro Kawata, Kohsei Matsutani, Yuri Kinoshita, Naoki Nishikawa, and
+Taiji Suzuki. Mixture of experts provably detect and learn the latent cluster structure in gradient-based learning. In Aarti Singh, Maryam Fazel,
+Daniel Hsu, Simon Lacoste-Julien, Felix Berkenkamp, Tegan Maharaj, Kiri
+Wagstaff, and Jerry Zhu, editors, Proceedings of the 42nd International Conference on Machine Learning, volume 267 of Proceedings of Machine Learning Research, pages 29390–29448. PMLR, 13–19 Jul 2025. URL https:
+//proceedings.mlr.press/v267/kawata25a.html.
+
+</li><br><li>
+
+Jaehoon Lee, Lechao Xiao, Samuel S. Schoenholz, Yasaman Bahri, Roman Novak, Jascha Sohl-Dickstein, and Jeffrey Pennington. Wide neural networks
+of any depth evolve as linear models under gradient descent. In Advances in
+Neural Information Processing Systems, volume 32, 2019.
+
+</li><br><li>
+
+Kaifeng Lyu and Jian Li. Gradient descent maximizes the margin of homogeneous neural networks. In International Conference on Learning Representations, 2020.
+
+</li><br><li>
+
+Siyuan Ma and Mikhail Belkin. Kernel machines that adapt to GPUs for effective large batch training. Proceedings of Machine Learning and Systems, 1:
+360–373, 2019.
+
+</li><br><li>
+
+Siyuan Ma, Raef Bassily, and Mikhail Belkin. The power of interpolation: Understanding the effectiveness of SGD in modern over-parametrized learning.
+In Proceedings of the 35th International Conference on Machine Learning,
+volume 80 of Proceedings of Machine Learning Research, pages 3325–3334.
+PMLR, 2018.
+
+</li><br><li>
+
+Eran Malach, Pritish Kamath, Emmanuel Abbe, and Nathan Srebro. Quantifying the benefit of using differentiable learning over tangent kernels. In Proceedings of the 38th International Conference on Machine Learning, volume
+139 of Proceedings of Machine Learning Research, pages 7379–7389. PMLR,
+2021.
+
+</li><br><li>
+
+Hancheng Min, Enrique Mallada, and Ren´e Vidal. Early neuron alignment in
+two-layer ReLU networks with small initialization. In The Twelfth International Conference on Learning Representations, 2024.
+
+</li><br><li>
+
+Depen Morwani, Benjamin Edelman, Costin-Andrei Oncescu, Rosie Zhao, and
+Sham Kakade. Feature emergence via margin maximization: case studies in
+algebraic tasks. In International Conference on Learning Representations,
+volume 2024, pages 29077–29114, 2024.
+
+</li><br><li>
+
+Neel Nanda, Lawrence Chan, Tom Lieberum, Jess Smith, and Jacob Steinhardt. Progress measures for grokking via mechanistic interpretability. arXiv
+preprint arXiv:2301.05217, 2023.
+
+</li><br><li>
+
+Behnam Neyshabur, Ryota Tomioka, and Nathan Srebro. Norm-based capacity
+control in neural networks. In Proceedings of the 28th Conference on Learning
+Theory, volume 40 of Proceedings of Machine Learning Research, pages 1376–
+1401. PMLR, 2015.
+
+</li><br><li>
+
+Elisa Oostwal, Michiel Straat, and Michael Biehl. Hidden unit specialization in
+layered neural networks: ReLU vs. sigmoidal activation. Physica A: Statistical
+Mechanics and its Applications, 564:125517, 2021. doi: 10.1016/j.physa.2020.
+125517.
+
+</li><br><li>
+
+Adityanarayanan Radhakrishnan, Daniel Beaglehole, Parthe Pandit, and
+Mikhail Belkin. Mechanism for feature learning in neural networks and
+backpropagation-free machine learning models. Science, 383(6690):1461–
+1467, 2024. doi: 10.1126/science.adi5639.
+
+</li><br><li>
+
+Adityanarayanan Radhakrishnan, Mikhail Belkin, and Dmitriy Drusvyatskiy.
+Linear recursive feature machines provably recover low-rank matrices. Proceedings of the National Academy of Sciences, 122(13):e2411325122, 2025.
+doi: 10.1073/pnas.2411325122. URL https://doi.org/10.1073/pnas.
+2411325122.
+
+</li><br><li>
+
+Maria Refinetti, Sebastian Goldt, Florent Krzakala, and Lenka Zdeborova. Classifying high-dimensional gaussian mixtures: Where kernel methods fail and
+neural networks succeed. In Marina Meila and Tong Zhang, editors, Proceedings of the 38th International Conference on Machine Learning, volume 139
+of Proceedings of Machine Learning Research, pages 8936–8947. PMLR, 18–
+24 Jul 2021. URL https://proceedings.mlr.press/v139/refinetti21b.
+html.
+
+</li><br><li>
+
+Noam Shazeer. Glu variants improve transformer. arXiv preprint
+arXiv:2002.05202, 2020.
+
+</li><br><li>
+
+Mahdi Soltanolkotabi. Learning ReLUs via gradient descent. In Advances in
+Neural Information Processing Systems, volume 30, 2017.
+
+</li><br><li>
+
+Daniel Soudry, Elad Hoffer, Mor Shpigel Nacson, Suriya Gunasekar, and Nathan
+Srebro. The implicit bias of gradient descent on separable data. Journal of
+Machine Learning Research, 19(70):1–57, 2018.
+
+</li><br><li>
+
+Adly Templeton, Tom Conerly, Jonathan Marcus, Jack Lindsey, Trenton
+Bricken, Brian Chen, Adam Pearce, Craig Citro, Emmanuel Ameisen, Andy
+Jones, Hoagy Cunningham, Nicholas L. Turner, Callum McDougall, Monte
+MacDiarmid, C. Daniel Freeman, Theodore R. Sumers, Edward Rees, Joshua
+Batson, Adam Jermyn, Shan Carter, Chris Olah, and Tom Henighan. Scaling monosemanticity: Extracting interpretable features from claude 3 sonnet.
+Transformer Circuits Thread, 2024. URL https://transformer-circuits.
+pub/2024/scaling-monosemanticity/index.html.
+
+</li><br><li>
+
+Yuandong Tian. Student specialization in deep rectified networks with finite
+width and input dimension. In Proceedings of the 37th International Conference on Machine Learning, volume 119 of Proceedings of Machine Learning
+Research, pages 9470–9480. PMLR, 2020.
+
+</li><br><li>
+
+Colin Wei, Jason D. Lee, Qiang Liu, and Tengyu Ma. Regularization matters:
+Generalization and optimization of neural nets v.s. their induced kernel. In
+Advances in Neural Information Processing Systems, volume 32, 2019.
+
+</li><br><li>
+
+Blake Woodworth, Suriya Gunasekar, Jason D. Lee, Edward Moroshko, Pedro
+Savarese, Itay Golan, Daniel Soudry, and Nathan Srebro. Kernel and rich
+regimes in overparametrized models. In Proceedings of Thirty Third Conference on Learning Theory, volume 125 of Proceedings of Machine Learning
+Research, pages 3635–3673. PMLR, 2020.
+
+</li><br><li>
+
+Greg Yang and Edward J. Hu. Tensor programs IV: Feature learning in infinitewidth neural networks. In Proceedings of the 38th International Conference on
+Machine Learning, volume 139 of Proceedings of Machine Learning Research,
+pages 11727–11737. PMLR, 2021.
+
+</li><br><li>
+
+Gilad Yehudai and Ohad Shamir. On the power and limitations of random features for understanding neural networks. In Advances in Neural Information
+Processing Systems, volume 32, 2019.
+
+</li><br><li>
+
+Zhenyu Zhu, Fanghui Liu, and Volkan Cevher. How gradient descent balances
+features: A dynamical analysis for two-layer neural networks. In International
+Conference on Learning Representations, 2025. URL https://openreview.
+net/forum?id=25j2ZEgwTj.
+
+</li></ul></div>
+</p>
+
+
+<h2 style="color:blue;">付録の機械翻訳は割愛・・・</h2>
+
+<h2>A Additional experimental details</h2>
+<h3>A.1 Additional Details for MLPs Develop Specialized 
+Firstlayer Neurons Experiments</h3>
+<p>
+
+<strong>Data generation.</strong> We use \(K = 10\) clusters in \(d = 40\) dimensions, with the
+cluster index \(c\) sampled uniformly from \(\{1, . . . , K\}\). We choose the cluster centers and predictive directions to lie along separate coordinate axes:
+
+<br><span style="color:blue;">
+
+</span>
+\[
+[µ_c]_j =
+\begin{cases}
+20, & j = c,\\
+0, & otherwise,
+\end{cases}
+\quad
+[v_c]_j =
+\begin{cases}
+1, & j = K + c,\\
+0, & otherwise,
+\end{cases}
+\quad
+j ∈ \{1, . . . , d\}.
+\]
+
+For each cluster c, we sample
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+x = µ_c + z,\quad z \sim \mathcal{N}(0, I_d/d).
+\]
+
+Thus, coordinates 1:10 encode cluster position, coordinates 11:20 contain the
+cluster-specific predictive directions \(\{v_c\}_{c=1}^K\), and coordinates 21:40 are nuisance
+coordinates.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+We use the same normalized second-Hermite link in every cluster and add Gaussian observation noise:
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+y =\frac{\text{He}_2\big(\sqrt{d}⟨v_c, x⟩\big)}{\sqrt2!}+\varepsilon,\quad \text{He}_2(t) = t^2 − 1,\quad \varepsilon \sim \mathcal{N}(0, 0.005^2).
+\]
+
+Training, validation, and test sets are generated independently and contain
+100,000, 4,096, and 2,048 examples, respectively.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Models and optimization.</strong> We train one-hidden-layer ReLU, GELU, ReGLU,
+and SwiGLU networks of width 2,048, with trainable hidden and output biases
+and balanced feature-learning initialization. For example, the hidden representation of a ReGLU network is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\text{ReLU}(W_gx + b_g) \odot (W_vx + b_v).
+\]
+
+All models are trained with Adam under the corresponding width-aware parameterization, using a batch size of 2,048, cosine learning-rate decay, and zero
+weight decay.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For ReLU, we search initial learning rates
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+
+\{0.004, 0.008, 0.012, 0.016, 0.024, 0.032\},
+\]
+
+with each schedule decaying to one tenth of its initial value. Model selection
+uses validation MSE only. The selected ReLU schedule is 0.004 → 0.0004, with the validation-selected checkpoint at step 37,000. The schedules used for the
+remaining architectures are
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\begin{align}
+\text{GELU: } & 0.016 → 0.0016,\\
+\text{ReGLU: } & 0.0016 → 0.00016,\\
+\text{SwiGLU: } & 0.0256 → 0.00256.
+\end{align}
+\]
+
+GELU, ReGLU, and SwiGLU are trained for at most 20,000 steps, while the
+ReLU candidates are trained for at most 40,000 steps. For every model, we
+select the checkpoint with the smallest validation MSE before evaluating on the
+test set.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Active-neuron criterion.</strong> We restrict the specialization analysis to neurons
+that contribute materially to the network output. For an ordinary ReLU or
+GELU neuron, we define its importance as
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+I_j = |a_j|||w_j||_2,
+\]
+
+where \(a_j\) is its output weight and \(w_j\) is its incoming weight. For a gated ReGLU
+or SwiGLU neuron, we use
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+I_j = |a_j|||w_{g,j}||_2 ||w_{v,j}||_2,
+\]
+
+where \(w_{g,j}\) and \(w_{v,j}\) denote its gate and value weights.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+We sort neurons by \(I_j\) and retain the smallest leading set accounting for at least
+99.9% of the total importance. We refer to these retained neurons as active.
+For gated architectures, the same active-neuron set is used when analyzing the
+gate and value weights separately.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The 99.9% threshold is a descriptive sparsification rule rather than a statistical
+significance threshold. Its purpose is to prevent the specialization statistics from
+being dominated by neurons with negligible influence on the network output.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Specialization measures.</strong> For an incoming weight vector wj , we define its
+maximum absolute cosine similarity with the cluster-specific predictive directions as
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+A_j = \max\limits_{1\leq c\leq K}\frac{|⟨w_j , v_c⟩|}{||w_j||_2} \tag{1}
+\]
+
+Because each vc is a unit vector, Aj is the largest absolute cosine similarity
+between wj and any cluster-specific predictive direction. A large value therefore
+indicates that a substantial fraction of the weight norm is concentrated along a
+single predictive direction.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Cosine alignment can be conservative when one predictive coordinate is much
+larger than every individual competing coordinate but the weight vector also contains many small coefficients. To capture this behavior, define
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\hat{c}_j ∈ \text{arg}\max\limits_{1\leq c\leq K}|⟨w_j , v_c⟩|
+\]
+
+and the predictive-coordinate dominance score
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+D_j =\frac{|[w_j]_{K+\hat{c}_j}|}{\max\limits_{\substack{
+1\leq ℓ\leq d\\ℓ\neq K+\hat{c}_j}}|[w_j]_ℓ|}. \tag{2}
+\]
+
+Since the predictive direction vc is supported on coordinate \(K + c, D_j \gt 1\)
+means that the largest-magnitude coordinate of \(w_j\) is a predictive coordinate,
+while \(D_j \gt 2\) means that this predictive coordinate is more than twice as large
+as every other coordinate.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For ReGLU and SwiGLU, both \(A_j\) and \(D_j\) are computed separately for the
+gate weights \(w_{g,j}\) and value weights \(w_{v,j}\) . Absolute inner products are used
+throughout because alignment with \(v_c\) and \(−v_c\) represents the same predictive
+direction.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Reported specialization statistics.</strong> The summary table in Fig. 1 reports
+the fractions of active neurons satisfying
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+A_j \geq 0.71,\quad A_j \geq 0.90,\quad D_j \gt 1,\quad D_j \gt 2.
+\]
+
+These correspond, respectively, to the two cosine-threshold columns, “Max is
+target-aligned,” and “Target-aligned max > 2× second max” in the table. For
+gated architectures, all statistics are reported separately for gate and value
+weights.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The individual neurons displayed in the bottom panel of Fig. 1 are the highestimportance active GELU neurons satisfying \(A_j \geq 0.90\). Their coordinate-wise
+absolute incoming weights are shown so that specialization is visible independently of sign.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Appendix Fig. 5 illustrates why the dominance score complements cosine alignment. In these examples, a neuron has only moderate cosine alignment because
+its norm contains many small coefficients, yet one cluster-specific predictive
+coordinate remains clearly dominant.
+
+<br><span style="color:blue;">
+
+</span>
+</p>
+
+<h3>A.2 Additional Details for MLPs Jointly Learn Cluster
+Structure and Cluster-specific Predictive Functions</h3>
+
+<p>
+<strong>Cluster and predictive geometry.</strong> We choose d = 20 and divide the input
+into two ten-dimensional subspaces:
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{R}^{20} = \mathcal{S}_{cluster} \oplus \mathcal{S}_{pred}.
+\]
+
+</p><p>
+
+Figure 5: Predictive-coordinate dominance complements cosine alignment. Coordinate-wise absolute weights of three active neurons. Each neuron
+has only moderate cosine alignment because its norm includes many smaller coefficients, but nevertheless exhibits a pronounced spike along one cluster-specific
+predictive direction \(v_c\). These examples illustrate why predictive-coordinate
+dominance captures specialization that can be missed by a strict cosine threshold.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The first contains information identifying the cluster, while the second contains
+the cluster-specific predictive signal. We consider \(K ∈ \{1, 2, 10, 50\}\) equally
+likely clusters.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For each \(K\), we construct well-separated cluster-center directions in \(\mathbb{R}^{10}\). We
+first draw
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+L_K = \max\{20,000, 500K\}
+\]
+
+independent Gaussian vectors and normalize them to unit norm. We select the
+first direction uniformly from this collection and choose each subsequent direction to minimize its largest inner product with the directions already selected.
+This farthest-point procedure produces unit vectors
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+s_1,...,s_K ∈ \mathbb{S}^9,\quad \mathbb{S}^9 = \{s ∈ \mathbb{R}^{10} : ||s||_2 = 1\},
+\]
+
+with large pairwise separation. The candidate collection and selected directions
+are generated separately for each value of \(K\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For \(K \gt 1\), define the largest pairwise similarity
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+ρ_K = \max\limits_{c\neq c^\prime}s_c^\top s_{c^\prime}
+\]
+
+We set \(ρ_1 = 0\). The center of cluster \(c\) in the full ambient space is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+µ_c =
+\begin{bmatrix}
+s_c \\
+0
+\end{bmatrix}
+∈ \mathbb{R}^{20},\quad K \gt 1.
+\]
+
+For \(K = 1\), we set \(µ_1 = 0\), since no cluster identification is required.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The standard deviation of the noise in the cluster-identifying coordinates is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+σ_K =\frac{1 − ρ_K}{2γ},\quad γ = 4. \tag{3}
+\]
+
+Thus, the noise level is adjusted using the least-separated pair of cluster centers,
+maintaining clear cluster separation as \(K\) changes.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Each cluster also receives an independently and uniformly sampled unit direction
+in the predictive subspace,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\tilde{v}_c \sim \text{Unif}(\mathbb{S}^9).
+\]
+
+We embed this direction into the full ambient space by zero-padding the clusteridentifying coordinates:
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+v_c =
+\begin{bmatrix}
+0 \\
+\tilde{v}_c
+\end{bmatrix}
+∈ \mathbb{R}^{20}.
+\]
+
+Thus, \(v_c\) lies entirely in \(\mathcal{S}_{pred}\), whereas \(µ_c\) lies entirely in \(\mathcal{S}_{cluster}\). Consequently,
+the coordinates identifying the cluster are disjoint from those determining its
+response.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Input distribution.</strong> The cluster identity C is sampled uniformly:
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+C \sim \text{Unif}\{1,..., K\}.
+\]
+
+Conditional on \(C = c\), the input is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+x = µ_c +
+\begin{bmatrix}
+σ_Kz_{cluster}\\
+z_{pred}
+\end{bmatrix},\quad
+z_{cluster}, z_{pred}
+\overset{iid}{\sim} \mathcal{N}(0, I_{10}). \tag{4}
+\]
+
+Equivalently, in the notation of Section 2,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+x|C = c \sim \mathcal{N}(µ_c, Σ_c),\quad Σ_c =
+\begin{pmatrix}
+σ_K^2I_{10} & 0 \\
+0 & I_{10}
+\end{pmatrix}.
+\]
+
+In the finite datasets, the number of examples assigned to each cluster is equal
+whenever the sample size is divisible by \(K\) and otherwise differs by at most one.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Mixed local prediction rules.</strong> Each cluster receives a nonlinear link function independently and uniformly, with replacement, from
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathcal{G} =\Bigg\{
+t \mapsto \frac{t^2 − 1}{\sqrt{2}},\quad t\mapsto \sin(t),\quad t \mapsto \tanh(t)\Bigg\} \tag{5}
+\]
+
+Sampling with replacement means that two clusters may receive the same link.
+For a sample from cluster \(c\), the response is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+y = g_c(⟨x, v_c⟩) + \varepsilon,\quad \varepsilon \sim \mathcal{N}(0, 0.02^2). \tag{6}
+\]
+
+Since \(v_c\) is supported only on the predictive coordinates,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+⟨x, v_c⟩ = \tilde{v}_c^\top z_{pred}.
+\]
+
+Thus, both the relevant predictive direction vc and the nonlinear response function \(g_c\) may change across clusters.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Training and test sets.</strong> For each K and seed, we generate a training pool
+containing 200,000 examples. We use the nested training sizes
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+n ∈ \{20,000, 50,000, 100,000, 200,000\},
+\]
+
+so that the dataset at a smaller value of n is contained in every larger training
+set. Each run uses a separate test set of 4,096 examples. All methods evaluated
+for the same \(K, n\), and seed use exactly the same training and test examples.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+We use five seeds indexed by \(r ∈ \{0,...,4\}\). For a fixed K, the cluster centers
+and predictive directions are shared across the five runs. The link assignments,
+training and test samples, label noise, and model initialization vary across runs.
+Specifically, the model and mixed-link seed is \(1000 + r\), the training-pool seed
+is \(12345 + r\), and the test-set seed is \(54321 + r\). We report the mean over these
+five runs, with shaded regions showing one empirical standard deviation.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>MLP architectures and optimization.</strong> We evaluate one-hidden-layer ReLU,
+GELU, ReGLU, and SwiGLU networks, all with width 4,096. For ReLU and
+GELU, the hidden representation has the form
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+h(x) = \phi(W x + b).
+\]
+
+For the gated architectures, it has the form
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+h(x) = \phi(W_gx + b_g) \odot (W_vx + b_v),
+\]
+
+where \(\phi\) is ReLU for ReGLU and SiLU for SwiGLU. All hidden weights, readout
+weights, and biases are trainable.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+We optimize the networks using Adam with batch size 4,096, cosine learningrate decay, and zero weight decay. The activation-specific schedules are
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\begin{array}{c | c}
+\text{Activation} & \text{Learning-rate schedule} \\
+\hline
+\text{ReLU} & 10^{−2} → 10^{−4} \\
+\text{GELU} & 3 × 10^{−2} → 3 × 10^{−4} \\
+\text{ReGLU} & 3 × 10^{−3} → 3 × 10^{−5} \\
+\text{SwiGLU} & 10^{−2} → 10^{−4}
+\end{array}
+\]
+
+Training continues for at least 20,000 updates and for at most 200,000 updates.
+After the minimum number of updates, optimization stops when either the
+training MSE reaches
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+4 × 10^{−4}
+\]
+,
+which equals the label-noise variance, or the training loss plateaus. The plateau
+rule stops after 60 consecutive evaluations, performed every 500 updates, without a relative training-MSE improvement of at least \(5 × 10^{−4}\)
+. We restore the
+checkpoint attaining the lowest training MSE. Stopping and checkpoint selection
+use training MSE only and never use test performance.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Global Laplace and RFM.</strong> RFM uses the metric-dependent Laplace kernel
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+k_t(x, x^\prime) = \exp\Bigg(−\frac{||M_t^{1/2}(x − x^\prime)||_2}{h_t}\Bigg), \tag{7}
+\]
+
+where \(M_t\) is the metric at RFM iteration t and ht is the kernel bandwidth. The
+initial metric is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+
+M_0 = I_{20},
+\]
+
+so iteration zero is the isotropic Laplace-kernel baseline.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For numerical stability across different values of \(K\), the bandwidth is computed
+from within-cluster distances in the transformed space. We estimate a median
+pairwise distance separately within each cluster and take the median of these
+cluster-level values. The bandwidth is recomputed after every metric update.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+This bandwidth calibration uses the cluster identities, but only to select one
+scalar bandwidth shared by the entire global kernel. The global Laplace and
+RFM predictors are still fit jointly to all training examples, do not use the cluster
+identities in their regression objective, and do not use them when making test
+predictions. Thus, they do not fit separate cluster-specific predictors.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+After each kernel fit, RFM estimates the average gradient outer product
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\hat{G}_t =\frac{1}{m}\sum_{i=1}^m∇\hat{f}_t(x_i)∇\hat{f}_t(x_i)^\top
+\]
+
+using at most \(m = 20,000\) training examples. A normalized version of \(\hat{G}_t\) becomes the metric for the next iteration. We perform three metric updates,
+producing iterations 0, 1, 2, 3.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Exact kernel solves are used for fewer than 11,000 training examples and include
+a ridge parameter of \(10^{−6}\)
+. Larger problems are solved using EigenPro [Ma et al.,
+2018, Ma and Belkin, 2019, Abedsoltan et al., 2023, 2025] without an explicit
+ridge penalty. EigenPro optimization stops upon reaching training MSE \(4×10^{−4}\)
+or its optimization limit. Its effective regularization therefore arises primarily
+from early stopping.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The displayed global RFM curve reports the smallest test MSE among iterations
+0:3. It is therefore an optimistic diagnostic envelope rather than a deployable
+iteration-selection procedure.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Per-cluster oracle methods.</strong> The per-cluster Laplace and RFM oracle methods are given the true cluster identity during both training and testing. They
+partition the training data by cluster, fit one independent predictor within each
+partition, and evaluate each test example using the predictor associated with
+its true cluster. The reported MSE is pooled across all test examples.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Figure 6: MLPs jointly learn clustering and local predictive functions.
+Each cluster has its own predictive direction and independently receives, with replacement, the normalized quadratic, sine, or hyperbolic-tangent response function. Curves show the mean over five runs, with shaded regions indicating one
+standard deviation. At larger training sizes, ReGLU and especially SwiGLU
+generally improve over their corresponding standard activations for \(K = 10\) and
+\(K = 50\). Dashed oracle methods are given the true cluster identity and fit an
+independent predictor within each cluster.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Iteration zero of each local RFM is the per-cluster Laplace oracle. Each local
+RFM subsequently performs three AGOP metric updates. For \(K = 1\), the global
+and per-cluster methods coincide.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+These oracle methods are not fair predictive baselines because they receive the
+true cluster identities. Their purpose is to measure how easily the local prediction problems can be solved once cluster identification is provided. The ability of
+an MLP to approach these oracle methods without receiving the cluster identities provides evidence that it learns cluster identification and the corresponding
+local prediction rules jointly.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Bayes reference.</strong> The dotted reference line reports the test MSE of the Bayes
+predictor under the known data-generating distribution. It computes the posterior probability of each cluster given the input and averages the corresponding
+noiseless local predictions. Because the clusters have small but nonzero overlap, its realized test MSE can be slightly larger than the label-noise variance
+\(0.02^2 = 4 × 10^{−4}\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Additional activations.</strong> Figure 6 compares all four MLP architectures on
+the same mixed-link datasets. The training and test examples, cluster geometry,
+link assignments, and random seeds are shared across activations for every \(K\) and \(n\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The advantage of multiplicative gating is most pronounced when many clusterdependent prediction rules must be learned. The improvement is not uniform in the smallest-data regime, but with sufficient samples the gated architectures,
+particularly SwiGLU, obtain the lowest MLP errors for \(K = 10\) and \(K = 50\).
+
+<br><span style="color:blue;">
+
+</span>
+</p>
+
+<h3>A.3 Additional Details for Trained MLPs Encode Cluster
+Structures</h3>
+<p>
+This appendix describes how we extract cluster gates from a trained ReLU MLP
+and reuse them to construct independent local Laplace and RFM predictors.
+The experiment uses the same mixed-link clustered distribution as Section 3.2.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Mixed-link clustered data.</strong> We decompose the ambient space into ten clusterposition coordinates and ten predictive coordinates,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{R}^{20} = \mathcal{S}_{gate} \oplus \mathcal{S}_{pred}.
+\]
+
+We consider \(K ∈ \{2, 5, 10, 50\}\) equally represented clusters. Each cluster \(c\) has
+a unit cluster-position direction \(s_c ∈ \mathbb{S}^9\) and an independently generated unit
+predictive direction \(v_c ∈ \mathbb{S}^9\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The directions sc are selected by farthest-point sampling from a large set of
+random unit vectors. Let
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+ρ_K = \max\limits_{c\neq c^\prime}s_c^\top s_{c^\prime}
+\]
+
+be the largest pairwise inner product. We set the cluster-center radius to \(R = 1\)
+and choose the standard deviation in the cluster-position coordinates as
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+σ_K =\frac{R(1 − ρ_K)}{2γ},\quad γ = 4.
+\]
+
+Thus, the noise level adapts to the closest pair of cluster centers, keeping the
+clusters well separated as \(K\) changes.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For an example from cluster \(c\), we sample
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+z_{gate}, z_{pred} \overset{iid}{\sim}\mathcal{N}(0, I_{10})
+\]
+
+and construct
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+x = (Rs_c + σ_Kz_{gate}, z_{pred}). \tag{8}
+\]
+
+The first ten coordinates therefore identify the cluster, while the last ten coordinates contain the variables used for prediction.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Each cluster independently receives a nonlinear response function gc, drawn
+uniformly from
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathcal{G} =\Bigg\{t \mapsto \frac{t^2 − 1}{\sqrt{2}},\quad t \mapsto \sin(t),\quad t \mapsto \tanh(t)\Bigg\}. \tag{9}
+\]
+
+
+The response is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+y = g_c\big(v_c^\top z_{pred}\big)+\varepsilon,\quad \varepsilon \sim \mathcal{N} (0, 0.02^2). \tag{10}
+\]
+
+Consequently, both the predictive direction \(v_c\) and the nonlinear response function \(g_c\) may differ across clusters. The link functions are sampled independently,
+so a particular realization need not contain all three functions, especially when
+\(K\) is small.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Datasets and repetitions.</strong> For every \(K\), we generate a balanced training
+pool containing 200,000 examples and use nested prefixes of sizes
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+n ∈ \{20,000, 50,000, 100,000, 200,000\}.
+\]
+
+Evaluation uses an independently generated test set containing 4,096 examples.
+Within each run, exactly the same serialized training and test tensors are used
+by the MLP, global kernel methods, oracle methods, and MLP-gated methods.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Results are averaged over five seeds. For a fixed \(K\), the cluster-position and
+predictive directions are held fixed, while each seed independently resamples
+the cluster-specific link assignments, training and test examples, label noise,
+and MLP initialization. No test labels are used to construct the gates.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Source ReLU MLP.</strong> For each K, sample size, and seed, we train a onehidden-layer ReLU network of width 4,096,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\hat{f}(x) =\sum_{j=1}^{4096}a_j \text{ReLU}(w_j^\top x + b_j ) + b_{out}.
+\]
+
+All weights and biases are trainable. Optimization uses Adam with minibatches
+of size 4,096, zero weight decay, and cosine learning-rate decay from \(10^{−2}\) to \(10^{−4}\). Training runs for at least 20,000 steps and at most 200,000 steps. It
+terminates when the full training MSE reaches \(4 × 10^{−4}\), or when the training
+loss plateaus. We restore the checkpoint with the smallest full training MSE.
+Neither test MSE nor cluster identity is used for checkpoint selection.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Selecting active neurons.</strong> After training, we freeze the MLP. For neuron \(j\),
+define its average output-weighted activation on the training set as
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+m_j =\frac{1}{n}\sum_{i=1}^n|a_j| \text{ReLU}(w_j^\top x_i + b_j ). \tag{11}
+\]
+
+We apply two-means clustering to \(\{\log_{10} m_j\}_{j=1}^{4096}\) and retain the group with the
+larger average contribution. The resulting active-neuron set is denoted by \(\mathcal{J}\). If fewer than \(K\) neurons are retained, we instead keep the \(K\) neurons with the
+largest \(m_j\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Contribution profiles and learned gates.</strong> For every training input \(x\), we
+compute its normalized contribution profile over the active neurons:
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+p_j(x) =\frac{|a_j| \text{ReLU}(w_j^\top x + b_j)}{\sum_{ℓ∈\mathcal{J}}
+|a_ℓ| \text{ReLU}(w_ℓ^\top x + b_ℓ)},\quad j ∈ \mathcal{J}. \tag{12}
+\]
+
+Thus \(p(x)\) describes which active first-layer neurons contribute to the MLP
+prediction on input \(x\), independent of the overall magnitude of the prediction.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+We apply \(K\)-means++ to the training contribution profiles and use \(M = K\) learned gates. Knowledge of the number of clusters is therefore provided, but
+the true cluster assignments are never observed. We use eight initializations and
+at most 30 Lloyd iterations, retaining the solution with the smallest training
+inertia. Every training example is assigned to exactly one gate through its
+nearest centroid.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Let \(q_c\) denote the centroid of learned gate \(c\), with coordinate \(q_{cj}\) corresponding to
+active neuron \(j\). Although examples receive hard gate assignments, the centroid
+coordinates provide a soft association between neurons and gates: the same
+neuron may contribute to several gates.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Constructing gate-specific features.</strong> For each learned gate c, we form the
+positive-semidefinite metric
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+G_c =\frac{\sum_{j∈\mathcal{J}}q_{cj}w_jw_j^\top}{\sum_{j∈\mathcal{J}}q_{cj}. \tag{13}
+\]
+
+The corresponding gate-specific representation is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+z_c(x) = G_c^{1/2} x. \tag{14}
+\]
+
+The MLP biases affect the contribution profiles and hence the gate assignments,
+while \(G_c\) itself is constructed from the incoming first-layer weight directions.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For every learned gate, we project only the training examples assigned to that
+gate and fit an independent local Laplace or RFM predictor in the resulting
+representation.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Test-time prediction.</strong> For a new test input \(x\), we:
+
+<br><span style="color:blue;">
+
+</span>
+<div class="styleBullet">
+<ul><li>
+
+1. pass \(x\) through the frozen MLP and compute its contribution profile \(p(x)\);
+
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+
+2. assign \(x\) to the nearest fixed training centroid;
+
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+
+3. transform it using the corresponding representation \(z_c(x) = G_c^{1/2} x\); and
+
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+
+4. evaluate the local predictor fitted for that learned gate.
+
+<br><span style="color:blue;">
+
+</span>
+</li></ul></div>
+</p><p>
+
+The test input is therefore assigned using only its MLP contribution profile.
+Neither its response nor its true cluster identity is used.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Local Laplace and RFM predictors.</strong> The local Laplace predictor for gate \(c\) uses
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+k_c(x, x^\prime) = exp\Bigg(−\frac{||G_c^{1/2} (x − x^\prime)||_2}{h_c}\Bigg),
+\]
+
+where \(h_c\) is initialized using the median pairwise distance within that gate. We
+use ridge parameter \(10^{−6}\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+The local RFM begins from this Laplace kernel and performs three metric updates, producing iterations 0, 1, 2, 3, where iteration 0 is the local Laplace predictor. After each update, the bandwidth is recomputed using distances under
+the updated metric. Kernel systems with fewer than 11,000 local training examples are solved directly; larger systems use EigenPro. The same procedure is
+used for the global and oracle RFM baselines.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Compared methods.</strong> Figure 4 compares:
+
+<br><span style="color:blue;">
+
+</span>
+<div class="styleBullet">
+<ul><li>
+• the source ReLU MLP;
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+
+• one global Laplace predictor fitted to all training examples;
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• one global RFM fitted to all training examples;
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• MLP-gated local Laplace, using the gates and projections extracted from
+the ReLU MLP;
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• MLP-gated local RFM, using the same extracted gates and projections;
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• per-cluster Laplace (oracle), which is given the true cluster identities at
+training and test time;
+
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• per-cluster RFM (oracle), defined analogously; and
+
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+• the irreducible noise level, whose expected MSE is \(0.02^2 = 4 × 10^{−4}\)
+.
+
+<br><span style="color:blue;">
+
+</span>
+</li></ul></div>
+</p><p>
+
+The oracle methods are diagnostic references rather than fair deployable predictors because they receive the true cluster identity. By contrast, the MLP-gated
+methods receive only the training input–response pairs and the known number
+\(K\) of gates.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Aggregation.</strong> Every curve in Figure 4 is the arithmetic mean over five independent runs. Each run uses a newly sampled dataset from the same generative
+model and an independently initialized MLP.
+
+<br><span style="color:blue;">
+
+</span>
+</p>
+
+<h2>B Proofs for Section 4 </h2>
+<h3>B.1 Proof of Theorem 1</h3>
+<p>
+We first prove Theorem 1 invoking Lemmas 3 to 9, whose statements and proofs
+are provided after the main proof. A roadmap of their dependencies is shown
+in fig. 7.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Throughout this subsection, the normalized means and predictive directions
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\frac{µ_1}{R},...,\frac{µ_K}{R}, v_1,..., v_K
+\]
+
+form an orthonormal basis of \(\mathbb{R}^d\), where \(d = 2K\). In the notation of Section 2,
+we may write
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+c \sim \text{Unif}([K]),\quad x = µ_c + z,\quad z \sim \mathcal{N}(0, I_d),
+\]
+
+and
+
+\[
+y = h_3\big(v_c^\top z\big),\quad h_3(t) = \frac{t^3 − 3t}{\sqrt{6}}.
+\]
+
+For \(ω ∈ \mathbb{S}^{d−1}\), define the weights’ correlations to the cluster means and predictive directions
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+b_c(ω) = ⟨ω, µ_c⟩,\quad ρ_c(ω) = ⟨ω, v_c⟩.
+\]
+
+Write the ReLU activation function and the Gaussian p.d.f. as
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\phi(t) = t_+, \phi(t) = \frac{1}{\sqrt{2π}}e^{−t^2/2},
+\]
+
+and define the unsigned and signed population-correlation objectives, respectively, by
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+Φ(ω) = \mathbb{E}\big[y \phi(ω^\top x)\big],\quad Ψ_ζ(ω) = ζΦ(ω),\quad ζ ∈ \{±1\}.
+\]
+
+Proof of Theorem 1. For each initial direction \(ω_j^0\), let (\overline{u}_j , \overline{ω}_j )\) be the corresponding self-selected teacher-only trajectory from Lemma 7.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+By Lemmas 7 and 5, almost surely there are a cluster label \(J_j ∈ [K]\) and an
+orientation \(τ_j ∈ \{±1\}\) such that
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\lim \sup\limits_{t→∞}||\overline{ω}_j(t) − τ_jv_{J_j}||_2 \leq \frac{C}{R}
+\]
+
+for a universal constant \(C\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Since \(m \lt ∞\) and every teacher-only direction converges, for every \(δ \gt 0\) there
+is a finite time \(T_δ\) such that, simultaneously for all \(j ∈ [m]\,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+||\overline{ω}_j(T_δ) − τ_jv_{J_j}||_2 \leq \frac{δ}{2}+\frac{C}{R}.
+\]
+
+Apply Lemma 9 on \([0, T_δ]\). For sufficiently small \(\varepsilon\),
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\Bigg|\Bigg|\frac{w_j(T_δ)}{||w_j(T_δ)||_2}−\overline{ω}_j(T_δ)\Bigg|\Bigg|_2 \leq L_{T_δ}m\varepsilon^2\leq\frac{δ}{2}
+
+\]
+
+for every \(j ∈ [m]\). The triangle inequality therefore gives
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\Bigg|\Bigg|\frac{w_j(T_δ)}{||w_j(T_δ)||_2}− τ_jv_{J_j}\Bigg|\Bigg|_2 \leq δ +\frac{C}{R}.
+\]
+
+The independence and uniformity of the labels \(J_1,...,J_m\), together with the
+cluster-coverage probability, follow from Lemma 8.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Figure 7: Dependency graph for the proof of Theorem 1. Solid arrows indicate
+the main logical dependencies. The dashed arrow records that Lemma 3 is also
+used to establish smoothness of the teacher-only vector field in the tracking
+argument.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<h3>B.1.1 The Population-correlation Landscape</h3>
+<p>
+In this subsection, we study the critical points of the optimization problem
+
+<br><span style="color:blue;">
+
+</span>
+
+\max\limits_{ω∈\mathbb{S}^{d−1}}Φ_ζ(ω). \tag{15}
+\]
+
+The use of homogeneity to characterize parameter directions is part of a broader
+literature on the implicit bias of gradient methods, beginning with homogeneous
+linear predictors and extending to homogeneous neural networks [Soudry et al.,
+2018, Ji and Telgarsky, 2019, Lyu and Li, 2020, Ji and Telgarsky, 2020]. These
+results motivate the directional viewpoint used here, but do not directly yield
+the squared-loss, small-initialization approximation in our setting; we establish
+the required approximation directly in Lemma 9. (In the subsequent section
+of the appendix, we will show how the sign ζ is determined for each neuron at
+very early times of training.) We show that the critical points of equation 15
+are specialized to clusters of the data distribution.
+
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+First, we provide an explicit formula for the signed population-correlation objective in terms of a weight’s correlations with the cluster means and predictive
+directions. This lemma is stated for weights \(ω\) on the unit sphere, but is later
+applied to small weights ω because of the homogeneity of ReLU networks.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+<strong>Lemma 3</strong> (Cubic correlation identity). For every \(ω ∈ \mathbb{S}^{d−1}\) and \(ζ ∈ \{±1\}\),
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+Ψ_ζ(ω) = −\frac{ζ}{K\sqrt{6}}\sum_{c=1}^K b_c(ω)φ\big(b_c(ω)\big)ρ_c(ω)^3.
+\]
+
+Proof. Fix \(ω ∈ \mathbb{S}^{d−1}\). Conditional on \(c\),
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+ω^\top x = b_c(ω) + ω^\top z,\quad y = h_3\big(v_c^\top z\big).
+\]
+
+Hence the contribution of cluster \(c\) to \(Φ(ω) = \mathbb{E}\big[
+y\phi(ω^\top x)\big]\) is
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{E}\Big[h_3\big(v_c^\top z\big)\big(b_c(ω) + ω^\top z\big)_+\Big]
+\]
+
+Set
+
+\[
+U = v_c^\top z,\quad V = ω^\top z,\quad ρ = ρ_c(ω) = ⟨v_c, ω⟩.
+\]
+
+Since \(z \sim \mathcal{N}(0, I_d)\) and \(v_c, ω\) are unit vectors, \(U\) and \(V\) are standard Gaussian, and
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{E}[UV] = v_c^\top \mathbb{E}[zz^\top]ω = ⟨v_c, ω⟩ = ρ.
+\]
+
+Thus \((U, V)\) is a jointly standard Gaussian pair with correlation \(ρ\).
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+For \(|ρ| \lt 1\), define
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+Z :=\frac{U − ρV}{\sqrt{1 − ρ^2}}
+\]
+
+
+Because \((U, V)\) is jointly Gaussian, \((Z, V)\) is also jointly Gaussian. Moreover,
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{E}[Z] = 0,\quad \mathbb{E}[Z^2] = 1,
+\]
+
+and
+
+\[
+\mathbb{E}[ZV] = \frac{\mathbb{E}[UV] − ρ\mathbb{E}[V^2]}{\sqrt{1 − ρ^2}}= 0.
+\]
+
+Jointly Gaussian random variables with zero covariance are independent, so \(Z \sim \mathcal{N}(0, 1)\) is independent of \(V\). Therefore
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+U = ρV +\sqrt{1 − ρ^2} Z.
+\]
+
+When \(|ρ| = 1\), the same representation holds with the second term equal to zero.
+
+<br><span style="color:blue;">
+
+</span>
+</p><p>
+
+Conditioning on \(V\) and using the independence of \(Z\) gives
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{E}[U|V] = ρV
+\]
+
+and
+
+\[
+\begin{align}
+\mathbb{E}[U^3|V] &= E\Big[\big(ρV +\sqrt{1 − ρ^2} Z\big)^3\Big|V\Big]\\
+\\
+&= ρ^3V^3 + 3ρ(1 − ρ^2)V,
+\end{align}
+\]
+
+since \(\mathbb{E}[Z] = \mathbb{E}[Z^3] = 0\) and \(\mathbb{E}[Z^2] = 1\). Recalling that
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+h_3(x) = \frac{x^3 − 3x}{\sqrt{6}},
+\]
+
+we obtain
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\begin{align}
+\mathbb{E}[h_3(U)|V] &= \frac{1}{\sqrt{6}}\big(\mathbb{E}[U^3
+|V] − 3\mathbb{E}[U|V]\big) \\
+\\
+&= ρ^3h_3(V).
+\end{align}
+\]
+
+Since \((b_c(ω) + V )_+\) depends only on \(V\), the tower property now gives
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\begin{align}
+\mathbb{E}\Big[h_3(U)\big(b_c(ω) + V\big)_+\Big] &= \mathbb{E}
+\Big[\big(b_c(ω) + V\big)_+\mathbb{E}[h_3(U)|V]\Big] \\
+\\
+&= ρ_c(ω)^3\mathbb{E}_{G\sim \mathcal{N}(0,1)}\Big[h_3(G)\big(
+b_c(ω) + G\big)_+\Big].
+\end{align}
+\]
+
+It remains to compute the one-dimensional expectation. For any \(b ∈ \mathbb{R}\),
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\mathbb{E}[h_3(G)(b + G)_+] = \frac{1}{\sqrt{6}}\int_{-b}^∞(x^3 − 3x)(b + x)φ(x) dx.
+\]
+
+
+Using
+
+\[
+\frac{d}{dx}\big[(x^2 − 1)φ(x)\big]= −(x^3 − 3x)φ(x),
+\]
+
+integration by parts yields
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\int_{-b}^∞ (x^3 − 3x)(b + x)φ(x) dx =\int_{-b}^∞(x^2 − 1)φ(x) dx,
+\]
+
+where the boundary term vanishes because \(b + x = 0\) at \(x = −b\) and \(φ(x) → 0\) as \(x → ∞\). Since
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\frac{d}{dx}\big(xφ(x)\big)= (1 − x^2)φ(x),
+\]
+
+we further obtain
+
+<br><span style="color:blue;">
+
+</span>
+
+\[
+\int_{^b}^∞(x^2 − 1)φ(x) dx = −bφ(b).
+\]
+
+Therefore
+
+\[
+\mathbb{E}[h_3(G)(b + G)_+] = −\frac{bφ(b)}{\sqrt{6}}.
+\]
+
+Applying this with b = bc(ω), the contribution of cluster c to Φ(ω) is
+−
+1
+√
+6
+bc(ω)φ
+
+bc(ω)
+
+ρc(ω)
+3
+.
+Since c is uniform on [K],
+Φ(ω) = −
+1
+K
+√
+6
+X
+K
+c=1
+bc(ω)φ
+
+bc(ω)
+
+ρc(ω)
+3
+.
+Finally, Ψζ (ω) = ζΦ(ω), and hence
+Ψζ (ω) = −
+ζ
+K
+√
+6
+X
+K
+c=1
+bc(ω)φ
+
+bc(ω)
+
+ρc(ω)
+3
+,
+as claimed.
+Because the µc/R and vc vectors form an orthonormal basis, the sphere constraint is
+X
+K
+c=1
+b
+2
+c
+R2
++
+X
+K
+c=1
+ρ
+2
+c = 1.
+Next, we consider the optimization problem of signed population-correlation
+maximization between the value of the neuron and the ground truth: maxω∈S
+d−1 Ψζ (ω).
+This is written and analyzed below under the linear change of coordinates
+bc = ⟨ω, µc⟩, ρc = ⟨ω, vc⟩,
+44
+where we show that the neuron maximizes correlation with the target by specializing to one cluster. Here, we use the fact that the target is the cubic Hermite
+polynomial. (A similar argument would hold for all higher-degree Hermite polynomials as well.)
+Lemma 4 (Positive local maxima use one cluster). Consider the constrained
+maximization problem
+max
+b1,...,bK,ρ1,...,ρK
+F(b1, . . . , bK, ρ1, . . . , ρK),
+where
+F(b1, . . . , bK, ρ1, . . . , ρK) := −
+ζ
+K
+√
+6
+X
+K
+c=1
+bcφ(bc)ρ
+3
+c
+,
+subject to
+X
+K
+c=1
+b
+2
+c
+R2
++
+X
+K
+c=1
+ρ
+2
+c = 1.
+Every constrained local maximum of F with positive objective value has exactly
+one nonzero predictive coordinate ρc. Moreover, if ρc = 0, then the corresponding routing coordinate bc also vanishes.
+Proof. At a constrained local maximum, first-order stationarity of the Lagrangian
+F(b1, . . . , bK, ρ1, . . . , ρK) − λ
+ X
+K
+c=1
+b
+2
+c
+R2
++
+X
+K
+c=1
+ρ
+2
+c − 1
+!
+with respect to bc and ρc gives, for every c ∈ [K],
+−
+ζ
+K
+√
+6
+(1 − b
+2
+c
+)φ(bc)ρ
+3
+c =
+2λ
+R2
+bc, (B.1)
+−
+3ζ
+K
+√
+6
+bcφ(bc)ρ
+2
+c = 2λρc. (B.2)
+Here we used
+d
+db
+
+bφ(b)
+
+= (1 − b
+2
+)φ(b).
+Multiplying equation B.2 by ρc and summing over c gives
+3F(b1, . . . , bK, ρ1, . . . , ρK) = 2λ
+X
+K
+c=1
+ρ
+2
+c
+.
+Since the objective value is positive, at least one predictive coordinate is nonzero.
+Hence both the left-hand side and P
+c
+ρ
+2
+c are positive, so
+λ > 0.
+45
+If ρc = 0, then equation B.1 reduces to
+0 =
+2λ
+R2
+bc.
+Since λ > 0, this implies bc = 0.
+It remains to rule out two nonzero predictive coordinates. Suppose that ρc ̸= 0
+and ρr ̸= 0 for two distinct clusters c ̸= r. Keep all routing coordinates and all
+other predictive coordinates fixed, and consider
+ρc(t) = sign(ρc)
+p
+ρ
+2
+c + t, ρr(t) = sign(ρr)
+p
+ρ
+2
+r − t.
+For sufficiently small |t|, this perturbation is well defined, preserves the signs of
+the two coordinates, and satisfies
+ρc(t)
+2 + ρr(t)
+2 = ρ
+2
+c + ρ
+2
+r
+.
+Thus it preserves the constraint exactly.
+Differentiating F along this feasible curve at t = 0 gives
+F
+′
+(0) = −
+3ζ
+2K
+√
+6
+(bcφ(bc)ρc − brφ(br)ρr).
+Since ρc, ρr ̸= 0, dividing equation B.2 by the corresponding predictive coordinate gives
+−
+3ζ
+K
+√
+6
+bcφ(bc)ρc = 2λ, −
+3ζ
+K
+√
+6
+brφ(br)ρr = 2λ.
+Therefore
+F
+′
+(0) = 0.
+The second derivative along the same feasible curve is
+F
+′′(0) = −
+3ζ
+4K
+√
+6
+
+bcφ(bc)
+ρc
++
+brφ(br)
+ρr
+
+.
+Using the same KKT identities gives
+F
+′′(0) = λ
+2
+
+1
+ρ
+2
+c
++
+1
+ρ
+2
+r
+
+> 0.
+Thus a critical point with two nonzero predictive coordinates has a feasible
+direction of positive curvature and cannot be a constrained local maximum.
+Hence at most one predictive coordinate is nonzero. Since the objective value
+is positive, at least one is nonzero, so exactly one is active. As shown above,
+every routing coordinate corresponding to an inactive predictive coordinate also
+vanishes.
+46
+Returning to our objective maxω∈S
+d−1 Ψζ (ω), let c denote the unique active
+cluster and let
+τ = sign(ρc) ∈ {±1}.
+Then
+bj = ρj = 0 for every j ̸= c,
+and the constraint becomes
+b
+2
+c
+R2
++ ρ
+2
+c = 1.
+Hence
+ρc = τ
+r
+1 −
+b
+2
+c
+R2
+.
+Substituting this into F, and writing b = bc, reduces the problem to the onedimensional objective
+−
+τ ζ
+K
+√
+6
+bφ(b)
+
+1 −
+b
+2
+R2
+3/2
+, |b| < R.
+Let c be the unique active cluster and let
+τ = sign(ρc) ∈ {±1}.
+Then
+bj = ρj = 0 for every j ̸= c,
+and
+ρc = τ
+r
+1 −
+b
+2
+c
+R2
+.
+Writing b = bc, the remaining one-dimensional objective is
+−
+τ ζ
+K
+√
+6
+bφ(b)
+
+1 −
+b
+2
+R2
+3/2
+, |b| < R.
+Lemma 5 (Specialized maxima). Fix c ∈ [K] and ζ, τ ∈ {±1}. On the onecluster feasible branch, write
+f(b) := −
+τ ζ
+K
+√
+6
+bφ(b)
+
+1 −
+b
+2
+R2
+3/2
+, |b| < R,
+and let
+I := {b ∈ (−R, R) : f(b) > 0}.
+Then I is a connected open interval. For all sufficiently large R, f has a unique
+critical point b
+⋆ ∈ I, which is a strict local maximum and satisfies
+b
+⋆ = −τ ζ + O(R
+−2
+).
+47
+The corresponding direction
+ω
+⋆ = τ
+r
+1 −
+(b
+⋆)
+2
+R2
+vc +
+b
+⋆
+R2
+µc
+is a strict local maximum of Ψζ and obeys
+ω
+⋆ = τvc −
+τ ζ
+R2
+µc + O(R
+−2
+).
+Proof. For every b ∈ (−R, R),
+1
+K
+√
+6
+> 0, φ(b) > 0,
+
+1 −
+b
+2
+R2
+3/2
+> 0.
+Hence the sign of f(b) is determined entirely by −τ ζb:
+f(b) > 0 ⇐⇒ −τ ζb > 0.
+Since τ ζ ∈ {±1}, it follows that
+I =
+(
+(−R, 0), τ ζ = 1,
+(0, R), τ ζ = −1.
+Thus I is connected.
+For b ∈ I, set
+t = −τ ζb.
+The preceding characterization of I shows that this is a bijective linear change
+of variable from I onto (0, R). Since φ is even and (τ ζ)
+2 = 1, we obtain
+f(b) = 1
+K
+√
+6
+tφ(t)
+
+1 −
+t
+2
+R2
+3/2
+.
+Therefore the critical points of f on I correspond exactly to the critical points
+on (0, R) of
+t 7−→ tφ(t)
+
+1 −
+t
+2
+R2
+3/2
+.
+This function is strictly positive on (0, R), so its critical points can be found
+from its logarithmic derivative:
+d
+dt log "
+tφ(t)
+
+1 −
+t
+2
+R2
+3/2
+#
+=
+1
+t
+− t −
+3t
+R2 − t
+2
+.
+Thus a critical point satisfies
+1
+t
+− t −
+3t
+R2 − t
+2
+= 0.
+48
+Multiplying by t(R2 − t
+2
+) gives
+t
+4 − (R
+2 + 4)t
+2 + R
+2 = 0.
+Solving this quadratic equation in t
+2 gives
+t
+2 =
+R2 + 4 ±
+√
+R4 + 4R2 + 16
+2
+.
+The root with the plus sign is larger than R2
+, whereas the root with the minus
+sign lies in (0, R2
+). Hence there is exactly one critical point in (0, R), and it
+satisfies
+t
+2 =
+R2 + 4 −
+√
+R4 + 4R2 + 16
+2
+= 1 + O(R
+−2
+).
+Since t > 0,
+t = 1 + O(R
+−2
+).
+Returning to b = −τ ζt gives
+b
+⋆ = −τ ζ + O(R
+−2
+).
+The function
+tφ(t)
+
+1 −
+t
+2
+R2
+3/2
+is positive on (0, R) and tends to zero as t → 0 or t → R. Since it has exactly
+one critical point in (0, R), this point is its unique strict maximum. Hence b
+⋆
+is
+the unique maximizer of f on I.
+It remains to show that the corresponding point is a local maximum of the
+full constrained objective F. Since the feasible set is compact, F attains a
+global maximum. The point constructed above has positive objective value, so
+the global maximum is positive. By Lemma 4, every global maximizer must
+have exactly one nonzero predictive coordinate and therefore lies on one of the
+one-cluster feasible branches.
+For every choice of the active cluster c and orientation τ , the change of variable
+t = −τ ζb
+reduces the positive part of the corresponding one-cluster objective to
+1
+K
+√
+6
+tφ(t)
+
+1 −
+t
+2
+R2
+3/2
+.
+Thus all one-cluster branches have the same maximal value, attained uniquely
+at the point identified above. Consequently, every corresponding ω
+⋆
+is a global
+maximizer of Ψζ .
+There are only finitely many such maximizers, one for each c ∈ [K] and τ ∈
+{±1}. Hence each is isolated, and therefore each ω
+⋆
+is a strict local maximum
+of Ψζ .
+49
+B.1.2 Random Initialization, Self-selected Signs, and Cluster Coverage
+In the previous section, we considered the signed population-correlation objective Φζ for each neuron. In this section, we note that the sign ζ for each neuron
+is learned at very early times of training, and does not need to be fixed. Consider
+the teacher-only joint dynamics
+u˙ = Φ(ω), ω˙ = tanh(u)∇S
+d−1Φ(ω). (16)
+These equations arise from the two-layer parameterization when the second-layer
+weight is initially zero. Crucially, they neglect interactions between neurons,
+which we will later show is a fine approximation because the network is small
+at initialization.
+Lemma 6 (Positive signed-correlation flows specialize). Let ω
+0 have an absolutely continuous distribution on S
+d−1
+, fix ζ ∈ {±1}, and assume Ψζ (ω
+0
+) > 0.
+For all sufficiently large R, spherical gradient ascent
+ω˙ = ∇S
+d−1Ψζ (ω), ω(0) = ω
+0
+,
+converges almost surely to one of the specialized maxima in Lemma 5.
+Proof. Along spherical gradient ascent,
+d
+dtΨζ (ω(t)) = ∥∇S
+d−1Ψζ (ω(t))∥
+2
+2 ≥ 0.
+Since the sphere is compact, Ψζ is bounded above. Hence
+Z ∞
+0
+∥∇S
+d−1Ψζ (ω(t))∥
+2
+2
+dt < ∞.
+Moreover, Ψζ is smooth on the sphere, so its gradient and Hessian are bounded.
+It follows that ∥∇S
+d−1Ψζ (ω(t))∥
+2
+2 has bounded derivative. A nonnegative integrable function with bounded derivative must converge to zero, and therefore
+∥∇S
+d−1Ψζ (ω(t))∥2 −→ 0.
+We next note that Ψζ has only finitely many positive critical points. Indeed, at
+any positive critical point, the stationarity conditions equation B.1–equation B.2
+imply that λ > 0, and hence bc = 0 whenever ρc = 0. For every active coordinate
+ρc ̸= 0, eliminating λ from the two stationarity equations gives
+(1 − b
+2
+c
+)ρ
+2
+c =
+3b
+2
+c
+R2
+.
+Thus 0 < |bc| < 1 and
+ρ
+2
+c =
+3b
+2
+c
+R2(1 − b
+2
+c
+)
+.
+50
+Equation B.2 further shows that
+|bc|φ(bc)|ρc|
+has the same value for every active coordinate. Substituting the preceding
+expression for ρ
+2
+c
+, this quantity is proportional to
+|bc|
+2φ(|bc|)
+p
+1 − |bc|
+2
+,
+which is strictly increasing for 0 < |bc| < 1, since
+d
+dt log 
+t
+2φ(t)
+√
+1 − t
+2
+
+=
+2
+t
++
+t
+3
+1 − t
+2
+> 0.
+Hence all active |bc| are equal. If there are s active coordinates, the sphere
+constraint then gives
+s
+b
+2
+c
+(4 − b
+2
+c
+)
+R2(1 − b
+2
+c
+)
+= 1,
+which has a unique solution for b
+2
+c ∈ (0, 1). Thus, for each choice of the active
+coordinates and their signs, there is at most one positive critical point. Since
+there are only finitely many such choices, the set of positive critical points is
+finite.
+Because Ψζ (ω(0)) > 0 and the objective is nondecreasing, every accumulation
+point of the trajectory has positive objective value. By compactness, accumulation points exist, and the convergence of the gradient to zero implies that every
+accumulation point is a positive critical point. Since there are only finitely many
+such points, the trajectory must converge to one of them.
+Finally, the argument in Lemma 4 gives an unstable tangent direction at every
+positive critical point with more than one active predictive coordinate. Since
+there are only finitely many such critical points, the center-stable manifold theorem implies that the set of initial conditions converging to any of them has
+measure zero. Lemma 5 shows that the remaining positive critical points are
+precisely the specialized maxima. Hence an absolutely continuous initialization
+converges almost surely to a specialized maximum.
+For a single neuron, write
+ω(t) = w(t)
+∥w(t)∥2
+.
+ReLU homogeneity implies that gradient flow preserves
+∥w(t)∥
+2
+2 − a(t)
+2 = ∥w(0)∥
+2
+2 − a(0)2 = ε
+2
+.
+We therefore define the scalar amplitude coordinate
+u(t) := arsinh
+a(t)
+ε
+
+,
+51
+so that, equivalently,
+a(t) = ε sinh u(t), ∥w(t)∥2 = ε cosh u(t).
+Under this parametrization, the target-only part of the directional dynamics is
+u˙ = Φ(ω), ω˙ = tanh(u)∇S
+d−1Φ(ω). (17)
+Lemma 7 (Self-selected sign and almost-sure specialization). Let ω
+0 have an
+absolutely continuous distribution on S
+d−1
+, and let (u(t), ω(t)) solve equation 17
+with
+u(0) = 0, ω(0) = ω
+0
+.
+For almost every ω
+0
+, define
+ζ = sign(Φ(ω
+0
+)) ∈ {±1}.
+Then, for every t > 0,
+ζu(t) > 0, ζΦ(ω(t)) ≥ |Φ(ω
+0
+)|.
+Moreover, ω(t) is a positive time reparameterization of spherical gradient ascent
+on Ψζ = ζΦ, and, for all sufficiently large R, it converges almost surely to one
+of the specialized maxima in Lemma 5.
+Proof. Since Φ is real analytic and not identically zero, its zero set has spherical
+measure zero. Thus, for almost every ω
+0
+, Φ(ω
+0
+) ̸= 0. Fix such a ω
+0 and let
+ζ = sign(Φ(ω
+0
+)).
+At t = 0,
+d
+dt
+
+ζu(t)
+
+
+
+
+
+t=0
+= ζΦ(ω
+0
+) = |Φ(ω
+0
+)| > 0,
+so ζu(t) > 0 for all sufficiently small t > 0.
+As long as ζu(t) > 0, tanh(u(t)) has sign ζ, and hence
+ζ tanh(u(t)) = |tanh(u(t))|.
+Therefore
+d
+dt
+
+ζΦ(ω(t))
+= |tanh(u(t))| ∥∇S
+d−1Φ(ω(t))∥
+2
+2 ≥ 0.
+It follows that
+ζΦ(ω(t)) ≥ ζΦ(ω
+0
+) = |Φ(ω
+0
+)|.
+Consequently,
+d
+dt
+
+ζu(t)
+
+= ζΦ(ω(t)) ≥ |Φ(ω
+0
+)|,
+52
+and therefore
+ζu(t) ≥ |Φ(ω
+0
+)|t.
+In particular, ζu(t) cannot return to zero, so the preceding inequalities hold for
+every t > 0. This proves
+ζu(t) > 0, ζΦ(ω(t)) ≥ |Φ(ω
+0
+)|.
+Since Ψζ = ζΦ and tanh(u(t)) has sign ζ, the directional dynamics satisfy
+ω˙(t) = |tanh(u(t))|∇S
+d−1Ψζ (ω(t)).
+Thus ω(t) follows the same orbit as spherical gradient ascent on Ψζ , up to a
+positive reparameterization of time. Moreover, ζu(t) ≥ |Φ(ω
+0
+)|t implies |u(t)| →
+∞, and hence |tanh(u(t))| → 1. In particular,
+Z ∞
+0
+|tanh(u(t))| dt = ∞,
+so this reparameterization covers the entire forward gradient-ascent trajectory.
+Finally,
+Ψζ (ω
+0
+) = ζΦ(ω
+0
+) = |Φ(ω
+0
+)| > 0.
+Lemma 6 therefore implies that ω(t) converges almost surely to one of the
+specialized maxima in Lemma 5.
+Lemma 8 (Uniform selected labels and coverage). Let ω
+0
+1
+, . . . , ω0
+m be independent and uniform on S
+d−1
+, and let Jj be the cluster selected by the self-selected
+flow in Lemma 7. Then J1, . . . , Jm are independent and uniform on [K]. Consequently,
+P
+
+{J1, . . . , Jm} ̸= [K]
+
+≤ K
+
+1 −
+1
+K
+m
+≤ Ke−m/K.
+Proof. For a permutation π of [K], let Pπ be the orthogonal map satisfying
+Pπ
+µc
+R
+=
+µπ(c)
+R
+, Pπvc = vπ(c)
+.
+The data distribution, target, and self-selected vector field are equivariant under
+Pπ. Hence, if ω
+0
+selects cluster c, then Pπω
+0
+selects cluster π(c). Uniform
+spherical measure is invariant under Pπ, so all selection probabilities are equal.
+By Lemma 7, they sum to one, and each is therefore 1/K. Independence follows
+because each teacher-only label is a deterministic function of an independent
+initial direction.
+A fixed cluster is missed with probability (1 − 1/K)
+m. A union bound yields
+the coverage estimate.
+53
+B.1.3 Tracking by the Full Small-initialization Dynamics
+Finally, we put the above ingredients analyzing the trajectories of individual
+neurons together, and show that they describe the trajectory of the neurons in a
+neural network (up to rescaling) when the network is initialized small. The proof
+strategy of studying feature learning through effectively independent neuron
+dynamics in early-time or small-initialization regimes has been put forward in
+prior work [Abbe et al., 2022, Min et al., 2024, Glasgow, 2024]. The population
+loss is
+L(θ) = 1
+2
+E
+h
+fθ(x) − y
+2
+i
+,
+and its gradient-flow equations are
+a˙ j = E
+
+(y − fθ(x))ϕ(w
+⊤
+j x)
+
+,
+w˙ j = ajE
+h
+(y − fθ(x))1{w⊤
+j
+x>0}x
+i
+.
+Lemma 9 (Early-time tracking from a zero output layer). Initialize
+aj (0) = 0, wj (0) = εω0
+j
+, ω0
+j ∈ S
+d−1
+.
+Let (¯uj , ω¯j ) solve the self-selected teacher-only system
+u¯˙
+j = Φ(¯ωj ), ω¯˙
+j = tanh(¯uj )∇S
+d−1Φ(¯ωj ),
+with
+(¯uj (0), ω¯j (0)) = (0, ω0
+j
+).
+For every fixed T < ∞, there are constants LT < ∞ and εT > 0 such that, for
+0 < ε ≤ εT ,
+sup
+0≤t≤T
+(|uj (t) − u¯j (t)| + ∥ωj (t) − ω¯j (t)∥2) ≤ LT mε2
+,
+where
+aj (t) = ε sinh(uj (t)), ωj (t) = wj (t)
+∥wj (t)∥2
+.
+Proof. ReLU homogeneity gives the invariant
+d
+dt
+
+∥wj∥
+2
+2 − a
+2
+j
+
+= 0.
+Under the stated initialization,
+∥wj (t)∥
+2
+2 − aj (t)
+2 = ε
+2
+.
+Since aj = ε sinh uj , it follows that
+∥wj∥2 = ε cosh uj .
+54
+Substituting
+wj = ε cosh(uj )ωj
+into the gradient-flow equations and using ReLU homogeneity gives
+u˙ j = Φ(ωj ) − E
+
+fθ(x)ϕ(ωj
+⊤x)
+
+,
+ω˙ j = tanh(uj )
+
+∇S
+d−1Φ(ωj )
+−
+
+I − ωjω
+⊤
+j
+
+E
+
+fθ(x)1{ωj
+⊤x>0}x
+
+!
+.
+Lemma 3 shows that the teacher-only vector field is smooth on bounded uintervals and on the sphere. On every fixed interval [0, T], the quantities uj (t)
+remain uniformly bounded for sufficiently small ε. Consequently, there is a
+constant CT < ∞ such that
+|aj (t)| + ∥wj (t)∥2 ≤ CT ε, 0 ≤ t ≤ T.
+Since x has finite moments of every order,
+∥fθ(t)∥L2(Px) ≤ CT
+Xm
+j=1
+|aj (t)|∥wj (t)∥2 ≤ CT mε2
+.
+Cauchy–Schwarz therefore bounds both interaction terms in the (uj , ωj ) equations by CT mε2
+.
+The full and teacher-only systems have the same initial conditions, and their
+vector fields are Lipschitz on the relevant compact set. Gr¨onwall’s inequality
+yields
+sup
+0≤t≤T
+(|uj (t) − u¯j (t)| + ∥ωj (t) − ω¯j (t)∥2) ≤ LT mε2
+.
+Perturbations of the pure cubic target. The pure Hermite target isolates
+the specialization mechanism and makes the population-correlation landscape
+exact. However, we could consider perturbations of this objective and expect
+similar specialization results. Indeed, specialized maxima and their attraction
+basins should persist under perturbations whose induced population-correlation
+objective is sufficiently small near the specialized maxima and the strict-saddle
+regions induced by the cubic Hermite part of the target.
+B.2 Proof of Theorem 2
+We prove a slightly stronger, parameterized version of the main-text result.
+Throughout this subsection, d = 2K and R ≥ 1 is fixed. We use the means µc =
+55
+[Rec; 0], predictive directions vc = [0; ec], and covariance Σc = diag(0K×K, IK).
+The setting in Theorem 2 is the special case R = 1. Equivalently,
+c ∼ Unif([K]), x = µc +
+
+0
+z
+
+, z ∼ N (0, IK),
+and the regression function is
+f
+⋆
+(x) := E[y | x] = g
+
+⟨x, vc⟩
+
+, g(t) = t+ − (t − 1)+.
+B.2.1 Exact MLP Representation and Generalization
+For a two-layer ReLU network, define the path norm
+∥f∥P = inf
+
+
+
+X
+j
+|aj |∥wj∥2 : f(x) = X
+j
+ajϕ(w
+⊤
+j x)
+
+
+
+.
+For the parameterization θ = ((aj , wj ))m
+j=1, define
+∥θ∥
+2
+F :=
+1
+2
+Xm
+j=1
+
+a
+2
+j + ∥wj∥
+2
+2
+
+,
+and, for B > 0, let FB be the class of two-layer ReLU networks admitting a
+parameterization with ∥θ∥
+2
+F ≤ B. Define clip(t) = min{1, max{0, t}}.
+Lemma 10 (Exact specialized MLP). On the support of the data distribution,
+F(x) = X
+K
+c=1
+
+ϕ
+
+v
+⊤
+c x
+
+− ϕ
+
+vc −
+µc
+R2
+⊤
+x
+
+equals f
+⋆
+(x) exactly. Moreover,
+∥F∥P ≤ BR := K
+
+1 + p
+1 + R−2
+
+.
+It also admits a parameterization satisfying ∥θ∥
+2
+F ≤ BR.
+Proof. Suppose x belongs to cluster r. Orthogonality gives
+v
+⊤
+c x = e
+⊤
+c
+z,
+µ
+⊤
+c x
+R2
+= 1{c=r}.
+For c ̸= r, the two ReLUs in the cth pair therefore cancel. The pair with c = r
+equals
+ϕ(e
+⊤
+r
+z) − ϕ(e
+⊤
+r
+z − 1) = g(e
+⊤
+r
+z).
+Thus F = f
+⋆
+.
+56
+The two hidden weights for cluster c are vc and vc−R−2µc, with output weights
++1 and −1. Their norms are 1 and √
+1 + R−2, respectively. Summing over
+clusters gives the path-norm bound.
+Finally, positive homogeneity allows each neuron to be rescaled without changing its realized function so that |aj | = ∥wj∥2. For this balanced parameterization,
+1
+2
+X
+j
+
+a
+2
+j + ∥wj∥
+2
+2
+
+=
+X
+j
+|aj |∥wj∥2 ≤ BR.
+The following bound is the two-layer path-norm specialization of norm-based
+capacity and Rademacher-complexity results for neural networks [Neyshabur
+et al., 2015, Bach, 2017, Golowich et al., 2018]; the conversion from Rademacher
+complexity to a risk bound follows the standard framework of Bartlett and
+Mendelson [2002].
+Lemma 11 (Path-norm Rademacher bound). For any deterministic sample
+x1, . . . , xn ∈ R
+d
+,
+Rb n(FB) ≤
+2B
+n
+ Xn
+i=1
+∥xi∥
+2
+2
+!1/2
+.
+Consequently, for any B ≥ BR, if fbMLP is an empirical squared-loss minimizer
+over clip ◦FB, then
+E
+h
+∥fbMLP − f
+⋆
+∥
+2
+L2(Px)
+i
+≤ 16B
+r
+K + R2
+n
+.
+Proof. By the arithmetic–geometric mean inequality, every f ∈ FB has path
+norm at most B. By positive homogeneity, every f ∈ FB can therefore be
+represented as
+f(x) = X
+j
+cjϕ(ω
+⊤
+j x), ∥ωj∥2 = 1,
+X
+j
+|cj | ≤ B.
+The class FB is therefore contained in B times the absolutely convex hull of
+unit-norm ReLU atoms. The contraction inequality and Cauchy–Schwarz give
+Rb n(FB) ≤
+B
+n
+Eϵ sup
+∥ω∥2≤1
+
+
+
+
+
+Xn
+i=1
+ϵiϕ(ω
+⊤xi)
+
+
+
+
+
+≤
+2B
+n
+Eϵ
+
+
+
+
+
+
+
+
+
+
+Xn
+i=1
+ϵixi
+
+
+
+
+
+
+
+
+
+
+2
+≤
+2B
+n
+ Xn
+i=1
+∥xi∥
+2
+2
+!1/2
+.
+57
+Clipping does not increase Rademacher complexity. Since both the target and
+clipped predictions lie in [0, 1], squared loss is 2-Lipschitz in the prediction.
+Because f
+⋆ ∈ clip ◦FB whenever B ≥ BR, standard ERM symmetrization and
+contraction applied to the class used by the estimator imply
+E
+h
+∥fbMLP − f
+⋆
+∥
+2
+L2(Px)
+i
+≤ 8 Rn(FB).
+Finally, E∥x∥
+2
+2 = R2 + K, and Jensen’s inequality yields the stated result.
+B.2.2 The Ground-truth AGOP Removes the Routing Block
+Define the ground-truth population AGOP across all input coordinates by
+M := E
+
+∇xf
+⋆
+(x)∇xf
+⋆
+(x)
+⊤
+
+.
+Lemma 12 (The AGOP kernel loses the cluster identity). Let PV := PK
+c=1 vcv
+⊤
+c
+be the orthogonal projector onto the predictive subspace, let G ∼ N (0, 1), and
+set α := E[g
+′
+(G)
+2
+] = P(0 < G < 1) > 0. Then
+M =
+α
+K
+PV .
+Moreover, every measurable function h of √
+Mx satisfies
+E
+h
+h(
+√
+Mx) − f
+⋆
+(x)
+2
+i
+≥
+
+1 −
+1
+K
+
+Var(g(G)).
+Proof. On the support of cluster c, the regression function is f
+⋆
+(x) = g(⟨x, vc⟩)
+and hence, almost everywhere,
+∇xf
+⋆
+(x) = g
+′
+(⟨x, vc⟩)vc.
+Averaging the corresponding outer product over the input and the uniform
+cluster index gives
+M =
+1
+K
+X
+K
+c=1
+E
+
+g
+′
+(⟨x, vc⟩)
+2
+| c
+
+vcv
+⊤
+c =
+α
+K
+X
+K
+c=1
+vcv
+⊤
+c =
+α
+K
+PV .
+Therefore √
+M =
+p
+α/K PV . In particular, √
+Mx contains the predictive coordinates Sj := ⟨x, vj ⟩, j ∈ [K], but none of the routing coordinates. Under
+the data distribution, S = (S1, . . . , SK) ∼ N (0, IK) and is independent of the
+uniform cluster index c, while f
+⋆
+(x) = g(Sc). Thus, conditional on √
+Mx,
+E[f
+⋆
+(x) |
+√
+Mx] = 1
+K
+X
+K
+j=1
+g(Sj ).
+58
+The conditional-expectation characterization of squared-loss regression implies
+that every h(
+√
+Mx) has risk at least
+E
+h
+Var
+f
+⋆
+(x) |
+√
+Mx
+i
+= E
+
+
+
+1
+K
+X
+K
+j=1
+g(Sj )
+2 −
+
+
+1
+K
+X
+K
+j=1
+g(Sj )
+
+
+2
+
+
+
+=
+
+1 −
+1
+K
+
+Var(g(G)).
+B.2.3 An All-orders Lower Bound for Kernel Methods and Regularized RFM
+We next study the full family in Training Setup 3. Let PR := Id − PV denote
+the projector onto the routing subspace. By Lemma 12,
+Mρ = ρPR +
+
+ρ +
+α
+K
+
+PV .
+Thus both the standard metric Id and the regularized RFM metric Mρ commute with every rotation of the predictive subspace. The lower bound below
+is uniform over ρ ≥ 0, applies to any rotationally invariant base kernel K, and
+is independent of the empirical ridge parameter. This rotational-invariance obstruction is closely related to prior lower bounds for kernel methods in high
+dimensions [Ghorbani et al., 2020a].
+Let Her denote the probabilists’ Hermite polynomial and hr = Her /
+√
+r! its
+normalized version. Write
+g(t) = X∞
+r=0
+gbrhr(t), gbr = E[g(G)hr(G)].
+Lemma 13 (Hermite coefficients of the clipped ramp). For every r ≥ 2,
+gbr =
+φ(0) Her−2(0) − φ(1) Her−2(1)
+√
+r!
+.
+In particular, the sequence (gbr)r≥2 is not eventually zero, and therefore
+X
+r>r0
+gb
+2
+r > 0 for every finite r0.
+Proof. For a ∈ R and r ≥ 2, the identity
+d
+dx
+
+Her−1(x)φ(x)
+
+= − Her(x)φ(x)
+59
+gives, by integration by parts,
+E [Her(G)(G − a)+] = Z ∞
+a
+Her(x)(x − a)φ(x) dx
+=
+Z ∞
+a
+Her−1(x)φ(x) dx
+= φ(a) Her−2(a).
+Apply this identity at a = 0 and a = 1 and divide by √
+r!.
+To show that the coefficients are not eventually zero, define
+am = φ(0) Hem(0) − φ(1) Hem(1).
+The Hermite generating function gives
+X∞
+m=0
+am
+t
+m
+m!
+= e
+−t
+2/2
+
+φ(0) − φ(1)e
+t
+
+.
+The right-hand side is not a polynomial, so (am) is not eventually zero. The
+same is true of (gbr)r≥2. Parseval’s identity then shows that every finite Hermite
+tail has strictly positive squared mass.
+For r ≥ 2, let Vr,K be the traceless order-r Gaussian-chaos space. Equivalently,
+under the standard isometry between the rth Gaussian chaos and symmetric
+order-r tensors, Vr,K corresponds to the kernel of the tensor trace map. It is
+the irreducible O(K) representation of harmonic degree-r polynomials.
+Lemma 14 (Harmonic dimension and directional energy). The dimension of
+Vr,K is
+Hr,K =
+
+K + r − 1
+r
+
+−
+
+K + r − 3
+r − 2
+
+.
+Let Pr,K be orthogonal projection onto Vr,K. For every unit vector q ∈ R
+K,
+
+
+
+Pr,Khr(q
+⊤z)
+
+
+
+
+2
+L2 = αr,K,
+where, writing r = 2m or r = 2m + 1,
+α2m,K =
+mY−1
+j=0
+K + 2j − 1
+K + 2m + 2j − 2
+,
+and
+α2m+1,K =
+mY−1
+j=0
+K + 2j − 1
+K + 2m + 2j
+.
+For every fixed r, Hr,K = Θr(Kr
+) and αr,K → 1 as K → ∞.
+60
+Proof. The dimension of symmetric order-r tensors is K+r−1
+r
+
+. The trace map
+onto symmetric order-(r − 2) tensors is surjective, and its kernel is the traceless
+subspace. This gives the stated dimension.
+Under the Gaussian-chaos/tensor isometry, hr(q
+⊤z) corresponds to q
+⊗r
+. By rotational invariance, take q = e1. The orthogonal projection of the homogeneous
+polynomial x
+r
+1 onto harmonic degree r is
+Hr[x
+r
+1
+] =
+⌊
+X
+r/2⌋
+j=0
+(−1)jΓ(r − j + K/2 − 1)
+4
+j j! Γ(r + K/2 − 1) ∥x∥
+2j∆jx
+r
+1
+.
+Since
+∆jx
+r
+1 =
+r!
+(r − 2j)!x
+r−2j
+1
+,
+the coefficient of x
+r
+1
+in this harmonic projection is
+⌊
+X
+r/2⌋
+j=0
+(−1)j
+r! Γ(r − j + K/2 − 1)
+4
+j j!(r − 2j)! Γ(r + K/2 − 1).
+In the symmetric-tensor inner product, this coefficient equals ⟨e
+⊗r
+1
+, Pr,Ke
+⊗r
+1
+⟩,
+which equals the squared norm of the projection. Simplifying the finite sum
+gives the two product formulas displayed above. The asymptotic statements
+follow immediately from those formulas and the dimension expression.
+Lemma 15 (Invariant random-subspace bound). Let V be a D-dimensional irreducible orthogonal representation of a compact group. Let S ⊆ V be a random
+subspace with invariant law and dim S ≤ N almost surely. Then, for every fixed
+v ∈ V ,
+E dist(v, S)
+2 ≥
+
+1 −
+N
+D
+
++
+∥v∥
+2
+2
+.
+Proof. Let ΠS be orthogonal projection onto S. Invariance implies that EΠS
+commutes with the group action. Schur’s lemma gives EΠS = βIV . Taking
+traces yields βD = E dim S ≤ N. Therefore
+E dist(v, S)
+2 = ∥v∥
+2
+2 − E∥ΠSv∥
+2
+2 = (1 − β)∥v∥
+2
+2 ≥
+
+1 −
+N
+D
+
++
+∥v∥
+2
+2
+.
+Lemma 16 (All-orders lower bound for regularized AGOP kernels). For every
+rotationally invariant kernel K, every sample size n, every ρ ≥ 0, and every
+empirical ridge parameter λn ≥ 0, both estimators from Training Setup 3 satisfy
+E
+h
+∥fb− f
+⋆
+∥
+2
+L2(Px)
+i
+≥
+X∞
+r=2
+gb
+2
+r αr,K 
+1 −
+n
+Hr,K 
++
+, fb∈
+n
+fbKernel, fbRFMo
+.
+61
+Proof. Let A = Id for fbKernel and A = Mρ for fbRFM. By the representer
+theorem, for a fixed training sample the predictor belongs to the span of the
+n transformed-kernel sections centered at the training inputs. For a test point
+in cluster c, restrict these sections to that cluster’s support and write them as
+functions of its predictive argument ξ ∈ R
+K:
+ψ
+A
+c,i(ξ) := K
+√
+Axi
+,
+√
+A
+
+µc +
+
+0
+ξ
+ , 1 ≤ i ≤ n.
+At Hermite order r ≥ 2, define
+Sc,r := span 
+Pr,Kψ
+A
+c,i : 1 ≤ i ≤ n
+	
+⊆ Vr,K.
+Then dim Sc,r ≤ n. The predictive coordinates of the training inputs are standard Gaussian, A commutes with predictive rotations, and K is rotationally
+invariant. Hence the law of Sc,r is invariant under the O(K) action on Vr,K for
+both estimators and every ρ ≥ 0.
+The order-r target component in cluster c is
+γc,r = gbrPr,Khr(e
+⊤
+c
+ξ),
+whose squared norm is gb
+2
+r αr,K by Lemma 14. The projected predictor lies in
+Sc,r. Since distinct Gaussian-chaos orders are orthogonal, for every finite L,
+∥fbc − g(e
+⊤
+c
+·)∥
+2
+L2 ≥
+X
+L
+r=2
+dist(γc,r, Sc,r)
+2
+.
+Apply Lemma 15 and then let L → ∞ by monotone convergence. This gives,
+for every cluster c,
+E
+h
+∥fbc − g(e
+⊤
+c
+·)∥
+2
+L2
+i
+≥
+X∞
+r=2
+gb
+2
+r αr,K 
+1 −
+n
+Hr,K 
++
+.
+Averaging over the uniform test cluster proves the result.
+Lemma 17 (Polynomial sample budgets leave a nonzero kernel/RFM error).
+Fix A < ∞, let nK = O(KA), and let ρK ≥ 0 be any sequence. Then, for each
+fb∈ {fbKernel, fbRFM},
+lim inf
+K→∞
+E
+h
+∥fb− f
+⋆
+∥
+2
+L2(Px)
+i
+≥
+X
+r≥2
+r>A
+gb
+2
+r > 0.
+Proof. Fix an order r > A. By Lemma 14, Hr,K = Θr(Kr
+) and αr,K → 1, so
+nK
+Hr,K
+−→ 0.
+62
+Apply Lemma 16. For any finite collection of orders satisfying r > A, each corresponding summand converges to gb
+2
+r
+. Taking the lower limit and then increasing
+the finite collection gives, by monotone convergence,
+lim inf
+K→∞
+E
+h
+∥fb− f
+⋆
+∥
+2
+L2(Px)
+i
+≥
+X
+r≥2
+r>A
+gb
+2
+r
+.
+The right-hand side is strictly positive by Lemma 13.
+Proof of Theorem 2. Under Data Setting 2, the parameterized construction above
+specializes to R = 1. Lemma 10 then represents f
+⋆
+exactly with width 2K and
+Frobenius budget
+B1 = K(1 + √
+2) ≤ 3K.
+Thus f
+⋆ ∈ clip ◦F3K, so Lemma 11, applied with the same budget B = 3K used
+by fbMLP in Training Setup 2, gives
+E
+h
+∥fbMLP − f
+⋆
+∥
+2
+L2(Px)
+i
+≤ 48K
+r
+K + 1
+n
+≤ 48√
+2
+K3/2
+√
+n
+.
+This is the first claim of the theorem with the universal constant C = 48√
+2.
+For the second claim, fix any A < ∞, any sequence nK = O(KA), and any
+sequence ρK ≥ 0. Applying Lemma 17 separately to fbKernel and fbRFM yields
+lim inf
+K→∞
+E
+h
+∥fb− f
+⋆
+∥
+2
+L2(Px)
+i
+≥
+X
+r≥2
+r>A
+gb
+2
+r > 0, fb∈
+n
+fbKernel, fbRFMo
+.
+The lower bound is uniform over ρK and over the empirical ridge parameters
+allowed in Training Setup 3. This is exactly the pair of kernel and RFM conclusions in the main-text statement.
+63
+</p>
+    </body>
+</html>
