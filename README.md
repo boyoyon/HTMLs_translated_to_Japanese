@@ -10,8 +10,9 @@
         </p>
         <h2>更新項目</h2>
         <p>
-            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_revenge_of_monosemanticity/2026_revenge_of_monosemanticity.html">2026 単義性の逆襲</a><br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_the_bomb_the_hubris_and_the_spectre.html">2026 爆弾、傲慢、そして亡霊</a><br>
             ---<br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_revenge_of_monosemanticity/2026_revenge_of_monosemanticity.html">2026 単義性の逆襲</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_Minkowskis_Geometric_Explanation/2026_Minkowskis_Geometric_Explanation.html">2026 ローレンツ収縮に関するミンコフスキーの幾何学的説明</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2012_Max Born_Albert_Einstein_and_Hermann_Minkowski.html">2012 特殊相対性理論の時空定式化</a><br>
              <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_hermann_minkowski_and_the_special_theory_of_relativity.html">2026 ヘルマン・ミンコフスキーと特殊相対性理論</a><br>
