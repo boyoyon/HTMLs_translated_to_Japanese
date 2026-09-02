@@ -1,0 +1,2334 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>The Qualia Structure Paradigm</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+        <h1><center>The Qualia Structure Paradigm:<br>
+towards a construction of a Qualia Periodic Table for the dissolution of the Hard Problem of Consciousness<br><span style="color:blue;">クオリア構造パラダイム：<br>
+意識の「ハード・プロブレム」解消に向けたクオリア周期表の構築</span></center></h1>
+
+<center>Author: Naotsugu Tsuchiya<sup>1,2,3</sup></center>
+<br>
+
+1. School of Psychological Sciences, Faculty of Medicine, Nursing, and Health Sciences, Monash
+University, Melbourne, Victoria, Australia<br>
+2. Center for Information and Neural Networks (CiNet), National Institute of Information and
+Communications Technology (NICT), Suita-shi, Osaka 565-0871, Japan<br>
+3. Laboratory of Qualia Structure, ATR Computational Neuroscience Laboratories,
+2-2-2 Hikaridai, Seika-cho, Soraku-gun, Kyoto 619-0288, Japan.<br>
+<br>
+
+A book chapter draft<br>
+<br>
+To be included in "The Scientific Study of Consciousness - Experimental and Theoretical
+Approaches"
+<br><span style="color:blue;">
+『意識の科学的研究――実験的および理論的アプローチ』に収録予定
+</span>
+
+<h2>Chapter summary</h2>
+<p>
+The nature of the relationships between qualitative aspects of consciousness, or qualia, and their
+physical substrates remains unclear. The problem of qualia is one of the biggest challenges among
+the enigmas of consciousness. One difficulty in qualia research is characterization of qualia. Verbal
+descriptions and simple behavioral responses are unable to capture the richness of qualia, the
+dilemma faced by the traditional NCC paradigm. Comparing a quale with another quale, however,
+is not difficult. Such relational characterization of qualia, but now in a structural context, underlies
+the core of the Qualia Structure paradigm. This new paradigm was inspired by category theory, in
+particular, the Yoneda lemma, which states that an object in a category is characterized by its
+relationships to all objects in that category. Inspired by the lemma, the Qualia Structure paradigm
+proposes a pathway to characterize and organize the structural properties of different qualia type
+one by one. As a result, it aspires to reach an organizing principle, akin to a Mendeleevian periodic
+table, for the domains of qualia and their physical substrates. Under this framework, any valid
+theories of consciousness should link the two domains in a structure-preserving manner. This level
+of specification and understanding of relations between qualia and the physical would dissolve the
+Hard Problem of consciousness in its current form.
+
+<br><span style="color:blue;">
+意識の質的側面、すなわちクオリアと、その物理的基盤との関係の性質は、依然として不明確なままです。クオリアの問題は、意識をめぐる数々の謎の中でも最大の難問の一つです。クオリア研究における困難の一つは、クオリアをどのように特徴づけるかという点にあります。言語による記述や単純な行動反応だけではクオリアの豊かさを捉えることができず、これは従来のNCC（意識の神経相関）パラダイムが直面しているジレンマでもあります。しかし、あるクオリアと別のクオリアを比較することは、それほど困難ではありません。こうしたクオリア間の関係性に基づく特徴づけ――ただし、構造的な文脈において――こそが、「クオリア構造パラダイム」の中核をなす考え方です。この新しいパラダイムは、圏論、とりわけ「米田の補題」に着想を得ています。米田の補題とは、圏内の対象は、その圏内のすべての対象との関係性によって特徴づけられるというものです。この補題に触発され、クオリア構造パラダイムは、異なる種類のクオリアが持つ構造的特性を一つひとつ特徴づけ、体系化していくための道筋を提示します。その結果として、クオリアの領域と物理的基盤の領域に対し、メンデレーエフの周期表のような体系化の原理を導き出すことを目指しています。この枠組みの下では、意識に関するいかなる妥当な理論も、これら二つの領域を「構造を保存する」形で結びつけるものでなければなりません。クオリアと物理的側面との関係について、これほど詳細な特定と理解が可能になれば、意識の「ハード・プロブレム（難問）」は、現在のような形では解消されることになるでしょう。
+</span>
+</p><p>
+
+<h2>1. Introduction <span style="color:blue;">はじめに</span></h2>
+<h3>1.1 Definition of qualia <span style="color:blue;">クオリアの定義</span></h3>
+<p>
+Do subjective experiences and objective brain states belong to completely different worlds? How do qualia, qualitative aspects of consciousness, relate to the physical material of the brain? Qualia are the properties that characterize the moment of our conscious experience in terms of what it is like to have them (Chalmers, 2003; Nagel, 1974). There are various terminologies used to refer to the concept of qualia, such as phenomenal consciousness, contents of consciousness, feelings and others (Tye, 2021; Van Gulick, 2022).
+
+<br><span style="color:blue;">
+主観的な体験と客観的な脳の状態は、全く異なる世界に属するものなのだろうか。意識の質的な側面であるクオリアは、脳という物理的・物質的なものとどのように関わっているのだろうか。クオリアとは、意識体験の瞬間を、「それを経験することがどのようなことか（what it is like）」という観点から特徴づける性質のことである（Chalmers, 2003; Nagel, 1974）。クオリアという概念を指す用語としては、現象的意識、意識の内容、感覚など、様々なものが用いられている（Tye, 2021; Van Gulick, 2022）。
+</span>
+</p><p>
+
+One useful distinction to reduce confusions about qualia is its definition in a narrower or broader sense (Balduzzi & Tononi, 2009; Kanai & Tsuchiya, 2012). Qualia, in the broadest sense, refers to the entire experience of consciousness in a given moment. For example, when you are watching a sunset on the beach, the qualia includes not only the ocean and the sunset, but also the sound of the waves, the sensation of the sand, and your thoughts at that moment. In a narrower sense, it refers to an aspect of a momentary subjective experience, such as the "redness" of the sunset, the shape of the sun, and so on. In this chapter, we mainly discuss qualia in a narrower sense. However, it is important to note that a fuller understanding of qualia requires characterization of how narrower and broader qualia relate to each other (See Section 4.4 on this issue) (Lee-Youngzie et al., 2024).
+
+<br><span style="color:blue;">
+クオリアをめぐる混乱を軽減する上で有用な区別の一つに、その定義を「狭義」と「広義」のどちらで捉えるかという点があります（Balduzzi & Tononi, 2009; Kanai & Tsuchiya, 2012）。最も広い意味でのクオリアは、ある特定の瞬間に生じる意識体験の全体を指します。例えば、浜辺で夕日を眺めているとき、そこに含まれるクオリアは、海や夕日だけでなく、波の音、砂の感触、そしてその瞬間に抱いている思考などをも含みます。一方、狭義のクオリアは、夕日の「赤さ」や太陽の形といった、瞬間的な主観的体験の一側面を指します。本章では、主に狭義のクオリアについて論じます。ただし、クオリアをより深く理解するためには、狭義のクオリアと広義のクオリアが互いにどのような関係にあるのかを明らかにすることが重要である点に留意する必要があります（この点についてはセクション4.4を参照）（Lee-Youngzie et al., 2024）。
+</span>
+</p><p>
+
+Qualia have been considered as outside of the realm of science, as they appear to be intrinsic and private, only directly available and accessible to the experiencer. The ineffability, or impossibility of full description in words, seems to make qualia impossible to compare in an objective and intersubjective manner (Dennett, 1988)<sup>1</sup>
+
+<br><span style="color:blue;">
+クオリアは、本質的かつ私的なものであり、その体験者にのみ直接的にアクセス可能であるように見えるため、科学の領域外にあるものとみなされてきた。言葉による完全な記述が不可能であるというその「言い表せなさ」ゆえに、クオリアを客観的かつ間主観的な方法で比較することは不可能であるように思われる（Dennett, 1988）<sup>1</sup>。
+</span>
+</p><p style="padding-left:4em;">
+<sup>1</sup> The Qualia Structure paradigm is naturally consistent with a philosophical view, grouped as “qualia realism”. Realists take qualia as some phenomena that exist. Qualia are the target of scientific explanation. While other philosophical views, such as illusionism (Frankish, 2016), are inconsistent with qualia realism, they may or may not be incompatible with the resulting data arising from the Qualia Structure paradigm. For discussions on the structural approaches and various philosophical options, see (Doerig et al., 2019; Fleming & Shea, 2024; Ellia & Tsuchiya, 2024; Tsuchiya et al., 2020). For a highly relevant philosophical position, called Ontic Structural Realism, see (Ladyman et al., 2007; Laudisa & Rovelli, 2021; Loorits, 2014).
+<br><span style="color:blue;">
+「クオリア構造（Qualia Structure）」パラダイムは、「クオリア実在論」に分類される哲学的見解と自然に整合します。実在論者は、クオリアを実在する現象とみなします。クオリアは科学的説明の対象となります。イリュージョニズム（Frankish, 2016）のような他の哲学的見解はクオリア実在論とは相容れませんが、クオリア構造パラダイムから得られるデータと両立するかどうかは必ずしも明らかではありません。構造的アプローチや様々な哲学的選択肢に関する議論については、(Doerig et al., 2019; Fleming & Shea, 2024; Ellia & Tsuchiya, 2024; Tsuchiya et al., 2020) を参照してください。関連性の高い哲学的立場である「存在論的構造実在論（Ontic Structural Realism）」については、(Ladyman et al., 2007; Laudisa & Rovelli, 2021; Loorits, 2014) を参照してください。
+</span>
+</p>
+
+<h3>1.2 Current status of consciousness research <span style="color:blue;">意識研究の現状</span></h3>
+<p>
+Perhaps due to a prevailing pessimistic attitude, an earlier generation of consciousness researchers tended to focus on experimental paradigms where participants report on a single aspect of experience, where questions tend to be about its presence or absence. There, responses tended to be restricted in the form of binary yes or no, categorization, or rating along one dimension of visibility or confidence. While powerful and important, the results from this paradigm with simple responses are explainable by many theories of consciousness. Indeed, upon accumulated evidence in the neural correlates of consciousness over the last 30 years (Koch et al., 2016; Mashour et al., 2020), we have seen explosions of theories of consciousness (Del Pin et al., 2020; Doerig et al., 2021; Kleiner, 2024; Kuhn, 2024; Seth & Bayne, 2022), some of which at least explains this type of literature relatively well. If the main reason for accumulating empirical evidence was to provide tighter constraints on theories of consciousness, an explosion of theories has been rather ironic. The Qualia Structure paradigm proposes to accumulate evidence in a way to constrain the possibility space for theories of consciousness.
+
+<br><span style="color:blue;">
+おそらく悲観的な見方が支配的であったためでしょう、初期の世代の意識研究者は、参加者が経験の単一の側面について報告するような実験パラダイムに焦点を当てる傾向がありました。そこでは、質問は主にその経験の有無を問うものであり、回答も「はい／いいえ」の二択、カテゴリー分類、あるいは視認性や確信度といった単一の次元に沿った評価といった形式に限定されがちでした。こうした単純な回答を伴うパラダイムから得られる結果は、強力かつ重要ではあるものの、意識に関する多くの理論によって説明可能です。実際、過去30年間にわたり意識の神経相関に関する証拠が蓄積される中で（Koch et al., 2016; Mashour et al., 2020）、意識理論の爆発的な増加が見られました（Del Pin et al., 2020; Doerig et al., 2021; Kleiner, 2024; Kuhn, 2024; Seth & Bayne, 2022）。その中には、少なくともこの種の研究知見を比較的うまく説明できる理論も存在します。もし実証的な証拠を蓄積する主な目的が意識理論に対してより厳密な制約を課すことにあったのだとすれば、理論の爆発的な増加はむしろ皮肉な結果と言えるでしょう。「クオリア構造（Qualia Structure）」パラダイムは、意識理論の可能性の空間を制約するような形で証拠を蓄積することを提案するものです。
+</span>
+</p>
+
+<h2>2 Introducing the Qualia Structure paradigm<br><span style="color:blue;">クオリア構造パラダイムの紹介</span></h2>
+<h3>2.1 Relational characterizations of qualia and its mathematical foundation in category
+theory<br><span style="color:blue;">クオリアの「関係的」な特徴付けと、圏論におけるその数学的基礎</span></h3>
+
+<p>
+
+How does it do it? While it is impossible to describe any quale exhaustively in words, a quale can be compared and related with other qualia easily and intuitively (Chalmers, 1996; Fink et al., 2021; Kleiner, 2024; Lee, 2021; Nagel, 1974; Tsuchiya & Saigo, 2021). This relational characterisation of qualia underlies the Qualia Structure paradigm.
+
+<br><span style="color:blue;">
+それはどのようにして行われるのでしょうか。クオリアを言葉で網羅的に記述することは不可能ですが、あるクオリアを他のクオリアと比較し、それらと関連付けることは、容易かつ直感的に行えます（Chalmers, 1996; Fink et al., 2021; Kleiner, 2024; Lee, 2021; Nagel, 1974; Tsuchiya & Saigo, 2021）。クオリアに関するこうした関係性に基づく特徴づけが、「クオリア構造（Qualia Structure）」パラダイムの根底にあります。
+</span>
+</p><p>
+
+Though relational methodology and concepts are immensely rich and deep topics, little has yet been applied to consciousness research. In this chapter, we take “similarity” as an example relation, yet there are many more relational characterizations. For example, “inclusion” has been used to study space qualia (A. Haun & Tononi, 2019) and topology in mathematics (Robinson, 2014; Rosiak, 2022). “Similarity” has a rich and long history in psychology (Roads & Love, 2024; Shepard & Cooper, 1992). Interestingly, however, even fundamental questions, such as whether similarity between qualia satisfies the axioms of distance (minimality, symmetry, and triangle inequality) is not yet resolved (Epping et al., 2023; Pothos et al., 2013; Rowe et al., 2024; Tversky,
+1977).
+
+<br><span style="color:blue;">
+関係論的な方法論や概念は極めて豊かで奥深いテーマですが、意識研究への適用はまだほとんどなされていません。本章では「類似性」を関係の一例として取り上げますが、関係による特徴づけは他にも数多く存在します。例えば、「包含」は空間クオリアの研究（A. Haun & Tononi, 2019）や数学におけるトポロジーの研究（Robinson, 2014; Rosiak, 2022）に用いられてきました。一方、「類似性」は心理学において豊かで長い研究の歴史を持っています（Roads & Love, 2024; Shepard & Cooper, 1992）。しかし興味深いことに、クオリア間の類似性が距離の公理（最小性、対称性、三角不等式）を満たすかどうかといった基本的な問いでさえ、いまだ解決されていません（Epping et al., 2023; Pothos et al., 2013; Rowe et al., 2024; Tversky, 1977）。
+</span>
+</p><p>
+
+Relatedly, while various types of “spaces” for qualia have been proposed (Fekete & Edelman, 2011; Prentner, 2019; D. Rosenthal, 2015; Stanley, 1999), it is unclear if all qualia can be regarded as points in some high-dimensional space (Tsuchiya et al., 2024). At this stage, it may be better to step back a little, putting a wider net, rather than assuming the existence of some spaces for qualia, and to search for possible mathematical “structures” of qualia. This explains the origin of the name of our paradigm, the Qualia Structure.
+
+<br><span style="color:blue;">
+関連して、クオリアのための様々な種類の「空間」が提案されてきましたが（Fekete & Edelman, 2011; Prentner, 2019; D. Rosenthal, 2015; Stanley, 1999）、すべてのクオリアを何らかの高次元空間における点として見なせるかどうかは不明です（Tsuchiya et al., 2024）。現段階では、クオリアのための特定の空間の存在を前提とするのではなく、むしろ一歩引いてより広い視野を持ち、クオリアが持ちうる数学的な「構造」を探求する方が賢明かもしれません。これこそが、我々のパラダイムである「クオリア構造（Qualia Structure）」という名称の由来です。
+</span>
+</p><p>
+
+Category theory was invented as a formal way of transforming structures, introduced as “natural transformations” (Eilenberg & Mac Lane, 1945). To define natural transformations, functors were introduced. And to define functors, categories were introduced (Mac Lane, 1998). In other words, category theory was constructed to characterize the “sameness” between different “structures”, such as geometry and algebra, as some form of “transformation”. Transformation and similarity are related, but the latter is more to do with some kind of "distance" between two entities. We posit that similarity between two qualia structures can be dealt with in the same manner as sameness between two structures by the mathematical framework of category theory. For a formal introduction to category theory, we recommend (Awodey, 2010; Leinster, 2014; Riehl, 2017). For accessible introductions to category theory, we recommend (Cheng, 2022; Lawvere & Schanuel, 2009; Spivak, 2014).
+
+<br><span style="color:blue;">
+圏論は、構造を変換する形式的な手法として、すなわち「自然変換」（Eilenberg & Mac Lane, 1945）として導入されました。自然変換を定義するために「関手」が導入され、関手を定義するために「圏」が導入されました（Mac Lane, 1998）。言い換えれば、圏論は、幾何学や代数学といった異なる「構造」の間の「同一性」を、ある種の「変換」として特徴づけるために構築されたのです。変換と類似性は関連していますが、後者は二つの実体の間にある種の「距離」があることに関わっています。我々は、二つのクオリア構造間の類似性もまた、圏論という数学的枠組みを用いることで、二つの構造間の同一性と同様に扱えるのではないかと考えます。圏論の本格的な入門書としては、(Awodey, 2010; Leinster, 2014; Riehl, 2017) を推奨します。また、より親しみやすい入門書としては、(Cheng, 2022; Lawvere & Schanuel, 2009; Spivak, 2014) を推奨します。
+</span>
+</p><p>
+
+One of the most powerful tools in category theory is its toolkit to offer mathematically precise and different levels of “structural similarities” (Tsuchiya et al., 2016) (Figure 1a). Categories can have a functor (a structure-preserving map) or have a pair of adjoint functors, which relates two categories through a weak form of equivalence (Tsuchiya et al., 2023). Categories can be equivalent, isomorphic, or identical. The strength of the structural sameness differs substantially between them in a precise manner. 
+
+<br><span style="color:blue;">
+圏論における最も強力なツールの一つは、数学的に厳密かつ異なるレベルの「構造的類似性」（Tsuchiya et al., 2016）を提示する一連の枠組みです（図1a）。圏の間には、関手（構造を保存する写像）や随伴関手の対を定義することができ、これらは「弱い形の同値性」を通じて二つの圏を関連付けます（Tsuchiya et al., 2023）。圏同士の関係としては、同値、同型、あるいは同一といったものがあり得ますが、それらの間における構造的な「同一性」の強さは、厳密な形で大きく異なります。
+</span>
+</p>
+
+<center><img src="images/1.svg"></center>
+
+<p>
+
+Figure 1. Category theory as the mathematical foundation of the Qualia Structure paradigm. a) Different levels of sameness between categories (reproduced from (Tsuchiya et al., 2016)). b) The Yoneda lemma in a nutshell. To test if objects A and B in a category are the same or not, a web of relationships among all objects can be compared as an indirect characterization of the sameness. c) The QR code for an intuitive video description of the Yoneda lemma.(<a href="https://www.youtube.com/watch?v=2BNkicNcnLI">The Yoneda lemma: The Relational Approach</a>)
+
+<br><span style="color:blue;">
+図1. クオリア構造（Qualia Structure）パラダイムの数学的基盤としての圏論。a) 圏の間の「同一性」の異なるレベル（(Tsuchiya et al., 2016)より転載）。b) 米田の補題の概要。ある圏内の対象AとBが同一かどうかを調べる際、それらの同一性を間接的に特徴づけるものとして、すべての対象間の関係性のネットワークを比較することができる。c) 米田の補題を直感的に解説した動画へのQRコード。(<a href="https://www.youtube.com/watch?v=2BNkicNcnLI">The Yoneda lemma: The Relational Approach</a>)
+</span>
+</p><p>
+
+While consciousness science tends to assume or aspire to assume the “identity” (Oizumi et al., 2014) or to find “isomorphism” (Fink et al., 2021) between the subjective and the physical, the reality may turn out to be elsewhere and more nuanced. As an empirical research program, the Qualia Structure advocates quantifying the nature of structural similarity between the domain of qualia and the domain of physical substrates (Tsuchiya et al., 2016).
+
+<br><span style="color:blue;">
+意識科学は、主観的な領域と物理的な領域との間の「同一性」（Oizumi et al., 2014）を前提とする（あるいは前提とすることを目指す）か、あるいは「同型性」（Fink et al., 2021）を見出そうとする傾向がありますが、実際には、事態はそれとは異なる、より複雑な様相を呈している可能性があります。実証的な研究プログラムとして、「クオリア構造（Qualia Structure）」は、クオリアの領域と物理的基質の領域との間にある構造的類似性の性質を定量化することを提唱しています（Tsuchiya et al., 2016）。
+</span>
+</p>
+
+<h3>2.2 The Yoneda lemma in Category Theory <span style="color:blue;">圏論における米田の補題</span></h3>
+<p>
+In addition to the different levels of sameness, category theory offers a mathematical foundation for the structural approach, the Yoneda lemma. “Lemma” is usually presented as a prelude to an important theorem. However, the lemma discovered by Nobuo Yoneda earlier than 1960 turned out to be one of the most powerful and insightful results from category theory (Bradley, 2017; Cheng, 2022; Tsuchiya & Saigo, 2021).
+
+<br><span style="color:blue;">
+「同一性」の様々なレベルに加え、圏論は構造的アプローチのための数学的基盤、すなわち「米田の補題」を提供しています。「補題（lemma）」とは通常、重要な定理を導くための準備段階として提示されるものです。しかし、米田信夫が1960年より前に発見したこの補題は、結果として圏論における最も強力かつ洞察に富んだ成果の一つとなりました（Bradley, 2017; Cheng, 2022; Tsuchiya & Saigo, 2021）。
+</span>
+</p><p>
+
+The most relevant consequence of the Yoneda lemma is that one can characterize an object in a category through its relationships with all other objects in the category. This statement makes sense intuitively when one considers how the meaning of a word is determined by its web of relationships with other words (c.f., Saussure’s structural linguistics (Gasparri & Marconi, 2015)). This type of indirect characterization has been employed in science when an object in question is difficult to define or characterize on its own. The benefits of the mathematical approach, such as the Yoneda lemma, is to provide precise conditions when such an inference is possible. Importantly, this inference is valid about an object in a category. Objects in a category have to satisfy a few axioms. For example, one of the axioms is  “composition”. Suppose that “objects” {A, B, C} and “arrows” {f, g} form a category. Composition axiom requires that, if objects {A, B, C} are related to each other through two arrows f:A→B, g:B→C, then A and C must be related by the compositional relation g○f:A→C.
+
+<br><span style="color:blue;">
+米田の補題がもたらす最も重要な帰結は、ある圏内の対象を、その圏内の他のすべての対象との関係性を通じて特徴づけられるという点にあります。この考え方は、ある単語の意味が他の単語との関係性の網の目の中で決定されるという点（ソシュールの構造言語学を参照：Gasparri & Marconi, 2015）を考えると、直感的に理解しやすいでしょう。このような間接的な特徴づけの手法は、対象そのものを単独で定義したり特徴づけたりすることが困難な場合、科学の分野でも用いられてきました。米田の補題のような数学的アプローチの利点は、そのような推論が可能となるための厳密な条件を提示できることにあります。重要なのは、この推論が「圏」における対象について有効であるという点です。圏内の対象は、いくつかの公理を満たす必要があります。例えば、「合成」もその公理の一つです。今、対象 {A, B, C} と射 {f, g} が圏を構成していると仮定しましょう。合成の公理によれば、対象 {A, B, C} が二つの射 f: A→B および g: B→C によって互いに関連づけられている場合、A と C は合成関係 g○f: A→C によって関連づけられていなければなりません。
+</span>
+</p><p>
+
+An astute reader might be concerned here that “similarity” relation does not satisfy the requirement of category. Similarities between qualia can subjectively feel graded. Considering a case of gradual changes in experience, compositions appear to be violated. Consider the color qualia of the sky near sunset. Spot A may be similar to B in color, and spot B may be similar to C. Yet, A may not be similar at all to C.
+
+<br><span style="color:blue;">
+鋭い読者なら、ここで「類似性」という関係が「カテゴリー」の要件を満たさないのではないかと懸念するかもしれない。クオリア間の類似性は、主観的に見て段階的なものとして感じられ得るからだ。経験が徐々に変化する事例を考えると、カテゴリーの構成性（合成性）が損なわれているように思われる。日没近くの空に見られる色のクオリアを例に挙げてみよう。ある地点 A の色は地点 B の色と似ているかもしれず、地点 B は地点 C と似ているかもしれない。しかし、地点 A は地点 C とは全く似ていないということもあり得るのである。
+</span>
+</p><p>
+
+To address this type of concern, one can consider enriched category theory (Kelly, 1982; Lawvere, 1973), which extends the notion of “relation” into “generalized metric”<sup>2</sup>. For enriched categories, an enriched version of the Yoneda lemma can be applied. Thus, even if relationships among objects are neither binary nor categorical, we can apply the Yoneda lemma for the enriched categories in consciousness research (Tsuchiya et al., 2022). For a relatively technical discussion on the Consideration of mathematical properties of similarity about qualia , see also Appendix.
+
+<br><span style="color:blue;">
+こうした懸念に対処する一つの方法として、「関係」という概念を「一般化された距離（generalized metric）」<sup>2</sup>へと拡張する「豊穣圏論（enriched category theory）」（Kelly, 1982; Lawvere, 1973）を検討することができます。豊穣圏に対しては、米田の補題の豊穣版を適用することが可能です。したがって、対象間の関係が二値的でも圏論的（通常の圏における射）でもない場合であっても、意識研究において豊穣圏に対する米田の補題を適用することができます（Tsuchiya et al., 2022）。クオリアの類似性に関する数学的性質の検討といった、比較的専門的な議論については、付録も参照してください。
+</span>
+</p><p style="padding-left:4em;">
+<sup>2</sup> Note that enriched category is not the only way to deal with this issue. See Chapter 8.2 in Eugenia Chen’s Joy of abstraction and “sorites paradox” in Stanford Encyclopedia 
+<br><span style="color:blue;">
+なお、この問題に対処する方法は「豊穣圏（enriched category）」だけではありません。Eugenia Cheng著『Joy of Abstraction』の第8.2章、およびスタンフォード哲学百科事典の「ソリテス・パラドックス（sorites paradox）」の項目を参照してください。
+</span>
+</p>
+
+<h3>2.3 What are Qualia Structures?<br><span style="color:blue;">クオリア構造とは何か？</span></h3>
+<p>
+What do we mean by Qualia Structures? Broadly speaking, they are the underlying mathematical structures behind qualia. We hypothesize the existence of such structures, part of which can be characterized by behavioral similarity ratings between their different elements.
+
+<br><span style="color:blue;">
+「クオリア構造」とは何を意味するのでしょうか。大まかに言えば、それはクオリアの背後にある数学的構造のことです。私たちはそのような構造の存在を仮定しており、その構造の一部は、異なる要素間の行動的類似性評価によって特徴づけることができます。
+</span>
+</p><p>
+
+For example, in the narrow sense qualia of color, we can measure a set of similarity relationships among different color qualia. Consider a color qualia structure of a person X as a category (category QCX). Likewise, consider a qualia structure that describes the structural relationship among qualia for visual motion, emotion, space, and time,... for person X as category QMX, QEX, QSX, QTX,... etc. Grouping all of these, we can consider a category Q*X, whose objects are these categories and arrows describe structural relationships between these categories, for person X’s qualia.
+
+<br><span style="color:blue;">
+例えば、狭義の「色のクオリア」について言えば、異なる色のクオリア間の類似関係の集合を測定することが可能です。ある人物Xの色のクオリア構造を一つの圏（圏QCX）とみなしてみましょう。同様に、人物Xにおける視覚的運動、情動、空間、時間などに関するクオリアの構造的関係を表すクオリア構造を、それぞれ圏QMX、QEX、QSX、QTX……などとみなします。これらすべてをまとめることで、人物Xのクオリアに関する圏Q*Xを考えることができます。この圏Q*Xにおいては、対象は上述の各圏であり、射はそれらの圏の間の構造的関係を表すものとなります。
+</span>
+</p><p>
+
+For a particular qualia category, we can also construct a category of categories to describe interindividual differences. For example, consider a color qualia structure for neurotypical and atypical populations QCN and QCA. We can also consider the underlying developmental trajectory of color qualia as a function of age as QCi, where i is the age of a person. These concepts can be also extended to different species S for QCS<sup>3</sup>.
+
+<br><span style="color:blue;">
+特定のクオリア・カテゴリーについて、個人差を記述するための「カテゴリーのカテゴリー」を構築することも可能です。例えば、定型発達集団および非定型発達集団における色のクオリア構造を、それぞれQCNおよびQCAとして考えてみましょう。また、年齢をiとしたとき、年齢の関数としての色のクオリアの根底にある発達的軌跡をQCiと捉えることもできます。これらの概念は、異なる種Sに拡張し、QCS<sup>3</sup>とすることも可能です。
+</span>
+</p><p style="padding-left:4em;">
+<sup>3</sup> In this formulation, it is perhaps too restrictive to assume all these different categories as an element in a set or a point in a space with proper metric. This is one of the reasons why we prefer a more general term, “structure”. Eventually, the concept of structures and space can be coherently subsumed at the level of another mathematical concept, called “topos”(Fong & Spivak, 2019; Goldblatt, 2014; Phillips, 2024). As of now, we promote the concept of “structures” over the more (currently) popular term of “space” as the latter seems to induce (unnecessary) theoretical restrictions and assumptions that may prevent us from revealing the nature of the underlying mathematical structures behind qualia. We hope that the usefulness of abstract formulation of the Quala Structure becomes clearer as you read on, especially Section 3.
+<br><span style="color:blue;">
+この定式化において、これら多様なカテゴリーのすべてを、ある集合の要素や適切な距離を備えた空間上の点とみなすことは、おそらく制約が強すぎるでしょう。これこそが、私たちが「空間」よりも「構造（structure）」という、より一般的な用語を好む理由の一つです。最終的には、構造や空間という概念は、「トポス（topos）」と呼ばれる別の数学的概念の枠組みの中で、整合性を持って包括的に捉えることが可能です（Fong & Spivak, 2019; Goldblatt, 2014; Phillips, 2024）。現時点では、私たちは「空間」という（現在主流の）用語よりも「構造」という概念を推奨します。「空間」という用語は、（不必要な）理論的制約や仮定を招き寄せ、クオリアの背後にある数学的構造の本質を解明する妨げとなりかねないと考えられるからです。「クオリア構造」の抽象的な定式化が持つ有用性は、読み進めるにつれて、特に第3節において、より明確になっていくものと期待しています。
+</span>
+</p>
+
+<h3>2.4 Three pillars of the Qualia Structure paradigm<br><span style="color:blue;">クオリア構造パラダイムの3つの柱</span></h3>
+<p>
+The Qualia Structure paradigm consists of the three distinct research approaches.
+
+<br><span style="color:blue;">
+クオリア構造パラダイムは、3つの異なる研究アプローチから構成されています。
+</span>
+</p><p>
+
+First, it tries to characterize qualia structures. This includes development of experimental methodologies and computational analysis techniques, such that we can estimate, visualize, and compare the relational structures of qualia from empirical data (Figure 2a). We will review recent advances along this line in Section 3.
+
+<br><span style="color:blue;">
+まず、クオリアの構造を特徴づけることを試みます。これには、実験手法や計算解析技術の開発が含まれます。それらを用いることで、経験的データからクオリアの関係構造を推定、可視化、比較することが可能になります（図2a）。この方向性における近年の進展については、第3節で概観します。
+</span>
+</p>
+
+<center><img src="images/2.svg"></center>
+
+<p>
+
+Figure 2. Three pillars of the Qualia Structure paradigm and the final goal of establishing commutative diagrams to dissolve the Hard Problem of Consciousness. a) Characterizing and comparing qualia structures. Comparisons can be within-person across different times or space (Zeleznikow-Johnston et al., 2023) or across-persons (Kawakita et al., 2025; Moriguchi et al., 2025). b) Proposing and comparing different algorithms for extracting causal structures from physical substrates. The example is from Integrated Information Theory (Albantakis et al., 2023). c) Quantifying the degree of structural similarity between qualia structures and causal structures proposed by various theories. d) Establishment of commutative diagrams that is necessary to compare different individuals and species horizontally (within the domain) and between qualia and its underlying physical/causal basis vertically (across the domains). Such diagrams would dissolve the Hard Problem of Consciousness.
+
+<br><span style="color:blue;">
+図2. 「クオリア構造」パラダイムを構成する3つの柱と、意識の「困難な問題（Hard Problem）」を解消するための可換図式構築という最終目標。a) クオリア構造の特性記述と比較。比較は、同一人物内での異なる時間や空間にわたるもの（Zeleznikow-Johnston et al., 2023）や、個人間でのもの（Kawakita et al., 2025; Moriguchi et al., 2025）であり得る。b) 物理的基盤から因果構造を抽出するための様々なアルゴリズムの提案とそれらの比較。例として統合情報理論（Albantakis et al., 2023）が挙げられる。c) クオリア構造と、様々な理論によって提案された因果構造との間の構造的類似性の度合いの定量化。d) 可換図式の構築。これは、異なる個人や種の間で水平的に（同一領域内で）、またクオリアとその基盤となる物理的・因果的根拠との間で垂直的に（領域をまたいで）比較を行うために必要となるものである。こうした図式は、意識の「困難な問題」を解消するであろう。
+</span>
+</p><p>
+
+Second, it tries to propose and compare the candidate computational algorithms, which extracts the qualia-relevant structures from physical substrates. Among available theories of consciousness (Kuhn, 2024; Seth & Bayne, 2022), Integrated Information Theory (IIT) (Albantakis et al., 2023; Balduzzi & Tononi, 2009; A. Haun & Tononi, 2019; Oizumi et al., 2014; Tononi, 2004) has been most advanced in this front. In this book chapter, we call the hypothetical “qualia-relevant structures extracted from physical substrates” simply as “causal structures”. Note that the Qualia Structure paradigm is compatible with any other alternative theories, as long as they are specific enough to provide causal structures. Along this direction, candidate structures based on entropy and mutual information have been pitted against the integrated information structures (A. Haun et al., 2017) (See later for details).<sup>4</sup>
+
+<br><span style="color:blue;">
+第二に、本書は、物理的基盤からクオリアに関連する構造を抽出するための計算アルゴリズムの候補を提示し、それらを比較しようとするものである。既存の意識理論（Kuhn, 2024; Seth & Bayne, 2022）の中で、この点において最も進んでいるのが統合情報理論（IIT）（Albantakis et al., 2023; Balduzzi & Tononi, 2009; A. Haun & Tononi, 2019; Oizumi et al., 2014; Tononi, 2004）である。本章では、この「物理的基盤から抽出されたクオリアに関連する構造」という仮説的な概念を、単に「因果構造」と呼ぶことにする。なお、「クオリア構造」パラダイムは、因果構造を提示できる程度に具体的であれば、他のいかなる代替理論とも両立可能であることに留意されたい。こうした方向性のもと、エントロピーや相互情報量に基づく構造の候補が、統合情報構造と比較検討されてきた（A. Haun et al., 2017）（詳細は後述）。<sup>4</sup>
+</span>
+</p><p style="padding-left:4em;">
+<sup>4</sup> A causal structure is an object in a category of causal structures (or CStr). A category of CStr consists of a collection of these objects with appropriate arrows. A candidate object is a cause-effect structure in IIT, which is hypothesized to correspond to a structure of a moment of a single experience (link to the IIT Wiki) or a broad quale. We can also consider different types of causal structures, CStr-sub, which consists of a subset of the IIT’s cause-effect structure, such that it reflects only one type of narrow qualia. For example, it is plausible that a subset of the cause-effect structures unfolded from the IIT’s complex may correspond to a color aspect of experience at the fovea. Call such a collection of causal structures as objects with appropriate arrows as a category, CStr-c. Similar categories can be constructed for other types of narrow qualia (e.g., visual motion, space, time). Now, a collection of (these smaller) CStr-* can also form a category of categories. For example, focusing on how CStr-c changes over time, we can consider CStr-c-dev. Or how CStr-c relates from one person to another, CStr-c-individual-differences. These two categories of categories are most directly comparable to the Qualia Structure discussed in Section 3.
+<br><span style="color:blue;">
+因果構造（causal structure）とは、因果構造の圏（CStr）における対象のことです。CStrの圏は、これらの対象と適切な射（arrow）の集まりから構成されます。その対象の候補となるのがIIT（統合情報理論）における「因果効果構造（cause-effect structure）」であり、これは単一の経験の「ある瞬間」（IIT Wikiへのリンク）や、広義のクオリアの構造に対応すると仮定されています。また、IITの因果効果構造の部分集合からなり、特定の種類の「狭義のクオリア」のみを反映するような、異なるタイプの因果構造（CStr-sub）を考えることも可能です。例えば、IITの「複合体（complex）」から展開される因果効果構造の部分集合が、網膜中心窩（fovea）における経験の「色」の側面に対応しているという可能性は十分に考えられます。このような因果構造（対象）と適切な射からなる圏を、CStr-cと呼ぶことにしましょう。同様の圏は、他の種類の狭義のクオリア（例：視覚的な動き、空間、時間）についても構築可能です。さて、（これらより小さな）CStr-*の集まりは、さらに「圏の圏（category of categories）」を形成することもできます。例えば、CStr-cが時間とともにどのように変化するかに着目したCStr-c-devや、ある人と別の人との間でCStr-cがどのような関係にあるかを示すCStr-c-individual-differences（個人差）などを考えることができます。これら2つの「圏の圏」は、セクション3で論じた「クオリア構造（Qualia Structure）」と最も直接的に比較可能なものです。
+</span>
+</p><p>
+
+
+Third, it tries to clarify the nature of the relationship between qualia structures and causal structures. The Qualia Structure paradigm does not start from the assumption that qualia structures are identical to some causal structure proposed by a particular theory. Rather, the Qualia Structure aims to characterize the degree of the structural similarity between qualia structures and causal structures, proposed by different theoretical proposals (Tsuchiya et al., 2016).
+
+<br><span style="color:blue;">
+第三に、クオリア構造と因果構造との関係の性質を明らかにしようと試みている。「クオリア構造」というパラダイムは、クオリア構造がある特定の理論によって提示された因果構造と同一であるという前提から出発するわけではない。むしろ、クオリア構造（に関する研究）は、クオリア構造と、様々な理論的提案によって示される因果構造との間の構造的類似性の度合いを特徴づけることを目指している（Tsuchiya et al., 2016）。
+</span>
+</p><p>
+
+As a result of these three approaches, the Qualia Structure paradigm eventually tries to establish commuting diagrams as in Figure 2d, which allows structural characterization of horizontal (within a domain) and vertical (across domains) directions. As elaborated later, this is a step necessary to achieve the dissolution of the Hard Problem.
+
+<br><span style="color:blue;">
+これら3つのアプローチの結果として、「クオリア構造」パラダイムは最終的に、図2dに示すような可換図式を確立しようとします。これにより、水平方向（ドメイン内）および垂直方向（ドメイン間）の構造的特徴付けが可能になります。後述するように、これは「ハード・プロブレム」の解消を実現するために不可欠なステップです。
+</span>
+</p><p>
+
+In the last section of this chapter, we briefly sketch a Qualia Periodic Table hypothesis, to provide further inspiration on where the Qualia Structure paradigm is trying to head towards. The hypothesis proposes a Mendeleevian approach to organize different types of qualia structures and causal structures as a possible extension of the horizontal elationship in Figure 2d. The hypothesis also proposes the two tables to be “dual” to each other. The dual relationship is a possible extension of the vertical relationship in Figure 2d. These mappings themselves are further organized in a tertiary structure, which specifies the relationships among different secondary structures as in natural transformation in category theory. Such tight hierarchical structures would leave little rooms for arbitrary thought experiments, and constrain logically possible worlds. When such a table is obtained, human knowledge may advance to the level that dissolves or reframes the original formulation of the hard problem of consciousness (Chalmers, 1996).
+
+<br><span style="color:blue;">
+本章の最後の節では、「クオリア構造」パラダイムが目指す方向性についてさらなる示唆を得るために、「クオリア周期表」仮説の概要を提示します。この仮説は、図2dにおける「水平的関係」の拡張の可能性として、多種多様なクオリア構造や因果構造を体系化する、メンデレーエフ的なアプローチを提案するものです。また、この仮説では、二つの表が互いに「双対（デュアル）」な関係にあることも提唱しています。この双対関係は、図2dにおける「垂直的関係」の拡張にあたるものです。これらの写像自体もさらに高次の「三次構造」へと組織化され、圏論における自然変換のように、異なる二次構造間の関係を規定します。このように強固な階層構造が確立されれば、恣意的な思考実験の余地はほとんどなくなり、論理的に可能な世界も制約されることになるでしょう。そのような表が完成した暁には、人間の知は、意識の「ハード・プロブレム」（Chalmers, 1996）の当初の定式化を解消、あるいは再定義するような段階へと進歩するかもしれません。
+</span>
+</p>
+
+<h2>3. Empirical research <span style="color:blue;">実証研究</span></h2>
+<h3>3.1 Estimation, visualization and quantification of qualia structures<br><span style="color:blue;">クオリア構造の推定、可視化、および定量化</span></h3>
+<h4>3.1.1 Color qualia structures at the fovea and the periphery<br><span style="color:blue;">中心窩と周辺部における色覚構造</span></h4>
+<p>
+Qualia structures can be inferred from introspection, to some extent. However, the history in psychological studies tells us that as the proper measurement and analysis methods are developed, we can reveal the structure with less distortion due to individual differences in memory, report capability and cognitive bias.
+
+<br><span style="color:blue;">
+クオリアの構造は、ある程度までは内省によって推測可能です。しかし、心理学研究の歴史が示すように、適切な測定・分析手法が開発されるにつれ、記憶や報告能力、認知バイアスといった個人差に起因する歪みを抑えつつ、その構造を明らかにできるようになります。
+</span>
+</p><p>
+
+With respect to color qualia structures, the nature of peripheral color has been disputed. One school of thought claims that color in the periphery is pure illusion, filled in by memory and expectation, facilitated by human ability to make saccades to the periphery (Carroll & Dennett, 2020.; Chater, 2018; Cohen et al., 2020; Cohen & Rubenstein, 2020; Giron et al., 2018)<sup>5</sup>. The core of this claim is the undeniable fact that the density of the cones in the retina decreases substantially towards the periphery (Curcio et al., 1990) (Figure 3a and b).
+
+<br><span style="color:blue;">
+色のクオリアの構造に関して、周辺視野における色の性質については議論がなされてきた。ある説では、周辺視野の色は純粋な錯覚であり、記憶や期待によって「充填（fill-in）」されたものだと主張されている。このプロセスは、周辺視野に向けてサッカード（急速眼球運動）を行う人間の能力によって促進されるとされる（Carroll & Dennett, 2020; Chater, 2018; Cohen et al., 2020; Cohen & Rubenstein, 2020; Giron et al., 2018）<sup>5</sup>。この主張の核心にあるのは、網膜における錐体細胞の密度が周辺部に向かって著しく低下するという、否定しがたい事実である（Curcio et al., 1990）（図3aおよびb）。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>5</sup> Introduction in Zeleznikow-Johnston et al 2023 collects the following comments: “perceptual experience lacks a surprising amount of colour” (Cohen & Rubenstein, 2020), “introspection [about peripheral colour] cannot be truly reliable” (Giron et al., 2018), “our intuitive sense of a rich, colorful visual world is largely incorrect” (Cohen et al., 2020), and “... it seems that our color vision goes right way out to the edge of our vision. It doesn’t.” (Carroll & Dennett, 2020) as well as Discussion ‘subjective visual world’ is richly coloured...must be an illusion” (Chater, 2018).
+
+<br><span style="color:blue;">
+Zeleznikow-Johnstonら（2023）の序論では、次のような見解が取り上げられている。「知覚体験には驚くほど色が欠けている」（Cohen & Rubenstein, 2020）、「（周辺視野の色に関する）内省は真に信頼できるものではない」（Giron et al., 2018）、「豊かで色彩に満ちた視覚世界という我々の直感的な感覚は、大部分において誤りである」（Cohen et al., 2020）、そして「……我々の色覚は視野の端にまで及んでいるように思えるが、実際にはそうではない」（Carroll & Dennett, 2020）。また、同論文の考察においても、「『主観的な視覚世界は色彩豊かである』……というのは錯覚に違いない」（Chater, 2018）と述べられている。
+</span>
+</p>
+
+<center><img src="images/3.png"></center>
+
+<p>
+
+Figure 3. Within-subject color qualia structure comparisons between the fovea and the periphery a) Eccentricity of a widefield display (-90 to +90 degree visual angle (dva) across the horizontal direction). Two arrows indicate a possible position of a briefly (250 ms) presented color patch without mask. b) Estimated cone density as a function of eccentricity. c) The wide field display. One arrow points to a very small stimulus (0.1 or 2 dva) at fovea (1 dva from the fixation). The other arrow points to x27 magnified (2.7 or 54 dva) at the far periphery (60 dva from the fixation). Mean dissimilarity matrix (d, e) and its multidimensional scaling (f, g), demonstrating color qualia structures that are equivalent between the fovea and periphery. Modified from (Zeleznikow-Johnston et al., 2023).
+
+<br><span style="color:blue;">
+図3. 網膜中心窩と周辺部における、同一被験者内での色クオリア構造の比較。a) 広視野ディスプレイの偏心度（水平方向に視角-90度から+90度）。2つの矢印は、マスクなしで短時間（250ミリ秒）提示されるカラーパッチの想定位置を示している。b) 偏心度の関数として示される推定錐体密度。c) 広視野ディスプレイ。一方の矢印は中心窩（固視点から視角1度）にある非常に小さな刺激（視角0.1度または2度）を指し、もう一方の矢印は遠方周辺部（固視点から視角60度）にある27倍に拡大された刺激（視角2.7度または54度）を指している。平均非類似度行列（d, e）およびその多次元尺度構成法（MDS）による解析結果（f, g）は、中心窩と周辺部で色クオリア構造が同等であることを示している。(Zeleznikow-Johnston et al., 2023)より改変。
+</span>
+</p><p>
+
+The other school holds that color qualia in the periphery is actually perceived and experienced, not filled in from expectation, memory or eye movements. This stance is close to most people’s intuition, and it is also supported by the empirical vision science (Tyler, 2015) when cortical magnification factor is properly considered. Along with many other dimensions of visual properties (Anstis, 1998), too small stimuli at the periphery would be simply indistinguishable, but this is not limited to color qualia.
+
+<br><span style="color:blue;">
+もう一方の学説は、視野周辺部における色のクオリアは、予測や記憶、あるいは眼球運動によって「埋め合わされた」ものではなく、実際に知覚・体験されていると主張しています。この見解は多くの人々の直感に近いものであり、皮質拡大率（cortical magnification factor）を適切に考慮すれば、実証的な視覚科学（Tyler, 2015）によっても裏付けられます。視覚特性の他の多くの側面（Anstis, 1998）と同様に、視野周辺部では刺激が小さすぎれば単に識別不可能となりますが、これは色のクオリアに限ったことではありません。
+</span>
+</p><p>
+
+To empirically compare these claims, we performed a Registered Report study, where we fixed all experimental parameters before conducting an experiment to fairly compare the two theories. To be decisive, we briefly presented stimuli (250ms) at the far periphery (60 dva) using the widefield display (Figure 3c). Then we asked participants to rate the subjective similarity of two color patches (typically, from -4 being very dissimilar to +4 being very similar. See the demonstration of the task used in (Moriguchi et al., 2025) here https://osf.io/scbu2?view_only=07279177f6344c1f9c5a1e2b3c10640a). Figure 3d-g summarize the results, clearly in support of equivalent color qualia structures between the fovea and periphery (Zeleznikow-Johnston et al., 2023). This is consistent with previous studies, which used appropriately magnified colored stimuli at the periphery (Abramov et al., 1991; Hansen et al., 2009), as well as a formal modeling study (A. M. Haun, 2021).
+
+<br><span style="color:blue;">
+これらの主張を実証的に比較するため、我々は「登録済みレポート（Registered Report）」形式の研究を実施しました。この研究では、2つの理論を公平に比較​​できるよう、実験実施前にすべての実験パラメータを固定しました。決定的な結果を得るために、広視野ディスプレイを用いて、極めて周辺の視野領域（中心から60度：60 dva）に刺激を短時間（250ミリ秒）提示しました（図3c）。その後、参加者に2つの色パッチの主観的な類似性を評価してもらいました（通常、-4を「非常に異なる」、+4を「非常に似ている」とする尺度を使用。Moriguchi et al. (2025) で用いられた課題のデモンストレーションは、こちら https://osf.io/scbu2?view_only=07279177f6344c1f9c5a1e2b3c10640a を参照）。図3d-gに結果をまとめましたが、これらは中心窩と周辺視野の間で色のクオリア構造が同等であることを明確に支持するものでした（Zeleznikow-Johnston et al., 2023）。この結果は、周辺視野において適切に拡大された色刺激を用いた先行研究（Abramov et al., 1991; Hansen et al., 2009）や、数理モデルを用いた研究（A. M. Haun, 2021）の結果と整合しています。
+</span>
+</p><p>
+
+Theoretically speaking, structural comparisons of qualia (not necessarily color) at the fovea and periphery are a great testing ground that can be utilized further. A given person can directly compare and report similarities of qualia at these locations. Thus, the investigated set of color qualia and its similarity relations across the entire visual field can form an enriched category, where the Yoneda lemma applies (See section 2.2). When similarity is obtained from different individuals, this Yoneda inference is not valid on its own. However, we can still learn many structural facts from intersubjective characterization of qualia structure, as we see next.
+
+<br><span style="color:blue;">
+理論的に言えば、網膜中心窩と周辺部におけるクオリア（必ずしも色に限らない）の構造的比較は、今後さらに活用しうる優れた検証の場となります。ある個人は、これら異なる部位におけるクオリアの類似性を直接比較し、報告することが可能です。したがって、視野全体にわたる色クオリアの集合とその類似関係は、米田の補題が適用可能な、豊かな構造を持つ圏を形成し得ます（セクション2.2を参照）。異なる個人の間で類似性が得られる場合、この米田の補題に基づく推論はそれ単独では成立しません。しかし、次に述べるように、クオリア構造を主体間で共有可能な形で特徴づけることによって、依然として多くの構造的事実を明らかにすることができます。
+</span>
+</p>
+
+<h4>3.1.2 Color qualia structures across development<br><span style="color:blue;">発達過程における色のクオリア構造</span></h4>
+<p>
+In one line of the research, we have been examining how qualia structures can change across development over the childhood. During childhood, cognitive capabilities such as language, categorization and memory improves massively. Can the changes in the cognitive capabilities alter the structures of qualia?
+
+<br><span style="color:blue;">
+私たちが行っている研究の一環として、小児期の発達に伴いクオリアの構造がどのように変化し得るかについて検討してきました。小児期には、言語、カテゴリー化、記憶といった認知能力が飛躍的に向上します。こうした認知能力の変化は、クオリアの構造を変容させ得るのでしょうか。
+</span>
+</p><p>
+
+Previous color studies (Forbes & Plunkett, 2023; Pitchford & Mullen, 2003; Saji et al., 2020) have established that color categorization in infants and children are distinct from that of adults. For example, the similarity of naming responses for a given color patch to another patch can be defined as intersubjective naming consistency between the two colors. With such a measure, (Saji et al., 2020) demonstrated that 3-year-old children very often confuse color names, for example, blue and green (Figure 4a). Does a confused and indiscrete color structure obtained from naming experiments reflect children’s color qualia structure?
+
+<br><span style="color:blue;">
+これまでの色彩に関する研究（Forbes & Plunkett, 2023; Pitchford & Mullen, 2003; Saji et al., 2020）により、乳幼児や児童における色のカテゴリー化は、大人とは異なるものであることが明らかになっています。例えば、ある色パッチに対する呼称反応と別のパッチに対する呼称反応との類似性は、その2色間における呼称の一致度（intersubjective naming consistency）として定義できます。Sajiら（2020）は、こうした指標を用いて、3歳児が「青」と「緑」といった色の名称を頻繁に混同していることを示しました（図4a）。呼称実験によって得られた、混同が見られ境界が不明瞭な色の構造は、子供が抱く色のクオリア（感覚的質感）の構造を反映しているのでしょうか。
+</span>
+</p>
+
+<center><img src="images/4.png"></center>
+
+<p>
+
+Figure 4. Development of color qualia structures a) Color naming results, represented by 2-dimensional multidimensional scaling (MDS), based on the similarity matrix inferred from confusion error in color naming (Saji et al., 2020). b) Touch panel devices are intuitive to children, minimizing errors associated with reports (e.g., mouse click, verbal responses). c) Color similarity matrix, directly obtained from participants in (Moriguchi et al., 2025). d) MDS across age groups from 3-years to adults, Japanese and Chinese, with nearly the same structures.
+
+<br><span style="color:blue;">
+図4. 色クオリア構造の発達 a) 色の命名における混同（誤答）から推定された類似性行列に基づき、2次元の多次元尺度構成法（MDS）で表現した色命名の結果（Saji et al., 2020）。 b) タッチパネルデバイスは子供にとって直感的であり、報告に伴う誤差（マウスのクリックや口頭での回答など）を最小限に抑えることができる。 c) (Moriguchi et al., 2025) において参加者から直接得られた色の類似性行列。 d) 3歳児から大人まで、および日本人と中国人を対象としたMDSの結果。いずれもほぼ同様の構造を示している。
+</span>
+</p><p>
+
+To test this, we developed a similarity rating task for young children. With intuitive touch devices (Figure 4b) and instructions, we obtained nearly equivalent color similarity structures across development from 3- through 12-year-old to adult (Figure 4c, d). To understand more fine grained equivalence and development of color qualia structures, we need a larger scale experiment with more color gradations, such as the one we explain next.
+
+<br><span style="color:blue;">
+これを検証するため、私たちは幼児を対象とした類似性評価課題を開発しました。直感的に操作できるタッチデバイス（図4b）と適切な教示を用いることで、3歳児から12歳児、そして大人に至るまで、発達段階にかかわらずほぼ同等の色類似性構造が得られました（図4c、d）。色のクオリア構造におけるより詳細な同等性や発達の様子を理解するには、次に説明するような、より多くの色階調を用いた大規模な実験が必要となります。
+</span>
+</p>
+
+<h4>3.1.3 A massive online experiments with similarity ratings<br><span style="color:blue;">類似度評価を用いた大規模オンライン実験</span></h4>
+<p>
+One of the reasons why similarity experiments have not been widespread in consciousness research may be related to expected cost of experiments due to a large amount of data required. As we show next, this issue has been alleviated thanks to the development of online experimental platforms, where it is fast and easy to recruit a large number of participants. Although online experiments were not rapidly adopted initially due to skepticism in response accuracy, recent experiments have provided high reliability and validity in perceptual experiments (Bridges et al., 2020; Chuyin et al., 2022; Crump et al., 2013; Hebart et al., 2020; Li et al., 2020; Qianchen et al., 2022; Sheehan, 2018).
+
+<br><span style="color:blue;">
+意識研究において類似性実験があまり普及してこなかった理由の一つとして、膨大なデータを必要とすることに伴う実験コストへの懸念が挙げられるかもしれません。しかし、次に述べるように、この問題はオンライン実験プラットフォームの発展によって緩和されてきました。こうしたプラットフォームを利用すれば、多数の参加者を迅速かつ容易に募集できるからです。当初、オンライン実験は回答の正確性に対する懐疑的な見方からすぐには普及しませんでしたが、近年の研究では、知覚実験において高い信頼性と妥当性が示されています（Bridges et al., 2020; Chuyin et al., 2022; Crump et al., 2013; Hebart et al., 2020; Li et al., 2020; Qianchen et al., 2022; Sheehan, 2018）。
+</span>
+</p><p>
+
+Consider the set of 93 colors used in color-naming experiments (Saji et al., 2020). With a naming task, a participant can name the color of a given patch for all colors just in 93 trials. If one were to consider a similarity rating experiment using the same set, there are 8649 combinations, distinguishing the order of presentation and including the trials with the same color pairs. There are ways to economically estimate the similarity “judgments”, such as the “inverse MDS” method by (Kriegeskorte & Mur, 2012). However, for the estimation of qualia structures, similarity “experience” matters. To equate experience, it is critical to control the duration of stimulus presentation and location of eye fixation. To achieve a tighter control on these parameters, it is straightforward to rate subjective similarity between a pair of synchronously (or asynchronously, with minimal delay) presented stimuli.
+
+<br><span style="color:blue;">
+色命名実験（Saji et al., 2020）で用いられた93色のセットを考えてみましょう。命名課題であれば、参加者はわずか93試行で、提示された各色のパッチに名前を付けることができます。一方、同じセットを用いて類似性評価実験を行う場合、提示順序を区別し、同一色のペアによる試行も含めると、その組み合わせは8649通りにのぼります。Kriegeskorte & Mur (2012) による「逆MDS（inverse MDS）」法のように、類似性「判断」を効率的に推定する手法も存在します。しかし、クオリア構造を推定する上では、類似性の「経験」が重要となります。経験を一定に保つためには、刺激の提示時間や注視位置を制御することが不可欠です。これらのパラメータをより厳密に制御する上では、同期して（あるいは最小限の遅延を伴う非同期で）提示された刺激ペア間の主観的類似性を評価するのが、簡便かつ有効な方法です。
+</span>
+</p><p>
+
+While we can collect 8649 trials from a particular individual in the lab, it is much more efficient to distribute stimulus combinations across many participants and average them, to obtain a rough idea of underlying qualia structures that are shared across the target populations. Such large-scale online experiments can be followed up with complementary in-lab testing with fewer participants to overcome environmental limitations (e.g., size of the visual field) (Zeleznikow-Johnston et al., 2023).
+
+<br><span style="color:blue;">
+特定の個人から実験室で8,649試行分のデータを収集することは可能ですが、対象集団全体で共有されるクオリアの構造の概略を把握するには、多数の参加者に刺激の組み合わせを分散して提示し、それらを平均化する方がはるかに効率的です。こうした大規模なオンライン実験の後に、少数の参加者を対象とした補完的な実験室実験を行うことで、（視野の大きさといった）環境上の制約を克服することができます（Zeleznikow-Johnston et al., 2023）。
+</span>
+</p><p>
+
+We have conducted online experiments, collecting the similarity responses from >400 color typical and >250 color atypical populations (Kawakita et al., 2024, 2025). While each individual rated similarities of 80-160 color combinations, aggregated responses converge relatively quickly as assessed by the method for unsupervised alignment (See below).
+
+<br><span style="color:blue;">
+我々はオンライン実験を実施し、典型的な色覚を持つ400名以上および非典型的な色覚を持つ250名以上の集団から、色の類似性に関する回答を収集しました（Kawakita et al., 2024, 2025）。各参加者は80〜160通りの色の組み合わせについて類似性を評価しましたが、教師なしアライメント手法（後述）を用いて評価したところ、集約された回答は比較的早期に収束することが確認されました。
+</span>
+</p><p>
+
+Similar strategies can be applied to other dimensions of qualia. Our ongoing experiments include similarity ratings among piano sounds, visual motion, emotional movies (Lin et al., 2023), words, sentences and so on. There have been various influential similarity rating experiments (Shepard, 1982; Shepard & Cooper, 1992), which informed subsequent structural theories of consciousness. We believe it is worthwhile to revisit the literature and try to replicate them in large-scale online experiments, perhaps recording the individual differences. With such approaches, there are many questions that can be addressed as we saw in the developmental study (Moriguchi et al., 2025). Are qualia structures innate from birth? How malleable are they due to development, learning, language, culture and psychological states? Are different types of qualia structures affected by these factors differently? How much are qualia structures intersubjectivity shared?
+
+<br><span style="color:blue;">
+同様の手法は、クオリアの他の側面にも適用可能です。現在進行中の実験には、ピアノの音、視覚的な動き、感情を喚起する動画（Lin et al., 2023）、単語、文章などの間での類似性評価が含まれます。これまでに、意識の構造に関するその後の理論に大きな影響を与えた、数々の重要な類似性評価実験が行われてきました（Shepard, 1982; Shepard & Cooper, 1992）。私たちは、こうした先行研究を再検討し、大規模なオンライン実験によって（場合によっては個人差を記録しつつ）それらを追試することには価値があると考えています。こうしたアプローチをとることで、発達に関する研究（Moriguchi et al., 2025）で見られたように、多くの問いに取り組むことが可能になります。クオリアの構造は生まれつき備わっているものなのでしょうか？ 発達、学習、言語、文化、心理状態によって、それらはどの程度変化しうるのでしょうか？ 異なる種類のクオリア構造は、これらの要因からそれぞれ異なる影響を受けるのでしょうか？ そして、クオリアの構造は、どの程度まで主体間で共有されているのでしょうか？
+</span>
+</p>
+
+<h4>3.1.4 Unsupervised alignment of qualia structures<br><span style="color:blue;">クオリア構造の教師なしアライメント</span></h4>
+<p>
+With the Qualia Structure paradigm, we can address a fundamental question of “is my red similar to your red?” from a structural perspective (Kawakita et al., 2025).
+
+<br><span style="color:blue;">
+クオリア構造パラダイムを用いることで、「私の『赤』はあなたの『赤』と似ているのか？」という根本的な問いに、構造的な観点から取り組むことができます（Kawakita et al., 2025）。
+</span>
+</p><p>
+
+Unlike the within-subject comparisons of similarity structures in the last section, however, across-subjects comparisons of similarity structures are not as straightforward to interpret. While the Yoneda lemma applies to an (enriched) category, a category needs to have a relationship between objects, such as color qualia within a single person. At this stage, it is not clear whether we can form a category in an across-subject manner. Thus, we cannot apply the Yoneda lemma directly.
+
+<br><span style="color:blue;">
+しかし、前節で扱った同一の被験者内における類似性構造の比較とは異なり、被験者間での類似性構造の比較は、その解釈がそれほど単純ではありません。米田の補題は（豊饒）圏に適用されるものですが、圏を成すためには、単一の人物における色のクオリアのような、対象間の関係性が存在する必要があります。現段階では、被験者間をまたぐ形で圏を構成できるかどうかは明らかではありません。したがって、米田の補題を直接適用することはできません。
+</span>
+</p><p>
+
+As an alternate pathway, recently we have proposed the unsupervised alignment as a way to find the violation of the necessary condition for two people to have the same qualia (Kawakita et al., 2025). That is, the structural equivalence between the two persons is one of the necessary conditions for two people to have the same qualia. Let us walk through the examples in Figure 5 to make this point.
+
+<br><span style="color:blue;">
+代替的なアプローチとして、我々は最近、二人の人間が同一のクオリアを持つための必要条件が満たされていないこと（違反）を見出す手法として、「教師なしアライメント（unsupervised alignment）」を提案しました（Kawakita et al., 2025）。すなわち、二人の人間が同一のクオリアを持つためには、両者の間に「構造的同等性」が成立していることが必要条件の一つとなります。この点について、図5の例を用いて説明しましょう。
+</span>
+</p>
+
+<center><img src="images/5.png"></center>
+
+<p>
+
+Figure 5. Schematic representation of structural differences and structural equivalence with item difference. a) Experienced dissimilarity relations are represented as the length of lines. For this hypothetical person, black feels very different from red and orange. b) For another hypothetical person, all three colors feel similar to the same degree. c) Structural difference. The structures cannot be “aligned”. d) Structural equivalence. The structures can be aligned, without knowing the labels. e) The item-level labels match between the aligned structures. f) While two structures match, the item-level labels do not match. This may be a case of inverted qualia between the two persons.
+
+<br><span style="color:blue;">
+図5. 構造的差異および項目差を伴う構造的等価性の模式図。a) 経験される非類似性の関係が、線の長さとして表現されている。この仮想的な人物にとって、黒は赤やオレンジとは大きく異なって感じられる。b) 別の仮想的な人物にとっては、これら3つの色はすべて同程度に似ていると感じられる。c) 構造的差異。構造を「対応させる（アラインする）」ことはできない。d) 構造的等価性。ラベルを知らなくても、構造を対応させることができる。e) 対応させた構造間で、項目レベルのラベルが一致している。f) 2つの構造は一致しているが、項目レベルのラベルは一致していない。これは、2人の間におけるクオリアの反転（inverted qualia）の事例である可能性がある。
+</span>
+</p><p>
+
+Figure 5a depicts a hypothetical person’s color qualia structure. This is similar to most people’s color qualia structure, where black appears very different from red and orange. Figure 5b is another person’s color qualia structure where all three colors are similar in the same way. The three dissimilarities are the same. Figure 5c shows that these two structures (or shape in the dissimilarity space) cannot be matched with any combination of rotation, reflection, scaling and translation (called the Affine transformation). Figure 5d is a case where with some degrees of inaccuracy (thus we talk about “equivalence”, see Figure 1a), we can match the two shapes. Figure 5e is a case where “after” matching the shape without knowing the item-level labels (thus, it is called “unsupervised alignment”), all three labels turned out to match with each other. Figure 5f is an intriguing possibility, where the structures are equivalent between the two, but the labels are swapped. Figure 5f, if empirically found, is a possible candidate case of “inverted qualia” in reality (Palmer, 1999)<sup>6</sup>.
+
+<br><span style="color:blue;">
+図5aは、ある仮想的な人物の色のクオリア構造を示しています。これは多くの人の色のクオリア構造と同様であり、そこでは黒が赤やオレンジとは大きく異なって知覚されます。図5bは別の人物の色のクオリア構造であり、ここでは3つの色が互いに同様の関係にあります（つまり、3つの色の間の非類似度の関係が同じになっています）。図5cは、これら2つの構造（あるいは非類似度空間における形状）が、回転、鏡映、拡大縮小、平行移動（これらはアフィン変換と呼ばれます）のいかなる組み合わせによっても一致させられないことを示しています。図5dは、ある程度の不正確さを許容すれば（したがってここでは「等価性」について論じます。図1aを参照）、2つの形状を一致させることができるケースです。図5eは、個々の要素のラベルを知らずに形状を一致させた（したがって、これは「教師なしアライメント」と呼ばれます）結果、3つのラベルすべてが互いに一致したケースです。図5fは興味深い可能性を示しており、2者の間で構造は等価であるものの、ラベルが入れ替わっているという状況です。もし図5fのようなケースが実際に確認されれば、それは現実における「クオリアの反転（inverted qualia）」の候補となり得る事例です（Palmer, 1999）<sup>6</sup>。
+</span>
+</p><p style="padding-left:4em;">
+<sup>6</sup> Inverted color qualia structure might be proven theoretically (im)possible, for example, due to the (non-)permutability of the underlying structure. This is highly speculative, but it is a potential project for the future. In mathematics, Galois theory provides a very elegant answer to the question of the existence of a formula for the roots of a 5-th (or higher) degree polynomial equation in terms of the coefficients of the polynomial with some restrictions (Leinster, 2024b). One of the key insights of the Galois theory is the equivalence between the solvability of equations and presence of a certain structure of the permutation group of its roots. It may be a far-fetched conjecture, but it is plausible that a similar approach may be applied to qualia structure. For example, a possibility of qualia inversion may turn out to be equivalent to the presence of certain structural characteristics of the underlying mathematical structure of qualia.
+
+<br><span style="color:blue;">
+クオリアの構造における「色の反転」の可能性については、例えばその基盤となる構造の置換可能性（あるいは不可能性）といった観点​​から、理論的にその可否が証明されるかもしれません。これは極めて推測的な話ではありますが、将来的に取り組むべき課題となり得るものです。数学の分野では、ガロア理論が、5次（あるいはそれ以上）の多項式方程式の解を係数を用いて表す公式の存在について、非常にエレガントな答えを提示しています（Leinster, 2024b）。ガロア理論の重要な洞察の一つは、方程式が解けるかどうかということと、その解の置換群が特定の構造を持っているかどうかということが等価である、という点にあります。飛躍した推測に聞こえるかもしれませんが、クオリアの構造に対しても同様のアプローチが適用できる可能性は十分に考えられます。例えば、クオリアの反転が可能かどうかという問題は、クオリアの基盤となる数学的構造が特定の構造的特徴を備えているかどうか、という点と等価であることが明らかになるかもしれません。
+</span>
+</p><p>
+
+
+With this notion at hand, we applied one of the unsupervised alignment methods, called the Gromov Wasserstein Optimal Transport (GWOT) method (Alvarez-Melis & Jaakkola, 2018; Mémoli, 2011; Sasaki et al., 2023), to test the alignment of color qualia structures, between >400 color typical and >250 atypical participants. Color atypical participants were screened with online-version of the Ishihara test.
+
+<br><span style="color:blue;">
+この考えに基づき、我々は教師なしアライメント手法の一つであるGromov-Wasserstein Optimal Transport（GWOT）法（Alvarez-Melis & Jaakkola, 2018; Mémoli, 2011; Sasaki et al., 2023）を適用し、色覚が典型的な400名以上の参加者と非典型的な250名以上の参加者の間における、色クオリア構造のアライメントを検証しました。なお、色覚が非典型的な参加者は、オンライン版の石原表を用いて選別されました。
+</span>
+</p><p>
+
+A dissimilarity matrix obtained from color typical participants is actually highly correlated with that from color atypical participants (Pearson correlation coefficient of ρ~0.66 for the data subsampled from 128 participants each, Figure 6a and b). However, correlations do not imply structural equivalence. In fact, correlation coefficients and unsupervised alignment performance are dissociable (Kawakita et al., 2024, 2025; Sasaki et al., 2023).
+
+<br><span style="color:blue;">
+「色覚が典型的な参加者」から得られた非類似度行列は、「色覚が非典型的な参加者」から得られたものと高い相関を示します（各128名の参加者からサブサンプリングしたデータにおいて、ピアソン相関係数 ρ ≈ 0.66；図6aおよびb）。しかし、相関関係があるからといって、構造的な等価性が示されるわけではありません。実際、相関係数と教師なしアライメントの性能は、互いに独立した（解離し得る）ものです（Kawakita et al., 2024, 2025; Sasaki et al., 2023）。
+</span>
+</p>
+
+<center><img src="images/6.png"></center>
+
+<p>
+
+Figure 6 Unsupervised alignment a and b) Dissimilarity matrices for 93 color patches for a) color typical participants (estimated from N=128 subset of participants) and b) color atypical participants (N=128). c and d) Results of the unsupervised alignment. c) Two separate cohorts of color typical participants (T1 and T2; for 3D rendering with rotation, see https://drive.google.com/file/d/1UnZZYsrq7P-fEqK3bWLuC2BMaCYtno-/view). d) Color typical (T1) and color atypical (A1) participants (https://drive.google.com/file/d/1UarebXVMK2oh0NUMcVE3YhTUkJd9BZub/view). Greenish and reddish points are separated for T1 but not for A1, as expected from the online-Ishihara test. Modified from (Kawakita et al., 2025).
+
+<br><span style="color:blue;">
+図6 教師なしアライメント。aおよびb）93個のカラーパッチに関する非類似度行列。a）典型的な色覚を持つ参加者（参加者全体のサブセットであるN=128から推定）、b）非典型的な色覚を持つ参加者（N=128）。cおよびd）教師なしアライメントの結果。c）典型的な色覚を持つ参加者の2つの独立したコホート（T1およびT2；回転を伴う3Dレンダリングについては https://drive.google.com/file/d/1UnZZYsrq7P-fEqK3bWLuC2BMaCYtno-/view を参照）。d）典型的な色覚を持つ参加者（T1）と非典型的な色覚を持つ参加者（A1）（https://drive.google.com/file/d/1UarebXVMK2oh0NUMcVE3YhTUkJd9BZub/view）。オンライン石原式色覚検査から予想される通り、T1では緑系と赤系の点が分離しているが、A1では分離していない。(Kawakita et al., 2025)より改変。
+</span>
+</p><p>
+
+Unsupervised alignment techniques are powerful tools to perform structural analysis of the data. Here we depicted its application to qualia structures, but it can be also applied to neural data (Thual et al., 2022). Further, this type of unsupervised alignment techniques might be applied to the comparisons of structures across the domains (e.g., qualia and causal structures at the level of category of categories), which is one of the most exciting projects in the future.
+
+<br><span style="color:blue;">
+教師なしアライメント手法は、データの構造解析を行うための強力なツールです。ここではクオリア構造への適用例を示しましたが、本手法は神経データにも適用可能です（Thual et al., 2022）。さらに、こうした教師なしアライメント手法は、異なるドメイン間（例えば、「圏の圏」のレベルにおけるクオリア構造と因果構造など）の構造比較にも応用できる可能性があり、これは将来的に最も興味深い取り組みの一つと言えます。
+</span>
+</p><p>
+
+Computational analysis techniques, such as alignments, enable us to analyze the similarity data in a concrete way, while category theory provides an abstract and mathematical basis. Crosstalks between computational analyses and category theory are likely to bring us further useful techniques, even beyond the scope of the Qualia Structure paradigm (Leinster, 2024a; Willerton, 2021).
+
+<br><span style="color:blue;">
+アライメントなどの計算解析手法は、類似性データを具体的に分析することを可能にする一方で、圏論は抽象的かつ数学的な基盤を提供します。計算解析と圏論の相互作用は、「クオリア構造（Qualia Structure）」のパラダイムの枠組みを超えて、さらなる有用な手法をもたらす可能性があります（Leinster, 2024a; Willerton, 2021）。
+</span>
+</p><p>
+
+In this regard, further computational and mathematical analysis of the nature of the “failure” of unsupervised alignment would be very interesting. What does it mean exactly when color qualia structures from typical participants do not align with those from atypical participants? At the abstract mathematical level, does it correspond to a different level of sameness proposed in Figure 1a? If so, can we formalize it using category theory? At the computational level, can we invent an algorithm to quantify such different levels of sameness?
+
+<br><span style="color:blue;">
+この点に関して、教師なしアライメントにおける「失敗」の性質について、さらなる計算論的・数学的な分析を行うことは非常に興味深いでしょう。典型的な参加者の色クオリア構造と非典型的な参加者の色クオリア構造が整合しないということは、正確には何を意味するのでしょうか。抽象的な数学的レベルにおいて、それは図1aで提示された「同一性」の異なるレベルに対応するのでしょうか。もしそうであれば、圏論を用いてそれを定式化できるでしょうか。また、計算論的レベルにおいて、そのような同一性の異なるレベルを定量化するアルゴリズムを考案できるでしょうか。
+</span>
+</p>
+
+<h4>3.1.5 What does it mean for two systems to generate a set of behavioral similarity
+matrices that can be aligned?<br><span style="color:blue;">2つのシステムが、互いに整合可能な一連の行動類似性行列を生成するとは、どういうことでしょうか?</span></h4>
+<p>
+Computational alignment analysis can be applied to analyze behavioral outputs from any systems, ranging from a simple computational model to a complex large language model, such as GPT (Binz & Schulz, 2023; Bubeck et al., 2023). Indeed, GPT demonstrates human-level (or better) performance on highly complex cognitive psychological questions, whose accuracy is likely to improve over the years.
+
+<br><span style="color:blue;">
+計算アライメント分析は、単純な計算モデルからGPTのような複雑な大規模言語モデルに至るまで、あらゆるシステムから得られる行動出力を分析するために適用可能です（Binz & Schulz, 2023; Bubeck et al., 2023）。実際、GPTは極めて複雑な認知心理学的な課題において人間と同等（あるいはそれ以上）の性能を示しており、その精度は今後さらに向上していくと考えられます。
+</span>
+</p><p>
+
+GPT can also generate similarity ratings between pairs of perceptual stimuli (Marjieh et al., 2023). In (Kawakita et al., 2024), we reported that outputs from GPT4 can be aligned with human color-typical similarity data at a 91.4% matching rate, substantially better than GPT3.5 (11.8%). The difference between GPT4 and GPT3.5 might be due to the massive difference in their architecture and the data used for learning (e.g., multimodal training for GPT4). In contrast, popular perceptual models of color, such as RGB or LAB, do not produce similarity matrices that can be aligned well with the human similarity matrix. Alignment performances were quite low, with matching rates for RGB and LAB being 5.38% and 4.30%, respectively.
+
+<br><span style="color:blue;">
+GPTは、知覚刺激のペア間における類似度を生成することも可能です（Marjieh et al., 2023）。Kawakitaら（2024）は、GPT-4の出力が、色に関する人間の典型的な類似度データと91.4%の割合で整合すること、すなわちGPT-3.5（11.8%）よりも大幅に高い整合性を示すことを報告しました。GPT-4とGPT-3.5の間のこの違いは、両者のアーキテクチャや学習に使用されたデータ（例：GPT-4におけるマルチモーダル学習）の大きな差異に起因している可能性があります。対照的に、RGBやLABといった一般的な色の知覚モデルでは、人間の類似度行列と十分に整合するような類似度行列を生成することはできません。その整合性能は極めて低く、RGBとLABの整合率はそれぞれ5.38%および4.30%にとどまりました。
+</span>
+</p><p>
+
+The difference in the alignment accuracy (from >90% to <5%) contrasts uniformly high Spearman correlation (ρ~0.6-0.77) among all model outputs, compared to the similarity ratings from color typical humans, dissociating the outcomes of alignment of structures from simpler statistical correlation.
+
+<br><span style="color:blue;">
+アライメント精度の差（90%超から5%未満へ）は、色覚が標準的な人間による類似度評価と比較した際の、すべてのモデル出力間における一貫して高いスピアマン相関（ρ≈0.6～0.77）とは対照的であり、このことは、構造のアライメント結果が単純な統計的相関とは別個のものであることを示しています。
+</span>
+</p><p>
+
+This type of new direction of research is at an early stage and likely to progress rapidly. From a research perspective, efficient use of AI would facilitate understanding of qualia structures of humans and provide a novel experimental design for efficient data collection. From a societal perspective, this line of research may identify limits and discrepancies of the AI with respect to humans’ experience, which may lead to the improvement of the AI to expand its capabilities.
+
+<br><span style="color:blue;">
+こうした新たな研究の方向性はまだ初期段階にありますが、今後急速に進展する可能性があります。研究の観点からは、AIを効率的に活用することで、人間のクオリア構造の理解が促進されるとともに、効率的なデータ収集のための新たな実験デザインが可能になるでしょう。また、社会的な観点からは、人間の経験とAIとの間の限界や乖離が明らかになることで、AIの能力を拡張・向上させることにつながる可能性があります。
+</span>
+</p><p>
+
+Would alignment of behavioral outputs between AIs and humans be sufficient to guarantee the alignment of underlying qualia? From this type of results, can we say anything about AI consciousness? We claim that alignment of (behavioral) similarity structures is just a necessary condition and that it does not guarantee alignment of qualia structures. Alignment analysis “alone” does not provide any means to reject or support the presence or absence of qualia in a given individual, animal species, insects, plants, AIs or robots. An inference of the presence/absence of qualia needs to come from elsewhere. This topic is outside the scope of this chapter, but we will touch upon this issue from a viewpoint of causal structural theories of consciousness<sup>7</sup>.
+
+<br><span style="color:blue;">
+AIと人間の行動出力の整合性は、その根底にあるクオリアの整合性を保証するのに十分なものでしょうか。こうした結果から、AIの意識について何かを言えるでしょうか。我々は、（行動上の）類似性構造の整合性は単なる必要条件に過ぎず、クオリア構造の整合性までは保証しないと主張します。整合性の分析「のみ」では、特定の個体、動物種、昆虫、植物、AI、あるいはロボットにおけるクオリアの有無を否定または支持する根拠は得られません。クオリアの有無に関する推論は、別のところから導き出される必要があります。このトピックは本章の範囲外ではありますが、意識の因果構造理論<sup>7</sup>の観点からこの問題に触れることにします。
+</span>
+</p><p style="padding-left:4em;">
+
+<sup>7</sup> When considering artificial consciousness, similarity relationships among functions (or reports from the artificial systems) is not sufficient. We claim that qualia similarity relationships in humans (or animals) are likely to prove much more powerful and meaningful to constrain theories of qualia (and consciousness more in general) in biological systems, compared to the hitherto dominant detection / discrimination paradigms. However, treating these behavioral reports alone will easily fall into a play of (methodological) behaviorism, easily attributing consciousness to artificial entities. The GPT4 result demonstrates that artificial systems can achieve behavioral / functional equivalence about “reports” on color similarity with color typical humans. This satisfies the minimal requirement of color qualia equivalence between two systems. To establish qualia structure equivalence, equivalence of causal structures is necessary (See also the end of Section 3).
+
+<br><span style="color:blue;">
+人工意識を考察する際、機能（あるいは人工システムからの報告）間の類似性関係だけでは不十分です。我々は、生物学的システムにおけるクオリア（およびより広範な意識）の理論を制約する上で、人間（あるいは動物）におけるクオリアの類似性関係の方が、これまで主流であった検出・識別パラダイムに比べて、はるかに強力かつ有意義なものになると主張します。しかし、こうした行動上の報告のみを扱うと、（方法論的）行動主義の陥穽に容易に嵌り込み、人工的な実体に安易に意識を帰属させてしまう恐れがあります。GPT-4の事例は、人工システムが、色の類似性に関する「報告」において、典型的な色覚を持つ人間との行動的・機能的な等価性を達成し得ることを示しています。これは、二つのシステム間における色クオリアの等価性という最小限の要件を満たすものです。クオリア構造の等価性を確立するためには、因果構造の等価性が必要となります（第3節の末尾も参照）。
+</span>
+</p>
+
+<h3>3.2. Causal structures of neural networks, estimated from connectivity and activity
+states<br><span style="color:blue;">接続性と活動状態から推定されたニューラルネットワークの因果構造</span></h3>
+<p>
+One of the most promising candidate physical substrates that supports qualia is some subset of the causal structures in the human brain (Lamme, 2006; Tononi, 2004; Tononi et al., 2016; Tsuchiya et al., 2020). For alternative views, see (Butlin et al., 2023; Doerig et al., 2019; Fleming & Shea, 2024).
+
+<br><span style="color:blue;">
+クオリアを支える物理的基盤の有力な候補の一つは、ヒトの脳における因果構造の特定の部分集合である（Lamme, 2006; Tononi, 2004; Tononi et al., 2016; Tsuchiya et al., 2020）。対立する見解については、(Butlin et al., 2023; Doerig et al., 2019; Fleming & Shea, 2024) を参照のこと。
+</span>
+</p><p>
+
+Let us unpack the above statement. Likely physical aspects in the brain supporting qualia are the neurons that interact with each other. Converging evidence from clinical patients demonstrates that loss of particular brain areas are related to loss of particular qualia and that artificial electrical stimulation of the same area invokes the same type of the qualia (Boly et al., 2017; Fox et al., 2020; Penfield & Rasmussen, 1950; Ramachandran & Blakeslee, 1998). At the coarse level, visual, auditory, tactile, olfactory and gustatory qualia are supported by the respective cortical areas. In addition, particular types of activity patterns within each cortical area are correlated with particular types of qualia in each modality.
+
+<br><span style="color:blue;">
+上記の記述を詳しく検討してみましょう。クオリアを支える脳内の物理的基盤として考えられるのは、互いに相互作用するニューロンです。臨床患者を対象とした複数の研究から、特定の脳領域の欠損が特定のクオリアの消失と関連していること、また、その領域への人工的な電気刺激が同種のクオリアを誘発することが示されています（Boly et al., 2017; Fox et al., 2020; Penfield & Rasmussen, 1950; Ramachandran & Blakeslee, 1998）。大まかなレベルで見ると、視覚、聴覚、触覚、嗅覚、味覚といったクオリアは、それぞれに対応する皮質領域によって支えられています。さらに、各皮質領域内における特定の活動パターンは、各モダリティ（感覚様相）における特定のクオリアと相関しています。
+</span>
+</p><p>
+
+Based on these robust observations, then, what would be reasonable to assume as physical substrates that can support different types of qualia in their specific and unique ways? We believe that it is a combination of the neural connectivity patterns AND the evoked activation patterns in respective areas (Balduzzi & Tononi, 2009; Tsuchiya, 2017).
+
+<br><span style="color:blue;">
+こうした確かな観察事実を踏まえると、それぞれ特有かつ独自な様態で異なる種類のクオリアを支えうる物理的基盤として、何と想定するのが妥当でしょうか。私たちは、それが「神経接続パターンの組み合わせ」と「各領域における誘発された活動パターン」の双方であると考えています（Balduzzi & Tononi, 2009; Tsuchiya, 2017）。
+</span>
+</p><p>
+
+Currently, there is an immense technical difficulty in measuring neural structures from BOTH anatomical connectivity AND activation patterns WHILE obtaining estimates of qualia structures<sup>8</sup>. However, we can make empirical progress to achieve this ideal level of data collections. Even if slow, an effort towards this direction is necessary to account for the links between structures of qualia and physical substrates.
+
+<br><span style="color:blue;">
+現在、解剖学的結合と活動パターンの双方から神経構造を測定しつつ、同時にクオリア構造の推定値も得ることは、技術的に極めて困難です<sup>8</sup>。しかし、こうした理想的なレベルのデータ収集を実現するために、経験的な進展を図ることは可能です。たとえ歩みは遅くとも、クオリアの構造と物理的基盤との間の関連を説明するためには、この方向での取り組みが必要とされます。
+</span>
+</p><p style="padding-left:4em;">
+<sup>8</sup> Note that micro/macro scale anatomical connectivities (e.g., synaptic structures and its strength, hormonal modulation) can change quickly. Structural differences across individuals are likely to explain some variance of interindividual differences in qualia structures.
+<br><span style="color:blue;">
+微視的および巨視的なスケールにおける解剖学的結合性（例：シナプス構造とその強度、ホルモンによる修飾）は、急速に変化し得ることに留意されたい。個体間の構造的差異は、クオリアの構造に見られる個人差のばらつきの一部を説明するものであると考えられる。
+</span>
+</p><p>
+
+Recently, neuroimaging studies have started addressing the neural correlates of experiential similarity structures, including color qualia (Brouwer & Heeger, 2009, 2013; I. A. Rosenthal et al., 2021). In these studies, however, behavioral testing might have been omitted based on physical stimulus properties, inferred from responses from other participants, or collected outside of the scanner.
+
+<br><span style="color:blue;">
+近年、神経画像研究において、色のクオリアを含む「経験的類似性構造」の神経的相関を解明する試みがなされるようになっています（Brouwer & Heeger, 2009, 2013; I. A. Rosenthal et al., 2021）。しかし、これらの研究では、行動実験が省略されたり（物理的刺激特性に基づく判断や、他の参加者の反応からの推定による）、あるいはスキャナー外でデータが収集されたりしている場合があります。
+</span>
+</p><p>
+
+To extend this line of research, we combined similarity rating tasks during fMRI scanning (Hirao et al., 2025). To investigate possible effects of rating responses on the neural activity, participants either actively rated similarity or viewed the stimuli in the scanner in the no-report paradigm (Frassle et al., 2014; Lumer & Rees, 1999; Tsuchiya et al., 2015). The simultaneous measurements of neuroimaging data with similarity responses allow us to disentangle participant-specific qualia correlates from average human brain correlates. At this stage, however, the individual anatomical connectivity information is lacking to estimate the causal structures on an individual basis.
+
+<br><span style="color:blue;">
+この研究の発展として、我々はfMRI計測中に類似度評価課題を組み合わせた実験を行った（Hirao et al., 2025）。評価という行為が神経活動に及ぼしうる影響を調べるため、参加者はスキャナー内で類似度を積極的に評価するか、あるいは「報告なし（no-report）」パラダイムの下で刺激を単に観察するかのいずれかを行った（Frassle et al., 2014; Lumer & Rees, 1999; Tsuchiya et al., 2015）。神経画像データと類似度評価反応を同時に計測することで、ヒトの脳における平均的な相関関係と、参加者固有のクオリア（感覚的質感）に関連する相関関係とを切り分けて検討することが可能になる。ただし現時点では、個人単位での因果構造を推定するために必要な、個人の解剖学的結合に関する情報が不足している。
+</span>
+</p>
+
+<center><img src="images/7.png"></center>
+
+<p>
+
+Figure 7 Neuroimaging during similarity ratings of color qualia.
+a) An fMRI experiment while participants were judging the similarity of colors, comparing two colors across time. Half of the trials involved active similarity rating, while the other half were passive, no-report condition. b) Resulting activation brain map, based on seeing color per se in this study (reddish hues) in comparison with previous studies (greenish hues). Modified from (Hirao et al., 2025)
+
+<br><span style="color:blue;">
+図7 色のクオリアの類似性評価中の神経画像。
+a) 参加者が2色の類似性を経時的に判断する際のfMRI実験。試行の半分は能動的な類似性評価を行うものであり、残りの半分は受動的かつ反応を求めない条件であった。 b) 本研究で提示された色（赤みがかった色相）の視覚刺激に基づく脳活動マップ。先行研究（緑がかった色相）との比較が示されている。(Hirao et al., 2025)より改変。
+</span>
+</p>
+
+<h3>3.3 Relationship between causal structures and qualia structures<br><span style="color:blue;">因果構造とクオリア構造の関係</span></h3>
+<p>
+If we can obtain connectivity and activity information at a reasonable resolution and accuracy, what would be the next concrete step in the Qualia Structure paradigm? From connectivity and activity, how can we extract candidate causal structures that would have a tight structural relationship with qualia structures?
+
+<br><span style="color:blue;">
+接続性や活動に関する情報を、妥当な解像度と精度で取得できるとしたら、「クオリア構造」のパラダイムにおける次の具体的なステップは何になるでしょうか。接続性と活動の情報から、クオリア構造と密接な構造的関係を持つ因果構造の候補を、どのように抽出できるのでしょうか。
+</span>
+</p><p>
+
+Currently, there exist not so many attempts to directly answer these questions. Exceptions are the explicit algorithms that have been proposed by the research program of the Integrated Information Theory (IIT) of consciousness (Balduzzi & Tononi, 2009; A. Haun & Tononi, 2019; Tononi, 2004). IIT aspires to construct a theory, which accounts for all qualia that are known. IIT identifies the phenomenological axioms (or essential properties), then translates them into algorithms for deriving the cause-effect structures from physical substrates. While the core philosophy remains the same, different versions of IIT propose different algorithms. IIT has been criticized in its testability by the critics (Doerig et al., 2019; Gomez-Marin & Seth, 2025; Herzog et al., 2022; Klincewicz et al., 2025). For replies, see (Albantakis, 2023; Tononi et al., 2025; Usher et al., 2023). As the proponents of IIT admit, it is infeasible to precisely apply the entire framework of IIT to more than a few artificial neurons (Albantakis et al., 2023; Oizumi et al., 2014). Yet, it provides various explanatory and predictive power to make IIT testable. In particular, IIT is falsifiable. The Qualia Structure paradigm tries to falsify IIT by empirically testing structural sameness between a (partial) causal structure and the relevant qualia structure.
+
+<br><span style="color:blue;">
+現在、これらの問いに直接答えようとする試みはそれほど多くありません。その例外と言えるのが、意識に関する「統合情報理論（IIT）」の研究プログラムにおいて提案されてきた具体的なアルゴリズムです（Balduzzi & Tononi, 2009; A. Haun & Tononi, 2019; Tononi, 2004）。IITは、既知のあらゆるクオリアを説明しうる理論の構築を目指しています。IITは、現象学的な公理（あるいは本質的な特性）を特定し、それらを、物理的基盤から因果構造を導き出すためのアルゴリズムへと変換します。中核となる哲学は一貫していますが、IITの異なるバージョンではそれぞれ異なるアルゴリズムが提案されています。IITに対しては、その検証可能性をめぐって批判がなされてきました（Doerig et al., 2019; Gomez-Marin & Seth, 2025; Herzog et al., 2022; Klincewicz et al., 2025）。これらへの反論については、Albantakis (2023)、Tononi et al. (2025)、Usher et al. (2023) を参照してください。IITの提唱者らも認めているように、IITの枠組み全体を少数の人工ニューロンを超える規模に厳密に適用することは現実的ではありません（Albantakis et al., 2023; Oizumi et al., 2014）。それでもなお、IITは検証を可能にする多様な説明力や予測力を備えています。特に、IITは反証可能です。「クオリア構造」パラダイムは、（部分的な）因果構造とそれに対応するクオリア構造との間の構造的同一性を経験的に検証することによって、IITを反証しようと試みるものです。
+</span>
+</p><p>
+
+It is also important to acknowledge that the current IIT has not yet provided an explicit link with the Qualia Structure paradigm. For example, it is not clear how to consider “similarity” of two aspects of narrow qualia within a single moment of experience. In IIT, a single moment of experience, or a broad quale, is hypothesised to correspond to a cause-effect structure of the relevant main complex. It is also unclear yet how two broad qualia can be compared to obtain a global impression of similarity of two experiences over time in the IIT framework.
+
+<br><span style="color:blue;">
+また、現在のIITが「クオリア構造（Qualia Structure）」のパラダイムとの間に、まだ明確な関連付けを示していないという点も認識しておく必要があります。例えば、単一の経験の瞬間における「狭義のクオリア（narrow qualia）」の二つの側面間の「類似性」をどのように捉えるべきかは、明らかではありません。IITにおいては、単一の経験の瞬間（あるいは「広義のクオリア」）は、関連する「主要な複合体（main complex）」の因果構造に対応すると仮定されています。さらに、IITの枠組みの中で、二つの「広義のクオリア」を比較し、時間的に隔たった二つの経験の類似性に関する全体的な印象をどのように導き出すかについても、現時点では不明確です。
+</span>
+</p><p>
+
+Nonetheless, a relevant qualia structure can be compared with various candidate causal structures, derived from different approximations of IIT (Barrett & Seth, 2011; Hidaka & Oizumi, 2018; P. Mediano et al., 2018; P. A. M. Mediano et al., 2022; Oizumi, Tsuchiya, et al., 2016; Tegmark, 2016; Toker & Sommer, 2016). Using an approximation of IIT 2.0 (Oizumi, Amari, et al., 2016), (A. M. Haun et al., 2017) compared three causal structures, derived from entropy, mutual information and integrated information. The integrated information structure was best correlated perceptual reports from patients. While what Haun et al 2017 tried to achieve is conceptually relevant to the qualia structure paradigm, the approximation algorithms based on the IIT 2.0 critically lack the consideration of “composition”, which is the most relevant IIT’s aspects in relation to the qualia structure paradigm. From IIT 3.0, this composition aspect is explicitly translated into postulates. (Leung et al., 2021) applied the IIT 3.0 framework to the local field potential recordings. They developed a procedure to construct estimation of the transitional probability matrix (TPM), from which all the IIT algorithms follow. Ideal next step is to apply Leung’s algorithm to the neural data that is concurrently obtained in the qualia structure relevant paradigms. Experiments with explicit similarity ratings during recordings, as in (Hirao et al., 2025), would be highly promising future projects, especially when combined with systematic comparisons of various versions of approximations of IIT’s structural measures (Cliff et al., 2023; P. Mediano et al., 2018).
+
+<br><span style="color:blue;">
+とはいえ、あるクオリア構造を、IITの異なる近似法から導き出される様々な候補となる因果構造と比較することは可能である（Barrett & Seth, 2011; Hidaka & Oizumi, 2018; P. Mediano et al., 2018; P. A. M. Mediano et al., 2022; Oizumi, Tsuchiya, et al., 2016; Tegmark, 2016; Toker & Sommer, 2016）。Haunら（A. M. Haun et al., 2017）は、IIT 2.0の近似法（Oizumi, Amari, et al., 2016）を用い、エントロピー、相互情報量、および統合情報量から導き出される3つの因果構造を比較した。その結果、統合情報量に基づく構造が、患者による知覚報告と最も高い相関を示した。Haunらの試みは概念的にはクオリア構造のパラダイムと関連しているものの、IIT 2.0に基づく近似アルゴリズムには、「構成（composition）」という側面への考慮が決定的に欠けている。この「構成」という側面は、クオリア構造のパラダイムと関連するIITの要素の中で最も重要なものであるが、IIT 3.0においては明示的に公理（postulates）として組み込まれている。Leungら（Leung et al., 2021）は、IIT 3.0の枠組みを局所電場電位（LFP）の記録データに適用した。彼らは、あらゆるIITアルゴリズムの基礎となる遷移確率行列（TPM）を推定・構築する手順を開発した。理想的な次のステップは、クオリア構造に関連する実験パラダイムにおいて同時取得された神経データに対し、Leungらのアルゴリズムを適用することである。記録中に明示的な類似度評価を行う実験（Hirao et al., 2025など）は、特にIITの構造的尺度に関する様々な近似法（Cliff et al., 2023; P. Mediano et al., 2018）との体系的な比較と組み合わせることで、極めて有望な将来のプロジェクトとなるだろう。
+</span>
+</p><p>
+
+Causal structures, as proposed from the IIT, require due consideration of both connectivity and activation patterns of the neurons, in a principled algorithm. In IIT, construction of the entire TPM corresponds to the knowledge of connectivity. Specification of the activation patterns of the neurons corresponds to a particular row (or column) of the matrix (e.g., the first row of the TPM may encode neurons A and B to be both inactive = [0 0]).
+
+<br><span style="color:blue;">
+IIT（統合情報理論）において提示される因果構造を扱うには、原理に基づいたアルゴリズムの中で、ニューロンの接続性と活性化パターンの双方を適切に考慮する必要があります。IITにおいて、TPM（遷移確率行列）全体を構築することは接続性に関する知識に対応し、ニューロンの活性化パターンを特定することは行列の特定の行（または列）に対応します（例えば、TPMの第1行は、ニューロンAとBがいずれも不活性である状態、すなわち[0 0]を符号化している可能性があります）。
+</span>
+</p><p>
+
+Figure 8 gives a simplistic schema, contrasting “activity pattern”-centered traditional thinking (Figure 8a and b for activity pattern A1 and A2) and the causal structural thinking (Figure 8c-f). Consider 9 neurons recorded, without knowing their connectivity patterns (Figure 8a and b). The majority of neuroscience experiments operate in this domain, assuming similar connectivity across participants. In Figure 8c and d, we consider a parallel and feedforward network (connectivity pattern C1). In Figure 8e and f, we add bilateral connectivity between these three feedforward chains (connectivity pattern C2). Let us define a function, called “CES”, which computes the causal structure of an activity state A given a network connectivity C, as in CES (A | C). Let us also consider a hypothetical distance, d, which quantifies the structural similarity between two CESs. For example, d( CES (A1 | C1), CES (A1 | C2) ) is the distance between Figure 8c and 8e, comparing causal structures due to the same activity states (A1) in distinct connectivity patterns, C1 and C2.
+
+<br><span style="color:blue;">
+図8は、「活動パターン」を中心とした従来の考え方（活動パターンA1およびA2に関する図8a、b）と、因果構造に基づく考え方（図8c〜f）を対比させた簡略化された図式を示しています。まず、接続パターンが未知の状態で記録された9つのニューロンを想定します（図8a、b）。神経科学実験の多くはこの状況下で行われており、被験者間で同様の接続性が存在すると仮定しています。図8c、dでは、並列かつフィードフォワードなネットワーク（接続パターンC1）を考えます。図8e、fでは、これら3つのフィードフォワード・チェーンの間に双方向の接続を追加します（接続パターンC2）。ここで、ネットワーク接続Cが与えられた際の活動状態Aの因果構造を算出する関数「CES」を定義し、これをCES(A | C)と表すことにします。また、2つのCES間の構造的類似性を定量化する仮想的な距離dを考えます。例えば、d( CES(A1 | C1), CES(A1 | C2) )は、図8cと図8eの間の距離を表します。これは、異なる接続パターンC1とC2において、同一の活動状態A1に起因する因果構造を比較するものです。
+</span>
+</p>
+
+<center><img src="images/8.png"></center>
+
+<p>
+
+Figure 8. causal structures requires measurement of both connectivity and activity patterns of neurons a) Hypothetical 9 neurons. Neurons 2, 5, 7 are active (Activity state = A1). b) Neurons 2, 4, 8 are active (A2). c) The neurons are connected in a parallel and feedforward connectivity scheme (C1) in the activity state A1. d) The C1 network is in the A2 state. e) The neurons are now connected with additional bidirectional lateral connectivity (C2) in the A1 state. f) The C2 network in the A2 state. If the neural activation pattern is only considered, c and e are predicted to support the same qualia, as well as d and f. With a distance, d, which computes structural similarity between two causal structures (CES) of a network connectivity C in an activity state A, the predicted qualia can be very different from those expected from the activity patterns alone. Values of d in this figure are hypothetical for explanation purposes.
+
+<br><span style="color:blue;">
+図8. 因果構造の特定には、ニューロンの接続性と活動パターンの両方の測定が必要である。a) 9つのニューロンからなる仮想的な系。ニューロン2、5、7が活動している（活動状態 = A1）。 b) ニューロン2、4、8が活動している（A2）。 c) 活動状態A1において、ニューロンは並列かつフィードフォワードな接続様式（C1）で接続されている。 d) 活動状態A2にあるC1ネットワーク。 e) 活動状態A1において、ニューロンは双方向の側方接続が追加された様式（C2）で接続されている。 f) 活動状態A2にあるC2ネットワーク。ニューロンの活動パターンのみを考慮した場合、cとeは同じクオリアを、同様にdとfも同じクオリアを支えると予測される。しかし、活動状態Aにおけるネットワーク接続Cの2つの因果構造（CES）間の構造的類似性を算出する距離尺度「d」を用いると、予測されるクオリアは、活動パターンのみから予想されるものとは大きく異なる可能性がある。なお、本図におけるdの値は、説明のために設定された仮想的なものである。
+</span>
+</p><p>
+
+The exact formula of d remains unclear at this stage. Although we do not know the precise formula for d, it is possible to conceive effective experiments along this line. A key here is to alter neural connectivity with minimal changes in activity patterns. Such experiments should discriminate between theories which only consider activity patterns alone from those that consider causal structures (Figure 8c-f). (Song et al., 2017) performed such an experiment utilizing the perceptual learning paradigm. Ongoing adversarial collaboration experiments (Olcese et al., 2024) also aims to alter the effective connectivity by “inactivating already inactive neurons”. In both cases, causal structural theories predict specific changes in qualia.
+
+<br><span style="color:blue;">
+現段階では、dの正確な数式は明らかになっていません。dの正確な数式は不明ですが、この方針に沿った有効な実験を考案することは可能です。ここでの鍵は、活動パターンの変化を最小限に抑えつつ、神経接続を変化させることです。そのような実験を行えば、活動パターンのみを考慮する理論と、因果構造を考慮する理論とを区別できるはずです（図8c-f）。Songら（2017）は、知覚学習のパラダイムを用いてそのような実験を行いました。現在進行中の「敵対的共同研究（adversarial collaboration）」による実験（Olceseら、2024）も、「すでに不活性なニューロンを不活性化する」ことによって有効接続を変化させることを目指しています。いずれの場合も、因果構造に基づく理論は、クオリアの特定の変化を予測しています。
+</span>
+</p><p>
+
+Other than the IIT, there can be many other theories that propose different types of causal structures arising from the neural connectivity and activity patterns. The Qualia Structure paradigm proposes to compare these theories through comparisons between qualia structures and causal structures in a theory neutral way. For a functionalist perspective on this issue, see (Fleming & Shea, 2024).
+
+<br><span style="color:blue;">
+IIT以外にも、神経の接続性や活動パターンから生じる異なる種類の因果構造を提示する理論は数多く存在し得ます。「クオリア構造」パラダイムは、クオリア構造と因果構造を比較することを通じて、理論中立的な方法でこれらの理論を対照・検討することを提案するものです。この問題に関する機能主義的な視点については、(Fleming & Shea, 2024) を参照してください。
+</span>
+</p><p>
+
+Without these causal structural considerations, one may wonder how it is possible for us to experience entirely distinct qualia, such as vision and hearing, both supported by similar neurons. Differences in causal structures extracted from the respective relevant neural structures for vision and hearing are expected to reflect such phenomenological differences (Kanai & Tsuchiya, 2012; Tsuchiya, 2017). Systematic exploration across different qualia types and links to their underlying causal structures is expected to necessitate some kind of guiding / organizing principle, such as the Qualia Periodic Table hypothesis as presented below.
+
+<br><span style="color:blue;">
+こうした因果的・構造的な観点を踏まえなければ、視覚や聴覚といった全く異なるクオリアを、類似したニューロンが担っているにもかかわらず、私たちがどのようにして経験し得るのかという疑問が生じるでしょう。視覚や聴覚にそれぞれ関与する神経構造から抽出される因果構造の差異は、こうした現象的な違いを反映していると考えられます（Kanai & Tsuchiya, 2012; Tsuchiya, 2017）。異なる種類のクオリアを横断的に探求し、それらの根底にある因果構造との関連を明らかにするには、以下に述べる「クオリア周期表」仮説のような、何らかの指針となる原理や体系化の原理が必要になると予想されます。
+</span>
+</p>
+
+<h2>4. Future outlook: Constructing Qualia Periodic Table to Dissolve the Hard Problem
+of Consciousness<br><span style="color:blue;">今後の展望：意識の「ハード・プロブレム」を解消するためのクオリア周期表の構築</span></h2>
+<h3>4.1 Qualia Periodic Table Hypothesis <span style="color:blue;">クオリア周期表仮説</span></h3>
+<p>
+Qualia Periodic Table Hypothesis proposes that types of qualia can be tabulated in a structurally organized manner. It proposes that each type of qualia can be considered as a category of category (or an object in a functor category). Relationships between types of qualia are functors in this level of category (or natural transformations in the original category level). Critically, as a dual of the qualia periodic table, it also proposes an existence of a causal structural periodic table. These dual periodic tables are hypothesized to be related in a functorial manner (or through natural transformations from a base category perspective). The existence of the underlying organizing mathematical principles for this periodic table is speculative at this moment.
+
+<br><span style="color:blue;">
+「クオリア周期表仮説」は、クオリアの種類を構造的に体系化された形で表にまとめられると提唱するものです。この仮説では、各クオリアの種類を「圏の圏」におけるカテゴリー（あるいは関手圏の対象）と見なします。クオリアの種類間の関係は、このレベルの圏における関手（あるいは元の圏のレベルにおける自然変換）として捉えられます。重要な点として、この仮説はクオリア周期表の双対（デュアル）として、「因果構造周期表」の存在も提示しています。これら二つの周期表は、関手的な関係にある（あるいは基底圏の視点からは自然変換を介して関連している）と仮定されています。なお、この周期表を支える数学的な構成原理の存在については、現時点ではあくまで推測の域を出ません。
+</span>
+</p><p>
+
+Following the previous section, here, we present a sketch of one possible future research direction: a Qualia Periodic Table hypothesis. This idea is inspired by a periodic table proposed by Mendelev in 1869 (Scerri & Worrall, 2001). The Mendelev’s table explained and organized the known properties of atoms and to predict then-unknown atoms. When appropriately translated to the domain of qualia structures and causal structures, this Mendeleev's approach might inspire future research and provide clearer ideas.
+
+<br><span style="color:blue;">
+前節に続き、ここでは将来の研究の方向性として、「クオリア周期表」という仮説の概要を提示します。この着想は、1869年にメンデレーエフが提案した周期表（Scerri & Worrall, 2001）に触発されたものです。メンデレーエフの周期表は、原子の既知の性質を説明・体系化するとともに、当時は未発見であった原子を予測するものでした。このメンデレーエフの手法をクオリア構造や因果構造の領域に適切に適用することで、将来の研究に新たな示唆を与え、より明確な概念を提示できる可能性があります。
+</span>
+</p>
+
+<h3>4.2 A Mendelevian approach for organizing structures of qualia and causal<br><span style="color:blue;">クオリアと因果の構造を体系化するためのメンデレーエフ的アプローチ</span></h3>
+<p>
+So far, the Qualia Structure project has been focusing on color qualia as the starting point to establish a common ground for the interdisciplinary studies, ranging from online and in-lab psychophysics, development in perception and language, computational analysis, category theory, and neuroimaging.
+
+<br><span style="color:blue;">
+これまで「Qualia Structure」プロジェクトは、オンラインや実験室での精神物理学、知覚・言語の発達、計算論的解析、圏論、神経画像法など、多岐にわたる学際的研究の共通の基盤を確立する出発点として、色のクオリアに焦点を当ててきました。
+</span>
+</p><p>
+
+Future research expands the target qualia into many different types, including visual motions, sounds, emotions, words and sentences and so on. The expansion of research on different qualia types would naturally require some organizing principles. At that point, we foresee construction of the Qualia Periodic Table as one viable hypothesis. (Note the idea of the Qualia Periodic Table is just for an analogy and does not imply simple periodicity in qualia structures. Also we do not foresee a simple “atomic number” like scaler for organization.)
+
+<br><span style="color:blue;">
+今後の研究では、対象となるクオリアの範囲を、視覚的な動き、音、感情、単語や文など、多種多様なものへと拡大していくことになります。こうした多様なクオリアに関する研究の拡大に伴い、それらを体系化するための原理が必要となるでしょう。その際、有力な仮説の一つとして、「クオリア周期表」の構築が考えられます。（なお、「クオリア周期表」という概念はあくまで類推に基づくものであり、クオリアの構造に単純な周期性が存在することを示唆するものではありません。また、体系化のために「原子番号」のような単純なスカラー量を用いることも想定していません。）
+</span>
+</p><p>
+
+Mendelev’s periodic table of atoms (Figure 9a) played a central role in the coherent explanation in physics and chemistry since its publication in 1869. The table served as the basis of explanation of known properties of physical and chemical phenomena, as well as to predict then-unknown particles, principles for constructing new molecules, which eventually led to development of quantum mechanics in the 1920s.
+
+<br><span style="color:blue;">
+メンデレーエフの原子の周期表（図9a）は、1869年の発表以来、物理学や化学における一貫した説明において中心的な役割を果たしてきました。この表は、物理的・化学的現象の既知の性質を説明する基盤となっただけでなく、当時は未知であった粒子の予測や、新たな分子を構築するための原理の提示にも寄与し、やがて1920年代の量子力学の発展へとつながりました。
+</span>
+</p>
+
+<center><img src="images/9.png"></center>
+
+<p>
+
+Figure 9.Qualia Periodic Table: a Mendeleevian approach to organize qualia types a) Original periodic table by Mendeleev (1869). 63 atoms were organized in the order of the atomic number. Unknown atoms were left blank (3 of them were discovered while Mendeleev was alive). b) A tentative Qualia Periodic Table. Various types of qualia, such as space (Sp), time (Ti), pain (Pa), smell (Sm), visual motion (Mo), visual texture (Te), visual shape (Sh), sound (So), touch (To), taste (Ta), visual color (Co), visual object (Ob), emotions (Emo) are organized based on the author’s intuition. Unlike the atomic number in Mendeleev's table, we have not discovered any organizing principle of qualia (e.g., more space-like, more time-like…). Yet, we can conceive of a category (a category of categories) among these qualia types (see the main text). c) A dual of the Qualia Periodic Table, listing the corresponding qualia types in terms of underlying all physically realizable causal structures. A category of causal structures can be also considered. A critical aspect of this proposal is a prediction of the existence of a functor (F or G). The functor maps from one category to the other while preserving the internal structures of the source category. Future theories of consciousness need to constrain and explain different ways of translating between these functorial mappings (natural transformation, NT).
+
+<br><span style="color:blue;">
+図9. クオリア周期表：クオリアの種類を体系化するためのメンデレーエフ的アプローチ。a) メンデレーエフによるオリジナルの周期表（1869年）。63種類の原子が原子番号順に配列された。未知の原子については空欄とされた（そのうち3つはメンデレーエフの存命中に発見された）。b) 試案としてのクオリア周期表。空間（Sp）、時間（Ti）、痛み（Pa）、嗅覚（Sm）、視覚的運動（Mo）、視覚的テクスチャ（Te）、視覚的形状（Sh）、音（So）、触覚（To）、味覚（Ta）、視覚的色（Co）、視覚的物体（Ob）、感情（Emo）といった様々な種類のクオリアが、著者の直観に基づいて配置されている。メンデレーエフの表における原子番号とは異なり、クオリアについては（「より空間的である」「より時間的である」といった）体系化の原理はまだ発見されていない。しかし、これらのクオリアの種類の間で、ある種の「カテゴリー（カテゴリーのカテゴリー）」を想定することは可能である（本文参照）。c) クオリア周期表の双対（デュアル）。物理的に実現可能なあらゆる因果構造に基づき、対応するクオリアの種類を列挙したものである。因果構造のカテゴリーを考えることもできる。この提案の重要な点は、関手（FまたはG）の存在の予測にある。この関手は、元のカテゴリーの内部構造を保持したまま、あるカテゴリーから別のカテゴリーへと写像を行うものである。今後の意識理論においては、これらの関手による写像間（自然変換：NT）の変換様式を制約し、説明することが求められる。
+</span>
+</p><p>
+
+What should a successful mapping between some qualia structure and causal structure bring us? Let’s assume a successful mapping from a category of color qualia to a category of its physical substrates, color causal structures.
+
+<br><span style="color:blue;">
+クオリアの構造と因果構造との間の適切な対応付けは、私たちに何をもたらすべきでしょうか。ここでは、色のクオリアの圏から、その物理的基盤である「色の因果構造」の圏への適切な対応付けがなされると仮定してみましょう。
+</span>
+</p><p>
+
+Once such mapping is established for a single case, it is natural to expand the same effort to expand such an approach to the other qualia types. Figure 9b anticipates the eventual organizing table for distinct qualia types. Here “distinction” of qualia types are initially guided by intersubjectively-agreed and research-informed distinctions, such as space, time, vision, sound, touch, smell, and taste. Within each modality, further subdivisions are likely. Within visual modality, color, texture, motion, shape, and other properties may possess distinct qualia structure types.
+
+<br><span style="color:blue;">
+ある一つの事例についてそのような対応関係が確立されれば、同様の取り組みを他の種類のクオリアへと広げていくのは自然な流れです。図9bは、異なる種類のクオリアを体系化する将来的な表の姿を先取りしたものです。ここで、クオリアの種類の「区別」は、空間、時間、視覚、聴覚、触覚、嗅覚、味覚といった、研究に基づき、かつ主観を超えて合意された区分を指針としています。各モダリティ（感覚様相）の内部においても、さらなる細分化が行われる可能性があります。例えば視覚モダリティの中では、色、質感、動き、形状、その他の特性が、それぞれ異なるクオリア構造のタイプを持っているかもしれません。
+</span>
+</p><p>
+
+Theoretically, it would be an ideal goal or aim to arrive at two domains of periodic table-like structures for Q and C as complete as possible, with precise mapping of F (or its inverse). Seeking for precise mapping, however, is unlikely to result in empirical progress. In mathematics, an effective strategy is often to start from a solution to a simpler problem. Then, try to see if the obtained solution can be extended to a larger scope of the problem gradually (e.g., the Galois extension and original introduction of the Kan extension in category theory). In this generalization framework, natural transformation is one of the most powerful and fundamental conceptual tools. Natural transformation gives precise formulation about what kind of constraints need to be satisfied for such transformation of a collection of categories and functors to another. Further, above and beyond natural transformation, it is not necessary to consider further meta mapping (e.g., functor category consists of functors as categories and natural transformations as functors).
+
+<br><span style="color:blue;">
+理論的には、F（またはその逆写像）の正確な写像を伴いつつ、QとCについて可能な限り完全な「周期表」のような構造の領域を構築することが、理想的な目標となるでしょう。しかし、最初から正確な写像を追求しても、経験的な進展につながる可能性は低いと言えます。数学において有効な戦略の一つは、まず単純な問題の解から出発することです。そして、得られた解を段階的に、より広い範囲の問題へと拡張できるかどうかを検討します（例えば、ガロア拡大や、圏論におけるカン拡張の当初の導入などがこれに当たります）。こうした一般化の枠組みにおいて、「自然変換」は最も強力かつ根本的な概念的ツールの一つです。自然変換は、ある圏と関手の集まりを別のものへと変換する際に、どのような制約が満たされるべきかについて、正確な定式化を与えてくれます。さらに言えば、自然変換を超えて、それ以上のメタ的な写像（例えば、関手を対象とし自然変換を射とする関手圏など）を考慮する必要は必ずしもありません。
+</span>
+</p><p>
+
+Applied to the qualia structure paradigm, this would correspond to starting from focusing on a particular qualia type in Q (e.g., color) and its causal structure in C with a possible mapping Fc. At the moment of construction of Fc, the domain of Q outside of color can be mapped into something like an empty set in C. If the domain of Fc can be extended to include more qualia types, such as visual motion, then a more general mapping G can be formulated as NT: F⇒G.
+
+<br><span style="color:blue;">
+これをクオリア構造のパラダイムに当てはめると、まずQ内の特定のクオリア・タイプ（例えば「色」）と、それに対応するC内の因果構造に着目し、写像Fcを想定することに相当します。Fcを構築する段階では、Qのうち「色」以外の領域は、Cにおける空集合のようなものへと写像されることになります。もしFcの定義域を拡張して、視覚的運動といった他のクオリア・タイプも包含できるようにすれば、より一般的な写像Gを、NT: F⇒Gという形で定式化することが可能になります。
+</span>
+</p>
+
+<h3>4.3 Research directions implied from the Qualia Periodic Table hypothesis<br><span style="color:blue;">クオリア周期表仮説から示唆される研究の方向性</span></h3>
+<p>
+While highly speculative and abstract, this tentative Qualia Periodic Table is hoped to clarify several future research directions.
+
+<br><span style="color:blue;">
+極めて推測的かつ抽象的ではあるものの、この暫定的な「クオリア周期表」が、将来の研究の方向性をいくつか明確にすることが期待される。
+</span>
+</p><p>
+
+First, it proposes a search for relationships between different qualia types. The hypothesis proposes an organizing structure among qualia types as a category. As mentioned earlier, a category consists of objects (in this case, a particular qualia type) and arrows (or directed relationships) among the objects, which satisfies certain axioms. In this case, we could potentially define structural sameness or inclusion relations between qualia types as an arrow in an ordinary category (or perceived sameness in an enriched category). If successful, any given qualia type’s characteristics should be definable from the relationships with other qualia types, through the Yoneda lemma.
+
+<br><span style="color:blue;">
+まず、異なるクオリアのタイプ間における関係性を探求することが提案されます。この仮説は、クオリアのタイプを「圏（category）」における対象と見なし、それらの間に組織的な構造を想定するものです。前述の通り、圏とは、対象（ここでは特定のクオリアのタイプ）と、それらの対象を結ぶ射（あるいは有向関係）から構成され、特定の公理を満たすものです。本件においては、クオリアのタイプ間の構造的な同一性や包含関係を、通常の圏における射として（あるいはエンリッチ圏における知覚された同一性として）定義できる可能性があります。もしこれが実現すれば、任意のクオリアのタイプの特性を、米田の補題（Yoneda lemma）を介して、他のクオリアのタイプとの関係性から定義できるようになるはずです。
+</span>
+</p><p>
+
+Second, perhaps in analogy with how atoms compose a molecule, one can start asking the organizing principles of how narrower qualia compose into broader qualia (Balduzzi & Tononi, 2009; Kanai & Tsuchiya, 2012; Lee-Youngzie et al., 2024). How do local and narrower qualia compose to a global and unified broad quale? Are all narrower qualia internally consistent with each other within a broader qualia at a given moment? These questions may be formally addressed by sheaf theory, which is closely related to category theory (Phillips, 2018, 2020; Rosiak, 2022).
+
+<br><span style="color:blue;">
+第二に、原子が分子を構成するのと同様の類推から、より狭いクオリアがいかにしてより広いクオリアを構成するのか、その組織化原理を問うことが可能になります（Balduzzi & Tononi, 2009; Kanai & Tsuchiya, 2012; Lee-Youngzie et al., 2024）。局所的かつ狭いクオリアは、いかにして大域的かつ統一された広いクオリアを構成するのでしょうか。ある時点において、より広いクオリアの内部で、すべての狭いクオリアは互いに整合しているのでしょうか。こうした問いは、圏論と密接に関連する「層（sheaf）の理論」を用いることで、形式的に扱うことができるかもしれません（Phillips, 2018, 2020; Rosiak, 2022）。
+</span>
+</p><p>
+
+Third, the duality of the table proposes a corresponding category in the domain of causal structures. In this category, objects are a collection of all physically realizable causal structures supporting each corresponding qualia type while arrows are structural sameness. Relational structures between qualia types need to be reflected in the causal structure side, due to the duality of the table. Can the organizing principle be some scalar, like atomic number? Or should it be more abstract mathematical objects, such as classifications of groups or graphs? Would it be some type of topological invariants?
+
+<br><span style="color:blue;">
+第三に、この表が持つ双対性は、因果構造の領域における対応する圏（カテゴリー）の存在を示唆しています。この圏において、対象（オブジェクト）は、各クオリアのタイプを支える物理的に実現可能なあらゆる因果構造の集合であり、射（アロー）は構造的な同一性を表します。表の双対性ゆえに、クオリアのタイプ間の関係構造は、因果構造側にも反映される必要があります。その構成原理となり得るのは、原子番号のような何らかのスカラー量でしょうか。それとも、群やグラフの分類といった、より抽象的な数学的対象でしょうか。あるいは、何らかの位相不変量のようなものでしょうか。
+</span>
+</p><p>
+
+Fourth, related to the duality, it demands the search for a functor, structure-preserving mapping, from Category of Qualia structures (Figure 9b) to Category of causal structures (Figure 9c). If there exists a functor in the other direction as well, then the next level of the search is to see if the two functors form an adjoint pair or not (Awodey, 2010; Leinster, 2014; Mac Lane, 1998; Spivak, 2014). For accessible explanation of adjoint functors, see (Rosiak, 2022; Tsuchiya et al., 2023). Existence of adjoint functors is mathematically highly non-trivial. Establishing structural sameness beyond adjunction might be very tough with empirical approaches.
+
+<br><span style="color:blue;">
+第四に、この双対性に関連して、クオリア構造の圏（図9b）から因果構造の圏（図9c）への関手（構造を保存する写像）を探求することが求められます。もし逆方向の関手も存在するならば、探求の次の段階は、それら二つの関手が随伴対をなすかどうかを調べることになります（Awodey, 2010; Leinster, 2014; Mac Lane, 1998; Spivak, 2014）。随伴関手に関する分かりやすい解説については、(Rosiak, 2022; Tsuchiya et al., 2023) を参照してください。随伴関手の存在は、数学的に見て極めて自明ではない事柄です。随伴関係を超えた構造的同一性を確立することは、経験的なアプローチでは非常に困難である可能性があります。
+</span>
+</p><p>
+
+Fifth, it also specifies a requirement of future satisfactory meta-theories of consciousness. This level of future theory explains how different theories relate to each other (Eilenberg & Mac Lane, 1945; John C. Baez & Mike Stay, 2009). Such a meta-theory would help resolve Cambrian-explosion of the theories of consciousness (Kleiner, 2020, 2024; Seth & Bayne, 2022).
+
+<br><span style="color:blue;">
+第五に、本論は、将来的に求められる「意識に関する十分なメタ理論」の要件をも規定するものである。こうした将来の理論は、個々の異なる理論がいかに互いに関連し合っているかを説明するものとなる（Eilenberg & Mac Lane, 1945; John C. Baez & Mike Stay, 2009）。そのようなメタ理論は、意識に関する理論の「カンブリア爆発」的状況を解消する助けとなるだろう（Kleiner, 2020, 2024; Seth & Bayne, 2022）。
+</span>
+</p>
+
+<h3>4.4 Dissolution of the hard problem of consciousness?<br><span style="color:blue;">意識の「困難な問題」の解消？</span></h3>
+<p>
+This level of meta-theory, in turn, provides a rather strict structural specification at the level of the underlying categories, both Categories of Qualia structures and causal structures (Figure 9b and
+c).
+
+<br><span style="color:blue;">
+このメタ理論のレベルは、ひいては、クオリア構造のカテゴリーと因果構造という、基礎となるカテゴリーのレベルにおいて、かなり厳密な構造的規定を与えるものである（図9bおよびc）。
+</span>
+</p><p>
+
+As an empirical project, establishing adjoint relationships between Categories of Qualia structures and Categories of causal structures would be already extremely challenging. Such empirical challenges would constrain even stronger top-down theoretical proposals of identity in IIT (Oizumi et al., 2014), isomorphism (Fink et al., 2021) or psychophysical coherence (Chalmers, 1996). Any hint of successful convergence between empirical and theoretical studies would severely constrain naturally possible states of the universe that we live in. This level of fundamental understanding of the universe must include the relationship between qualia and their physical substrates.
+
+<br><span style="color:blue;">
+経験的なプロジェクトとして、クオリア構造の圏と因果構造の圏との間に随伴関係を確立することは、それ自体すでに極めて困難な課題でしょう。そうした経験的課題は、IITにおける同一性（Oizumi et al., 2014）や同型性（Fink et al., 2021）、あるいは精神物理的整合性（Chalmers, 1996）といった、より強力なトップダウンの理論的提案に対しても制約を課すことになるはずです。経験的研究と理論的研究の間に収束の兆しが見えれば、それは私たちが生きるこの宇宙において自然に生じうる状態を、厳しく制約することになるでしょう。宇宙に対するこうした根本的な理解には、クオリアとそれに対応する物理的基盤との関係が含まれていなければなりません。
+</span>
+</p><p>
+
+Are behaviorally obtained qualia structures between two species (e.g., humans, animals, AIs etc) enough to argue for the equivalence of qualia structures? What does it tell us about the possibility of qualia inversions or swaps (Palmer, 1999)? While structural characterization of qualia is much richer and more subtle than traditional behavioral responses (including verbal responses), it is still a collection of behaviors. As such, total reliance of “behavioral” structural approaches to establish equivalence of qualia structures is subject to the same previous criticisms on the logical possibilities of philosophical zombie, inverted qualia etc (Chalmers, 2003). As emphasized in Figure 2d, it is a joint characterization of horizontal (within a domain) and vertical (across domains) relationships, which can only establish reliable answers towards these questions.
+
+<br><span style="color:blue;">
+行動に基づいて得られた2つの種（例：人間、動物、AIなど）間のクオリア構造は、それらのクオリア構造が等価であると論じるのに十分なものでしょうか？また、このことはクオリアの反転や入れ替わり（Palmer, 1999）の可能性について、何を物語っているのでしょうか？クオリアの構造的特徴付けは、従来の行動反応（言語的反応を含む）に比べてはるかに豊かで繊細なものですが、それでもやはり行動の集積に過ぎません。したがって、クオリア構造の等価性を確立するために「行動」に基づく構造的アプローチに全面的に依拠することは、哲学的ゾンビやクオリア反転などの論理的可能性をめぐる従来の批判（Chalmers, 2003）と同様の批判にさらされることになります。図2dで強調されているように、これらの問いに対して信頼できる答えを導き出せるのは、水平的（ドメイン内）な関係と垂直的（ドメイン間）な関係を統合的に特徴付けることによってのみなのです。
+</span>
+</p><p>
+
+Once science reaches that level of understanding, or even better the natural laws that link between
+the two domains, then the hard problem of consciousness dissolves (Chalmers, 1996). If we reach
+that level, meta-physical thought experiments lose their relevance to this world even logically.
+Thought experiments, such as inverted qualia, may be replaced with empirical prescription of
+exactly when and under what conditions it may be empirically found (Figure 5f).
+
+<br><span style="color:blue;">
+科学がそのレベルの理解に達したとき、あるいはさらに望ましくは、これら二つの領域を結びつける自然法則が解明されたとき、「意識のハード・プロブレム」は解消されることになる（Chalmers, 1996）。そのような段階に到達すれば、形而上学的な思考実験は、論理的な観点から見ても、現実世界との関連性を失うだろう。「逆転クオリア」のような思考実験は、いつ、どのような条件下でそれが経験的に確認され得るかという、正確な経験的記述へと置き換えられるかもしれない（図5f）。
+</span>
+</p><p>
+
+Anticipated changes in the levels of questions may be akin to what happened to physics in the
+19-th century. After Mendeleev’s periodic table, further deeper questions were asked, culminating
+our modern understanding of general relativity, quantum theory, and standard models of particle
+physics. In the course of the progress, philosophical understanding of the ontology, the nature of
+the things, underwent substantial revisions. Likewise, in consciousness science, fundamental
+problems would not disappear entirely, yet the original hard problem may start to fade away and
+dissolve in the background and may be replaced by even more interesting, mysterious and
+fundamental questions.
+
+<br><span style="color:blue;">
+問いの次元に予想される変化は、19世紀の物理学が経験した変遷に似ているかもしれません。メンデレーエフの周期表の登場後、さらに深遠な問いが投げかけられるようになり、その探求の果てに、一般相対性理論、量子論、そして素粒子物理学の標準模型といった現代の理解が確立されました。こうした進展の過程で、存在論、すなわち「物事の本質」に関する哲学的理解もまた、根本的な見直しを迫られました。同様に、意識科学においても、根本的な問題が完全に消え去ることはないでしょうが、当初の「ハード・プロブレム（難問）」は次第に薄れ、背景へと溶け込んでいくかもしれません。そして、それらに取って代わる形で、より興味深く、神秘的で、かつ根本的な問いが登場する可能性があるのです。
+</span>
+</p>
+
+<h2>5. Conclusion <span style="color:blue;">
+結論</span></h2>
+<p>
+In this chapter, we reviewed recent empirical interdisciplinary approaches to investigate qualia, the
+Qualia Structure paradigm. The fundamental mathematical basis of this paradigm is category
+theory, a branch of mathematics developed to analyze structural sameness. The Yoneda lemma
+from category theory inspires a novel structural way to completely characterize qualia through
+massive relationships with other qualia. With this principle at its core, empirical research results are
+beginning to emerge. Of importance is development in computational analyses (e.g., unsupervised
+alignment) that bridge abstract mathematical ideas on structures to concrete structural data (e.g.,
+similarity matrix, causal structures of a network). Comparisons of predictions from various theories
+of consciousness can be achieved once we obtain data for qualia structures and their candidate
+physical substrates with their connectivity and activity.
+
+<br><span style="color:blue;">
+本章では、クオリアを研究するための近年の学際的かつ実証的なアプローチ、すなわち「クオリア構造（Qualia Structure）」パラダイムについて概観した。このパラダイムの数学的基礎となるのは、構造的な同一性を分析するために発展した数学の一分野である「圏論」である。圏論における「米田の補題」は、他のクオリアとの膨大な関係性を介してクオリアを完全に特徴づけるという、新たな構造的アプローチの着想源となっている。この原理を中核に据え、実証的な研究成果も現れ始めている。ここで重要となるのは、構造に関する抽象的な数学的概念と、具体的な構造データ（類似度行列やネットワークの因果構造など）とを橋渡しする計算論的解析手法（教師なしアライメントなど）の発展である。クオリア構造に関するデータと、その物理的基盤の候補（およびその接続性や活動パターン）に関するデータが得られれば、意識に関する様々な理論から導き出される予測を比較・検証することが可能になる。
+</span>
+</p><p>
+
+Finally we summarized a Qualia Periodic Table hypothesis, inspired by Mendeleev's approach. The
+hypothesis paves several future directions for empirical research, such as identification of the
+organizing principle of the different qualia types. Further structural approaches and understanding
+may alter the level of philosophical and scientific inquiry, dissolving the traditional concern of the
+hard problem of consciousness.
+
+<br><span style="color:blue;">
+最後に、メンデレーエフの手法に着想を得た「クオリア周期表」の仮説をまとめました。この仮説は、異なるクオリアのタイプを規定する組織化原理の特定など、実証的研究に向けた将来のいくつかの方向性を切り開くものです。さらなる構造的アプローチや理解の深化は、哲学的・科学的探究のあり方を変容させ、意識の「困難な問題（ハード・プロブレム）」をめぐる従来の懸念を解消する可能性があります。
+</span>
+</p><p>
+
+A key to the success in unlocking the mystery of qualia and physical substrates lies in the future
+generation of consciousness researchers. The Qualia Structure paradigm anticipates the key
+players in the next generation with broad interdisciplinary background knowledge and skills.
+Among the skills, perhaps, communications skills are critical. Category theory can possibly
+facilitate such interdisciplinary communications (Cheng, 2022; Spivak, 2014). In addition to the
+limits in how much depth and width one can acquire, keeping distinct or apparently inconsistent
+ideas and theories is extremely hard intellectual exercise, due to known human cognitive biases of
+confirmation biases (Kahneman, 2011; Sharot, 2017). We hope that the interdisciplinary nature of
+the Qualia Structure paradigm inspires future generations to dissolve or reframe the hard problem
+of consciousness.
+
+<br><span style="color:blue;">
+クオリアと物理的基盤の謎を解明する鍵は、次世代の意識研究者が握っています。「クオリア構造（Qualia Structure）」パラダイムは、幅広い学際的背景知識とスキルを備えた次世代の主要な担い手の登場を見据えています。それらのスキルの中でも、特にコミュニケーション能力が極めて重要と言えるでしょう。圏論（category theory）は、こうした学際的なコミュニケーションを促進する一助となり得ます（Cheng, 2022; Spivak, 2014）。知識の深さや幅をどこまで獲得できるかという限界に加え、互いに異なる、あるいは一見すると矛盾するようなアイデアや理論を並立させておくことは、極めて困難な知的営みです。これは、確証バイアス（Kahneman, 2011; Sharot, 2017）に代表される、人間の認知バイアスが関与しているためです。「クオリア構造」パラダイムが持つ学際的な性質が、次世代の研究者を触発し、意識の「ハード・プロブレム」を解消、あるいはその枠組みを再構築するきっかけとなることを私たちは期待しています。
+</span>
+</p>
+
+<h2>Acknowledgement <span style="color:blue;">謝辞</span></h2>
+<p>
+Due to the limit in space and time, the author misses many potentially important references and
+work by others, which have shaped the idea of this chapter. Rather than listing all of them, the
+author chose to represent recent progress from the Qualia Structure project, supported by Japan
+Society for the Promotion of Science Grant-in-Aid for Transformative Research Areas (B)
+20H05709 and 20H05710 and (A) 23H04829 and 23H04830. The author takes the responsibility
+for any errors and inaccuracies of the descriptions. The idea of the Qualia Periodic Table is the
+author’s, not discussed much with the members of the Qualia Structure project. The project’s latest
+update is available at https://en.qualia-structure. The author appreciates discussions on the
+contents of the paper with the members of the Qualia Structure project as well as the participants
+of the Qualia Structure Summer school 2024. He also appreciates Masafumi Oizumi, Steve
+Phillips, Hayato Saigo, Yusuke Moriguchi, Ariel Zeleznikow-Johnston, Alex Maier and Davide Alde
+for their helpful comments on the earlier version of this manuscript. He is also supported by the
+National Health and Medical Research Council Ideas Grant GNT1183280, Australian Research
+Council Discovery Projects DP240102680. The funders had no role in the decision to publish, or
+preparation of the manuscript.
+
+<br><span style="color:blue;">
+紙幅や時間の制約上、本章の着想の形成に寄与した他者による重要な先行研究や業績の多くを、十分に紹介しきれていないことをお断りしておきます。それらすべてを列挙する代わりに、本章では「クオリア構造（Qualia Structure）」プロジェクトによる最近の進展を紹介することに重点を置きました。なお、同プロジェクトは、日本学術振興会（JSPS）科学研究費助成事業「学術変革領域研究（B）」（課題番号20H05709、20H05710）および「学術変革領域研究（A）」（課題番号23H04829、23H04830）の助成を受けています。記述における誤りや不正確な点については、すべて著者が責任を負います。「クオリア周期表」という着想は著者独自のものであり、プロジェクトメンバーとの間で詳細な議論がなされたものではありません。プロジェクトの最新情報は https://en.qualia-structure にて公開されています。本論文の内容について議論を交わした「クオリア構造」プロジェクトのメンバーおよび「Qualia Structure Summer School 2024」の参加者の皆様に感謝の意を表します。また、本稿の初期段階において有益なコメントをくださったMasafumi Oizumi、Steve Phillips、Hayato Saigo、Yusuke Moriguchi、Ariel Zeleznikow-Johnston、Alex Maier、Davide Aldeの各氏にも深く感謝いたします。さらに、著者はNational Health and Medical Research Council（オーストラリア国立保健医療研究評議会）のIdeas Grant（GNT1183280）およびAustralian Research Council（オーストラリア研究会議）のDiscovery Projects（DP240102680）による助成を受けています。なお、これらの助成機関は、本論文の出版決定や原稿の作成には一切関与していません。
+</span>
+</p>
+
+<h2>Appendix: Definitions and examples of category and functor in category theory<br><span style="color:blue;">付録：圏論における圏と関手の定義および例</span></h2>
+<p>
+A category consists of objects (which can be some types of qualia) and arrows. Arrows denote the
+relationship between objects. There are a few rules (or axioms) that these objects and arrows have
+to satisfy to be regarded as a category. The rules include: 1) every object has to have a
+self-referencing arrow (called the identity), 2) two arrows should be composable, when their
+starting (domain) and ending (codomain) objects match, 3) when 3 arrows compose, the order of
+compositions does not matter.
+
+<br><span style="color:blue;">
+圏（category）は、対象（クオリアの一種である場合もあります）と射（arrow）から構成されます。射は対象間の関係を表します。対象と射が圏とみなされるためには、いくつかの規則（または公理）を満たす必要があります。その規則には、1) すべての対象は自己参照的な射（恒等射と呼ばれます）を持つこと、2) 2つの射について、始点となる対象（始域）と終点となる対象（終域）が一致する場合、それらを合成できること、3) 3つの射を合成する際、合成の順序は結果に影響しないこと、などが含まれます。
+</span>
+</p><p>
+
+To understand this in a concrete example, let’s consider a category of Qualia. One possible set of
+objects {A, B, C, …} would be all colors that I can experience. For these objects, we can define an
+arrow f:A→B to mean “A is indistinguishably similar to B”. Let A (and B) be my color qualia that I
+experience when I see a red ♦ in deck X (and Y) of playing cards. If A and B are “indistinguishably
+similar” to me, then there is an arrow from A to B, that is, f:A→B exists. But if I can distinguish the
+redness of the red diamond from that of a reddish sunset (=C), then there exists no arrow from A
+(or B) to C. Further, let’s define color qualia D (and E) for ♥ in deck X (and Y). Then, for me,
+g:B→D and h:D→E exist. We can compose f and g to obtain i: (f then g) A→D to mean that ♦ in
+deck X is indistinguishably similar to ♥ in deck X. The results of two composition of j:[f then (g then
+h)] and k:[(f then g) then h] are the same (i.e., ♦ in deck X is indistinguishably similar to ♥ in deck
+Y). For more qualia relevant examples, see Tsuchiya & Saigo 2021.
+
+<br><span style="color:blue;">
+これを具体的な例で理解するために、クオリアの圏を考えてみましょう。対象の集合 {A, B, C, …} として、私が経験しうるあらゆる色を想定します。これらの対象について、「AはBと区別がつかないほど似ている」ことを意味する射 f: A→B を定義できます。ここで、A（およびB）を、トランプのデッキX（およびY）にある赤いダイヤ（♦）を見たときに私が経験する色のクオリアだとします。もし私にとってAとBが「区別がつかないほど似ている」ならば、AからBへの射、すなわち f: A→B が存在することになります。しかし、もし私がその赤いダイヤの赤さと、赤みがかった夕焼け（=C）の赤さとを区別できるのであれば、A（あるいはB）からCへの射は存在しません。さらに、デッキX（およびY）のハート（♥）に対応する色のクオリアをD（およびE）と定義してみましょう。すると、私にとっては g: B→D および h: D→E が存在することになります。f と g を合成して i: (f then g) A→D を得ることができますが、これは「デッキXのダイヤ（♦）はデッキXのハート（♥）と区別がつかないほど似ている」ことを意味します。j: [f then (g then h)] と k: [(f then g) then h] という二つの合成の結果は同じものになります（つまり、「デッキXのダイヤ（♦）はデッキYのハート（♥）と区別がつかないほど似ている」ということです）。クオリアに関連するその他の例については、Tsuchiya & Saigo (2021) を参照してください。
+</span>
+</p><p>
+
+A functor can be considered as an arrow from one category to another category, which preserves
+two properties of the original category, 1) identity arrows and 2) compositions.
+
+<br><span style="color:blue;">
+関手は、ある圏から別の圏への矢印とみなすことができ、元の圏の2つの性質、すなわち1) 恒等射と2) 合成を保存します。
+</span>
+</p><p>
+
+Coming back to the example of a category Qualia. We consider a category of Nouns, which
+consists of nouns as objects. An arrow α:W→V is defined as “W means the same as V”. Then, a
+functor F: ColorQualia→Nouns preserves the identity (e.g., 1A: A→A) in ColorQualia category into
+Noun category (e.g,. F(1A)=1F(A)=”red”→”red”). Similarly, composition in the ColorQualia category
+is preserved in the Noun category. For more qualia relevant examples, See (Tsuchiya & Saigo
+2021, Tsuchiya, Saigo, Phillips 2023).
+
+<br><span style="color:blue;">
+「クオリア」の圏という例に話を戻しましょう。ここでは、名詞を対象（オブジェクト）とする「名詞の圏」を考えます。射 α: W → V は、「WはVと同じ意味である」と定義されます。このとき、関手 F: ColorQualia → Nouns は、ColorQualia圏における恒等射（例：1A: A → A）を名詞の圏における恒等射（例：F(1A) = 1F(A) = 「赤」→「赤」）へと写し、その性質を保ちます。同様に、ColorQualia圏における射の合成も、名詞の圏において保たれます。クオリアに関連するその他の例については、(Tsuchiya & Saigo 2021, Tsuchiya, Saigo, Phillips 2023) を参照してください。
+</span>
+</p>
+
+<h2>Appendix: Consideration of mathematical properties of similarity about qualia<br><span style="color:blue;">付録：クオリアに関する類似性の数学的性質の考察</span></h2>
+<p>
+In our empirical examples, color qualia structures are most extensively studied, where similarity
+relations are regarded as arrows in the enriched category of color qualia (Tsuchiya, Saigo, Phillips
+2023).
+
+<br><span style="color:blue;">
+我々の実証的な事例において最も詳細に研究されているのは色彩クオリアの構造であり、そこでは類似性関係が色彩クオリアの豊穣圏（enriched category）における射（arrow）と見なされている（Tsuchiya, Saigo, Phillips 2023）。
+</span>
+</p><p>
+
+Whether similarity relations satisfy all conditions as arrows for the enriched category is an empirical
+question. It is important to verify and test if the data that is used for the structure approaches,
+which assumes the metric properties of the collected data. In fact, axioms of symmetry and identity
+along with triangle inequality can be violated in the studies of perceptual similarities, when the
+similarities were treated as “distance”(Epping et al., 2023; Rosch, 1975; Tversky, 1977).
+
+<br><span style="color:blue;">
+類似性関係が豊穣圏（enriched category）における射（arrow）としてのあらゆる条件を満たすかどうかは、経験的な問題である。収集されたデータの距離的性質を前提とする構造的アプローチにおいて、実際に使用されるデータがそれらの条件を満たしているかどうかを検証・確認することは重要である。実際、知覚的類似性を「距離」として扱う研究においては、対称性や同一性、さらには三角不等式といった公理が満たされない場合があることが指摘されている（Epping et al., 2023; Rosch, 1975; Tversky, 1977）。
+</span>
+</p><p>
+
+In a recent work, (Rowe et al., 2024) provided one way to deal with this issue. They considered
+any quale at a given time and space is only maximally similar to itself (satisfying the axiom of
+minimality). Two qualia at a given time but two spaces are treated as different points. In this
+framework, similarity of two distinct qualia at the same time and space can be only theoretically
+defined/extrapolated. This also removes any violation of symmetry.
+
+<br><span style="color:blue;">
+近年の研究において、Roweら（2024）は、この問題に対処する一つの方法を提示しました。彼らは、ある時空間におけるいかなるクオリアも、それ自身に対してのみ最大に類似している（最小性の公理を満たす）と考えました。同一時刻であっても異なる空間にある二つのクオリアは、異なる点として扱われます。この枠組みでは、同一の時空間における二つの異なるクオリア間の類似性は、理論的に定義または外挿することしかできません。これにより、対称性の侵害も解消されます。
+</span>
+</p><p>
+
+With respect to violations of triangle inequality, there are various mathematical methods to deal
+with, such as a kernel method (Jäkel et al., 2008). Quantum cognition models of similarity also
+substantially reduced the violations of triangle inequality compared to classical distance models
+(Epping et al., 2023).
+
+<br><span style="color:blue;">
+三角不等式の違反に対処するための数学的手法としては、カーネル法（Jäkel et al., 2008）など、様々なものが存在します。また、類似性に関する量子認知モデルにおいても、従来の距離モデルと比較して、三角不等式の違反が大幅に低減されました（Epping et al., 2023）。
+</span>
+</p><p>
+
+The precise characterization of the mathematical characterization and formulation of qualia
+similarity is one of the open areas of the research.
+
+<br><span style="color:blue;">
+クオリアの類似性に関する数学的な特徴付けと定式化を正確に行うことは、未解決の研究課題の一つです。
+</span>
+</p>
+
+<h2>References <span style="color:blue;">参考文献</span></h2>
+<p>
+<div class="styleRef">
+<ul><li>
+Abramov, I., Gordon, J., & Chan, H. (1991). Color appearance in the peripheral retina: Effects of
+stimulus size. Journal of the Optical Society of America, A, Optics, Image & Science, 8(2),
+404–414. https://doi.org/10.1364/JOSAA.8.000404
+
+<br><span style="color:blue;">
+周辺網膜における色の見え：刺激サイズの影響
+</span>
+</li><br><li>
+
+Albantakis, L. (2023, October 20). IIT criticisms and replies (a non-exhaustive list).
+Conscious(Ness) Realist. https://consciousnessrealist.com/IIT-criticism-replies/
+
+<br><span style="color:blue;">
+IIT（統合情報理論）に対する批判とそれへの反論（網羅的ではないリスト）
+</span>
+</li><br><li>
+
+Albantakis, L., Barbosa, L., Findlay, G., Grasso, M., Haun, A. M., Marshall, W., Mayner, W. G. P.,
+Zaeemzadeh, A., Boly, M., Juel, B. E., Sasai, S., Fujii, K., David, I., Hendren, J., Lang, J. P.,
+& Tononi, G. (2023). Integrated information theory (IIT) 4.0: Formulating the properties of
+phenomenal existence in physical terms. PLOS Computational Biology, 19(10), e1011465.
+https://doi.org/10.1371/journal.pcbi.1011465
+
+<br><span style="color:blue;">
+統合情報理論（IIT）4.0：現象的実在の性質を物理的用語で定式化する
+</span>
+</li><br><li>
+
+Alvarez-Melis, D., & Jaakkola, T. S. (2018). Gromov-Wasserstein Alignment of Word Embedding
+Spaces. arXiv:1809.00013 [Cs]. http://arxiv.org/abs/1809.00013
+
+<br><span style="color:blue;">
+単語埋め込み空間のグロモフ・ワッサースタイン・アライメント
+</span>
+</li><br><li>
+
+Anstis, S. (1998). Picturing Peripheral Acuity. Perception, 27(7), 817–825.
+https://doi.org/10.1068/p270817
+
+<br><span style="color:blue;">
+周辺視野の解像度を可視化する
+</span>
+</li><br><li>
+
+Awodey, S. (2010). Category theory (2nd ed). Oxford University Press.
+
+<br><span style="color:blue;">
+圏論
+</span>
+</li><br><li>
+
+Balduzzi, D., & Tononi, G. (2009). Qualia: The geometry of integrated information. PLoS Comput
+Biol, 5(8), e1000462. https://doi.org/10.1371/journal.pcbi.1000462
+
+<br><span style="color:blue;">
+クオリア：統合情報の幾何学
+</span>
+</li><br><li>
+
+Barrett, A. B., & Seth, A. K. (2011). Practical measures of integrated information for time-series
+data. PLoS Comput Biol, 7(1), e1001052. https://doi.org/10.1371/journal.pcbi.1001052
+
+<br><span style="color:blue;">
+時系列データに対する統合情報の実際的な尺度
+</span>
+</li><br><li>
+
+Binz, M., & Schulz, E. (2023). Using cognitive psychology to understand GPT-3. Proceedings of
+the National Academy of Sciences, 120(6), e2218523120.
+https://doi.org/10.1073/pnas.2218523120
+
+<br><span style="color:blue;">
+認知心理学を用いてGPT-3を理解する
+</span>
+</li><br><li>
+
+Boly, M., Massimini, M., Tsuchiya, N., Postle, B. R., Koch, C., & Tononi, G. (2017). Are the Neural
+Correlates of Consciousness in the Front or in the Back of the Cerebral Cortex? Clinical
+and Neuroimaging Evidence. J Neurosci, 37(40), 9603–9613.
+https://doi.org/10.1523/JNEUROSCI.3218-16.2017
+
+<br><span style="color:blue;">
+意識の神経相関は、大脳皮質の前方にあるのか、それとも後方にあるのか？――臨床的および神経画像的エビデンス
+</span>
+</li><br><li>
+
+Bradley, T.-D. (2017). The Yoneda Perspective.
+https://www.math3ma.com/blog/the-yoneda-perspective
+
+<br><span style="color:blue;">
+米田の視点
+</span>
+</li><br><li>
+
+Bridges, D., Pitiot, A., MacAskill, M. R., & Peirce, J. W. (2020). The timing mega-study: Comparing
+a range of experiment generators, both lab-based and online. PeerJ, 8, e9414.
+https://doi.org/10.7717/peerj.9414
+
+<br><span style="color:blue;">
+タイミングに関する大規模研究：実験生成ツールの比較（ラボ型およびオンライン型）
+</span>
+</li><br><li>
+
+Brouwer, G. J., & Heeger, D. J. (2009). Decoding and Reconstructing Color from Responses in
+Human Visual Cortex. The Journal of Neuroscience, 29(44), 13992–14003.
+https://doi.org/10.1523/JNEUROSCI.3577-09.2009
+
+<br><span style="color:blue;">
+ヒト視覚野の応答からの色の解読と再構成
+</span>
+</li><br><li>
+
+Brouwer, G. J., & Heeger, D. J. (2013). Categorical Clustering of the Neural Representation of
+Color. The Journal of Neuroscience, 33(39), 15454–15465.
+https://doi.org/10.1523/JNEUROSCI.2472-13.2013
+
+<br><span style="color:blue;">
+色の神経表現のカテゴリー分類
+</span>
+</li><br><li>
+
+Bubeck, S., Chandrasekaran, V., Eldan, R., Gehrke, J., Horvitz, E., Kamar, E., Lee, P., Lee, Y. T.,
+Li, Y., Lundberg, S., Nori, H., Palangi, H., Ribeiro, M. T., & Zhang, Y. (2023). Sparks of
+Artificial General Intelligence: Early experiments with GPT-4 (arXiv:2303.12712). arXiv.
+https://doi.org/10.48550/arXiv.2303.12712
+
+<br><span style="color:blue;">
+汎用人工知能の萌芽：GPT-4による初期の実験
+</span>
+</li><br><li>
+
+Butlin, P., Long, R., Elmoznino, E., Bengio, Y., Birch, J., Constant, A., Deane, G., Fleming, S. M.,
+Frith, C., Ji, X., Kanai, R., Klein, C., Lindsay, G., Michel, M., Mudrik, L., Peters, M. A. K.,
+Schwitzgebel, E., Simon, J., & VanRullen, R. (2023). Consciousness in Artificial
+Intelligence: Insights from the Science of Consciousness (arXiv:2308.08708). arXiv.
+http://arxiv.org/abs/2308.08708
+
+<br><span style="color:blue;">
+人工知能における意識：意識科学からの知見
+</span>
+</li><br><li>
+
+Carroll, S., & Dennett, D. C. (Directors). (2020). Daniel Dennett on minds, patterns, and the
+scientific image – Sean Carroll (No. 78). (78) [Broadcast].
+https://www.preposterousuniverse.com/podcast/2020/01/06/78-daniel-dennett-on-minds-pat
+terns-and-the-scientific-image/
+
+<br><span style="color:blue;">
+ダニエル・デネットが語る、心、パターン、そして科学的イメージ
+</span>
+</li><br><li>
+
+Chalmers, D. J. (1996). The conscious mind (白楊社, Trans.). OUP.
+
+<br><span style="color:blue;">
+意識的な心
+</span>
+</li><br><li>
+
+Chalmers, D. J. (2003). Consciousness and its place in nature. The Blackwell Guide to Philosophy
+of Mind, 102–142.
+
+<br><span style="color:blue;">
+意識と自然におけるその位置づけ
+</span>
+</li><br><li>
+
+Chater, N. (2018). The mind is flat: The illusion of mental depth and the improvised mind. Penguin
+UK.
+
+<br><span style="color:blue;">
+心は平坦である――心の深みという錯覚と即興的な心
+</span>
+</li><br><li>
+
+Cheng, E. (2022). The Joy of Abstraction An Exploration of Math, Category Theory, and Life.
+Cambridge University Press.
+
+<br><span style="color:blue;">
+抽象化の喜び――数学、圏論、そして人生の探求
+</span>
+</li><br><li>
+
+Chuyin, Z., Koh, Z. H., Gallagher, R., Nishimoto, S., & Tsuchiya, N. (2022). What can we
+experience and report on a rapidly presented image? Intersubjective measures of
+specificity of freely reported contents of consciousness [version 2; peer review: 2
+approved]. F1000Research, 11(69), 34. https://doi.org/10.12688/f1000research.75364.2
+
+<br><span style="color:blue;">
+急速に提示された画像について、私たちは何を経験し、報告できるのか？意識の自由報告内容の特異性に関する間主観的測定[バージョン2]
+</span>
+</li><br><li>
+
+Cliff, O. M., Bryant, A. G., Lizier, J. T., Tsuchiya, N., & Fulcher, B. D. (2023). Unifying pairwise
+interactions in complex dynamics. Nature Computational Science.
+https://doi.org/10.1038/s43588-023-00519-x
+
+<br><span style="color:blue;">
+複雑な力学系における対的相互作用の統一
+</span>
+</li><br><li>
+
+Cohen, M. A., Botch, T. L., & Robertson, C. E. (2020). The limits of color awareness during active,
+real-world vision. Proceedings of the National Academy of Sciences, 117(24),
+13821–13827. https://doi.org/10.1073/pnas.1922294117
+
+<br><span style="color:blue;">
+現実世界における能動的な視覚活動中の、色認識の限界
+</span>
+</li><br><li>
+
+Cohen, M. A., & Rubenstein, J. (2020). How much color do we see in the blink of an eye?
+Cognition, 200, 104268. https://doi.org/10.1016/j.cognition.2020.104268
+
+<br><span style="color:blue;">
+瞬きをする間に、私たちはどれだけの色を見ているのでしょうか？
+</span>
+</li><br><li>
+
+Crump, M. J. C., McDonnell, J. V., & Gureckis, T. M. (2013). Evaluating Amazon’s Mechanical Turk
+as a Tool for Experimental Behavioral Research. PLOS ONE, 8(3), e57410.
+https://doi.org/10.1371/journal.pone.0057410
+
+<br><span style="color:blue;">
+実験的行動研究のツールとしてのAmazon Mechanical Turkの評価
+</span>
+</li><br><li>
+
+Curcio, C. A., Sloan, K. R., Kalina, R. E., & Hendrickson, A. E. (1990). Human photoreceptor
+topography. The Journal of Comparative Neurology, 292(4), 497–523.
+https://doi.org/10.1002/cne.902920402
+
+<br><span style="color:blue;">
+ヒト光受容体の
+分布図
+</span>
+</li><br><li>
+
+Del Pin, S. H., Skóra, Z., Sandberg, K., Overgaard, M., & Wierzchoń, M. (2020). Comparing
+theories of consciousness: Object position, not probe modality, reliably influences
+experience and accuracy in object recognition tasks. Consciousness and Cognition, 84,
+102990. https://doi.org/10.1016/j.concog.2020.102990
+
+<br><span style="color:blue;">
+意識に関する理論の比較：物体認識課題において、経験や正確性に確実に影響を及ぼすのはプローブのモダリティではなく、物体の位置である
+</span>
+</li><br><li>
+
+Dennett, D. C. (1988). Quining qualia. In A. J. Marcel & E. Bisiach (Eds.), Consciousness in
+Contemporary Science (pp. 42–77). Clarendon Press/Oxford University Press.
+
+<br><span style="color:blue;">
+クオリアを「クワインする」
+</span>
+</li><br><li>
+
+Doerig, A., Schurger, A., & Herzog, M. H. (2021). Hard criteria for empirical theories of
+consciousness. Cognitive Neuroscience, 12(2), 41–62.
+https://doi.org/10.1080/17588928.2020.1772214
+
+<br><span style="color:blue;">
+意識の経験的理論に対する厳格な基準
+</span>
+</li><br><li>
+
+Doerig, A., Schurger, A., Hess, K., & Herzog, M. H. (2019). The unfolding argument: Why IIT and
+other causal structure theories cannot explain consciousness. Consciousness and
+Cognition, 72, 49–59.
+
+<br><span style="color:blue;">
+展開される議論：IITやその他の因果構造理論が意識を説明できない理由
+</span>
+</li><br><li>
+
+Eilenberg, S., & Mac Lane, S. (1945). General Theory of Natural Equivalences. Transactions of the
+American Mathematical Society, 231–294.
+
+<br><span style="color:blue;">
+自然同値の一般理論
+</span>
+</li><br><li>
+
+Ellia, F., & Tsuchiya, N. (2024). Beyond Accommodation: On the Structural Turn in Computational
+Functionalist Theories of Consciousness. OSF. https://doi.org/10.31234/osf.io/qc5ty
+
+<br><span style="color:blue;">
+適応を超えて――意識の計算論的機能主義理論における構造的転回について
+</span>
+</li><br><li>
+
+Epping, G. P., Fisher, E. L., Zeleznikow‐Johnston, A. M., Pothos, E. M., & Tsuchiya, N. (2023). A
+Quantum Geometric Framework for Modeling Color Similarity Judgments. Cognitive
+Science, 47(1). https://doi.org/10.1111/cogs.13231
+
+<br><span style="color:blue;">
+色類似性判断をモデル化するための量子幾何学的枠組み
+</span>
+</li><br><li>
+
+Fekete, T., & Edelman, S. (2011). Towards a computational theory of experience. Consciousness
+and Cognition, 20(3), 807–827. https://doi.org/10.1016/j.concog.2011.02.010
+
+<br><span style="color:blue;">
+経験の計算理論に向けて
+</span>
+</li><br><li>
+
+Fink, S. B., Lyre, H., & Kob, L. (2021). A structural constraint on neural correlates of
+consciousness. Philosophy and the Mind Sciences, 2.
+https://doi.org/10.33735/phimisci.2021.79
+
+<br><span style="color:blue;">
+意識の神経相関に関する構造的制約
+</span>
+</li><br><li>
+
+Fleming, S. M., & Shea, N. (2024). Quality space computations for consciousness. Trends in
+Cognitive Sciences. https://doi.org/10.1016/j.tics.2024.06.007
+
+<br><span style="color:blue;">
+意識のための「質的空間」の計算
+</span>
+</li><br><li>
+
+Fong, B., & Spivak, D. I. (2019). An Invitation to Applied Category Theory: Seven Sketches in
+Compositionality (1st ed.). Cambridge University Press.
+https://doi.org/10.1017/9781108668804
+
+<br><span style="color:blue;">
+応用圏論への招待：合成性に関する7つのスケッチ
+</span>
+</li><br><li>
+
+Forbes, S. H., & Plunkett, K. (2023). Colour perception changes with basic colour word
+comprehension. Developmental Science, 26(6), e13406. https://doi.org/10.1111/desc.13406
+
+<br><span style="color:blue;">
+色の知覚は、基本的な色名理解によって変化する
+</span>
+</li><br><li>
+
+Fox, K. C. R., Shi, L., Baek, S., Raccah, O., Foster, B. L., Saha, S., Margulies, D. S., Kucyi, A., &
+Parvizi, J. (2020). Intrinsic network architecture predicts the effects elicited by intracranial
+electrical stimulation of the human brain. Nature Human Behaviour, 4(10), 1039–1052.
+https://doi.org/10.1038/s41562-020-0910-1
+
+<br><span style="color:blue;">
+ヒトの脳に対する頭蓋内電気刺激が引き起こす効果は、内在的なネットワーク構造によって予測される
+</span>
+</li><br><li>
+
+Frankish, K. (2016). Illusionism as a Theory of Consciousness. Journal of Consciousness Studies,
+23(11–12), 11–39.
+
+<br><span style="color:blue;">
+意識の理論としてのイリュージョニズム
+</span>
+</li><br><li>
+
+Frassle, S., Sommer, J., Jansen, A., Naber, M., & Einhauser, W. (2014). Binocular Rivalry: Frontal
+Activity Relates to Introspection and Action But Not to Perception. Journal of Neuroscience,
+34(5), 1738–1747. https://doi.org/10.1523/JNEUROSCI.4403-13.2014
+
+<br><span style="color:blue;">
+両眼闘争：前頭部の活動は内省や行動と関連するが、知覚とは関連しない
+</span>
+</li><br><li>
+
+Gasparri, L., & Marconi, D. (2015). Word Meaning.
+https://seop.illc.uva.nl/entries/word-meaning/#pagetopright
+
+<br><span style="color:blue;">
+単語の意味
+</span>
+</li><br><li>
+
+Giron, C., Lau, H., & Knotts, J. D. (2018). Are Open Interviews Superior to Button Presses? A
+Commentary on Haun et al. (2017).
+
+<br><span style="color:blue;">
+オープン・インタビューはボタン操作よりも優れているか？
+</span>
+</li><br><li>
+
+Goldblatt, R. (2014). Topoi: The categorial analysis of logic (Vol. 98). Elsevier.
+
+<br><span style="color:blue;">
+トポス：論理の圏論的分析
+</span>
+</li><br><li>
+
+Gomez-Marin, A., & Seth, A. K. (2025). A science of consciousness beyond pseudo-science and
+pseudo-consciousness. Nature Neuroscience, 1–4.
+https://doi.org/10.1038/s41593-025-01913-6
+
+<br><span style="color:blue;">
+疑似科学や疑似意識を超えた、意識の科学
+</span>
+</li><br><li>
+
+Hansen, T., Pracejus, L., & Gegenfurtner, K. R. (2009). Color perception in the intermediate
+periphery of the visual field. Journal of Vision, 9(4), 26–26. https://doi.org/10.1167/9.4.26
+
+<br><span style="color:blue;">
+視野の中間周辺部における色知覚
+</span>
+</li><br><li>
+
+Haun, A., Kawasaki, H., Kovach, C., Oya, H., Howard, M. A., Adolphs, R., & Tsuchiya, N. (2017).
+Conscious perception as integrated information patterns in human electrocorticography.
+eNeuro, doi: 10.1101/039032.
+
+<br><span style="color:blue;">
+ヒトの皮質脳波における統合された情報パターンとしての意識的知覚
+</span>
+</li><br><li>
+
+Haun, A. M. (2021). What is visible across the visual field? Neuroscience of Consciousness,
+2021(1), niab006. https://doi.org/10.1093/nc/niab006
+
+<br><span style="color:blue;">
+視野全体にわたって何が見えているのか？
+</span>
+</li><br><li>
+
+Haun, A. M., Oizumi, M., Kovach, C. K., Kawasaki, H., Oya, H., Howard, M. A., Adolphs, R., &
+Tsuchiya, N. (2017). Conscious Perception as Integrated Information Patterns in Human
+Electrocorticography. Eneuro, 4(5), ENEURO.0085-17.2017.
+https://doi.org/10.1523/ENEURO.0085-17.2017
+<br><span style="color:blue;">
+人間の意識的知覚は統合された情報パターンである
+</span>
+</li><br><li>
+
+Haun, A., & Tononi, G. (2019). Why Does Space Feel the Way it Does? Towards a Principled
+Account of Spatial Experience. Entropy, 21(12), 1160.
+
+<br><span style="color:blue;">
+空間はなぜあのような感覚をもたらすのか――空間体験に関する原理的な説明に向けて
+</span>
+</li><br><li>
+
+Hebart, M. N., Zheng, C. Y., Pereira, F., & Baker, C. I. (2020). Revealing the multidimensional
+mental representations of natural objects underlying human similarity judgements. Nature
+Human Behaviour, 4(11), 1173–1185. https://doi.org/10.1038/s41562-020-00951-3
+
+<br><span style="color:blue;">
+人間の類似性判断の根底にある自然物の多次元的心的表現の解明
+</span>
+</li><br><li>
+
+Herzog, M. H., Schurger, A., & Doerig, A. (2022). First-person experience cannot rescue causal
+structure theories from the unfolding argument. Consciousness and Cognition, 98, 103261.
+https://doi.org/10.1016/j.concog.2021.103261
+
+<br><span style="color:blue;">
+一人称的経験は、展開されつつある議論から因果構造説を救い出すことはできない
+</span>
+</li><br><li>
+
+Hidaka, S., & Oizumi, M. (2018). Fast and exact search for the partition with minimal information
+loss. PLOS ONE, 13(9), e0201126. https://doi.org/10.1371/journal.pone.0201126
+
+<br><span style="color:blue;">
+情報の損失を最小限に抑え、迅速かつ正確にパーティションを検索します
+</span>
+</li><br><li>
+
+Hirao, T., Miyamae, M., Matsuyoshi, D., Inoue, R., Takado, Y., Obata, T., Higuchi, M., Tsuchiya, N.,
+& Yamada, M. (2024). A neuroimaging dataset during sequential color qualia similarity
+judgments with and without reports (p. 2024.05.16.594267). bioRxiv.
+https://doi.org/10.1101/2024.05.16.594267
+
+<br><span style="color:blue;">
+色クオリアの類似性に関する逐次的な判断課題（報告あり・報告なし）遂行中の神経画像データセット
+</span>
+</li><br><li>
+
+Hirao, T., Miyamae, M., Matsuyoshi, D., Inoue, R., Takado, Y., Obata, T., Higuchi, M., Tsuchiya, N.,
+& Yamada, M. (2025). A neuroimaging dataset during sequential color qualia similarity
+judgments with and without reports. Scientific Data, 12(1), 389.
+https://doi.org/10.1038/s41597-025-04511-0
+
+<br><span style="color:blue;">
+報告を伴う場合と伴わない場合における、色のクオリアの類似性に関する逐次的な判断中の神経画像データセット
+</span>
+</li><br><li>
+
+Jäkel, F., Schölkopf, B., & Wichmann, F. A. (2008). Similarity, kernels, and the triangle inequality.
+Journal of Mathematical Psychology, 52(5), 297–303.
+https://doi.org/10.1016/j.jmp.2008.03.001
+
+<br><span style="color:blue;">
+類似度、カーネル、および三角不等式
+</span>
+</li><br><li>
+
+John C. Baez, & Mike Stay. (2009). Physics, Topology, Logic and Computation: A Rosetta Stone.
+Arxiv.
+<br><span style="color:blue;">
+物理学・トポロジー・論理学・計算：ロゼッタ・ストーン
+</span>
+</li><br><li>
+
+Kahneman, D. (2011). Thinking, fast and slow. Macmillan.
+Kanai, R., & Tsuchiya, N. (2012). Qualia. Curr Biol, 22(10), R392-6.
+https://doi.org/10.1016/j.cub.2012.03.033
+
+<br><span style="color:blue;">
+ファスト＆スロー
+</span>
+</li><br><li>
+
+Kawakita, G., Zeleznikow-Johnston, A., Takeda, K., Tsuchiya, N., & Oizumi, M. (2025). Is my “red”
+your “red”?: Unsupervised alignment of qualia structures via optimal transport.
+https://doi.org/10.31234/osf.io/h3pqm
+
+<br><span style="color:blue;">
+私の「赤」はあなたの「赤」か？――最適輸送を用いたクオリア構造の教師なしアライメント
+</span>
+</li><br><li>
+
+Kawakita, G., Zeleznikow-Johnston, A., Tsuchiya, N., & Oizumi, M. (2024). Gromov–Wasserstein
+unsupervised alignment reveals structural correspondences between the color similarity
+structures of humans and large language models. Scientific Reports, 14(1), 15917.
+https://doi.org/10.1038/s41598-024-65604-1
+<br><span style="color:blue;">
+グロモフ・ワッサースタイン（Gromov–Wasserstein）を用いた教師なしアライメントにより、人間と大規模言語モデルにおける色の類似性構造の間の構造的対応関係が明らかになった
+</span>
+</li><br><li>
+
+Kelly, G. M. (1982). Basic Concepts of Enriched Category Theory. Cambridge University Press.
+
+<br><span style="color:blue;">
+豊穣圏論の基本概念
+</span>
+</li><br><li>
+
+Kleiner, J. (2020). Mathematical Models of Consciousness. Entropy, 22(6), 609.
+https://doi.org/10.3390/e22060609
+
+<br><span style="color:blue;">
+意識の数学的モデル
+</span>
+</li><br><li>
+
+Kleiner, J. (2024). Towards a structural turn in consciousness science. Consciousness and
+Cognition, 119, 103653. https://doi.org/10.1016/j.concog.2024.103653
+
+<br><span style="color:blue;">
+意識科学における構造的転換に向けて
+</span>
+</li><br><li>
+
+Klincewicz, M., Cheng, T., Schmitz, M., Sebastián, M. Á., & Snyder, J. S. (2025). What makes a
+theory of consciousness unscientific? Nature Neuroscience, 1–5.
+https://doi.org/10.1038/s41593-025-01881-x
+
+<br><span style="color:blue;">
+意識の理論を非科学的なものにする要因とは何か？
+</span>
+</li><br><li>
+
+Koch, C., Massimini, M., Boly, M., & Tononi, G. (2016). Neural correlates of consciousness:
+Progress and problems. Nat Rev Neuro, 17(5), 307–321.
+https://doi.org/10.1038/nrn.2016.22
+
+<br><span style="color:blue;">
+意識の神経相関
+</span>
+</li><br><li>
+
+Kriegeskorte, N., & Mur, M. (2012). Inverse MDS: Inferring Dissimilarity Structure from Multiple
+Item Arrangements. Frontiers in Psychology, 3. https://doi.org/10.3389/fpsyg.2012.00245
+
+<br><span style="color:blue;">
+逆MDS：複数の項目配置からの非類似性構造の推定
+</span>
+</li><br><li>
+
+Kuhn, R. L. (2024). A landscape of consciousness: Toward a taxonomy of explanations and
+implications. Progress in Biophysics and Molecular Biology, 190, 28–169.
+https://doi.org/10.1016/j.pbiomolbio.2023.12.003
+
+<br><span style="color:blue;">
+意識のランドスケープ：説明と含意の分類に向けて
+</span>
+</li><br><li>
+
+Ladyman, J., Ross, D., Spurrett, D., & Collier, J. G. (2007). Every thing must go: Metaphysics
+naturalized. Oxford University Press.
+
+<br><span style="color:blue;">
+すべてをなくす：自然化された形而上学
+</span>
+</li><br><li>
+
+Lamme, V. A. (2006). Towards a true neural stance on consciousness. Trends in Cognitive
+Sciences, 10(11), 494–501.
+
+<br><span style="color:blue;">
+意識に関する真の神経科学的立場に向けて
+</span>
+</li><br><li>
+
+Laudisa, F., & Rovelli, C. (2021). Relational Quantum Mechanics. In E. N. Zalta (Ed.), The Stanford
+Encyclopedia of Philosophy (Winter 2021). Metaphysics Research Lab, Stanford University.
+https://plato.stanford.edu/archives/win2021/entries/qm-relational/
+
+<br><span style="color:blue;">
+関係的量子力学
+</span>
+</li><br><li>
+
+Lawvere, F. W. (1973). Metric spaces, generalized logic, and closed categories. Rendiconti Del
+Seminario Matématico e Fisico Di Milano, 43(1), 135–166.
+
+<br><span style="color:blue;">
+計量空間、一般化されたロジック、および閉じられたカテゴリ
+</span>
+</li><br><li>
+
+Lawvere, F. W., & Schanuel, S. H. (2009). Conceptual mathematics: A first introduction to
+categories. Cambridge University Press.
+
+<br><span style="color:blue;">
+概念数学：圏論への入門
+</span>
+</li><br><li>
+
+Lee, A. Y. (2021). Modeling Mental Qualities. The Philosophical Review, 130(2), 263–298.
+https://doi.org/10.1215/00318108-8809919
+
+<br><span style="color:blue;">
+精神的性質のモデリング
+</span>
+</li><br><li>
+
+Lee-Youngzie, Z., Tsuchiya, N., & Monti, M. M. (2024). Towards a Mathematical Structure of Global
+
+Phenomenal Consciousness. OSF. https://doi.org/10.31234/osf.io/2u37y
+
+<br><span style="color:blue;">
+グローバルな現象的意識の数学的構造に向けて
+</span>
+</li><br><li>
+
+Leinster, T. (2014). Basic category theory. Cambridge University Press.
+
+<br><span style="color:blue;">
+圏論入門
+</span>
+</li><br><li>
+
+Leinster, T. (2024a). Entropy and Diversity: The Axiomatic Approach (arXiv:2012.02113). arXiv.
+https://doi.org/10.48550/arXiv.2012.02113
+
+<br><span style="color:blue;">
+エントロピーと多様性：公理的アプローチ
+</span>
+</li><br><li>
+
+Leinster, T. (2024b). Galois Theory (arXiv:2408.07499). arXiv.
+https://doi.org/10.48550/arXiv.2408.07499
+
+<br><span style="color:blue;">
+ガロア理論
+</span>
+</li><br><li>
+
+Leung, A., Cohen, D., van Swinderen, B., & Tsuchiya, N. (2021). Integrated information structure
+collapses with anesthetic loss of conscious arousal in Drosophila melanogaster. PLOS
+Computational Biology, 17(2), e1008722. https://doi.org/10.1371/journal.pcbi.1008722
+
+<br><span style="color:blue;">
+キイロショウジョウバエにおいて、麻酔による意識的覚醒の消失に伴い、統合的情報構造が崩壊する
+</span>
+</li><br><li>
+
+Li, Q., Joo, S. J., Yeatman, J. D., & Reinecke, K. (2020). Controlling for Participants’ Viewing
+Distance in Large-Scale, Psychophysical Online Experiments Using a Virtual Chinrest.
+Scientific Reports, 10(1), 904. https://doi.org/10.1038/s41598-019-57204-1
+
+<br><span style="color:blue;">
+バーチャル・チンレストを用いた大規模オンライン精神物理学実験における参加者の視距離の制御
+</span>
+</li><br><li>
+
+Lin, L., Naotsugu, T., & Zhang, C. (2023, July). Qualia Structure Meeting presentation: Emotion
+video similarity task. Zenodo. https://doi.org/10.5281/zenodo.8151547
+
+<br><span style="color:blue;">
+Qualia Structure Meeting 発表：感情
+動画類似性タスク。Zenodo
+</span>
+</li><br><li>
+
+Loorits, K. (2014). Structural qualia: A solution to the hard problem of consciousness. Frontiers in
+Psychology, 5. https://doi.org/10.3389/fpsyg.2014.00237
+
+<br><span style="color:blue;">
+構造的クオリア：意識の「困難な問題」への解決策
+</span>
+</li><br><li>
+
+Lumer, E. D., & Rees, G. (1999). Covariation of activity in visual and prefrontal cortex associated
+with subjective visual perception. Proc Natl Acad Sci U S A, 96(4), 1669–1673.
+
+<br><span style="color:blue;">
+主観的な視覚知覚に関連する、視覚野と前頭前野における活動の共変動
+</span>
+</li><br><li>
+
+Mac Lane, S. (1998). Categories for the working mathematician. 1998. Graduate Texts in
+Mathematics, 5.
+
+<br><span style="color:blue;">
+働く数学者のための圏論</span>
+</li><br><li>
+
+Marjieh, R., Sucholutsky, I., van Rijn, P., Jacoby, N., & Griffiths, T. L. (2023). Large language
+models predict human sensory judgments across six modalities (arXiv:2302.01308). arXiv.
+https://doi.org/10.48550/arXiv.2302.01308
+
+<br><span style="color:blue;">
+大規模言語モデルは6つのモダリティにわたる人間の感覚的判断を予測する
+</span>
+</li><br><li>
+
+Mashour, G. A., Roelfsema, P., Changeux, J.-P., & Dehaene, S. (2020). Conscious Processing and
+the Global Neuronal Workspace Hypothesis. Neuron, 105(5), 776–798.
+https://doi.org/10.1016/j.neuron.2020.01.026
+
+<br><span style="color:blue;">
+意識的処理とグローバル・ニューロナル・ワークスペース仮説
+</span>
+</li><br><li>
+
+Mediano, P. A. M., Rosas, F. E., Bor, D., Seth, A. K., & Barrett, A. B. (2022). The strength of weak
+integrated information theory. Trends in Cognitive Sciences.
+https://doi.org/10.1016/j.tics.2022.04.008
+
+<br><span style="color:blue;">
+「弱い」統合情報理論の強み
+</span>
+</li><br><li>
+
+Mediano, P., Seth, A., & Barrett, A. (2018). Measuring Integrated Information: Comparison of
+Candidate Measures in Theory and Simulation. Entropy, 21(1), 17.
+https://doi.org/10.3390/e21010017
+
+<br><span style="color:blue;">
+統合情報の測定：理論およびシミュレーションにおける候補指標の比較
+</span>
+</li><br><li>
+
+Mémoli, F. (2011). Gromov–Wasserstein Distances and the Metric Approach to Object Matching.
+Foundations of Computational Mathematics, 11(4), 417–487.
+https://doi.org/10.1007/s10208-011-9093-5
+
+<br><span style="color:blue;">
+グロモフ・ワッサースタイン距離と物体マッチングへの距離空間的アプローチ
+</span>
+</li><br><li>
+
+Moriguchi, Y., Watanabe, R., Sakata, C., Zeleznikow-Johnston, A., Wang, J., Saji, N., & Tsuchiya,
+N. (2024). Comparing color qualia structures through a novel similarity task in young
+children versus adults. https://doi.org/10.31234/osf.io/wdcu7
+
+<br><span style="color:blue;">
+幼児と成人における新規な類似性課題を通じた色彩クオリア構造の比較
+</span>
+</li><br><li>
+
+Moriguchi, Y., Watanabe, R., Sakata, C., Zeleznikow-Johnston, A., Wang, J., Saji, N., & Tsuchiya,
+N. (2025). Comparing color qualia structures through a similarity task in young children
+versus adults. Proceedings of the National Academy of Sciences, 122(11), e2415346122.
+https://doi.org/10.1073/pnas.2415346122
+
+<br><span style="color:blue;">
+幼児と成人における類似性課題を通じた色彩感覚構造の比較
+</span>
+</li><br><li>
+
+Nagel, T. (1974). What Is It Like to Be a Bat? The Philosophical Reveiw, 83(4), 435–450.
+
+<br><span style="color:blue;">
+コウモリであるとはどのようなことか
+</span>
+</li><br><li>
+
+Oizumi, M., Albantakis, L., & Tononi, G. (2014). From the phenomenology to the mechanisms of
+consciousness: Integrated Information Theory 3.0. PLoS Computational Biology, 10(5),
+e1003588. https://doi.org/10.1371/journal.pcbi.1003588
+
+<br><span style="color:blue;">
+意識の現象学からメカニズムへ：統合情報理論3.0
+</span>
+</li><br><li>
+
+Oizumi, M., Amari, S., Yanagawa, T., Fujii, N., & Tsuchiya, N. (2016). Measuring Integrated
+Information from the Decoding Perspective. PLoS Comp, 12(1), e1004654.
+https://doi.org/10.1371/journal.pcbi.1004654
+
+<br><span style="color:blue;">
+デコーディングの観点からの統合情報の測定
+</span>
+</li><br><li>
+
+Oizumi, M., Tsuchiya, N., & Amari, S. I. (2016). Unified framework for information integration based
+on information geometry. PNAS, 113(51), 14817–14822.
+https://doi.org/10.1073/pnas.1603583113
+
+<br><span style="color:blue;">
+情報幾何学に基づく情報統合のための統一的枠組み
+</span>
+</li><br><li>
+
+Olcese, U., Muckli, L., Boly, M., Hohwy, J., Corcoran, A. W., Dorman, R., Haun, A., Yuste, R.,
+Cavanagh, P., Peli, E., Kovacs, G., Takahashi, K., Fiorilli, J., Quero, S. P., Abbatecola, C.,
+Petro, L., Monai, E., Cruz, B. M. M. de la, Hwang, D., … Pennartz, C. (2024). Accelerating
+research on consciousness: An adversarial collaboration to test contrasting predictions of
+the Integrated Information Theory and Predictive Processing accounts of consciousness -
+version 2. https://doi.org/10.17605/OSF.IO/4RN85
+
+<br><span style="color:blue;">
+意識研究の加速：統合情報理論と予測処理理論による意識に関する対立的な予測を検証するための対抗的共同研究
+</span>
+</li><br><li>
+
+Palmer, S. E. (1999). Color, consciousness, and the isomorphism constraint. BEHAVIORAL AND
+BRAIN SCIENCES, 67.
+
+<br><span style="color:blue;">
+色、意識、そして同型性の制約
+</span>
+</li><br><li>
+
+Penfield, W., & Rasmussen, T. (1950). The cerebral cortex of man; a clinical study of localization of
+function (pp. xv, 248). Macmillan.
+
+<br><span style="color:blue;">
+ヒトの大脳皮質；機能局在に関する臨床研究
+</span>
+</li><br><li>
+
+Phillips, S. (2018). Going Beyond the Data as the Patching (Sheaving) of Local Knowledge.
+Frontiers in Psychology, 9, 1926. https://doi.org/10.3389/fpsyg.2018.01926
+
+<br><span style="color:blue;">
+データを越えて――ローカルな知識のパッチング（シービング）として
+</span>
+</li><br><li>
+
+Phillips, S. (2020). Sheaving—A universal construction for semantic compositionality. Philosophical
+Transactions of the Royal Society B: Biological Sciences, 375(1791), 20190303.
+https://doi.org/10.1098/rstb.2019.0303
+
+<br><span style="color:blue;">
+シービング（Sheaving）―意味的合成性のための普遍的構成法
+</span>
+</li><br><li>
+
+Phillips, S. (2024). A category theory perspective on the Language of Thought: LoT is universal.
+Frontiers in Psychology, 15. https://doi.org/10.3389/fpsyg.2024.1361580
+
+<br><span style="color:blue;">
+思考の言語（LoT）に関する圏論的視点：LoTは普遍的である。
+</span>
+</li><br><li>
+
+Pitchford, N., & Mullen, K. (2003). The development of conceptual colour categories in pre-school
+children: Influence of perceptual categorization. Visual Cognition, 10(1), 51–77.
+https://doi.org/10.1080/713756669
+
+<br><span style="color:blue;">
+就学前児童における概念的色彩カテゴリーの発達：知覚的カテゴリー化の影響
+</span>
+</li><br><li>
+
+Pothos, E. M., Busemeyer, J. R., & Trueblood, J. S. (2013). A quantum geometric model of
+similarity. Psychological Review, 120(3), 679–696. https://doi.org/10.1037/a0033142
+
+<br><span style="color:blue;">
+類似性の量子幾何学的モデル
+</span>
+</li><br><li>
+
+Prentner, R. (2019). Consciousness and topologically structured phenomenal spaces.
+Consciousness and Cognition, 70, 25–38. https://doi.org/10.1016/j.concog.2019.02.002
+
+<br><span style="color:blue;">
+意識と位相的に構造化された現象的空間
+意識と認
+</span>
+</li><br><li>
+
+Qianchen, L., Gallagher, R. M., & Tsuchiya, N. (2022). How much can we differentiate at a brief
+glance: Revealing the truer limit in conscious contents through the massive report paradigm
+(MRP). R. Soc. Open Sci., 9(210394), 26. https://doi.org/10.1098/rsos.210394
+
+<br><span style="color:blue;">
+一瞥でどこまで識別できるか：大量報告パラダイムによる意識内容の真の限界の解明
+</span>
+</li><br><li>
+
+Ramachandran, V. S., & Blakeslee, S. (1998). Phantoms in the Brain: Probing the Mysteries of the
+Human Mind. William Morrow.
+
+<br><span style="color:blue;">
+脳内の幽霊――人間精神の謎に迫る
+</span>
+</li><br><li>
+
+Riehl, E. (2017). Category theory in context. Dover Publications.
+
+<br><span style="color:blue;">
+文脈の中の圏論
+</span>
+</li><br><li>
+
+Roads, B. D., & Love, B. C. (2024). Modeling Similarity and Psychological Space. Annual Review
+of Psychology, 75(1), 215–240. https://doi.org/10.1146/annurev-psych-040323-115131
+
+<br><span style="color:blue;">
+類似性と心理的空間のモデリング
+</span>
+</li><br><li>
+
+Robinson, M. (2014). Topological Signal Processing. Springer Berlin Heidelberg.
+https://doi.org/10.1007/978-3-642-36104-3
+
+<br><span style="color:blue;">
+位相的信号処理
+</span>
+</li><br><li>
+
+Rosch, E. (1975). Cognitive reference points. Cognitive Psychology, 7(4), 532–547.
+https://doi.org/10.1016/0010-0285(75)90021-3
+
+<br><span style="color:blue;">
+認知的基準点
+</span>
+</li><br><li>
+
+Rosenthal, D. (2015). Quality Spaces and Sensory Modalities. In P. Coates & S. Coleman (Eds.),
+Phenomenal Qualities (pp. 33–65). Oxford University Press.
+https://doi.org/10.1093/acprof:oso/9780198712718.003.0002
+
+<br><span style="color:blue;">
+質的空間と感覚モダリティ
+</span>
+</li><br><li>
+
+Rosenthal, I. A., Singh, S. R., Hermann, K. L., Pantazis, D., & Conway, B. R. (2021). Color Space
+Geometry Uncovered with Magnetoencephalography. Current Biology, 31(3), 515-526.e5.
+https://doi.org/10.1016/j.cub.2020.10.062
+
+<br><span style="color:blue;">
+脳磁図で明らかにする色空間の幾何学的構造
+</span>
+</li><br><li>
+
+Rosiak, D. (2022). Sheaf theory through examples. The MIT Press.
+
+<br><span style="color:blue;">
+具体例で学ぶ層の理論
+</span>
+</li><br><li>
+
+Rowe, E., Takeda, K., Oizumi, M., D’Souza, J., Van Boxtel, J., & Tsuchiya, N. (2024). Qualia structures collapse for geometric shapes, but not faces, when spatial attention is withdrawn.
+https://doi.org/10.31234/osf.io/x3pcn
+
+<br><span style="color:blue;">
+空間的注意が取り除かれると、幾何学的形状についてはクオリア構造が崩壊するが、顔についてはそうではない。
+</span>
+</li><br><li>
+
+Saji, N., Imai, M., & Asano, M. (2020). Acquisition of the Meaning of the Word Orange Requires
+Understanding of the Meanings of Red , Pink , and Purple: Constructing a Lexicon as a
+Connected System. Cognitive Science, 44(1). https://doi.org/10.1111/cogs.12813
+
+<br><span style="color:blue;">
+「オレンジ」という語の意味の獲得には、「赤」「ピンク」「紫」の意味の理解が必要である：相互に関連したシステムとしての語彙の構築
+</span>
+</li><br><li>
+
+Sasaki, M., Takeda, K., Abe, K., & Oizumi, M. (2023). Toolbox for Gromov-Wasserstein optimal
+transport: Application to unsupervised alignment in neuroscience (p. 2023.09.15.558038).
+bioRxiv. https://doi.org/10.1101/2023.09.15.558038
+
+<br><span style="color:blue;">
+グロモフ・ワッサースタイン最適輸送のためのツールボックス：神経科学における教師なしアライメントへの応用
+</span>
+</li><br><li>
+
+Scerri, E. R., & Worrall, J. (2001). Prediction and the periodic table. Studies in History and
+Philosophy of Science Part A, 32(3), 407–452.
+https://doi.org/10.1016/S0039-3681(01)00023-1
+
+<br><span style="color:blue;">
+予測と周期表
+</span>
+</li><br><li>
+
+Seth, A. K., & Bayne, T. (2022). Theories of consciousness. Nature Reviews Neuroscience, 23(7),
+439–452. https://doi.org/10.1038/s41583-022-00587-4
+
+<br><span style="color:blue;">
+意識の理論
+</span>
+</li><br><li>
+
+Sharot, T. (2017). The influential mind: What the brain reveals about our power to change others.
+Henry Holt.
+
+<br><span style="color:blue;">
+影響力を生む脳の仕組み――他者を変える力について脳が明かすこと
+</span>
+</li><br><li>
+
+Sheehan, K. B. (2018). Crowdsourcing research: Data collection with Amazon’s Mechanical Turk.
+Communication Monographs, 85(1), 140–156.
+https://doi.org/10.1080/03637751.2017.1342043
+
+<br><span style="color:blue;">
+クラウドソーシングによる研究：Amazon Mechanical Turkを用いたデータ収集
+</span>
+</li><br><li>
+
+Shepard, R. N. (1982). Geometrical Approximations to the Structure of Musical Pitch.
+PSYCHOLOGICAL REVIEW.
+
+<br><span style="color:blue;">
+楽音のピッチ構造に対する幾何学的近似
+</span>
+</li><br><li>
+
+Shepard, R. N., & Cooper, L. A. (1992). Representation of Colors in the Blind, Color-Blind, and
+Normally Sighted. Psychological Science, 3(2), 97–104.
+https://doi.org/10.1111/j.1467-9280.1992.tb00006.x
+
+<br><span style="color:blue;">
+全盲者、色覚異常者、および正常色覚者における色の表現
+</span>
+</li><br><li>
+
+Song, C., Haun, A. M., & Tononi, G. (2017). Plasticity in the Structure of Visual Space. Eneuro,
+4(3), ENEURO.0080-17.2017. https://doi.org/10.1523/ENEURO.0080-17.2017
+
+<br><span style="color:blue;">
+視覚空間の構造における可塑性
+</span>
+</li><br><li>
+
+Spivak, D. I. (2014). Category theory for the sciences. MIT Press.
+
+<br><span style="color:blue;">
+科学のための圏論
+</span>
+</li><br><li>
+
+Stanley, R. P. (1999). Qualia space. Journal of Consciousness Studies, 6(1), 49–60.
+
+<br><span style="color:blue;">
+クオリア空間
+</span>
+</li><br><li>
+
+Tegmark, M. (2016). Improved Measures of Integrated Information. PLoS Comput Biol, 12(11),
+e1005123. https://doi.org/10.1371/journal.pcbi.1005123
+
+<br><span style="color:blue;">
+統合情報の改良された尺度
+</span>
+</li><br><li>
+
+Thual, A., Tran, H., Zemskova, T., Courty, N., Flamary, R., Dehaene, S., & Thirion, B. (2022).
+Aligning individual brains with Fused Unbalanced Gromov-Wasserstein (arXiv:2206.09398).
+arXiv. http://arxiv.org/abs/2206.09398
+
+<br><span style="color:blue;">
+Fused Unbalanced Gromov-Wassersteinを用いた個々の脳の整合
+</span>
+</li><br><li>
+
+Toker, D., & Sommer, F. (2016). Moving Past the Minimum Information Partition: How To Quickly
+and Accurately Calculate Integrated Information. arXiv.Org, 1–21.
+
+<br><span style="color:blue;">
+最小情報分割を超えて：統合情報を迅速かつ正確に計算する方法
+</span>
+</li><br><li>
+
+Tononi, G. (2004). An information integration theory of consciousness. BMC Neurosci, 5, 42.
+
+<br><span style="color:blue;">
+意識の情報統合理論
+</span>
+</li><br><li>
+
+Tononi, G., Albantakis, L., Barbosa, L., Boly, M., Cirelli, C., Comolatti, R., Ellia, F., Findlay, G.,
+Casali, A. G., Grasso, M., Haun, A. M., Hendren, J., Hoel, E., Koch, C., Maier, A., Marshall,
+W., Massimini, M., Mayner, W. G., Oizumi, M., … Zaeemzadeh, A. (2025). Consciousness
+or pseudo-consciousness? A clash of two paradigms. Nature Neuroscience, 1–9.
+https://doi.org/10.1038/s41593-025-01880-y
+
+<br><span style="color:blue;">
+意識か、それとも擬似意識か？――二つのパラダイムの衝突
+</span>
+</li><br><li>
+
+Tononi, G., Boly, M., Massimini, M., & Koch, C. (2016). Integrated information theory: From
+consciousness to its physical substrate. Nat Rev Neuro, 17(7), 450–461.
+https://doi.org/10.1038/nrn.2016.44
+
+<br><span style="color:blue;">
+統合情報理論：意識からその物理的基盤へ
+</span>
+</li><br><li>
+
+Tsuchiya, N. (2017). What is it like to be a bat?"—A pathway to the answer from the Integrated
+Information Theory. Philosophy Compass, e12407. https://doi.org/DOI 10.1111/phc3.12407
+
+<br><span style="color:blue;">
+「コウモリであるとはどのようなことか？」――統合情報理論から答えへの道筋
+</span>
+</li><br><li>
+
+Tsuchiya, N., Andrillon, T., & Haun, A. (2020). A reply to “the unfolding argument”: Beyond
+functionalism/behaviorism and towards a science of causal structure theories of
+consciousness. Consciousness and Cognition, 79, 102877.
+https://doi.org/10.1016/j.concog.2020.102877
+
+<br><span style="color:blue;">
+「展開する議論」への応答――機能主義・行動主義を超えて、意識の因果構造理論の科学へ
+</span>
+</li><br><li>
+
+Tsuchiya, N., Bruza, P. D., Yamada, M., Saigo, H., & Pothos, E. (2024). A Quantum-like Qualia
+hypothesis: From Quantum Cognition to Quantum Perception. Front Psychol.
+https://doi.org/10.31234/osf.io/9m5yp
+
+<br><span style="color:blue;">
+量子的なクオリアという仮説：量子認知から量子知覚へ
+</span>
+</li><br><li>
+
+Tsuchiya, N., Phillips, S., & Saigo, H. (2022). Enriched category as a model of qualia structure
+based on similarity judgements. Consciousness and Cognition, 101, 103319.
+https://doi.org/10.1016/j.concog.2022.103319
+
+<br><span style="color:blue;">
+類似性判断に基づくクオリア構造のモデルとしての豊饒化圏
+</span>
+</li><br><li>
+
+Tsuchiya, N., & Saigo, H. (2021). A relational approach to consciousness: Categories of level and
+contents of consciousness. Neuroscience of Consciousness, 2021(2).
+https://doi.org/10.1093/nc/niab034
+
+<br><span style="color:blue;">
+意識への関係論的アプローチ：意識のレベルと内容のカテゴリー
+</span>
+</li><br><li>
+
+Tsuchiya, N., Saigo, H., & Phillips, S. (2023). An adjunction hypothesis between qualia and reports.
+Frontiers in Psychology, 13.
+https://www.frontiersin.org/articles/10.3389/fpsyg.2022.1053977
+
+<br><span style="color:blue;">
+クオリアと報告の間の付加仮説
+</span>
+</li><br><li>
+
+Tsuchiya, N., Taguchi, S., & Saigo, H. (2016). Using category theory to assess the relationship
+between consciousness and integrated information theory. Neuroscience Research, 107,
+1–7. https://doi.org/10.1016/j.neures.2015.12.007
+
+<br><span style="color:blue;">
+圏論を用いた意識と統合情報理論との関係性の検討
+</span>
+</li><br><li>
+
+Tsuchiya, N., Wilke, M., Frässle, S., & Lamme, V. A. (2015). No-Report Paradigms: Extracting the
+True Neural Correlates of Consciousness. TICS, 19(12), 757–770.
+
+<br><span style="color:blue;">
+「報告を伴わない」パラダイム：意識の真の神経相関の抽出
+</span>
+</li><br><li>
+
+Tversky, A. (1977). Features of similarity. Psychological Review, 84(4), 327.
+https://doi.org/10.1037/0033-295X.84.4.327
+類似性の特徴
+<br><span style="color:blue;">
+
+</span>
+</li><br><li>
+
+Tye, M. (2021). Qualia. In E. N. Zalta (Ed.), The Stanford Encyclopedia of Philosophy (Fall 2021).
+Metaphysics Research Lab, Stanford University.
+https://plato.stanford.edu/archives/fall2021/entries/qualia/
+
+<br><span style="color:blue;">
+『スタンフォード哲学百科事典』（2021年秋季版）
+</span>
+</li><br><li>
+
+Tyler, C. W. (2015). Peripheral Color Demo. I-Perception, 6(6), 204166951561367.
+https://doi.org/10.1177/2041669515613671
+
+<br><span style="color:blue;">
+周辺視野における色知覚のデモンストレーション。I-Perception, 6(6), 204166951561367.
+</span>
+</li><br><li>
+
+Usher, M., Negro, N., Jacobson, H., & Tsuchiya, N. (2023). When philosophical nuance matters:
+Safeguarding consciousness research from restrictive assumptions. Frontiers in
+Psychology, 14, 1306023. https://doi.org/10.3389/fpsyg.2023.1306023
+
+<br><span style="color:blue;">
+哲学的なニュアンスが重要となる場合：
+制約的な前提から意識研究を守る
+</span>
+</li><br><li>
+
+Van Gulick, R. (2022). Consciousness. In E. N. Zalta & U. Nodelman (Eds.), The Stanford
+Encyclopedia of Philosophy (Winter 2022). Metaphysics Research Lab, Stanford University.
+https://plato.stanford.edu/archives/win2022/entries/consciousness/
+
+<br><span style="color:blue;">
+スタンフォード哲学百科事典（2022年冬版）
+</span>
+</li><br><li>
+
+Willerton. (2021, June 6). Optimal Transport and Enriched Categories I | The n-Category Café.
+https://golem.ph.utexas.edu/category/2021/06/duality_in_transport_problems.html
+
+<br><span style="color:blue;">
+最適輸送と豊穣圏
+</span>
+</li><br><li>
+
+Zeleznikow-Johnston, A., Aizawa, Y., Yamada, M., & Tsuchiya, N. (2023). Are Color Experiences
+the Same across the Visual Field? Journal of Cognitive Neuroscience, 1–34.
+https://doi.org/10.1162/jocn_a_01962
+39/39
+<br><span style="color:blue;">
+視野全体で色の体験は同じか？
+</span>
+</li></ul></div>
+
+
+</p>
+    </body>
+</html>
