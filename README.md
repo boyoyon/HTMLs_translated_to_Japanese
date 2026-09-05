@@ -10,8 +10,10 @@
         </p>
         <h2>更新項目</h2>
         <p>
-            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_complementing_iit_with_qstr/2016_can_extrinsic_methods_reveal_intrinsic_structur.html">2026 IITをQStrで補完する</a><br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2009_dark_channel_prior/2009_Single_Image_Haze_Removal_Using_Dark_Channel_Prior.html">2009 ダークチャネルプライアを使った単一画像ヘイズ除去</a><br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1929_direction_of_magnetisation/1929_on_the_direction_of_magnetisation_of_basalt.html">1929 玄武岩の磁化の方向について</a><br>
             ---<br>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_complementing_iit_with_qstr/2016_can_extrinsic_methods_reveal_intrinsic_structur.html">2026 IITをQStrで補完する</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2024_qualia_structure_paradigm/2024_qualia_structure_paradigm.html">2024 クオリア構造パラダイム</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_the_bomb_the_hubris_and_the_spectre.html">2026 爆弾、傲慢、そして亡霊</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_revenge_of_monosemanticity/2026_revenge_of_monosemanticity.html">2026 単義性の逆襲</a><br>
