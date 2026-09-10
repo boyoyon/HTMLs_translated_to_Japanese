@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <meta charset="utf-8" />
+        <title>One AI or Many?</title>
+        <style type="text/css">
+            p
+            {
+                padding-left: 2em;
+            }
+           .margin-abstract {
+               margin-left: 60px; /* 左マージンを広くする */
+               margin-right: 60px; /* 右マージンを広くする */
+           }
+        </style>
+    <style>
+        .styleRef { 
+            text-indent: -40px; /* 最初の行の字下げを逆方向に */
+            margin-left: 10px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+    <style>
+        .styleBullet { 
+            text-indent: -20px; /* 最初の行の字下げを逆方向に */
+            margin-left: 30px; /* 2行目以降の字下げを調整 */
+            ul {
+                  list-style-type: none; /* 箇条書き記号を非表示 */
+                  padding-left: 40px; /* 全体の左余白 */
+            }
+            li {
+            }
+        }
+    </style>
+<style>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.column {
+  flex: 0.50%; /* 幅を50%に設定して2列に */
+  box-sizing: border-box;
+  padding: 10px;
+}
+</style>
+
+    </head>
+    <body>
+Seymour Papert
+<hr>
+        <h1><center>One AI or Many?<br><span style="color:blue;">人工知能は一つかたくさんか</span></center></h1>
+
+<p>
+ Is there one ai or are there many? A dramatic shift in the tone
+ of discussion about artificial intelligence has brought about a
+ suddenly increased awareness of the presence of divergent ways
+ of thinking in what has generally been presented as a unified field.
+ Readers of this issue of Dcedalus who have not kept abreast of recent
+ developments may be astonished to see how many of its authors have
+ chosen to focus on divergences in the field, and particularly on one
+ trend in AI that has come to be known as connectionism. They would
+ not be alone in their surprise. Late in 1985 I participated in a
+ planning meeting to discuss an issue of Dcedalus on AI. At that time
+ I knew (and I assume that most people at that meeting knew) that
+ research activity on "connectionist" themes was growing. But I
+ would have expressed disbelief had anyone at the meeting suggested
+ (no one did) that these themes would soon burst out of the technical
+ journals into such publications as the New York Times Book
+ Review?where connectionism is characterized as cognitive counter
+ revolution1?and become the central talking point wherever AI or
+ cognitive science is discussed. The contents of this issue of Dcedalus
+ reflect this movement more than any deliberate plan: something
+ intriguing and dramatic had taken place on a larger scale than the
+ planning of a journal. So when Stephen Graubard invited me to
+ contribute a piece of my own, I could not resist using the connec
+ tionist brouhaha as the occasion to discuss some larger issues about
+ the nature of artificial intelligence and its appeal to people more
+ interested in the human mind than in building robots.
+ 
+<br><span style="color:blue;">
+AIは単一のものなのか、それとも複数存在するのか。人工知能をめぐる議論の様相が劇的に変化したことで、これまで一般には「統一された分野」として提示されてきたこの領域の中に、実は多様な考え方が存在するという事実への認識が急速に高まりました。近年の動向を追っていなかった本号『Daedalus（ダイダロス）』の読者は、寄稿者の多くがこの分野における「相違点」、とりわけ「コネクショニズム」と呼ばれるAIの一潮流に焦点を当てているのを見て、驚かれるかもしれません。しかし、驚くのは読者だけではないでしょう。1985年後半、私はAIを特集する『Daedalus』号の企画会議に参加しました。当時、私は（そしておそらく会議の参加者の大半も）、「コネクショニスト」的なテーマに関する研究活動が拡大しつつあることは認識していました。しかし、もしその会議で誰かが――実際には誰もそんなことは言いませんでしたが――次のようなことを示唆したとしたら、私は信じられなかったはずです。すなわち、これらのテーマがやがて専門誌の枠を飛び出し、『ニューヨーク・タイムズ・ブック・レビュー』（そこではコネクショニズムが「認知科学における反革命」と評されています）のような一般誌にまで取り上げられ、AIや認知科学が議論されるあらゆる場所で中心的な話題になる、などという事態です。本号の内容は、何らかの意図的な計画というよりは、こうした動きを反映したものとなっています。つまり、ある雑誌の企画という枠組みを超えた、より大きな規模で、興味深く劇的な出来事が進行していたのです。ですから、スティーブン・グラウバード氏から寄稿の依頼を受けた際、私はこの「コネクショニズムをめぐる騒ぎ」を好機と捉え、人工知能の本質や、ロボットの構築よりも人間の心に関心を寄せる人々にとってのAIの魅力といった、より大きな問題について論じてみたいという衝動を抑えることができませんでした。
+</span>
+</p><p>
+
+The field of artificial intelligence is currently divided into what
+ seem to be several competing paradigms. The present contenders
+ differ over the form of mechanisms needed to capture all forms of
+ intelligence. They are each engaged in a search for mechanisms with
+ a universal application. Allen Newell, dean of information process
+ ing, believes that he is close, that all knowledge can be formulated as
+ the rules behind a special kind of program known as a "production
+ system." The authors of the current connectionist manifesto, Parallel
+ Distributed Processing,2 do not think they are as close, but speak
+ with confidence that their way?relying not on programs but on
+ networked neuronlike entities?will provide universal mechanisms.
+ 
+<br><span style="color:blue;">
+現在、人工知能の分野は、互いに競合するいくつかのパラダイムに分かれているように見受けられる。有力な各派は、あらゆる形態の知能を捉えるために必要なメカニズムのあり方をめぐって見解を異にしているが、いずれも普遍的な適用性を持つメカニズムの探求に取り組んでいる。情報処理研究の第一人者であるアレン・ニューウェルは、目標達成は目前にあると考えている。彼は、あらゆる知識を「プロダクション・システム」と呼ばれる特殊なプログラムの背後にある規則として定式化できると確信しているのである。一方、コネクショニストによる現在のマニフェストとも言える『並列分散処理（Parallel Distributed Processing）』の著者たちは、そこまで到達しているとは考えていないものの、自分たちのアプローチ――プログラムではなく、ネットワーク化されたニューロン様の要素に依拠する手法――こそが普遍的なメカニズムをもたらすだろうと自信を持って語っている。
+</span>
+</p><p>
+
+I do not foresee the future in terms of an ultimate victory for any
+ of the present contenders. What I do foresee is a change of frame,
+ away from the search for universal mechanisms. I believe that we
+ have much more to learn from studying the differences, rather than
+ the sameness, of kinds of knowing. And just because knowing takes
+ place in one brain is not a reason to argue, as both connectionists and
+ programmers do, that there is one privileged and universal mecha
+ nism on any psychologically relevant level.
+ 
+<br><span style="color:blue;">
+現在の有力な説のいずれかが最終的に勝利を収めるような未来は、私には予想できません。私が予想するのは、むしろ「普遍的なメカニズム」の探求から離れ、枠組みそのものが変化していくということです。知識のあり方における「共通点」よりも「相違点」を研究することからこそ、私たちはより多くのことを学べると私は考えています。また、知識の形成が単一の脳内で行われるという事実をもって、心理学的に意味のあるレベルにおいて唯一の特権的かつ普遍的なメカニズムが存在すると論じることはできません――コネクショニストやプログラマーはそう主張しがちですが。
+</span>
+</p><p>
+
+An analogy dramatizes what I mean by psychologically relevant.
+ An evolutionary biologist might try to understand how tigers came to
+ have stripes. And a molecular biologist might try to understand the
+ origin of life in some primeval soup. But how life started gives you no
+ information about how a tiger looks. Yet this fallacy pervades the
+ intellectual discourse of connectionists and programmers. The con
+ nectionists talk about experiments on the level of small groups of
+ simulated neurons and then, almost in the same breath, talk about
+ how one can walk and think at the same time. Multiprocessing is
+ assumed to be the same kind of enterprise in both cases. Information
+ processing experts display rule systems that match the behavior of
+ people and computers solving logical problems, and jump from there
+ to statements like Allen NewelPs: "Psychology has arrived at the
+ possibility of a unified theory of cognition."
+ 
+<br><span style="color:blue;">
+「心理学的に妥当（あるいは関連性がある）」とはどういうことか、ある例え話を使って劇的に説明してみましょう。進化生物学者は、トラがいかにして縞模様を持つようになったのかを解明しようとするかもしれません。また、分子生物学者は、いわゆる「原始スープ」の中で生命がいかにして誕生したのかを理解しようとするかもしれません。しかし、生命がどのように始まったかという情報は、トラの見た目がどのようなものかを知る手がかりにはなりません。それにもかかわらず、コネクショニストやプログラマーたちの知的議論には、こうした誤った考え方が蔓延しています。コネクショニストは、シミュレーション上のニューロンの小集団レベルでの実験について語ったかと思うと、すぐさま、人が歩きながら同時に思考することについて論じたりします。彼らは、どちらのケースも「マルチプロセッシング（並列処理）」という同じ種類の営みであると見なしているのです。情報処理の専門家たちは、論理的な問題を解く際の人間の行動やコンピュータの挙動と合致するようなルール・システムを提示し、そこから飛躍して、アレン・ニューウェルが述べたような「心理学は、認知に関する統一理論を構築しうる段階に到達した」といった主張を展開するのです。
+</span>
+</p><p>
+
+There is the same mistake on both sides: the category error of
+ supposing that the existence of a common mechanism provides both
+ an explanation and a unification of all systems, however complex, in
+ which this mechanism might play a central role. My thesis here is that
+ AI needs to be defined in a way that does not put it in jeopardy of
+ making this category error. As it matures, I see AI developing the
+ conceptual frameworks that will enable us to obtain a rigorous
+ understanding not only of what is the same in such activities as falling
+ in love and playing chess, but of what is different between them.
+ Artificial intelligence should become the methodology for thinking
+ about ways of knowing.
+ 
+<br><span style="color:blue;">
+双方に共通する誤りがあります。それは、ある共通のメカニズムが存在するという事実が、そのメカニズムが中心的な役割を果たすあらゆるシステム（たとえどれほど複雑なものであれ）に対する説明となり、かつそれらを統合するものにもなると見なしてしまうという、「カテゴリー錯誤」です。本稿における私の主張は、AIを定義する際には、こうしたカテゴリー錯誤に陥る危険を避けるような形で行う必要がある、というものです。AIが成熟するにつれて、単に「恋に落ちること」と「チェスをすること」といった活動の間にどのような共通点があるかだけでなく、それらの間にどのような相違点があるかについても、厳密に理解することを可能にする概念的枠組みが構築されていくものと私は考えています。人工知能は、「知る」という営みのあり方を考察するための方法論となるべきなのです。
+</span>
+</p><p>
+
+In this essay I use an incident in the development of connectionism
+ to illustrate the current resistance of the field to this way of thinking
+ about its intellectual identity.
+
+<br><span style="color:blue;">
+本稿では、コネクショニズムの発展過程におけるある出来事を取り上げ、同分野がその知的アイデンティティをめぐるこうした考え方に対して現在示している抵抗を明らかにします。
+</span>
+</p>
+
+<h2><center>Ⅰ</center></h2>
+
+<p>
+
+ I do not come to the discussion of connectionism as a neutral
+ observer. In fact, the standard version of its history assigns me a role
+ in a romantic story whose fairytale resonances surely contribute at
+ least a little to connectionism's aura of excitement.
+ 
+<br><span style="color:blue;">
+私がコネクショニズムをめぐる議論に臨む際、その立場は中立的な観察者というものではありません。実のところ、その歴史に関する一般的な語り口において、私はあるロマンチックな物語の登場人物とされています。その物語が持つ「おとぎ話」のような響きは、コネクショニズムが帯びているあの高揚感に、少なからず寄与しているはずです。
+</span>
+</p><p>
+
+Once upon a time two daughter sciences were born to the new
+ science of cybernetics. One sister was natural, with features inherited
+ from the study of the brain, from the way nature does things. The
+ other was artificial, related from the beginning to the use of comput
+ ers. Each of the sister sciences tried to build models of intelligence,
+ but from very different materials. The natural sister built models
+ (called neural networks) out of mathematically purified neurones.
+ The artificial sister built her models out of computer programs.
+ 
+<br><span style="color:blue;">
+かつて、サイバネティクスという新しい科学から、二つの「姉妹」となる科学が生まれました。一方の姉妹は「自然」なもので、脳の研究や自然界の仕組みからその特徴を受け継いでいました。もう一方は「人工」的なもので、当初からコンピュータの利用と深く結びついていました。これら二つの姉妹科学は、それぞれ知能のモデルを構築しようとしましたが、その材料は全く異なるものでした。自然派の姉妹は、数学的に純化されたニューロンを用いてモデル（ニューラルネットワークと呼ばれるもの）を構築しました。一方、人工派の姉妹は、コンピュータ・プログラムを用いてモデルを構築したのです。
+</span>
+</p><p>
+
+In their first bloom of youth the two were equally successful and
+ equally pursued by suitors from other fields of knowledge. They got
+ on very well together. Their relationship changed in the early sixties
+ when a new monarch appeared, one with the largest coffers ever seen
+ in the kingdom of the sciences: Lord DARPA, the Defense Depart
+ ment's Advanced Research Projects Agency. The artificial sister grew
+ jealous and was determined to keep for herself the access to Lord
+ DARPA's research funds. The natural sister would have to be slain.
+ 
+<br><span style="color:blue;">
+若き盛りの頃、二人は等しく成功を収め、他の学問分野からの求婚者たちにも等しく言い寄られていた。二人の仲は極めて良好だった。しかし1960年代初頭、事態は一変する。科学という王国においてかつてないほどの巨額の富を抱える新たな君主、「ロード・ダーパ（DARPA：国防総省の国防高等研究計画局）」が登場したからである。すると「人工の妹」は嫉妬に駆られ、ロード・ダーパの研究資金へのアクセスを独占しようと決意した。そのためには、「自然の姉」を亡き者にしなければならなかった。
+</span>
+</p><p>
+
+The bloody work was attempted by two staunch followers of the
+ artificial sister, Marvin Minsky and Seymour Papert, cast in the role
+ of the huntsman sent to slay Snow White and bring back her heart as
+ proof of the deed. Their weapon was not the dagger but the mightier
+ pen, from which came a book? Perceptrons<sup>3</sup>? purporting to prove
+ that neural nets could never fill their promise of building models of
+ mind: only computer programs could do this. Victory seemed
+ assured for the artificial sister. And indeed, for the next decade all the
+ rewards of the kingdom came to her progeny, of which the family of
+ expert systems did best in fame and fortune.
+
+<br><span style="color:blue;">
+その血なまぐさい仕事に挑んだのは、「人工の妹」の熱心な信奉者であるマーヴィン・ミンスキーとシーモア・パパートの二人だった。彼らは、白雪姫を殺害し、その証拠として心臓を持ち帰るよう命じられた「狩人」の役回りを演じたのである。彼らの武器は短剣ではなく、それよりも強力な「ペン」であった。そのペンから生まれた一冊の本――『パーセプトロン』――は、ニューラルネットワークが「心のモデルを構築する」という約束を果たすことは決してあり得ず、それを成し遂げられるのはコンピュータ・プログラムだけであると論証しようとするものだった。「人工の妹」の勝利は確実かに思われた。実際、その後10年にわたり、王国のあらゆる恩恵はその「子孫」たちにもたらされた。中でも、名声と富の面で最も成功を収めたのが「エキスパート・システム」の一族であった。
+</span>
+</p><p>
+
+ But Snow White was not dead. What Minsky and Papert had
+ shown the world as proof was not the heart of the princess; it was the
+ heart of a pig. To be more literal: their book was read as proving that
+ the neural net approach to building models of mind was dead. But a
+ closer look reveals that they really demonstrated something much less
+ than this. The book did indeed point out very serious limitations of a
+ certain class of nets (nowadays known as one-layer perceptrons) but
+ was misleading in its suggestion that this class of nets was the heart
+ of connectionism. Parallel Distributed Processing, allowing that the
+ suggestion could have been an honest mistake, lapses into a fairy-tale
+ tone in talking about how things were back in "Minsky and Papert's
+ day." In that far-off time and place, the technical discoveries were still
+ to be made that would open the vision?model connectionism's
+ sustaining myth?of much more powerful neural nets than could
+ then be imagined.
+
+<br><span style="color:blue;">
+しかし、白雪姫は死んでいなかった。ミンスキーとパパートが世界に「証​​拠」として提示したのは、王女の心臓ではなく、豚の心臓だったのである。もう少し即物的に言えば、彼らの著書は、心のモデルを構築する手法としてのニューラルネットワーク・アプローチが「死んだ」ことを証明するものとして受け止められた。だが、詳しく検討してみると、彼らが実際に示したのは、それとは程遠い、もっと限定的な事柄にすぎなかったことがわかる。確かにその著書は、ある種のネットワーク（今日では「単層パーセプトロン」として知られるもの）が抱える極めて深刻な限界を指摘してはいた。しかし、そうした種類のネットワークこそがコネクショニズムの核心であるかのように示唆した点においては、誤解を招くものであった。『並列分散処理（Parallel Distributed Processing）』は、その示唆が善意による誤解であった可能性を認めつつも、「ミンスキーとパパートの時代」の状況を語る際には、おとぎ話のような調子に陥っている。遠い過去のあの時代、当時は想像もつかなかったほど強力なニューラルネットワークというビジョン――すなわちコネクショニズムを支える神話――を切り拓くことになる技術的発見は、まだなされていなかったのである。
+</span>
+</p><p>
+
+ Connectionist writings present the story as having a happy ending.
+ The natural sister was quietly nurtured in the laboratories of a few
+ ardent researchers who kept the faith, even when the world at large
+ let itself be convinced that the enterprise was futile. Who (or what)
+ should be cast in the role of Prince Charming is a problem I shall take
+ up later: Who are the parties to the present-day connectionist love
+ affair? Who woke connectionism? And why now? And what next?
+ But for the moment suffice it to note that the princess has emerged
+ from relative rags and obscurity to win the admiration of all except
+ a few of her sister's disgruntled hangers-on.
+
+<br><span style="color:blue;">
+コネクショニズムに関する文献は、この物語をハッピーエンドとして描いています。
+その「実の妹」は、世間一般がこの試みを無駄だと決めつけていた時期でさえ信念を捨てなかった、数人の熱心な研究者たちの研究所で、ひっそりと育てられてきました。誰（あるいは何）が「白馬の王子様」の役を担うべきかという問題については、後ほど取り上げることにしましょう。現代のコネクショニズムをめぐるロマンスの当事者は誰なのか？ 誰がコネクショニズムを目覚めさせたのか？ なぜ今なのか？ そして次はどうなるのか？
+しかし、ひとまずは次の点を確認しておけば十分でしょう。すなわち、この「お姫様」は、かつての不遇で無名な状態から抜け出し、もう一人の姉妹（旧来のパラダイム）につき従う不満を抱いた少数の取り巻き連中を除けば、あらゆる人々から称賛を勝ち取る存在となったのです。
+</span>
+</p>
+
+ <h2><center>II</center></h2>
+
+<p>
+ The story seems to call for a plea of guilty or innocent: Did Minsky
+ and I try to kill connectionism, and how do we feel now about its
+ resurrection? Something more complex than a plea is needed. Yes,
+ there was some hostility in the energy behind the research reported in
+ Perceptrons, and there is some degree of annoyance at the way the
+ new movement has developed; part of our drive came, as we quite
+ plainly acknowledged in our book, from the fact that funding and research energy were being dissipated on what still appear to me
+ (since the story of new, powerful network mechanisms is seriously
+ exaggerated) to be misleading attempts to use connectionist methods
+ in practical applications. But most of the motivation for Perceptrons
+ came from more fundamental concerns, many of which cut cleanly
+ across the division between networkers and programmers.
+ 
+<br><span style="color:blue;">
+この話は、あたかも「有罪か無罪か」を問うような構図を求めているようだ。つまり、ミンスキーと私はコネクショニズムを葬り去ろうとしたのか、そしてそれが復活した今、どう感じているのか、という問いである。だが、単なる「有罪・無罪」の答弁以上のものが必要だろう。確かに、『パーセプトロン』で報告された研究の背後にはある種の敵意があったし、その後の新しい潮流の展開の仕方に対して苛立ちを覚える部分もある。我々の動機の一部は――著書でも率直に認めた通り――資金や研究のエネルギーが、コネクショニズムの手法を実用に応用しようとする「誤解を招く試み」に浪費されていたという事実から来ていた（強力な新型ネットワーク・メカニズムという話は著しく誇張されており、私には今でもそれらが誤解を招く試みであるように思えるからだ）。しかし、『パーセプトロン』執筆の動機の大部分は、より根本的な懸念に由来していた。そしてその懸念の多くは、ネットワーク研究者とプログラマーという区分けを鮮やかに横断するものであった。
+</span>
+</p><p>
+
+One of these concerns had to do with finding an appropriate
+ balance between romanticism and rigor in the pursuit of artificial
+ intelligence. Many serious endeavors would never get off the ground
+ if pioneers were limited to discussing in public only what they could
+ demonstrate rigorously. Think, for example, of the development of
+ flying machines. The excitement generated when the Wright brothers
+ made their first flight had a large element of the romantic. And rightly
+ so: it is hard to work up respect for those critics who complained that
+ a short hop on a beach did not prove the feasibility of useful air
+ transportation. When final success cannot be taken as a criterion for
+ judging initial steps, the problem of developing a sensible critical
+ methodology is an essential and often delicate part of any very
+ out-of-the-ordinary endeavor. In the case of artificial intelligence, the
+ problem of critical judgment of partial results is compounded by the
+ fact that a little intelligence is not easily recognized as intelligence.
+ Indeed, in English we have a special word for it: although a short
+ flight is still counted as a flight, a little intelligence is counted as
+ stupidity, and in AI's early stages (where it still is), this is all that can
+ be expected. How, then, does one decide whether the latest "stu
+ pidity" of a machine should be counted as a step toward intelligence?
+ The methodology Minsky and I used in Perceptrons is best explained
+ through an example.
+
+<br><span style="color:blue;">
+こうした懸念の一つは、人工知能の探求において、ロマンチシズム（夢や理想を追う姿勢）と厳密さとの間に適切なバランスをどう見出すかという点に関わるものでした。もし先駆者たちが、厳密に実証できることしか公の場で議論できないという制約を受けていたとしたら、多くの真剣な試みは決して日の目を見なかったことでしょう。例えば、飛行機械の開発を思い浮かべてみてください。ライト兄弟が初飛行に成功した際に巻き起こった興奮には、ロマンチシズムの要素が多分に含まれていました。そして、それはもっともなことでした。海岸での短い飛行など実用的な航空輸送の実現可能性を証明するものではないと不満を漏らした批評家たちに対して、敬意を抱くことなど難しいからです。最終的な成功を初期段階の評価基準にできない場合、妥当な批判的評価手法を確立することは、極めて異例なあらゆる試みにおいて不可欠であり、かつ往々にして繊細さを要する課題となります。人工知能の場合、部分的な成果をどう評価するかという問題は、「わずかな知能」は容易には「知能」として認識されないという事実によって、さらに複雑なものとなっています。実際、英語にはこの状況を表す特別な言葉があります。短い飛行であっても「飛行」とみなされるのに対し、わずかな知能は「愚かさ」とみなされてしまうのです。そして、AIの初期段階（現在もなおその段階にありますが）においては、それこそが予想される唯一の反応なのです。では、機械が見せる最新の「愚かさ」を、知能への一歩とみなすべきかどうかを、どう判断すればよいのでしょうか？ ミンスキーと私が『パーセプトロン』で用いた手法は、具体例を挙げて説明するのが最善でしょう。
+</span>
+</p><p>
+
+ Parallel Distributed Processing reports an experiment in which a
+ simulated machine ( I'll call it Exor) learned to tell whether two
+ inputs, each of which must be either a one or a zero, are different.*
+ Exor's learning process consumed 2,232 repetitions of a training
+ cycle; in each repetition the machine was presented with one of the
+ four possible combinations of inputs (one-one, zero-zero, zero-one,
+ one-zero) and a feedback signal to indicate whether it had given the
+ right response ("no" for the first two and "yes" for the others). Smart
+or stupid? Should one be more impressed by the fact that the thing
+ "learned" at all, or by the fact that it learned so slowly and
+ laboriously?
+
+<br><span style="color:blue;">
+『並列分散処理（Parallel Distributed Processing）』では、ある実験について報告されています。その実験では、シミュレーション上のマシン（ここでは「Exor」と呼ぶことにします）が、それぞれ「1」か「0」のいずれかをとる2つの入力が互いに異なるかどうかを判別する学習を行いました。Exorの学習プロセスでは、トレーニング・サイクルが2,232回繰り返されました。各サイクルにおいて、マシンには4通りの入力の組み合わせ（1-1、0-0、0-1、1-0）のいずれかが提示されるとともに、その応答が正しかったかどうかを示すフィードバック信号（最初の2つの組み合わせに対しては「いいえ」、残りの2つに対しては「はい」）が与えられました。これは賢いことなのでしょうか、それとも愚かなことなのでしょうか？ このマシンがそもそも「学習」したという事実に感心すべきなのでしょうか、それとも、その学習がいかに遅々として進まず、多大な労力を要するものであったかという点に注目すべきなのでしょうか？
+</span>
+</p><p>
+
+ There was a time, in the early days of cybernetics, when a machine
+ doing anything at all that resembled learning would have been
+ impressive. Today something more is needed to give significance, and
+ in this case the something more is closely related to our allegory. Exor
+ is a neural net, and the task it learned to perform happens, for all its
+ simplicity, to be one of those things a one-layer net cannot do.
+ Knowing this turns the dilemma of judging Exor into an encapsula
+ tion of the larger dilemma of judging connectionism. If you want to
+ believe, Exor allows you to proclaim, "Snow White lives." If you
+ don't, Exor's retarded pace of learning allows you to whisper, "But
+ barely." Perceptrons set out on a very different tack: instead of asking
+ whether nets are good, we asked what they are good for. The focus
+ of enquiry shifted from generalities about kinds of machines to
+ specifics about kinds of tasks. From this point of view, Exor raises
+ such questions as: Which tasks would be learned faster and which
+ would be learned even more slowly by this machine? Can we make a
+ theory of tasks that will explain why 2,232 repetitions were needed
+ in this particular act of learning? The shift in perspective is sharp:
+ interest has moved from making a judgment of the machine to using
+ the performance of the machine on particular tasks as a way to learn
+ more about the nature of the tasks. This shift is reflected in the
+ subtitle of our book?Perceptrons: An Introduction to Computa
+ tional Geometry. We approached our study of neural networks by
+ looking carefully at the kinds of tasks for which their use was being
+ advocated at the time. Since most of these were in the area of visual
+ pattern recognition, our methodology led us into building theories
+ about such patterns. To our surprise, we found ourselves working a
+ new problem area for geometric research, concerned with under
+ standing why some recognition tasks could easily be performed by a
+ given recognition mechanism, while other computations were ex
+ tremely costly as measured by the number of repetitions needed for a
+ task or the amount of machinery required. For example, a small
+ single-layer perceptron can easily distinguish triangles from squares,
+ but a very large network is needed to learn whether what is put in
+ front of it is a single connected object or is made up of several parts.
+
+<br><span style="color:blue;">
+サイバネティクスの黎明期には、学習に似た何らかの動作を行う機械というだけで、人々に感銘を与えることができた時代がありました。しかし今日では、意義あるものと見なされるためには、それ以上の何かが求められます。そして、この「何か」こそが、我々の寓話と密接に関わっているのです。Exor（エクソール）はニューラルネットワークの一種ですが、それが学習した課題は、単純なものでありながら、実は単層ネットワークでは実行不可能な種類の課題でした。この事実を知ることで、Exorをどう評価するかというジレンマは、コネクショニズム全体をどう評価するかという、より大きなジレンマを凝縮した形として捉えられるようになります。信じたい人にとっては、Exorは「白雪姫は生きている」と宣言する根拠となります。一方、信じない人にとっては、Exorの極めて遅い学習ペースを見て、「かろうじて生きているに過ぎない」とささやく根拠となるのです。パーセプトロンの研究は、全く異なるアプローチをとりました。すなわち、「ネットワークは優れているか」を問うのではなく、「ネットワークは何の役に立つのか」を問うたのです。探求の焦点は、機械の種類に関する一般的な議論から、課題の種類に関する具体的な分析へと移りました。この視点に立つと、Exorは次のような問いを投げかけます。この機械は、どのような課題を素早く学習し、どのような課題を極めてゆっくりと学習するのか？ なぜ今回の特定の学習において2,232回もの反復が必要だったのかを説明できるような、課題に関する理論を構築できるだろうか？ この視点の転換は鮮烈なものでした。関心の対象は、機械そのものを評価することから、特定の課題における機械の性能を手がかりとして、その課題の性質をより深く理解することへと移行したのです。こうした転換は、我々の著書『パーセプトロン：計算幾何学入門（Perceptrons: An Introduction to Computational Geometry）』という副題にも反映されています。我々は、当時ニューラルネットワークの利用が推奨されていた課題の種類を詳細に検討することから、ニューラルネットワークの研究に取り組みました。それらの課題の多くは視覚的なパターン認識に関するものであったため、我々の手法は必然的に、そうしたパターンに関する理論の構築へと向かうことになりました。驚いたことに、我々は幾何学研究における新たな領域に取り組んでいることに気づきました。それは、ある認識メカニズムによって容易に実行できる認識課題がある一方で、他の計算を実行するには（課題に必要な反復回数や必要な機械の規模という尺度で測って）極めて大きなコストがかかるのはなぜか、という点を解明しようとする領域だったのです。例えば、小規模な単層パーセプトロンであれば三角形と正方形を容易に区別できますが、目の前にあるものが単一のつながった物体なのか、それとも複数の部品から構成されているのかを学習するには、非常に大規模なネットワークが必要となります。
+</span>
+</p><p>
+
+ Our surprise at finding ourselves working in geometry was a
+ pleasant one. It reinforced our sense that we were opening a new
+ field, not closing an old one. But although the shift from judging
+ perceptrons abstractly to judging the tasks they perform might seem
+ like plain common sense, it took us a long time to make it. So long,
+ in fact, that we are now only mildly surprised to observe the
+ resistance today's connectionists show to recognizing the nature of
+ our work?and the nature of the problem area into which their own
+ investigations must eventually lead.
+
+<br><span style="color:blue;">
+自分たちが幾何学の領域で研究することになったと気づいたとき、私たちは嬉しい驚きを覚えました。それは、私たちが古い分野を終わらせるのではなく、新しい分野を切り開いているのだという確信を強めるものでした。しかし、パーセプトロンを抽象的に評価するのではなく、それらが遂行するタスクに基づいて評価するという転換は、ごく当たり前のことのように思えるかもしれませんが、実際にその転換に至るまでには長い時間を要しました。実のところ、そのあまりの時間の長さを思えば、現代のコネクショニストたちが、私たちの研究の性質や、彼ら自身の探求がいずれ行き着くことになる問題領域の性質を認めようとしないその抵抗ぶりを目の当たりにしても、今や私たちはさほど驚きはしません。
+</span>
+</p>
+
+ <h2><center>Ill</center></h2>
+<p>
+
+ Artificial intelligence, like any other scientific enterprise, had built a
+ scientific culture. The way of working we used in Perceptrons ran
+ against the grain of this culture, in whose development we ourselves
+ had participated.
+ 
+<br><span style="color:blue;">
+人工知能は、他のあらゆる科学的営みと同様に、一つの科学的文化を築き上げていた。『パーセプトロン』で行った我々の研究手法は、その文化――我々自身もその形成に関与してきた文化――のあり方とは相容れないものであった。
+</span>
+</p><p>
+
+The quest for universality of mechanism is obscured as a pervasive
+ trait of the AI culture by the circumstance that all successful AI
+ demonstrations, whether by programmers or connectionists, perform
+ quite specific tasks in quite narrow domains. Indeed, AI theorists
+ sometimes claim as an important discovery the theory that domain
+ specificity is not a limitation of machines but a characteristic of
+ intelligence. However, the theoretical energy of AI has not gone into
+ understanding differences between specific domains, but rather into
+ finding general forms for the specific contents.
+ 
+<br><span style="color:blue;">
+AI文化に広く見られる「メカニズムの普遍性」の追求という傾向は、ある事情によってその姿が見えにくくなっています。その事情とは、プログラマーによるものであれコネクショニストによるものであれ、成功を収めたAIのデモンストレーションはすべて、極めて限定された領域において、極めて特定のタスクを実行するものだという点です。実際、AIの理論家たちは、「領域特異性（ドメイン・スペシフィシティ）は機械の限界ではなく、知能の特性である」という説を重要な発見として主張することさえあります。しかし、AI研究における理論的探求のエネルギーは、特定の領域間の差異を理解することではなく、むしろそれら特定のコンテンツに共通する一般的な形式を見出すことに注がれてきたのです。
+</span>
+</p><p>
+
+The universalist trait gains robustness from having numerous roots.
+ Among the deepest may be the mythic nature of AI's original enterprise
+ of mind building mind. The desire for universality was fed also by the
+ legacy of the scientists, largely mathematicians, who created AI. And it
+ was nurtured by the most mundane material circumstances of funding.
+ By 1969, the date of the publication of Perceptrons, AI was not
+ operating in an ivory-tower vacuum. Money was at stake. And while
+ this pressured the field into a preference for short-term achievement, it
+ also put a premium on claims that the sponsor's investment would
+ bear fruits beyond the immediate product.
+
+<br><span style="color:blue;">
+「普遍性」を志向するその性質は、数多くの源流を持つことで強固なものとなっています。
+その中でも最も根深いものの一つは、AIという試みが当初から抱いていた、「精神が精神を構築する」という神話的な性格でしょう。普遍性への希求は、AIを創始した科学者たち（その多くは数学者でした）が残した遺産によっても助長されました。さらに、資金調達という極めて現実的かつ物質的な事情も、この傾向を育む一因となりました。
+『パーセプトロン』が出版された1969年の時点で、AIはすでに「象牙の塔」のような隔絶された空間で営まれていたわけではありません。そこには資金という利害が絡んでいました。そうした状況は、研究分野として短期的な成果を優先させる圧力を生む一方で、出資者の投資が単なる目先の製品にとどまらない成果をもたらすという主張に、高い価値を与えることにもなったのです。
+</span>
+</p><p>
+
+ Its universalism made it almost inevitable for AI to appropriate our
+ work as proof that neural nets were universally bad. We did not think
+ of our work as killing Snow White; we saw it as a way to understand her. In fact, more than half of our book is devoted to "proper
+ ceptron" findings about some very surprising and hitherto unknown
+ things that perceptrons can do. But in a culture set up for global
+ judgment of mechanisms, being understood can be a fate as bad as
+ death. A real understanding of what a mechanism can do carries too
+ much implication about what it can not do.
+ 
+<br><span style="color:blue;">
+その普遍主義的な性質ゆえに、AI（人工知能）の文脈において、我々の研究が「ニューラルネットワークは根本的に欠陥がある」ことの証拠として取り上げられてしまうのは、ある意味で避けられないことでした。我々は自分たちの研究を「白雪姫を殺すもの」などとは考えておらず、むしろ彼女を理解するための一つの手段だと捉えていたのです。実際、我々の著書の半分以上は、パーセプトロンが可能にする驚くべき、かつそれまで知られていなかった機能に関する知見――いわば「プロパーセプトロン（proper-ceptron）」とでも呼ぶべき発見――の記述に割かれています。しかし、あらゆる仕組みに対して世界規模で「審判」を下そうとする文化においては、「理解される」こと自体が、死に匹敵するほどの過酷な運命となり得ます。ある仕組みに何ができるかを真に理解するということは、裏を返せば、何ができないかについても多くのことを示唆してしまうからです。
+</span>
+</p><p>
+
+The same trait of universalism leads the new generation of
+ connectionists to assess their own microlevel experiments, such as
+ Exor, as a projective screen for looking at the largest macroissues in
+ the philosophy of mind. The category error analogous to seeking
+ explanations of the tiger's stripes in the structure of DNA is not an
+ isolated error. It is solidly rooted in AI's culture.
+
+<br><span style="color:blue;">
+こうした普遍主義的な傾向ゆえに、新世代のコネクショニストたちは、「Exor」のような自身のミクロなレベルでの実験を、心の哲学における最大のマクロな問題を考察するための「投影スクリーン」と見なすようになっています。トラの縞模様の説明をDNAの構造の中に求めようとするのと同様のカテゴリー錯誤は、単発的な誤りではありません。それはAIの文化に深く根を下ろしているのです。
+</span>
+</p>
+
+ <h2><center>IV</center></h2>
+<p>
+ The conceit of using the story of Snow White as a metaphor has
+ allowed me to talk about the connectionist counterrevolution with
+ out saying exactly what connectionism is or what it is revolting
+ against. A little more technical detail is needed to situate connection
+ ism in the larger field of sciences of mind.
+ 
+<br><span style="color:blue;">
+白雪姫の物語を比喩として用いるという発想のおかげで、
+コネクショニズムの反革命について、
+コネクショニズムが具体的に何であるか、あるいは何に反抗しているのかを明確にすることなく、
+語ることができました。
+コネクショニズムを心の科学というより大きな分野の中に位置づけるには、
+もう少し技術的な詳細が必要です。
+</span>
+</p><p>
+
+The actual task of recognizing the sameness of the two binary
+ inputs would be a trivial one for a programmer. The first of several
+ remarkable features possessed by Exor is that no one programmed it;
+ it was "trained" to do its task by a strictly behaviorist process of
+ external association of stimuli with reinforcements. It could have
+ been trained by someone who rigorously followed Watson's stric
+ tures against thinking about the innards of a system. But if this was
+ its only merit as a model of mental process, the large number of
+ repetitions would negate its interest: machines specifically designed to
+ simulate conditioned reflexes have done so with a psychologically
+ more plausible number of repetitions.
+ 
+<br><span style="color:blue;">
+2つのバイナリ入力が同一であるかどうかを識別するという実際の課題は、プログラマーにとっては取るに足らないものです。Exorが持ついくつかの際立った特徴の第一は、それが誰かによってプログラムされたものではないという点にあります。Exorは、刺激と強化（reinforcement）を外部で結びつけるという、厳密に行動主義的なプロセスを通じて、その課題を遂行するように「訓練」されたのです。システムの内部構造について考察することを禁じたワトソンの教えを厳格に守る人物によって、Exorは訓練されたとも言えるでしょう。しかし、もし精神プロセスのモデルとしての利点がそれだけだとしたら、膨大な回数の反復が必要であるという点が、その価値を損なうものとなってしまうでしょう。条件反射をシミュレートするために特別に設計された機械であれば、心理学的により妥当な回数の反復で同様のことが行われてきたからです。
+</span>
+</p><p>
+
+Exor's claim of universality is a stronger feature. Exor is small and
+ limited in power, but it sustains the vision of larger machines that are
+ built on the same principles and that will learn whatever is learnable
+ with no innate disposition to acquire particular behaviors. The
+ prospect of such performance becomes a vindication of something
+ more than neural nets. It promises a vindication of behaviorism
+ against Jean Piaget, Noam Chomsky, and all those students of mind
+ who criticized the universalism inherent in behaviorism's tabula rasa.
+Behaviorism has been beaten down in another version of the Snow
+ White story, but the response of academic psychology to connection
+ ism may turn out to be a classic example of the return of the
+ repressed.
+
+<br><span style="color:blue;">
+Exorの持つ「普遍性」という主張は、より強力な特徴と言えます。Exorは小規模で能力も限られていますが、同じ原理に基づいて構築され、特定の行動様式を獲得するための生得的な素因を持たずに、学習可能なあらゆるものを学習していく、より大規模なマシンのビジョンを体現しています。こうした性能が実現する可能性は、単なるニューラルネットワークの枠を超えた意義を証明するものとなります。それは、行動主義の「タブラ・ラサ（白紙）」の概念に内在する普遍主義を批判したジャン・ピアジェやノーム・チョムスキー、そしてその他多くの心に関する研究者たちに対し、行動主義の正当性を再証明する可能性を秘めているのです。行動主義は、いわば「白雪姫」の物語の別バージョンのように打ちのめされてきましたが、コネクショニズムに対するアカデミックな心理学界の反応は、結果として「抑圧されたものの回帰」の典型例となるかもしれません。
+</span>
+</p><p>
+
+ Connectionism does more than bring back old-fashioned behav
+ iorism. It brings it back in a form that offers a reconciliation with
+ biological thinking about the brain. The structure of the machine
+ reflects, albeit in an abstract way, a certain model of how brains
+ might conceivably be built out of neurons. Although the actual Exor
+ experiments are, of course, performed by computer programs, these
+ programs are meant to represent what would happen if one con
+ nected together networks of units that are held to be neuronlike in the
+ following sense. Each unit in the network receives signals from the
+ others or from sensor units connected to the outside world; at any
+ given time, each unit has a certain level of activation that depends on
+ the weighted sum of the states of activation of the units sending
+ signals to it, and the signals sent out along the unit's "axon" reflect its
+ state of activation. Learning takes place by a process that adjusts the
+ weights (strengths of connections) between the units; when the
+ weights are different, activation patterns produced by a given input
+ will be different, and finally, the output (response) to an input
+ (stimulus) will change. This feature gives machines in Exor's family a
+ biological flavor that appeals strongly to the spirit of our times and
+ yet takes very little away from the behaviorist simplicity: although
+ one has to refer to the neuronlike structure in order to build the
+ machine, one thinks only in terms of stimulus, response, and a
+ feedback signal to operate it.
+
+<br><span style="color:blue;">
+コネクショニズムは、単に古めかしい行動主義を復活させるだけのものではありません。それは、脳に関する生物学的な考え方との調和を可能にするような形で、行動主義を蘇らせるものです。その機械の構造は、抽象的ではあるものの、ニューロンから脳がいかに構成されうるかという特定のモデルを反映しています。実際のExor（エクソール）の実験はもちろんコンピュータ・プログラムによって行われますが、それらのプログラムが表現しようとしているのは、ある特定の意味でニューロンに似ていると見なされる「ユニット」のネットワークを接続した際に生じるであろう現象です。ネットワーク内の各ユニットは、他のユニットや外界とつながったセンサー・ユニットから信号を受け取ります。各ユニットは常に一定の活性化レベルを保持しており、そのレベルは、信号を送ってくるユニットの活性化状態の「重み付き和」に依存します。そして、そのユニットの「軸索」に沿って送出される信号は、そのユニット自身の活性化状態を反映したものとなります。学習は、ユニット間の重み（接続の強さ）を調整するプロセスを通じて行われます。重みが異なれば、特定の入力によって生み出される活性化パターンも異なり、最終的には、入力（刺激）に対する出力（反応）も変化することになります。こうした特徴により、Exor系列の機械は、現代の精神に強く訴えかける生物学的な雰囲気を帯びながらも、行動主義的な単純さをほとんど損なっていません。つまり、機械を構築する際にはニューロンに似た構造を考慮する必要がありますが、実際に機械を操作する際には、刺激、反応、そしてフィードバック信号といった概念だけを考えればよいのです。
+</span>
+</p>
+
+>h2><center> V</center></h2>
+<p>
+ This presentation of connectionism as behaviorism in  clothing helps place Perceptrons in perspective: the qu discusses are a modern form of an old debate originally co humanistic and philosophical discussion of associations a again more recently as a discussion of behaviorism. Su often turn around assertions of the form, "Starting with  (associations, stimulus and response, or whatever), you can to (general ideas, language, or whatever)." Discussion ofThis content downloaded from
+ has been more or less compelling but seldom anywhere near conclu
+ sive to standards of rigor that seemed normal to people trained, as
+ Minsky and I both were, as mathematicians. And indeed, how could
+ the discussion even be formulated with any semblance of rigor in the
+ absence of a tight theory of human thought? And how could one
+ move seriously toward such a tight theory without knowing whether
+ general ideas or whatever can be derived from associations or
+ whatever?
+
+<br><span style="color:blue;">
+コネクショニズムを「行動主義の焼き直し」として捉えるこの見方は、パーセプトロンを適切な文脈で理解する助けとなります。ここで論じられている問題は、古くからの論争の現代版と言えます。その論争は、当初は連合（association）をめぐる人間論的・哲学的な議論として展開され、近年では行動主義をめぐる議論として再燃しています。こうした議論は往々にして、「（連合、刺激と反応などから）出発して、（一般的な概念や言語などに）到達できるか」といった主張を軸に展開されます。その議論はそれなりに説得力を持つものではありましたが、数学者としての訓練を受けたミンスキーや私にとって「標準的」と思えるような厳密さの基準に照らせば、決して決定的な結論に至るものではありませんでした。そもそも、人間の思考に関する厳密な理論が存在しない状態で、この議論を厳密さをもって定式化することなど可能なのでしょうか。また、一般的な概念などが連合から導き出せるかどうかも分からないまま、そのような厳密な理論の構築に向けて真剣に取り組むことなど、果たしてできるものでしょうか。
+</span>
+</p><p>
+
+ In its narrowest sense, the intention of Perceptrons was to avoid
+ for the study of "machine thinking" some of the chicken-and-egg
+ difficulties that have plagued thinking about human thinking. The
+ strategy was to study a class of computational machines that were
+ sufficiently powerful to capture a significant slice of contemporary
+ achievement in AI, yet sufficiently simple to make possible, with the
+ limited analytic tools at our disposal, a rigorous mathematical
+ analysis of their capacities. We chose the class of machines for which
+ the book was named (in honor of Frank Rosenblatt): perceptrons are
+ defined in the book to be a special and especially simple kind of
+ neural net in the same family as Exor. Perceptrons are too simple to
+ be interesting in their own right as models of mental process. But the
+ most promising step toward developing tools powerful enough to
+ analyze more complex systems, including the human mind, seemed to
+ be achieving a thorough understanding of a single case as simple as a
+ perceptron. Many readers, perhaps all except mathematicians, would
+ be shocked to know how simple a machine can be and still elude full
+ understanding of its capabilities. I find it quite awesome to think
+ about how hard it was to confirm or reject our intuitions about the
+ capacities of perceptrons.
+ 
+<br><span style="color:blue;">
+最も狭い意味において、「パーセプトロン」という研究が意図していたのは、「機械の思考」を研究するにあたり、人間の思考に関する考察を長年悩ませてきた「鶏と卵」のような難問を回避することでした。その戦略は、当時のAI研究の主要な成果を十分に捉えられるだけの能力を持ちながら、同時に、利用可能な限られた解析ツールでもその能力を厳密に数学的に解析できるほど単純な、ある種の計算機械を研究することにありました。そこで私たちは、本書のタイトルにもなった（フランク・ローゼンブラットに敬意を表して名付けられた）種類の機械を選びました。本書においてパーセプトロンは、Exor（排他的論理和）と同じ系統に属する、特別かつ極めて単純なニューラルネットワークの一種として定義されています。パーセプトロンは単純すぎて、それ自体が精神プロセスのモデルとして興味深いものとは言えません。しかし、人間の心を含むより複雑なシステムを解析できる強力なツールを開発する上で最も有望な第一歩は、パーセプトロンのように単純な単一の事例を徹底的に理解することにあるように思われました。機械というものがこれほど単純でありながら、その能力を完全には理解しきれないものであり得るという事実を知れば、多くの読者（おそらく数学者以外の全員）は驚かされることでしょう。パーセプトロンの能力に関する私たちの直感が正しいかどうかを確認したり、あるいは否定したりすることが、いかに困難な作業であったかを考えると、私は深い感銘を覚えます。
+</span>
+</p><p>
+
+
+Minsky and I both knew perceptrons extremely well. We had
+ worked on them for many years before our joint project of under
+ standing their limits was conceived; indeed, we originally met at a
+ conference where we both coincidentally presented papers with an
+ unlikely degree of overlap in content about what perceptronlike
+ machines could do. With this background we should have been in an
+ exceptional position to formulate strong conjectures about percep
+ trons. Yet when we challenged ourselves to prove our intuitions it
+ sometimes took years of struggle to pin one down?to prove it true
+ or to discover that it was seriously flawed.
+
+<br><span style="color:blue;">
+ミンスキーと私は、どちらもパーセプトロンについて熟知していました。パーセプトロンの限界を解明するという共同プロジェクトを立ち上げる以前から、私たちは長年にわたってこの分野の研究に取り組んできたのです。実際、私たちが初めて出会ったのもある学会でのことでしたが、そこで偶然にも、パーセプトロンのような機械に何ができるかという点について、驚くほど内容の重なる論文をそれぞれ発表していたのでした。こうした背景を考えれば、パーセプトロンに関して有力な仮説を打ち立てる上で、私たちは極めて有利な立場にあったはずです。それにもかかわらず、自分たちの直感を証明しようと試みた際には、ある一つの仮説を確定させる――つまり、それが正しいと証明するか、あるいは重大な欠陥があると見抜く――までに、何年もの苦闘を要することさえありました。
+</span>
+</p><p>
+
+ I was left with a deep respect for the extraordinary difficulty of
+ being sure of what a computational system can or cannot do. I
+ wonder at people who seem so secure in their intuitive convictions, or
+ their less-than-rigorous rhetorical arguments, about computers, neu
+ ral nets, or human minds. One area in which intuition seems
+ particularly in need of rigorous analysis is in dealing with the
+ romantically attractive notion of holistic process.
+
+<br><span style="color:blue;">
+計算システムに何が可能で何が不可能かを確信することの並外れた困難さについて、私は深い敬意を抱かざるを得ませんでした。コンピュータやニューラルネットワーク、あるいは人間の心について、直感的な確信や、厳密さを欠くレトリックに基づいた議論をいとも簡単に信じ込んでいる人々を見ると、私は不思議でなりません。特に直感に対して厳密な分析が求められる領域の一つに、「全体論的（ホリスティック）なプロセス」という、ロマンティックな魅力を帯びた概念を扱う問題があります。
+</span>
+</p>
+
+ <h2><center>VI</center></h2>
+<p>
+ In the history of psychology, behaviorism and holism (or gestaltism)
+ have been considered polar opposites. Behaviorism fragments the
+ mind into a myriad of separate atoms of a much smaller size than
+ common sense would allow. Holism and gestaltism insist that
+ psychological atoms are bigger than common sense thinks. So it is
+ quite remarkable that connectionism has facets that appeal to each of
+ these schools of thought.
+ 
+<br><span style="color:blue;">
+心理学の歴史において、行動主義と全体論（あるいはゲシュタルト主義）は、互いに正反対の立場にあると見なされてきました。行動主義は、常識的な感覚からすればあまりに微小な、数多くの個別の「要素（アトム）」へと心を細分化します。一方、全体論やゲシュタルト主義は、心理的な要素は常識的な想定よりも大きなものであると主張します。したがって、コネクショニズムがこれら双方の学派に訴えかける側面を併せ持っているというのは、極めて注目に値することです。
+</span>
+</p><p>
+
+The title of the current bible of connectionism, Parallel Distributed
+ Processing, juxtaposes two qualities that are taken in the connection
+ ist movement as prime characteristics certainly of all natural, and
+ probably of effective artificial, embodiments of intelligence. Parallel
+ refers to the quality of having many processes go on at the same time:
+ as people walk and talk at the same time, they very likely carry out
+ large numbers of concurrent, mostly unconscious, mental processes.
+ Distributed refers to the quality of not being localized: in traditional
+ computers, items of information are stored in particular places,
+ cleanly separated from one another; in neural nets, information is
+ spread out (in principle, a new piece of learning might involve
+ changes everywhere). Much of the sense that deep process is at work
+ in the functioning of nets is related to the suggestion that what
+ ordinary discourse and traditional cognitive theory misleadingly
+ describe as atomistic items of information are holistically represented
+ and yet appropriately evocable.
+ 
+<br><span style="color:blue;">
+コネクショニズムの現在の「聖典」とも言える『並列分散処理（Parallel Distributed Processing）』という書名は、コネクショニズムの潮流において、あらゆる自然な知能の具現化（そしておそらくは有効な人工的知能の具現化）の主要な特徴とみなされている二つの性質を並置しています。「並列（Parallel）」とは、多数のプロセスが同時に進行するという性質を指します。例えば、人が歩きながら話すとき、その人はおそらく、多数の同時進行的かつ大部分が無意識的な心的プロセスを遂行しているのです。「分散（Distributed）」とは、局所化されていないという性質を指します。従来のコンピュータでは、情報の各要素は特定の場所に格納され、互いに明確に分離されていますが、ニューラルネットワークでは、情報は分散して存在しています（原理的には、新たな学習によってネットワーク全体が変化し得るのです）。ネットワークの機能において「深層的なプロセス」が働いているという感覚の多くは、次のような示唆に関連しています。すなわち、日常的な言説や従来の認知理論では誤解を招く形で「情報の断片（アトム）」として記述されているものが、実際には全体論的に表現されながらも、適切に呼び出し可能である、という点です。
+</span>
+</p><p>
+
+Parallel plus distributed feels right. But work with perceptrons
+ made us acutely aware of ways in which the two qualities are in
+ tension rather than sweet harmony. It is not hard to switch percep
+ tions so as to make the juxtaposition feel intuitively problematic. In
+ ordinary life, customs of separating activities into rooms and offices
+ are founded on experience with the untidy consequences of having
+ everything happening everywhere at the same time. But connection
+ ism is built on the theory?what Sherry Turkle calls a sustaining
+ myth?that a deeper understanding would reveal the naivete of such
+ everyday analogies. Just as modern physics teaches us not to project
+ our sense of macroscopic events onto the subatomic world, so too
+ deeper understanding of networks will teach us that our metaphors
+ of macroscopic organization may be equally misleading.
+ 
+<br><span style="color:blue;">
+「並列かつ分散型」という概念は、一見もっともらしく思えます。しかし、パーセプトロンを扱う中で、私たちはこれら二つの性質が必ずしも調和しているわけではなく、むしろ互いに緊張関係にあるという事実を痛感させられました。視点を少し変えるだけで、この二つを並置することに直感的な違和感を覚えるようになるのは、決して難しいことではありません。日常生活において、活動の場を部屋やオフィスごとに分けるという慣習が定着しているのは、あらゆる物事が同時にあらゆる場所で進行した際に生じる「収拾のつかない事態」を経験的に知っているからです。しかしコネクショニズムは、ある理論――シェリー・タークルが「支えとなる神話（サステイニング・ミス）」と呼んだもの――に基づいています。それは、より深い理解が得られれば、そうした日常的な類推がいかに単純で未熟なものであるかが明らかになる、という考え方です。現代物理学が、マクロな事象に対する私たちの感覚を素粒子の世界にそのまま当てはめてはならないと教えているのと同様に、ネットワークへの理解が深まれば、マクロな組織のあり方について私たちが抱いている比喩もまた、同様に誤解を招くものであると気づかされることになるでしょう。
+</span>
+</p><p>
+
+Indeed, one can find analogies in physical science that go very
+ strongly against uninformed intuitions about interference?how pro
+ cesses disturb one another. The vibrations of all radio and television
+ waves pass through the same space at the same time, and yet tuning
+ circuits can separate them. Even more incomprehensible, if not
+ frankly shocking to common sense, is the hologram, which records a
+ three-dimensional picture in a fully distributed way: if part of the
+ holographic record is destroyed, no particular part of the picture is
+ lost; there is only a uniform degradation of quality.
+
+<br><span style="color:blue;">
+実際、物理学の世界には、干渉（すなわち、あるプロセスが別のプロセスを乱すこと）に関する素朴な直感とは真っ向から対立するような例が見受けられます。あらゆるラジオやテレビの電波は、同じ空間を同時に通過していますが、同調回路を使えばそれらを分離することができます。さらに理解しがたいもの、いや常識に照らせば衝撃的とさえ言えるのがホログラムです。ホログラムは、三次元の画像を完全に分散した形で記録します。そのため、記録の一部が破壊されたとしても、画像の特定の部位が失われることはなく、ただ画質が一様に低下するだけなのです。
+</span>
+</p><p>
+
+ These examples plainly say that there is precedent in the physical
+ world for distributed superposition. Enough in the universe is holistic
+ so that the concept of distributed neural net cannot be rejected on
+ general intuitive principles. But not everything is holistic, and com
+ monsense (or even philosophical) opinion is of little use in spotting
+ what is. Specific investigation, sometimes of a subtle and very
+ technical mathematical nature, is needed to find out whether holistic
+ representation is possible in any specific situation and whether (where
+ it can be done) there is an exorbitant price to pay. The Exor machine
+ illustrates, in a simple case, the concept of the cost of holism.
+ 
+<br><span style="color:blue;">
+これらの例は、物理世界において「分散型重ね合わせ（distributed superposition）」の先例が存在することを明白に示しています。宇宙には全体論的（ホリスティック）な側面が十分に存在するため、分散型ニューラルネットワークという概念を、一般的な直感的原理に基づいて否定することはできません。しかし、あらゆるものが全体論的であるわけではなく、何がそうであるかを見極める上で、常識（あるいは哲学的な見解でさえも）はほとんど役に立ちません。特定の状況において全体論的な表現が可能かどうか、また（それが可能な場合）そこに法外なコストが伴うかどうかを明らかにするには、時に極めて繊細かつ高度に専門的な数学的性質を伴う、具体的な調査が必要となります。「Exorマシン」は、全体論に伴うコストという概念を、単純な事例を通して例証するものです。
+</span>
+</p><p>
+
+The task that Exor learned can be seen as a superposition of two
+ learnings in the same network: learning to say yes to one-zero and
+ learning to say yes to zero-one. An important fact is that each of these
+ tasks, taken separately, is much easier to learn than the combined
+ task. And this is not an occasional phenomenon: Exor is a very mild
+ case of incurred cost of distribution. One of the research results of
+ Perceptrons, and one that required some mathematical labor, shows
+ that in certain situations the degree of difficulty of superposed tasks
+ can exceed the difficulty of each separate task by arbitrary, large
+ factors.
+
+<br><span style="color:blue;">
+XOR（排他的論理和）の学習課題は、同一のネットワーク内における2つの学習の重ね合わせ、すなわち「1と0の入力に対して『イエス（1）』と出力する学習」と「0と1の入力に対して『イエス（1）』と出力する学習」の組み合わせとして捉えることができます。ここで重要なのは、これら個々の課題は、それらを組み合わせた課題に比べて学習がはるかに容易であるという点です。しかも、これは単なる例外的な現象ではありません。XORは、いわゆる「分布に伴うコスト（cost of distribution）」が生じる事例としては、ごく穏やかな部類に入るものに過ぎないのです。パーセプトロンに関する研究成果の一つ（数学的な検討を要したものでもありますが）が示しているように、特定の状況下では、重ね合わされた課題の難易度が、個々の課題の難易度を任意の大きな倍率で上回ることがあり得るのです。
+</span>
+</p><p>
+
+ The romantic stance is to make a new network that isn't quite a
+ perceptron and to assume it innocent until proven guilty of the
+ danger of superposition costs. On the whole, connectionist literature
+ does so even when reporting experiments in which the new networks
+ show empirical signs of such costs as those that Exor incurs in its mild
+ way. The rigorous stance assumes the possibility of guilt until
+ innocence can be established: the theorems proved about perceptrons
+ are seen as showing what kind of phenomena need to be precluded
+ before one can make assertions confidently.
+
+<br><span style="color:blue;">
+「ロマンティックな」立場とは、パーセプトロンとは厳密には異なる新しいネットワークを構築し、重ね合わせに伴うコスト（superposition costs）という危険性が実際に証明されるまでは、そのネットワークを「無実（問題なし）」とみなすというものです。コネクショニズムに関する文献の多くは、たとえ新しいネットワークが（XOR問題において軽微な形で見られるような）コストの兆候を経験的に示した実験結果を報告する場合であっても、概してこのような態度をとります。一方、「厳密な」立場では、無実が立証されるまでは「有罪（問題あり）」の可能性があると仮定します。つまり、パーセプトロンに関して証明された諸定理は、自信を持って何らかの主張を行う前に、どのような現象を排除しておく必要があるかを示すものとみなされるのです。
+</span>
+</p>
+
+ <h2><center>VII</center></h2>
+<p>
+ I said at the beginning that I would offer some thoughts about Prince
+ Charming. Who woke connectionism? Why this surge of interest and
+ activity? Why now? And I will use my speculations on these themes
+ to comment on the important question, What next?
+ 
+<br><span style="color:blue;">
+冒頭で述べたように、ここでは「プリンス・チャーミング（白馬の王子様）」について考察してみたいと思います。コネクショニズムを目覚めさせたのは何だったのでしょうか？ なぜこれほど関心や活動が急激に高まったのでしょうか？ なぜ「今」なのでしょうか？ そして、こうしたテーマに関する私なりの考察を踏まえ、「次はどうなるのか」という重要な問いについて論じていきたいと思います。
+</span>
+</p><p>
+
+A purely technical account of Snow White's awakening goes like
+ this: In the olden days of Minsky and Papert, neural networking
+ models were hopelessly limited by the puniness of the computers
+ available at the time and by the lack of ideas about how to make any
+ but the simplest networks learn. Now things have changed. Powerful,
+ massively parallel computers can implement very large nets, and new
+ learning algorithms can make them learn. No romantic Prince
+ Charming is needed for the story.
+
+<br><span style="color:blue;">
+白雪姫の目覚めを純粋に技術的な観点から説明すると、次のようになります。ミンスキーやパパートが活躍した往時のニューラルネットワーク・モデルは、当時のコンピュータの能力不足や、単純なもの以外のネットワークに学習させる手法の欠如といった制約により、その可能性が著しく制限されていました。しかし、状況は一変しました。現在では、強力な超並列コンピュータによって大規模なネットワークを実装することが可能になり、新たな学習アルゴリズムを用いてそれらに学習させることもできるようになっています。この物語に、ロマンチックな「白馬の王子様」は必要ないのです。
+</span>
+</p><p>
+
+ I don't believe it. The influential recent demonstrations of new
+ networks all run on small computers and could have been done in
+ 1970 with ease. Exor is a "toy problem" run for study and demon
+ stration, but the examples discussed in the literature are still very
+ small. Indeed, Minsky and I, in a more technical discussion of this
+ history (added as a new chapter to a reissue of Perceptrons), suggest
+ that the entire structure of recent connectionist theories might be built
+ on quicksand: it is all based on toy-sized problems with no theoretical
+ analysis to show that performance will be maintained when the
+ models are scaled up to realistic size. The connectionist authors fail to
+ read our work as a warning that networks, like "brute force"
+ programs based on search procedures, scale very badly.
+ 
+<br><span style="color:blue;">
+信じがたいことだが、近年の有力な新しいネットワークのデモンストレーションは、いずれも小規模なコンピュータ上で動作するものであり、1970年当時でも容易に実現できたはずのものだ。「XOR（排他的論理和）」は研究や実証のための「トイ・プロブレム（おもちゃのような単純な課題）」だが、文献で論じられている他の例も依然として極めて小規模なものにすぎない。実際、ミンスキーと私は、この経緯に関するより専門的な議論（『パーセプトロン』再版への新章として追加）の中で、近年のコネクショニスト理論の構造全体が「流砂」の上に築かれている可能性があると指摘している。それらはすべてトイ・サイズの課題に基づいているにもかかわらず、モデルを現実的な規模にまで拡大した際に性能が維持されることを示す理論的分析がなされていないからだ。コネクショニズムを提唱する論者たちは、我々の研究が発している警告――すなわち、探索手順に基づく「ブルート・フォース（力任せ）」なプログラムと同様に、ネットワークもまた規模の拡大に対して極めて脆弱であるという警告――を読み取れていないのである。
+</span>
+</p><p>
+
+A more sociological explanation is needed. Massively parallel
+ supercomputers do play an important role in the connectionist
+ revival. But I see it as a cultural rather than a technical role, another
+ example of a sustaining myth. Connectionism does not use the new
+ computers as physical machines; it derives strength from the "com
+ puter in the mind," from its public's largely nontechnical awareness
+ of supercomputers.
+ 
+<br><span style="color:blue;">
+より社会学的な説明が必要である。超並列スーパーコンピュータは、コネクショニズムの復権において確かに重要な役割を果たしている。しかし、私はそれを技術的な役割というよりはむしろ文化的な役割、すなわち「持続する神話」の新たな一例だと捉えている。コネクショニズムは、新しいコンピュータを単なる物理的な機械として利用しているわけではない。むしろ、その力は「心の中のコンピュータ」――すなわち、一般の人々が抱く、スーパーコンピュータに対する（専門的知識に基づかない）漠然としたイメージ――に由来しているのである。
+</span>
+</p><p>
+
+I see connectionism's relationship to biology in similar terms.
+ Although its models use biological metaphors, they do not depend on
+ technical findings in biology any more than they do on modern
+ supercomputers. But here too there is a powerful, resonant phenome
+ non. Biology is increasingly the locus of the greatest excitement. And
+ neurosciences are invading the territory of academic psychology just as
+ psychopharmacology is invading the territory of clinical psychology.
+ 
+<br><span style="color:blue;">
+コネクショニズムと生物学との関係についても、私は同様に捉えています。
+そのモデルは生物学的な比喩を用いてはいますが、現代のスーパーコンピュータに依存していないのと同様に、生物学の専門的な知見に依存しているわけでもありません。しかし、ここにも強力で共鳴し合うような現象が見られます。生物学は、ますます大きな興奮を呼ぶ領域となっています。そして、精神薬理学が臨床心理学の領域に侵入しているのと同様に、神経科学もまた学術心理学の領域へと侵入しつつあるのです。
+</span>
+</p><p>
+
+I also see a more subtle, but not less relevant, cultural resonance.
+ This is a generalized turn away from the hard-edged rationalism of
+ the time connectionism last went into eclipse and a resurgent
+ attraction to more holistic ways of thinking. The actual theoretical
+ discussion in the connectionist literature may not be connected in any
+ strict sense to such trends in intellectual fashion. But here again, the
+ concepts of sustaining myth and cultural resonance are pertinent: this
+ time, perhaps, in a two-way process of mutual support.
+ 
+<br><span style="color:blue;">
+また、より微妙ではあるものの、決して重要性が劣るわけではない文化的な共鳴も見て取れます。
+それは、コネクショニズムが前回衰退した当時の、厳格で鋭利な合理主義から離れ、より全体論的な思考様式へと関心が回帰するという、一般的な傾向です。コネクショニズムに関する文献における実際の理論的議論は、こうした知的潮流と厳密な意味で結びついているわけではないかもしれません。しかしここでもやはり、「持続する神話」や「文化的共鳴」といった概念が妥当性を持ちます。おそらく今回は、それらが相互に支え合う双方向的なプロセスとして機能しているのでしょう。
+</span>
+</p><p>
+
+Voila Prince Charming: a composite of cultural trends. Reduction
+ ist undertones in my discussion do not undermine my good wishes for
+ a happy union with Snow White. The new sense of excitement that is
+ already replacing a certain ho-hum tiredness in cognitive science will
+ ensure the fertility of the union. But the impact of connectionism will
+ come less from the ideas it engenders than from heightened aware
+ ness of the problems it avoids.
+
+<br><span style="color:blue;">
+さあ、白馬の王子様の登場だ。彼はさまざまな文化的潮流の複合体である。私の議論には還元主義的なニュアンスが含まれているが、だからといって白雪姫との幸福な結びつきを願う気持ちが損なわれるわけではない。認知科学において、ある種のマンネリ化した倦怠感に取って代わりつつある新たな興奮の波が、この結びつきの豊かさを保証してくれるだろう。しかし、コネクショニズムがもたらす影響は、それが生み出すアイデアそのものよりも、むしろそれが回避する諸問題に対する意識の高まりに由来するものとなるはずだ。
+</span>
+</p>
+
+<h3> ENDNOTES <span style="color:blue;">注</span></h3>
+
+<p>
+<div class="styleRef">
+<ul><li>
+
+1) Jarmes G. Greeno, "The Cognition Connection," New York Times Book Review,
+ 4 Jan. 1987.
+
+<br><span style="color:blue;">
+認知のつながり
+</span>
+</li><br><li>
+
+2) David E. Rumelhart, James L. McClelland, and the PDP Research Group, Parallel
+ Distributed Processing (Cambridge: MIT Press, 1986).
+
+<br><span style="color:blue;">
+並列分散処理
+</span>
+</li><br><li>
+
+3) Marvin Minsky and Seymour Papert, Perceptrons: An Introduction to Computa
+ tional Geometry (Cambridge: MIT Press, 1969).
+ 
+<br><span style="color:blue;">
+パーセプトロン
+</span>
+</li><br><li>
+
+4) Rumelhart, McClelland, and the PDP Research Group, Parallel Distributed
+ Processing, p. 111.
+
+<br><span style="color:blue;">
+並列分散処理 .p.111
+</span>
+</li></ul></div>
+</p>
+    </body>
+</html>
