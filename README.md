@@ -13,7 +13,6 @@
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1988_one_ai_or_many.html">1988 人工知能は一つかたくさんか?</a><br>
             ---<br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_illustrating_hyperbolic_surfaces/2026_illustrating_hyperbolic_surfaces.html">2026 メッシュ埋め込みによる双曲曲面の可視化</a><br>
-            ---<br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_From_the_Light_Quantum_to_the_Photon.html">2026 光量子から光子へ　物理的概念の進化</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2009_dark_channel_prior/2009_Single_Image_Haze_Removal_Using_Dark_Channel_Prior.html">2009 ダークチャネルプライアを使った単一画像ヘイズ除去</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/1929_direction_of_magnetisation/1929_on_the_direction_of_magnetisation_of_basalt.html">1929 玄武岩の磁化の方向について</a><br>
