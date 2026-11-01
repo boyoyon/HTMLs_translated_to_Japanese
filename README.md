@@ -10,6 +10,7 @@
         </p>
         <h2>更新項目</h2>
         <p>
+            <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_proving_and_improving_PRH_with_jepas/2026_proving_and_improving_PRH_with_jepas.html">2026 JEPAを用いたプラトン的表現仮説の検証と改善</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_the_recipe_for_intelligence/2026_the_recipe_for_intelligence.html">2026 知能のレシピ</a><br>
             <a href="https://boyoyon.github.io/HTMLs_translated_to_Japanese/papers/2026_NeuroAI_and_Beyond/2026_NeuroAI_and_Beyond.html">2026 NeuroAIとその先へ</a><br>
             ---<br>
